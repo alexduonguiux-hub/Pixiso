@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('app boots and lists catalog characters', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   await expect(page.getByRole('heading', { name: 'Pixiso' })).toBeVisible();
-  const items = page.getByTestId('character-list').locator('li');
+  const items = page.getByTestId('character-list').locator('button');
   await expect(items).not.toHaveCount(0);
 });
 
