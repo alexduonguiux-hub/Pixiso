@@ -131,6 +131,13 @@ function build(inspection: Inspection, labels: Labels): Catalog {
       ...(l.description_vi ? { description_vi: l.description_vi } : {}),
       tags: l.tags,
       heightM: c.heightM,
+      projected: {
+        heightM: c.projectedS.heightM,
+        aboveM: c.projectedS.aboveM,
+        belowM: c.projectedS.belowM,
+        widthM: c.projectedS.widthM,
+        maxHeightM: c.projectedMax.heightM,
+      },
       builtinNodes: c.builtinParts.map((p) => p.node).sort(),
     };
   });

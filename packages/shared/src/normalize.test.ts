@@ -22,6 +22,7 @@ const fixture: Catalog = catalogSchema.parse({
       label_vi: 'Hiệp sĩ',
       tags: [],
       heightM: 1.8,
+      projected: { heightM: 1.8, aboveM: 1.8, belowM: 0.2, widthM: 1.0, maxHeightM: 1.8 },
       builtinNodes: ['Knight_Helmet'],
     },
     {
@@ -30,6 +31,7 @@ const fixture: Catalog = catalogSchema.parse({
       label_vi: 'Pháp sư',
       tags: [],
       heightM: 1.7,
+      projected: { heightM: 1.7, aboveM: 1.7, belowM: 0.2, widthM: 1.0, maxHeightM: 1.7 },
       builtinNodes: ['Mage_Hat'],
     },
   ],

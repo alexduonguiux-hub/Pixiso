@@ -14,6 +14,16 @@ import type { StoreApi } from 'zustand/vanilla';
 import type { AppState } from '../state/store.js';
 import { CharacterRig } from './CharacterRig.js';
 import { IsoCameraRig } from './IsoCameraRig.js';
+import { DoubleSide, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
+import {
+  renderClip,
+  type ClipRenderRequest,
+  type ClipRenderResult,
+} from '../render/framePipeline.js';
+import { HELPER_LAYER, PixelRenderer } from '../render/PixelRenderer.js';
+
+/** Calibration geometry for render tests: a 1×1 m ground square or a camera-facing flat quad. */
+export type TestObjectKind = 'ground_square' | 'flat_quad';
 
 /**
  * The reference 3D viewport: one renderer, one scene, the iso camera rig and
@@ -30,6 +40,10 @@ export class SceneController {
   /** True once the current store state is fully applied to the rig. */
   ready = false;
   lastError: string | null = null;
+  readonly pixel: PixelRenderer;
+  private store: StoreApi<AppState> | null = null;
+  private readonly readyListeners = new Set<() => void>();
+  private testObject: Mesh | null = null;
 
   private readonly clock = new Clock();
   private raf = 0;
@@ -53,6 +67,7 @@ export class SceneController {
 
     this.grid = new GridHelper(8, 8, 0x3a3a44, 0x2a2a32);
     this.grid.position.y = -0.001;
+    this.grid.layers.set(HELPER_LAYER);
     this.forwardArrow = new ArrowHelper(
       new Vector3(0, 0, 1),
       new Vector3(0, 0.05, 0),
@@ -62,13 +77,60 @@ export class SceneController {
       0.2,
     );
     this.forwardArrow.visible = false;
+    this.forwardArrow.traverse((o) => o.layers.set(HELPER_LAYER));
     this.rig.root.add(this.forwardArrow);
 
+    this.cameraRig.camera.layers.enable(HELPER_LAYER);
     this.scene.add(this.cameraRig.group, this.grid, this.rig.root);
+    this.pixel = new PixelRenderer(this.renderer, this.scene, this.cameraRig.camera);
+  }
+
+  /** Called after every completed apply (config/recolour change). */
+  onReady(listener: () => void): () => void {
+    this.readyListeners.add(listener);
+    return () => {
+      this.readyListeners.delete(listener);
+    };
+  }
+
+  /**
+   * Renders one clip/direction through the pixel pipeline using the current config.
+   * Only valid when `ready`; synchronous.
+   */
+  renderClip(req: ClipRenderRequest): ClipRenderResult {
+    const store = this.store;
+    if (!store) throw new Error('scene is not bound to a store');
+    return renderClip(this.rig, this.pixel, store.getState().catalog, req);
+  }
+
+  /** Swaps the character for calibration geometry (tests), or restores it with `null`. */
+  setTestObject(kind: TestObjectKind | null, hex = '#ffffff'): void {
+    if (this.testObject) {
+      this.testObject.removeFromParent();
+      this.testObject.geometry.dispose();
+      (this.testObject.material as MeshBasicMaterial).dispose();
+      this.testObject = null;
+    }
+    this.rig.root.visible = kind === null;
+    if (!kind) return;
+    const mesh = new Mesh(
+      new PlaneGeometry(1, 1),
+      new MeshBasicMaterial({ color: new Color(hex), side: DoubleSide }),
+    );
+    if (kind === 'ground_square') {
+      mesh.rotation.x = -Math.PI / 2; // lie flat on the ground, centred on the origin
+    } else {
+      mesh.quaternion.copy(this.cameraRig.camera.quaternion); // face the camera
+      mesh.position.set(0, 1, 0);
+    }
+    mesh.name = `test:${kind}`;
+    this.testObject = mesh;
+    this.scene.add(mesh);
   }
 
   bind(store: StoreApi<AppState>): void {
     this.unsubscribe?.();
+    this.store = store;
     const apply = (s: AppState) => {
       this.ready = false;
       this.rig.setDirection(s.preview.direction);
@@ -80,11 +142,13 @@ export class SceneController {
           if (anim) this.rig.setAnimation(anim);
           this.lastError = null;
           this.ready = true;
+          for (const l of this.readyListeners) l();
         })
         .catch((err: unknown) => {
           this.lastError = err instanceof Error ? err.message : String(err);
           console.error('[scene] apply failed', err);
           this.ready = true;
+          for (const l of this.readyListeners) l();
         });
     };
     apply(store.getState());
@@ -138,6 +202,7 @@ export class SceneController {
   dispose(): void {
     this.stop();
     this.unsubscribe?.();
+    this.pixel.dispose();
     this.renderer.dispose();
   }
 }

@@ -682,6 +682,20 @@
         ]
       },
       "heightM": 2.1863,
+      "projectedS": {
+        "yawDeg": 45,
+        "heightM": 2.1206,
+        "aboveM": 1.9959,
+        "belowM": 0.1247,
+        "widthM": 1.9425
+      },
+      "projectedMax": {
+        "yawDeg": 0,
+        "heightM": 2.1621,
+        "aboveM": 1.9959,
+        "belowM": 0.1662,
+        "widthM": 1.4675
+      },
       "animations": [
         {
           "name": "1H_Melee_Attack_Chop",
@@ -2333,6 +2347,20 @@
         ]
       },
       "heightM": 2.3145,
+      "projectedS": {
+        "yawDeg": 45,
+        "heightM": 2.2387,
+        "aboveM": 2.0979,
+        "belowM": 0.1408,
+        "widthM": 1.9425
+      },
+      "projectedMax": {
+        "yawDeg": 0,
+        "heightM": 2.2781,
+        "aboveM": 2.1119,
+        "belowM": 0.1662,
+        "widthM": 1.4675
+      },
       "animations": [
         {
           "name": "1H_Melee_Attack_Chop",
@@ -3863,6 +3891,20 @@
         ]
       },
       "heightM": 2.2027,
+      "projectedS": {
+        "yawDeg": 45,
+        "heightM": 2.1057,
+        "aboveM": 1.9809,
+        "belowM": 0.1247,
+        "widthM": 1.9425
+      },
+      "projectedMax": {
+        "yawDeg": 0,
+        "heightM": 2.1471,
+        "aboveM": 1.9809,
+        "belowM": 0.1662,
+        "widthM": 1.4675
+      },
       "animations": [
         {
           "name": "1H_Melee_Attack_Chop",
@@ -5390,6 +5432,20 @@
         ]
       },
       "heightM": 2.187,
+      "projectedS": {
+        "yawDeg": 45,
+        "heightM": 2.104,
+        "aboveM": 1.9793,
+        "belowM": 0.1247,
+        "widthM": 1.9425
+      },
+      "projectedMax": {
+        "yawDeg": -270,
+        "heightM": 2.1458,
+        "aboveM": 1.9796,
+        "belowM": 0.1662,
+        "widthM": 1.4675
+      },
       "animations": [
         {
           "name": "1H_Melee_Attack_Chop",
@@ -6917,6 +6973,20 @@
         ]
       },
       "heightM": 2.2512,
+      "projectedS": {
+        "yawDeg": 45,
+        "heightM": 2.2237,
+        "aboveM": 2.099,
+        "belowM": 0.1247,
+        "widthM": 1.9425
+      },
+      "projectedMax": {
+        "yawDeg": 45,
+        "heightM": 2.2237,
+        "aboveM": 2.099,
+        "belowM": 0.1247,
+        "widthM": 1.9425
+      },
       "animations": [
         {
           "name": "1H_Melee_Attack_Chop",

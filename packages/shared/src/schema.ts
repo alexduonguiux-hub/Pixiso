@@ -53,6 +53,15 @@ export const catalogCharacterSchema = z.object({
   tags: z.array(z.string()),
   /** Rest-pose bounding-box height in metres (from inspection). */
   heightM: z.number().positive(),
+  /** Rest-pose extents in the iso camera's image plane, facing S (metres). */
+  projected: z.object({
+    heightM: z.number().positive(),
+    aboveM: z.number(),
+    belowM: z.number(),
+    widthM: z.number().positive(),
+    /** Tallest projected height over the 8 directions. */
+    maxHeightM: z.number().positive(),
+  }),
   /** Non-skinned mesh nodes bundled inside the GLB that must be hidden unless selected as a part. */
   builtinNodes: z.array(z.string()),
 });

@@ -14,6 +14,16 @@
 
 Rest-pose bounding boxes come from the raw skinned-mesh POSITION accessors (bind pose = rest pose for these exports). Feet are at y = min.y.
 
+Projected extents are the same vertices seen by the 30°/45° camera (what the sprite will actually span): facing S (yaw 45°) and the tallest of the 8 directions. `PPM = characterHeightPx / projectedS.heightM` of the reference character (D-018).
+
+| id | projected S height (m) | above / below origin (m) | projected S width (m) | max height over 8 dirs (m) |
+| --- | --- | --- | --- | --- |
+| barbarian | 2.121 | 1.996 / 0.125 | 1.942 | 2.162 (yaw 0°) |
+| knight | 2.239 | 2.098 / 0.141 | 1.942 | 2.278 (yaw 0°) |
+| mage | 2.106 | 1.981 / 0.125 | 1.942 | 2.147 (yaw 0°) |
+| rogue | 2.104 | 1.979 / 0.125 | 1.942 | 2.146 (yaw -270°) |
+| rogue_hooded | 2.224 | 2.099 / 0.125 | 1.942 | 2.224 (yaw 45°) |
+
 | id | rest bbox min | rest bbox max | Rig node transform |
 | --- | --- | --- | --- |
 | barbarian | (-0.971, 0.000, -0.460) | (0.971, 2.186, 0.526) | T(0.000, 0.000, 0.000) R(0.000, 0.000, 0.000, 1.000) S(1.000, 1.000, 1.000) |

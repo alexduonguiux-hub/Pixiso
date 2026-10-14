@@ -1,3 +1,4 @@
+import type * as PixelCore from '@pixiso/pixel-core';
 import type { StoreApi } from 'zustand/vanilla';
 import type { SceneController } from './scene/SceneController.js';
 import type { AppState } from './state/store.js';
@@ -6,6 +7,8 @@ import type { AppState } from './state/store.js';
 export interface PixisoDebug {
   store: StoreApi<AppState>;
   scene: SceneController | null;
+  /** pixel-core namespace, so render tests can measure in-page without a bundler import. */
+  core: typeof PixelCore;
 }
 
 declare global {

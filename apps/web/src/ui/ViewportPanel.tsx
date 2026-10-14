@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { vi } from '../i18n/vi.js';
 import { preloadAllAssets } from '../scene/loader.js';
 import { SceneController } from '../scene/SceneController.js';
+import { setSceneController } from '../scene/sceneRegistry.js';
 import { appStore, useAppStore } from '../state/store.js';
 
 export function ViewportPanel() {
@@ -24,12 +25,14 @@ export function ViewportPanel() {
     ctl.start();
     if (window.__pixiso) window.__pixiso.scene = ctl;
     controllerRef.current = ctl;
+    setSceneController(ctl);
     preloadAllAssets();
     return () => {
       ro.disconnect();
       ctl.dispose();
       if (window.__pixiso) window.__pixiso.scene = null;
       controllerRef.current = null;
+      setSceneController(null);
     };
   }, []);
 

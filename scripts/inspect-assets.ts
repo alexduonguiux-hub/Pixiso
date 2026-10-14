@@ -61,6 +61,19 @@ export interface AnimationInfo {
   /** True when the clip translates the character horizontally (net drift > 0.1 m). */
   rootMotion: boolean;
 }
+/** Extents measured in the iso camera's image plane for a given facing yaw. */
+export interface ProjectedExtent {
+  yawDeg: number;
+  /** Full height on screen in metres (vertical extent + depth·sinθ). */
+  heightM: number;
+  /** Metres above the origin pixel (head). */
+  aboveM: number;
+  /** Metres below the origin pixel (front of the feet). */
+  belowM: number;
+  /** Full width on screen in metres. */
+  widthM: number;
+}
+
 export interface CharacterInspection {
   id: string;
   file: string;
@@ -76,6 +89,9 @@ export interface CharacterInspection {
   builtinParts: BuiltinPartInfo[];
   restBBox: BBox;
   heightM: number;
+  /** Rest-pose extents as seen by the 30°/45° camera, facing S (yaw 45°) and the max over 8 directions. */
+  projectedS: ProjectedExtent;
+  projectedMax: ProjectedExtent;
   animations: AnimationInfo[];
   nodeTree: string[];
 }
@@ -238,6 +254,62 @@ function animationInfo(anim: Animation): AnimationInfo {
   };
 }
 
+const ISO_ELEVATION = Math.PI / 6;
+const ISO_AZIMUTH = Math.PI / 4;
+
+/**
+ * Projects rest-pose vertices onto the iso camera's image plane for a facing yaw.
+ * Camera looks from azimuth 45°, elevation 30°; up vector u = (−sinθ·sin45, cosθ, −sinθ·cos45),
+ * right vector r = (cos45, 0, −sin45). Vertex rotated by yaw about +Y first.
+ */
+function projectedExtent(positions: Float32Array[], yawRad: number): ProjectedExtent {
+  const sy = Math.sin(yawRad);
+  const cy = Math.cos(yawRad);
+  const st = Math.sin(ISO_ELEVATION);
+  const ct = Math.cos(ISO_ELEVATION);
+  const sa = Math.sin(ISO_AZIMUTH);
+  const ca = Math.cos(ISO_AZIMUTH);
+  let minV = Infinity,
+    maxV = -Infinity,
+    minH = Infinity,
+    maxH = -Infinity;
+  for (const arr of positions) {
+    for (let i = 0; i < arr.length; i += 3) {
+      const x = arr[i]!;
+      const y = arr[i + 1]!;
+      const z = arr[i + 2]!;
+      const rx = x * cy + z * sy;
+      const rz = -x * sy + z * cy;
+      const v = -st * sa * rx + ct * y - st * ca * rz;
+      const h = ca * rx - sa * rz;
+      if (v < minV) minV = v;
+      if (v > maxV) maxV = v;
+      if (h < minH) minH = h;
+      if (h > maxH) maxH = h;
+    }
+  }
+  return {
+    yawDeg: Math.round((yawRad * 180) / Math.PI),
+    heightM: r4(maxV - minV),
+    aboveM: r4(maxV),
+    belowM: r4(-minV),
+    widthM: r4(maxH - minH),
+  };
+}
+
+function skinnedPositions(root: ReturnType<Document['getRoot']>): Float32Array[] {
+  const out: Float32Array[] = [];
+  for (const node of root.listNodes()) {
+    const mesh = node.getMesh();
+    if (!mesh || !node.getSkin()) continue;
+    for (const prim of mesh.listPrimitives()) {
+      const pos = prim.getAttribute('POSITION');
+      if (pos) out.push(Float32Array.from(pos.getArray()!));
+    }
+  }
+  return out;
+}
+
 function nearestJointAncestor(node: Node, joints: Set<Node>): string {
   let cur = node.getParentNode();
   while (cur) {
@@ -317,6 +389,13 @@ function inspectCharacter(doc: Document, file: string): CharacterInspection {
   for (const child of scene.listChildren()) buildTree(child, 0, joints, tree);
 
   const restBBox = finishBBox(rest);
+  const positions = skinnedPositions(root);
+  const projectedS = projectedExtent(positions, Math.PI / 4);
+  let projectedMax = projectedS;
+  for (let k = 1; k < 8; k++) {
+    const e = projectedExtent(positions, Math.PI / 4 - (k * Math.PI) / 4);
+    if (e.heightM > projectedMax.heightM) projectedMax = e;
+  }
   return {
     id: idFromFile(file),
     file: `Characters/gltf/${path.basename(file)}`,
@@ -335,6 +414,8 @@ function inspectCharacter(doc: Document, file: string): CharacterInspection {
     builtinParts,
     restBBox,
     heightM: restBBox.size[1],
+    projectedS,
+    projectedMax,
     animations: root
       .listAnimations()
       .map(animationInfo)
@@ -413,6 +494,31 @@ function renderReport(ins: Inspection): string {
   L.push(
     'Rest-pose bounding boxes come from the raw skinned-mesh POSITION accessors (bind pose = rest pose for these exports). Feet are at y = min.y.',
   );
+  L.push('');
+  L.push(
+    'Projected extents are the same vertices seen by the 30°/45° camera (what the sprite will actually span): facing S (yaw 45°) and the tallest of the 8 directions. `PPM = characterHeightPx / projectedS.heightM` of the reference character (D-018).',
+  );
+  L.push('');
+  L.push(
+    header([
+      'id',
+      'projected S height (m)',
+      'above / below origin (m)',
+      'projected S width (m)',
+      'max height over 8 dirs (m)',
+    ]),
+  );
+  for (const c of ins.characters) {
+    L.push(
+      row([
+        c.id,
+        f(c.projectedS.heightM),
+        `${f(c.projectedS.aboveM)} / ${f(c.projectedS.belowM)}`,
+        f(c.projectedS.widthM),
+        `${f(c.projectedMax.heightM)} (yaw ${c.projectedMax.yawDeg}°)`,
+      ]),
+    );
+  }
   L.push('');
   L.push(header(['id', 'rest bbox min', 'rest bbox max', 'Rig node transform']));
   for (const c of ins.characters) {

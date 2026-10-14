@@ -78,7 +78,14 @@ export const vi = {
     comingSoon: 'Sẽ có ở Phase 3.',
   },
   pixelPreview: {
-    comingSoon: 'Sẽ có ở Phase 2.',
+    zoom: 'Phóng to',
+    rendering: 'Đang dựng pixel…',
+    frame: 'Khung',
+    colors: 'màu',
+    cell: 'Ô',
+    ppm: 'px/m',
+    palette: 'Bảng màu',
+    notReady: 'Chờ nạp mô hình…',
   },
   directions: {
     S: 'Nam (S)',

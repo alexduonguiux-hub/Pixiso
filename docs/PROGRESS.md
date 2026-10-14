@@ -47,9 +47,33 @@ Living status for the MVP. One section per phase: done, decisions, open items.
 - Thumbnails on character cards (needs the pixel renderer).
 - Skin shares a mesh with sleeves on some characters; recolouring `arms` tints skin (known limitation, HANDOFF §6.7).
 
-## Phase 2 — Pixel render core ⏳
+## Phase 2 — Pixel render core ✅ (stopped here for review)
 
-Not started.
+**Done**
+
+- `packages/pixel-core`: `alphaThreshold`, OKLab/OKLCh, `buildPaletteMedianCut` (OKLab, one palette for all frames, deterministic), `mapToPalette`, `addOutline` (`dark` / `selective`), `cleanupOrphans` (snapshot pass, protects outline, keeps 2-px details), geometry helpers (`opaqueBounds`, `unionRects`, `cropImage`, `flipHorizontal`, `scaleNearest`, `blit`), stats (`countColors`, `countSemiTransparent`, `imageHash`), `processFrame` / `processFrames` in the §6.5 order. 55 Vitest tests with ASCII fixtures.
+- `apps/web/src/render`: `PixelRenderer` (sRGB8_ALPHA8 render target, nearest, no AA, helper layer excluded, Y-flipped readback), `pixelMath` (PPM, working frustum, §6.6 sample times, 10 ms frame durations), `framePipeline.renderClip` (synchronous clip sampling that restores the viewer pose).
+- `inspect-assets` → `catalog.characters[].projected` (view-plane extents).
+- Live pixel preview panel: processed clip at ×4/×6/×8, palette strip, cell size, colour count, PPM.
+- Playwright `pixel.spec.ts`: determinism (byte-identical hashes), ≤N colours, 0 semi-transparent (raw and processed), reference height ±1 px for 32/48/64, 2:1 ground diamond (41×21 px), flat-colour sRGB check. `review-phase2.spec.ts` writes `test-output/review-phase2/*.png` (×8).
+
+**Measurements** (Chromium 141 / SwiftShader)
+
+| Setting | Rendered Knight height | PPM   |
+| ------- | ---------------------- | ----- |
+| 32 px   | 31 px                  | 14.29 |
+| 48 px   | 47 px                  | 21.44 |
+| 64 px   | 63 px                  | 28.59 |
+
+Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spellbook, hat, cape) 51×62 px; 16 colours each.
+
+**Decisions** D-016 … D-021.
+
+**Open / for review**
+
+- Look direction: selective outline + 16 colours is the proposed default; sheets for outline none/dark/selective, palettes 8/16/32 and heights 32/48/64 are in `test-output/review-phase2/`.
+- 8-colour palettes wash out the Knight's warm accents (median cut favours the large grey areas); a hue-aware split or a minimum-chroma reserve could help later.
+- Height comes out 1 px short of the setting at every size; compensating by +1 px on `characterHeightPx` is trivial if the exact number matters more than the rest-pose definition.
 
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 

@@ -74,7 +74,7 @@ export class CharacterRig {
   private builtin = new Map<string, Object3D>();
   private skinned = new Map<string, SkinnedMesh>();
   private attached = new Map<string, AttachedPart>();
-  private direction: Direction = 'S';
+  private currentDirection: Direction = 'S';
   private applyToken = 0;
 
   constructor() {
@@ -84,6 +84,18 @@ export class CharacterRig {
 
   get ready(): boolean {
     return this.model !== null;
+  }
+
+  get direction(): Direction {
+    return this.currentDirection;
+  }
+
+  get currentAnimation(): CatalogAnimation | null {
+    return this.current;
+  }
+
+  get currentTime(): number {
+    return this.action?.time ?? 0;
   }
 
   /** Applies a config; later calls supersede earlier in-flight ones. */
@@ -280,7 +292,7 @@ export class CharacterRig {
   }
 
   setDirection(direction: Direction): void {
-    this.direction = direction;
+    this.currentDirection = direction;
     this.root.rotation.set(0, yawForDirection(direction), 0);
   }
 
@@ -298,7 +310,7 @@ export class CharacterRig {
     return {
       characterId: this.characterId,
       clip: this.current?.clip ?? null,
-      direction: this.direction,
+      direction: this.currentDirection,
       hiddenBuiltins: builtins
         .filter(([, n]) => !n.visible)
         .map(([k]) => k)
