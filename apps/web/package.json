@@ -1,0 +1,29 @@
+{
+  "name": "@pixiso/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "test:render": "playwright test"
+  },
+  "dependencies": {
+    "@pixiso/pixel-core": "workspace:*",
+    "@pixiso/shared": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "three": "^0.186.0",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "vite": "^7.3.7"
+  }
+}

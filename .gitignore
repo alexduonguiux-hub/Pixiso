@@ -6,3 +6,8 @@ test-output/
 playwright-report/
 coverage/
 .DS_Store
+test-results/
+*.tsbuildinfo
+.pnpm-store/
+assets/vendor/.tmp*/
+.vite/

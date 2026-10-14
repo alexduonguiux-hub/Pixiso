@@ -1,0 +1,11 @@
+node_modules/
+dist/
+assets/
+test-output/
+playwright-report/
+test-results/
+pnpm-lock.yaml
+docs/ASSET_REPORT.md
+packages/shared/catalog.json
+CLAUDE.md
+docs/HANDOFF.md
