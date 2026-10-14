@@ -7,7 +7,10 @@ export type PaletteSpec = { mode: 'auto'; colors: number } | { mode: 'fixed'; he
 interface Entry {
   key: number;
   lab: Lab;
+  /** weight used for splitting (may be flattened) */
   count: number;
+  /** real pixel count */
+  raw: number;
 }
 
 interface Box {
@@ -28,11 +31,14 @@ function boxOf(entries: Entry[]): Box {
   return { entries, min, max };
 }
 
-function widestAxis(b: Box): { axis: number; range: number } {
+/** Relative importance of L, a, b when deciding which box/axis to split. */
+export type AxisWeights = [number, number, number];
+
+function widestAxis(b: Box, w: AxisWeights = [1, 1, 1]): { axis: number; range: number } {
   let axis = 0;
   let range = -1;
   for (let i = 0; i < 3; i++) {
-    const r = b.max[i]! - b.min[i]!;
+    const r = (b.max[i]! - b.min[i]!) * w[i]!;
     if (r > range) {
       range = r;
       axis = i;
@@ -49,13 +55,24 @@ const sortLab = (a: Lab, b: Lab): number => a[0] - b[0] || a[1] - b[1] || a[2] -
  * are sorted by colour key, boxes split at the weighted median, ties resolved
  * by index. Returns at most `maxColors` colours sorted by (L, a, b).
  */
-export function buildPaletteMedianCut(images: RGBAImage[], maxColors: number): Rgb8[] {
+export type PaletteRepresentative = 'mean' | 'mode';
+
+export function buildPaletteMedianCut(
+  images: RGBAImage[],
+  maxColors: number,
+  weightPower = 1,
+  representative: PaletteRepresentative = 'mean',
+  axisWeights: AxisWeights = [1, 1, 1],
+): Rgb8[] {
   const hist = colorHistogram(images);
   const entries: Entry[] = [...hist.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([key, count]) => ({
       key,
-      count,
+      raw: count,
+      // weightPower < 1 flattens the population so small but distinct materials keep a box
+      count:
+        weightPower === 1 ? count : Math.max(1, Math.round(Math.pow(count, weightPower) * 1000)),
       lab: srgb8ToOklab((key >> 16) & 255, (key >> 8) & 255, key & 255),
     }));
   if (entries.length === 0) return [];
@@ -72,7 +89,7 @@ export function buildPaletteMedianCut(images: RGBAImage[], maxColors: number): R
     for (let i = 0; i < boxes.length; i++) {
       const b = boxes[i]!;
       if (b.entries.length < 2) continue;
-      const { range } = widestAxis(b);
+      const { range } = widestAxis(b, axisWeights);
       if (range > bestRange) {
         bestRange = range;
         best = i;
@@ -80,7 +97,7 @@ export function buildPaletteMedianCut(images: RGBAImage[], maxColors: number): R
     }
     if (best < 0) break;
     const box = boxes[best]!;
-    const { axis } = widestAxis(box);
+    const { axis } = widestAxis(box, axisWeights);
     const sorted = [...box.entries].sort((a, b) => a.lab[axis]! - b.lab[axis]! || a.key - b.key);
     const total = sorted.reduce((s, e) => s + e.count, 0);
     let acc = 0;
@@ -95,6 +112,14 @@ export function buildPaletteMedianCut(images: RGBAImage[], maxColors: number): R
 
   const out = new Map<number, Rgb8>();
   for (const b of boxes) {
+    if (representative === 'mode') {
+      // the material's actual colour: the most common texel in the box (ties: lowest key)
+      let best = b.entries[0]!;
+      for (const e of b.entries)
+        if (e.raw > best.raw || (e.raw === best.raw && e.key < best.key)) best = e;
+      out.set(best.key, [(best.key >> 16) & 255, (best.key >> 8) & 255, best.key & 255]);
+      continue;
+    }
     let L = 0,
       a = 0,
       bb = 0,

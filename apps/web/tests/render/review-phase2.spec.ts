@@ -5,8 +5,9 @@ import { outDir, waitSceneReady } from './helpers.js';
 
 /**
  * Produces the Phase 2 review images (HANDOFF §10, "Bàn giao để duyệt"):
- * 2 characters × directions S and E × 3 walk frames, nearest ×8, plus comparison
- * sheets for outline modes, palette sizes and heights. Not an assertion test.
+ * 2 characters × directions S and E × 3 walk frames, nearest ×8, for the
+ * pixel-rules look and for the Phase 2 baseline, plus comparison sheets for
+ * outline modes, palette sizes and heights. Not an assertion test.
  */
 
 const dir = outDir('review-phase2');
@@ -50,6 +51,17 @@ const SETUPS: Setup[] = [
   },
 ];
 
+interface SheetOptions {
+  directions: string[];
+  frames: number[];
+  heightPx: number;
+  outline: string;
+  colors: number;
+  title: string;
+  scale: number;
+  look?: 'ramp' | 'composite';
+}
+
 async function applySetup(page: Page, s: Setup) {
   await page.evaluate((setup) => {
     const { store } = window.__pixiso!;
@@ -65,19 +77,8 @@ async function applySetup(page: Page, s: Setup) {
   await waitSceneReady(page);
 }
 
-/** In-page helper: renders frames and returns ×SCALE PNG data URLs plus a labelled contact sheet. */
-async function renderSheet(
-  page: Page,
-  opts: {
-    directions: string[];
-    frames: number[];
-    heightPx: number;
-    outline: string;
-    colors: number;
-    title: string;
-    scale: number;
-  },
-) {
+/** In-page: renders the walk clip for each direction, one palette across all of them, and draws a labelled sheet. */
+async function renderSheet(page: Page, o: SheetOptions) {
   return page.evaluate(async (o) => {
     const { store, scene } = window.__pixiso!;
     const core = window.__pixiso!.core;
@@ -89,19 +90,38 @@ async function renderSheet(
       outline: o.outline as 'none' | 'dark' | 'selective',
       palette: { mode: 'auto' as const, colors: o.colors },
     };
-    // One palette for the whole character: build it from all 8 walk frames of every direction.
+    const look = o.look ?? 'ramp';
     const perDir = o.directions.map((d) =>
-      scene!.renderClip({ animation: walk, direction: d as 'S', style, rawOnly: true }),
+      scene!.renderClip({
+        animation: walk,
+        direction: d as 'S',
+        style,
+        look,
+        rawOnly: look === 'composite',
+      }),
     );
-    const allRaw = perDir.flatMap((r) => r.raw);
-    const processed = core.processFrames(allRaw, style.palette, style.outline);
-    const union = core.unionRects(processed.frames.map((f) => core.opaqueBounds(f)))!;
-    const rect = core.padRect(union, 1, allRaw[0]!.width, allRaw[0]!.height);
+    let frames;
+    if (look === 'ramp') {
+      const processed = core.processPasses(
+        perDir.flatMap((r) => r.passes),
+        { ...core.DEFAULT_LOOK, maxColors: o.colors, outline: style.outline },
+      );
+      frames = processed.frames;
+    } else {
+      frames = core.processFrames(
+        perDir.flatMap((r) => r.raw),
+        style.palette,
+        style.outline,
+      ).frames;
+    }
+    const colorKeys = [...core.colorHistogram(frames).keys()].sort((a, b) => a - b);
+    const union = core.unionRects(frames.map((f) => core.opaqueBounds(f)))!;
+    const rect = core.padRect(union, 1, frames[0]!.width, frames[0]!.height);
 
     const cells: { label: string; img: ReturnType<typeof core.cropImage> }[] = [];
     o.directions.forEach((d, di) => {
       for (const fi of o.frames) {
-        const f = processed.frames[di * walk.defaultFrames + fi]!;
+        const f = frames[di * walk.defaultFrames + fi]!;
         cells.push({
           label: `${d} · frame ${fi + 1}/${walk.defaultFrames}`,
           img: core.cropImage(f, rect),
@@ -109,7 +129,7 @@ async function renderSheet(
       }
     });
 
-    const toPng = (
+    const toCanvas = (
       img: { width: number; height: number; data: Uint8ClampedArray },
       scale: number,
     ) => {
@@ -128,7 +148,6 @@ async function renderSheet(
       return c;
     };
 
-    // Contact sheet: checkerboard background, cells in a row per direction, labels above.
     const cellW = rect.w * o.scale;
     const cellH = rect.h * o.scale;
     const pad = 16;
@@ -146,7 +165,7 @@ async function renderSheet(
     ctx.fillText(o.title, pad, 28);
     ctx.font = '12px system-ui, sans-serif';
     ctx.fillStyle = '#9a9aa6';
-    ctx.fillText(`${rect.w}×${rect.h} px · ${processed.palette.length} màu · ×${o.scale}`, pad, 46);
+    ctx.fillText(`${rect.w}×${rect.h} px · ${colorKeys.length} màu · ×${o.scale}`, pad, 46);
     cells.forEach((cell, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
@@ -154,7 +173,6 @@ async function renderSheet(
       const y = 64 + row * (cellH + labelH + pad);
       ctx.fillStyle = '#9a9aa6';
       ctx.fillText(cell.label, x, y + 14);
-      // checkerboard
       for (let cy = 0; cy < cellH; cy += 16) {
         for (let cx = 0; cx < cellW; cx += 16) {
           ctx.fillStyle = ((cx + cy) / 16) % 2 === 0 ? '#2a2a32' : '#222228';
@@ -162,24 +180,23 @@ async function renderSheet(
         }
       }
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(toPng(cell.img, o.scale), x, y + labelH);
+      ctx.drawImage(toCanvas(cell.img, o.scale), x, y + labelH);
     });
-    // palette strip
     const py = sheet.height - 10;
-    processed.palette.forEach((c, i) => {
-      ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
+    colorKeys.forEach((key, i) => {
+      ctx.fillStyle = `rgb(${(key >> 16) & 255},${(key >> 8) & 255},${key & 255})`;
       ctx.fillRect(pad + i * 14, py - 8, 12, 8);
     });
     return {
       sheet: sheet.toDataURL('image/png'),
       frames: cells.map((c) => ({
         label: c.label,
-        png: toPng(c.img, o.scale).toDataURL('image/png'),
+        png: toCanvas(c.img, o.scale).toDataURL('image/png'),
       })),
       cell: { w: rect.w, h: rect.h },
-      palette: processed.palette.length,
+      palette: colorKeys.length,
     };
-  }, opts);
+  }, o);
 }
 
 function writeDataUrl(file: string, dataUrl: string) {
@@ -187,7 +204,7 @@ function writeDataUrl(file: string, dataUrl: string) {
 }
 
 test('review sheets: 2 characters × S/E × 3 walk frames at ×8', async ({ page }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(300_000);
   await page.goto('http://localhost:5173/');
   await page.evaluate(() => localStorage.clear());
   await page.reload();
@@ -195,58 +212,64 @@ test('review sheets: 2 characters × S/E × 3 walk frames at ×8', async ({ page
 
   for (const setup of SETUPS) {
     await applySetup(page, setup);
-    const r = await renderSheet(page, {
+    const base = {
       directions: ['S', 'E'],
       frames: [0, 1, 2],
       heightPx: 48,
       outline: 'selective',
       colors: 16,
-      title: `${setup.label} · 48 px · viền chọn lọc · 16 màu`,
       scale: SCALE,
+    };
+    const r = await renderSheet(page, {
+      ...base,
+      title: `${setup.label} · 48 px · viền chọn lọc · 16 màu · quy tắc pixel (mới)`,
     });
     writeDataUrl(path.join(dir, `${setup.id}_sheet_x8.png`), r.sheet);
     r.frames.forEach((f) => {
       const m = /^(\w+) · frame (\d+)/.exec(f.label);
       if (m) writeDataUrl(path.join(dir, `${setup.id}_${m[1]}_f${m[2]}_x8.png`), f.png);
     });
-    console.log(`${setup.id}: cell ${r.cell.w}×${r.cell.h}, ${r.palette} colours`);
+    const old = await renderSheet(page, {
+      ...base,
+      look: 'composite',
+      title: `${setup.label} · 48 px · viền chọn lọc · 16 màu · Phase 2 (cũ)`,
+    });
+    writeDataUrl(path.join(dir, `${setup.id}_sheet_baseline_x8.png`), old.sheet);
+    console.log(
+      `${setup.id}: new cell ${r.cell.w}×${r.cell.h} (${r.palette} colours), baseline ${old.cell.w}×${old.cell.h} (${old.palette} colours)`,
+    );
   }
 
   // Comparison sheets on the knight: outline modes, palette sizes, heights.
   await applySetup(page, SETUPS[0]!);
+  const one = { directions: ['S'], frames: [0], scale: SCALE };
   for (const outline of ['none', 'dark', 'selective']) {
     const r = await renderSheet(page, {
-      directions: ['S'],
-      frames: [0],
+      ...one,
       heightPx: 48,
       outline,
       colors: 16,
       title: `Viền: ${outline} · 48 px · 16 màu`,
-      scale: SCALE,
     });
     writeDataUrl(path.join(dir, `compare_outline_${outline}_x8.png`), r.sheet);
   }
-  for (const colors of [8, 16, 32]) {
+  for (const colors of [8, 16, 24, 32]) {
     const r = await renderSheet(page, {
-      directions: ['S'],
-      frames: [0],
+      ...one,
       heightPx: 48,
       outline: 'selective',
       colors,
       title: `Bảng màu: ${colors} màu · 48 px · viền chọn lọc`,
-      scale: SCALE,
     });
     writeDataUrl(path.join(dir, `compare_palette_${colors}_x8.png`), r.sheet);
   }
   for (const h of [32, 48, 64]) {
     const r = await renderSheet(page, {
-      directions: ['S'],
-      frames: [0],
+      ...one,
       heightPx: h,
       outline: 'selective',
       colors: 16,
       title: `Chiều cao: ${h} px · viền chọn lọc · 16 màu`,
-      scale: SCALE,
     });
     writeDataUrl(path.join(dir, `compare_height_${h}_x8.png`), r.sheet);
   }

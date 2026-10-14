@@ -75,6 +75,25 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - 8-colour palettes wash out the Knight's warm accents (median cut favours the large grey areas); a hue-aware split or a minimum-chroma reserve could help later.
 - Height comes out 1 px short of the setting at every size; compensating by +1 px on `characterHeightPx` is trivial if the exact number matters more than the rest-pose definition.
 
+## Phase 2b — Pixel look per pixel-art rules ✅ (stopped for review)
+
+**Done**
+
+- Researched the rules (Pixel Joint, Lospec, Pixel Parmesan, Pixelblog, Pixel Logic, Saint11, Dead Cells, three.js RenderPixelatedPass) and wrote `docs/PIXEL_RULES.md` (Vietnamese) with what the pipeline does for each rule.
+- Shader data passes (`uPixisoPass`): albedo + toon light band, 4× supersampled (`PixelRenderer.renderPasses`).
+- `pixel-core`: `ramps` (hue-shifted shades, gamut clamp, line colour), `compose` (ramp palette with artist-style budget, coverage + majority downsample, ramp outline), `clusters` (cluster cleanup with contrast protection), `look.processPasses`; 73 Vitest tests.
+- `framePipeline.renderClip` has `look: 'ramp' | 'composite'`; the preview and review sheets use `ramp`; the Phase 2 baseline stays available for comparison (`*_sheet_baseline_x8.png`).
+- Review sheets regenerated: new vs baseline for Knight and Mage, outline none/dark/selective, palettes 8/16/24/32, heights 32/48/64.
+
+**Measurements** unchanged for the calibration tests (height 31/47/63 px, diamond 41×21, flat colours exact); determinism holds for the ramp look (hash-equal frames across runs).
+
+**Decisions** D-022 … D-028.
+
+**Open**
+
+- 16 colours: Mage skin merges with hair (D-028). 24 colours is a good default for characters with many materials; a material-id pass reserving a base for `_Head` is the planned fix.
+- Inner lines (depth/normal edges) and selective AA on inner lines remain post-MVP.
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

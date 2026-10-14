@@ -11,6 +11,7 @@ import {
   type WebGLRenderer,
 } from 'three';
 import type { PixelFrustum } from '../scene/IsoCameraRig.js';
+import { setPixisoPass } from '../scene/toon.js';
 
 /** Scene layer for helpers (grid, arrows) that the pixel pass must not see. */
 export const HELPER_LAYER = 1;
@@ -94,6 +95,29 @@ export class PixelRenderer {
       img.data.set(flipped.subarray((f.heightPx - 1 - y) * row, (f.heightPx - y) * row), y * row);
     }
     return img;
+  }
+
+  /**
+   * The two data passes of the pixel-look pipeline at `k`× supersampling,
+   * pixel-centre aligned with the 1× frustum (block (x, y) covers 1× pixel (x, y)).
+   */
+  renderPasses(f: PixelFrustum, k: number): { albedo: RGBAImage; light: RGBAImage } {
+    const fk: PixelFrustum = {
+      widthPx: f.widthPx * k,
+      heightPx: f.heightPx * k,
+      ppm: f.ppm * k,
+      pivotX: k * f.pivotX + (k - 1) / 2,
+      pivotY: k * f.pivotY + (k - 1) / 2,
+    };
+    try {
+      setPixisoPass(1);
+      const albedo = this.render(fk);
+      setPixisoPass(2);
+      const light = this.render(fk);
+      return { albedo, light };
+    } finally {
+      setPixisoPass(0);
+    }
   }
 
   dispose(): void {

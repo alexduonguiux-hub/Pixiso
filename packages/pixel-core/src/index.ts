@@ -7,3 +7,7 @@ export * from './palette.js';
 export * from './outline.js';
 export * from './cleanup.js';
 export * from './pipeline.js';
+export * from './ramps.js';
+export * from './compose.js';
+export * from './clusters.js';
+export * from './look.js';

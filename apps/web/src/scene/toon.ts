@@ -20,15 +20,50 @@ import {
 } from 'three';
 import type { RecolorMethod } from '../state/store.js';
 
-/** 3-step toon ramp (HANDOFF §6.4), nearest-filtered. */
-export function createGradientMap(steps: number[] = [0.35, 0.7, 1.0]): DataTexture {
-  const data = new Uint8Array(steps.map((s) => Math.round(s * 255)));
-  const tex = new DataTexture(data, steps.length, 1, RedFormat, UnsignedByteType);
+/** One toon band: dot(N,L) up to `upTo` maps to the grey `value` (linear). */
+export interface ToonBand {
+  upTo: number;
+  value: number;
+}
+
+/**
+ * Three bands tuned for the iso key light (PIXEL_RULES §3): shadow for faces
+ * turned away, a wide mid band, a narrow highlight only where the surface
+ * squarely faces the light. Values match `DEFAULT_LOOK.bandValues`.
+ */
+export const DEFAULT_TOON_BANDS: ToonBand[] = [
+  { upTo: 0.15, value: 0.35 },
+  { upTo: 0.8, value: 0.7 },
+  { upTo: 1, value: 1.0 },
+];
+
+/** Nearest-filtered gradient map encoding the bands over dot(N,L) ∈ [-1, 1]. */
+export function createGradientMap(
+  bands: ToonBand[] = DEFAULT_TOON_BANDS,
+  texels = 64,
+): DataTexture {
+  const data = new Uint8Array(texels);
+  for (let i = 0; i < texels; i++) {
+    const dotNL = ((i + 0.5) / texels) * 2 - 1;
+    const band = bands.find((b) => dotNL <= b.upTo) ?? bands[bands.length - 1]!;
+    data[i] = Math.round(band.value * 255);
+  }
+  const tex = new DataTexture(data, texels, 1, RedFormat, UnsignedByteType);
   tex.minFilter = NearestFilter;
   tex.magFilter = NearestFilter;
   tex.generateMipmaps = false;
   tex.needsUpdate = true;
   return tex;
+}
+
+/**
+ * Render pass selector shared by every Pixiso material:
+ * 0 = shaded (viewer), 1 = albedo only (texture × recolour), 2 = toon light band as grey.
+ */
+export const pixisoPass = { value: 0 };
+
+export function setPixisoPass(pass: 0 | 1 | 2): void {
+  pixisoPass.value = pass;
 }
 
 export interface RecolorUniforms {
@@ -53,6 +88,7 @@ uniform int uRecolorMode;
 uniform vec3 uTargetLab;
 uniform vec3 uSourceLch;
 uniform float uChromaMin;
+uniform int uPixisoPass;
 
 vec3 pixisoLinearToOklab(vec3 c) {
   c = max(c, vec3(0.0));
@@ -114,6 +150,21 @@ const RECOLOR_FRAG = /* glsl */ `
 diffuseColor.rgb = pixisoRecolor(diffuseColor.rgb);
 `;
 
+// Data passes for the pixel pipeline. Written after the normal shading so the
+// viewer path is untouched; the sRGB render target encodes the greys.
+const PASS_FRAG = /* glsl */ `
+#include <opaque_fragment>
+if (uPixisoPass == 1) {
+  gl_FragColor = vec4(diffuseColor.rgb, diffuseColor.a);
+}
+#if NUM_DIR_LIGHTS > 0
+if (uPixisoPass == 2) {
+  float band = getGradientIrradiance(normal, directionalLights[0].direction).r;
+  gl_FragColor = vec4(vec3(band), diffuseColor.a);
+}
+#endif
+`;
+
 function firstMap(source: Material | Material[]): Texture | null {
   const m = Array.isArray(source) ? source[0] : source;
   if (m instanceof MeshStandardMaterial || m instanceof MeshToonMaterial) return m.map;
@@ -145,12 +196,13 @@ export function makeToonMaterial(
   const mat = new MeshToonMaterial({ map, gradientMap, color: 0xffffff }) as PixisoToonMaterial;
   mat.userData = { pixiso: { uniforms, recolor: null } };
   mat.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms);
+    Object.assign(shader.uniforms, uniforms, { uPixisoPass: pixisoPass });
     shader.fragmentShader = shader.fragmentShader
       .replace('void main() {', `${GLSL_FUNCS}\nvoid main() {`)
-      .replace('#include <map_fragment>', RECOLOR_FRAG);
+      .replace('#include <map_fragment>', RECOLOR_FRAG)
+      .replace('#include <opaque_fragment>', PASS_FRAG);
   };
-  mat.customProgramCacheKey = () => 'pixiso-toon-recolor-v1';
+  mat.customProgramCacheKey = () => 'pixiso-toon-recolor-v2';
   return mat;
 }
 

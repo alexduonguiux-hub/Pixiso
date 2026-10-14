@@ -39,9 +39,11 @@ async function renderStats(
   frames = 1,
   outline = 'selective',
   colors = 16,
+  look: 'ramp' | 'composite' = 'ramp',
+  rawCheck = false,
 ) {
   return page.evaluate(
-    async ({ animationId, direction, heightPx, frames, outline, colors }) => {
+    async ({ animationId, direction, heightPx, frames, outline, colors, look, rawCheck }) => {
       const { store, scene } = window.__pixiso!;
       const s = store.getState();
       const animation = s.catalog.animations.find((a) => a.id === animationId)!;
@@ -52,19 +54,34 @@ async function renderStats(
         palette: { mode: 'auto' as const, colors },
       };
       const core = window.__pixiso!.core;
-      const res = scene!.renderClip({ animation, direction: direction as 'S', style, frames });
+      const res = scene!.renderClip({
+        animation,
+        direction: direction as 'S',
+        style,
+        frames,
+        look,
+      });
+      const rawRes = rawCheck
+        ? scene!.renderClip({
+            animation,
+            direction: direction as 'S',
+            style,
+            frames,
+            rawOnly: true,
+          })
+        : null;
       return {
         hashes: res.frames.map((f) => core.imageHash(f)),
         colors: res.frames.map((f) => core.countColors(f)),
         semi: res.frames.map((f) => core.countSemiTransparent(f)),
-        rawSemi: res.raw.map((f) => core.countSemiTransparent(f)),
+        rawSemi: rawRes ? rawRes.raw.map((f) => core.countSemiTransparent(f)) : [],
         bounds: res.frames.map((f) => core.opaqueBounds(f)),
         palette: res.palette.length,
         ppm: res.ppm,
         frustum: res.frustum,
       };
     },
-    { animationId, direction, heightPx, frames, outline, colors },
+    { animationId, direction, heightPx, frames, outline, colors, look, rawCheck },
   );
 }
 
@@ -99,8 +116,12 @@ test('output has ≤ N colours and no semi-transparent pixels', async ({ page })
     for (const n of r.semi) expect(n).toBe(0);
   }
   // Even before post-processing the GPU pass must not produce blended edges (antialias off).
-  const raw = await renderStats(page, 'idle', 'S', 48, 1, 'none', 16);
+  const raw = await renderStats(page, 'idle', 'S', 48, 1, 'none', 16, 'ramp', true);
   expect(raw.rawSemi[0]).toBe(0);
+  // The Phase 2 baseline look must still satisfy the same limits.
+  const old = await renderStats(page, 'walk', 'E', 48, 2, 'selective', 16, 'composite');
+  expect(old.palette).toBeLessThanOrEqual(16);
+  for (const n of old.semi) expect(n).toBe(0);
 });
 
 test('reference character height matches characterHeightPx within ±1 px', async ({ page }) => {
