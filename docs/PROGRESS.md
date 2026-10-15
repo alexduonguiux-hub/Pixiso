@@ -112,6 +112,12 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - The Knight's visor/face reads as a dark slit with eyes; acceptable for a helmeted knight, but a per-mesh material reservation (D-028) would still help at 16 colours.
 - Inner lines are depth-only; normal-based crease lines (folds) are not drawn.
 
+## Pivot spike — pixel matrices (no 3D) ✅ (awaiting decision)
+
+- `packages/sprite-kit`: template format (`format.ts`), composer (`compose.ts`), palette painter (`paint.ts`), 32 px body for S and W (`body32.ts`), parts (`parts32.ts`: helmet, sword, round shield, cape), offset-table clips (`anim.ts`), character builder (`character.ts`). Unit tests.
+- `scripts/spike-sprite-kit.ts` renders ×8 sheets to `test-output/spike-matrix/` in Node (pngjs), no browser.
+- Plan and open decisions in `docs/PIVOT.md` §5.
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

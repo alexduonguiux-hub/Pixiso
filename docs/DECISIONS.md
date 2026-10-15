@@ -147,3 +147,9 @@ Opaque 8-connected islands smaller than 6 px are erased after cleanup. The Knigh
 ### D-034 Bridging thin slivers during downsampling
 
 A block covered 30–50 % becomes a pixel when both its horizontal or both its vertical neighbours are solid (≥ 50 %). Thin geometry seen edge-on (the Knight's helmet crest, blades, staffs) stays continuous instead of leaving crumbs that the island filter would then erase; nothing is invented where no geometry exists.
+
+## Pivot — vẽ trên lưới pixel
+
+### D-035 Drop 3D rendering; characters are semantic pixel matrices
+
+After two review rounds the user judged the 3D→pixel output unfit at 32–48 px (see docs/PIVOT.md §1 for the diagnosis). The new source of truth for pixels is `packages/sprite-kit`: ASCII matrices of (material, shade) cells composed by layer and anchor on a 24×32 grid, animated by per-limb offset tables, coloured by `pixel-core` ramps. Deterministic by construction, no WebGL, no vendor assets. The 3D code and KayKit assets stay in git history until the user confirms their removal (PIVOT.md §5).

@@ -60,3 +60,39 @@ Hình học có sẵn là KayKit: chibi đầu to, mũ giáp che gần hết, m�
 - PixelLab API và công cụ: https://pixellab.ai/pixellab-api, https://www.pixellab.ai/docs/tools/animate-with-skeleton, https://www.pixellab.ai/docs/tools/skeleton-animation
 - So sánh công cụ sinh pixel art 2026 (Cinevva): https://app.cinevva.com/guides/ai-pixel-art-generators
 - Dead Cells pipeline: https://80.lv/articles/case-study-dead-cells-character-art-pipeline/
+
+---
+
+## 5. Hướng đã chọn (15/10): vẽ trực tiếp trên lưới pixel bằng ma trận
+
+Bạn quyết định bỏ 3D. Cách mới: **nhân vật là tập các ma trận pixel ngữ nghĩa** (mỗi ô ghi _vật liệu + bậc sáng_, không ghi màu), ghép theo lớp và điểm neo trên lưới 24×32, animation là bảng dịch chuyển từng chi, màu đến từ dải hue-shift của `pixel-core`. Spike nằm ở `packages/sprite-kit` và `scripts/spike-sprite-kit.ts`; ảnh ở `test-output/spike-matrix/`.
+
+### Spike đã chứng minh
+
+- Base 32 px hướng S và W (E = lật W), idle 2 khung, walk 4 khung chỉ bằng bảng offset.
+- Phụ kiện gắn theo neo: mũ giáp, kiếm, khiên tròn, áo choàng; thứ tự lớp đổi theo hướng.
+- Đổi màu theo vật liệu (da, tóc, vải, vải phụ, quần, giày, kim loại, da thuộc, gỗ, điểm nhấn) với dải 3 bậc; 32 màu cho cả nhân vật.
+- Không cần trình duyệt: render bằng Node trong 1 giây; tất định theo đúng nghĩa đen (cùng ma trận → cùng byte).
+
+### Vì sao hướng này hợp với mục tiêu
+
+- Người dùng chỉ chọn và đổi màu; mọi tổ hợp luôn hợp lệ vì tất cả bộ phận vẽ trên cùng một khung xương pixel.
+- Claude vẫn chỉ chọn id và màu; code vẽ pixel. Nguyên tắc 1 và 3 trong CLAUDE.md giữ nguyên.
+- Ma trận là văn bản: hoạ sĩ sửa được bằng bất kỳ editor nào, diff được trong git, không cần công cụ 3D.
+
+### Kế hoạch mới
+
+| Giai đoạn      | Việc                                                                                                                                    | Ước lượng |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| M1 Nền tảng    | `sprite-kit` thành package chính; catalog mới (base + parts + materials); bỏ three.js khỏi web; preview từ sprite-kit; UI giữ bố cục cũ | 2 ngày    |
+| M2 Base đầy đủ | 5 hướng (S, SW, W, NW, N; lật cho SE, E, NE), 6 clip: idle 2, walk 4, run 4, attack 3, hit 2, death 4 (offset + vài khung vẽ riêng)     | 3–4 ngày  |
+| M3 Thư viện    | tóc ×6, mũ ×4, giáp/áo choàng/váy ×4, vũ khí ×8, khiên ×3; mỗi món 5 hướng                                                              | 4–5 ngày  |
+| M4 Xuất        | sheet, JSON Aseprite, GIF, ZIP, `player.html` (pixel-core đã có phần lớn)                                                               | 2 ngày    |
+| M5 Mô tả       | endpoint Claude với catalog mới                                                                                                         | 2 ngày    |
+
+### Quyết định cần bạn xác nhận
+
+1. Cỡ cơ sở **32 px** (xuất ×2 = 64 px bằng nearest). Bộ 48 px là bộ vẽ riêng, để vòng sau.
+2. Phong cách chibi như spike (đầu 14 px, mắt 2×2). Nếu muốn tỷ lệ khác phải quyết ngay vì mọi bộ phận vẽ theo khung này.
+3. Gỡ code 3D và asset KayKit khỏi app (giữ trong lịch sử git). Asset mới do ta vẽ, giấy phép do ta đặt.
+4. Ai vẽ: tôi vẽ bộ đầu bằng ASCII và bạn duyệt theo từng đợt; hoạ sĩ (nếu có) thay thế từng ma trận về sau mà không đụng code.

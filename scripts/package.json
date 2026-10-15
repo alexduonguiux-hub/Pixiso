@@ -9,9 +9,15 @@
   "dependencies": {
     "@gltf-transform/core": "^4.5.1",
     "@gltf-transform/extensions": "^4.5.1",
+    "@pixiso/pixel-core": "workspace:*",
     "@pixiso/shared": "workspace:*",
+    "@pixiso/sprite-kit": "workspace:*",
     "fflate": "^0.8.3",
+    "pngjs": "^7.0.0",
     "yaml": "^2.9.1",
     "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/pngjs": "^6.0.5"
   }
 }
