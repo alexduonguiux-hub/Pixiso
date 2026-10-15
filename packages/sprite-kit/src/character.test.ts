@@ -37,7 +37,7 @@ describe('character builder', () => {
     expect(imageHash(a)).toBe(imageHash(b));
     const rows = toAscii(buildFrame({ parts: [] }, 'S', { limbs: {} }));
     expect(rows[29]).toMatch(/o/); // sole line
-    expect(rows[30]!.trim()).toBe('');
+    expect(rows[30]).toMatch(/^\.+$/); // nothing below the soles
   });
 
   it('paints with one hue-shifted ramp per material and never more than 3 shades each', () => {
