@@ -152,8 +152,12 @@ export function buildPalette(images: RGBAImage[], spec: PaletteSpec): Rgb8[] {
 }
 
 /** Nearest palette index in OKLab, memoised per input colour. */
-export function createPaletteMapper(palette: Rgb8[]): (r: number, g: number, b: number) => number {
+export function createPaletteMapper(
+  palette: Rgb8[],
+  weights: AxisWeights = [1, 1, 1],
+): (r: number, g: number, b: number) => number {
   const labs = palette.map((c) => srgb8ToOklab(...c));
+  const [wL, wa, wb] = weights;
   const cache = new Map<number, number>();
   return (r, g, b) => {
     const key = rgbKey(r, g, b);
@@ -164,9 +168,9 @@ export function createPaletteMapper(palette: Rgb8[]): (r: number, g: number, b: 
     let bestD = Infinity;
     for (let i = 0; i < labs.length; i++) {
       const p = labs[i]!;
-      const dL = lab[0] - p[0];
-      const da = lab[1] - p[1];
-      const db = lab[2] - p[2];
+      const dL = (lab[0] - p[0]) * wL;
+      const da = (lab[1] - p[1]) * wa;
+      const db = (lab[2] - p[2]) * wb;
       const d = dL * dL + da * da + db * db;
       if (d < bestD) {
         bestD = d;

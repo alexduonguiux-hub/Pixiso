@@ -10,4 +10,5 @@ export * from './pipeline.js';
 export * from './ramps.js';
 export * from './compose.js';
 export * from './clusters.js';
+export * from './islands.js';
 export * from './look.js';

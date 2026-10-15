@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
+  addInnerLines,
   addRampOutline,
   allocateShades,
   baseCountFor,
   buildRampPalette,
   classifyBand,
   composeFrame,
+  decodeDepth,
+  smoothBands,
 } from './compose.js';
 import { imageFromAscii } from './fixtures.test-util.js';
-import { linearToSrgb } from './oklab.js';
 import { countColors } from './stats.js';
 import { createImage, type RGBAImage } from './types.js';
 
@@ -26,12 +28,12 @@ function passes(
   const H = rows.length;
   const albedo = createImage(W * k, H * k);
   const light = createImage(W * k, H * k);
-  const bandByte = (b: number) => Math.round(linearToSrgb([0.35, 0.7, 1.0][b]!) * 255);
+  const bandByte = (b: number) => Math.round([0.35, 0.7, 1.0][b]! * 255);
   rows.forEach((row, y) => {
     for (let x = 0; x < W; x++) {
       const ch = row[x]!;
       if (ch === '.') continue;
-      const color = ch === 'R' || ch === 'r' ? RED : BLUE;
+      const color = ch === 'B' || ch === 'b' ? BLUE : RED;
       const band = bands[ch] ?? 1;
       const cov = coverage[ch] ?? 1;
       let n = 0;
@@ -65,8 +67,8 @@ describe('compose', () => {
 
   it('classifies light bytes into bands', () => {
     const bands = [0.35, 0.7, 1.0];
-    expect(classifyBand(Math.round(linearToSrgb(0.35) * 255), bands, 3)).toBe(0);
-    expect(classifyBand(Math.round(linearToSrgb(0.7) * 255), bands, 3)).toBe(1);
+    expect(classifyBand(Math.round(0.35 * 255), bands, 3)).toBe(0);
+    expect(classifyBand(Math.round(0.7 * 255), bands, 3)).toBe(1);
     expect(classifyBand(255, bands, 3)).toBe(2);
     expect(classifyBand(255, bands, 2)).toBe(1);
   });
@@ -125,5 +127,75 @@ describe('compose', () => {
     const res = composeFrame(albedo, light, pal, 1, [0.35, 0.7, 1.0]);
     addRampOutline(res, pal, 'dark');
     expect([res.image.data[0], res.image.data[1], res.image.data[2]]).toEqual(pal.line);
+  });
+
+  it('smooths band islands inside one material but never across materials', () => {
+    const k = 1;
+    // a 6×4 red block, mid band, with a 1-pixel highlight speck and a 2-pixel shadow island;
+    // a blue column on the right in shadow must stay shadow.
+    const { albedo, light } = passes(['RRRRRB', 'RRhRRB', 'RRRssB', 'RRRRRB'], k, {
+      R: 1,
+      h: 2,
+      s: 0,
+      B: 0,
+    });
+    const pal = buildRampPalette([albedo], 7);
+    const res = composeFrame(albedo, light, pal, k, [0.35, 0.7, 1.0]);
+    const redBase = res.index[0]! - (res.index[0]! % 3);
+    const blueKey = res.index[5]!;
+    expect(smoothBands(res, { iterations: 2, minIsland: 4 })).toBeGreaterThan(0);
+    for (let y = 0; y < 4; y++) {
+      for (let x = 0; x < 5; x++) expect(res.index[y * 6 + x]).toBe(redBase + 1);
+      expect(res.index[y * 6 + 5]).toBe(blueKey);
+    }
+  });
+
+  it('keeps large band masses', () => {
+    const { albedo, light } = passes(['RRRRRR', 'RRRRRR', 'ssssss', 'ssssss'], 1, { R: 2, s: 0 });
+    const pal = buildRampPalette([albedo], 7);
+    const res = composeFrame(albedo, light, pal, 1, [0.35, 0.7, 1.0]);
+    const before = Array.from(res.index);
+    smoothBands(res, { iterations: 2, minIsland: 4 });
+    expect(Array.from(res.index)).toEqual(before);
+  });
+
+  it('decodes 16-bit depth and draws inner lines on the far side of an occlusion', () => {
+    expect(decodeDepth(255, 0)).toBeCloseTo(1, 6);
+    expect(decodeDepth(0, 0)).toBe(0);
+    expect(decodeDepth(128, 0)).toBeCloseTo(128 / 255, 6);
+    const { albedo, light } = passes(['RRRR', 'RRRR', 'RRRR'], 1, { R: 2 });
+    // depth pass: left half near (0.2), right half far (0.6)
+    const depth = { width: 4, height: 3, data: new Uint8ClampedArray(4 * 3 * 4) };
+    for (let y = 0; y < 3; y++) {
+      for (let x = 0; x < 4; x++) {
+        const d = (x < 2 ? 0.2 : 0.6) * 255;
+        depth.data.set(
+          [Math.floor(d), Math.round((d - Math.floor(d)) * 255), 0, 255],
+          (y * 4 + x) * 4,
+        );
+      }
+    }
+    const pal = buildRampPalette([albedo], 7);
+    const res = composeFrame(albedo, light, pal, 1, [0.35, 0.7, 1.0], 0.5, depth);
+    const mask = new Uint8Array(12);
+    const n = addInnerLines(res, pal, 'selective', 0.1, mask);
+    expect(n).toBe(3); // column x=2 (far side) on every row
+    for (let y = 0; y < 3; y++) {
+      expect(mask[y * 4 + 2]).toBe(1);
+      expect(mask[y * 4 + 1]).toBe(0);
+      expect(mask[y * 4 + 3]).toBe(0);
+    }
+  });
+
+  it('bridges a thin sliver between two solid blocks but drops an isolated sliver', () => {
+    const k = 4;
+    // R = full block, t = 25 %-covered block (below the 50 % threshold, above the 30 % bridge floor? no: 25 % < 30 %)
+    // u = 37.5 % block: bridges when flanked horizontally by solid blocks
+    const { albedo, light } = passes(['RuR', 'uuu', 'RuR'], k, { R: 1, u: 1 }, { u: 6 / 16 });
+    const pal = buildRampPalette([albedo], 7);
+    const res = composeFrame(albedo, light, pal, k, [0.35, 0.7, 1.0], 0.5, null, 0.3);
+    expect(res.index[1]).toBeGreaterThanOrEqual(0); // top middle: flanked left/right by solid -> bridged
+    expect(res.index[3]).toBeGreaterThanOrEqual(0); // middle left: flanked up/down by solid -> bridged
+    expect(res.index[4]).toBe(-1); // centre: flanked only by slivers -> dropped
   });
 });

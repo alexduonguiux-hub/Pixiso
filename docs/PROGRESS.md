@@ -94,6 +94,24 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - 16 colours: Mage skin merges with hair (D-028). 24 colours is a good default for characters with many materials; a material-id pass reserving a base for `_Head` is the planned fix.
 - Inner lines (depth/normal edges) and selective AA on inner lines remain post-MVP.
 
+## Phase 2c — Large masses (second review round) ✅ (stopped for review)
+
+**Done**
+
+- Smooth normals by position (`scene/smoothNormals.ts`), applied to character and part meshes.
+- Hue-weighted texel → material assignment; light/depth passes in a linear render target.
+- `smoothBands`: majority filter + island absorption of light bands inside one material.
+- Depth pass (16-bit) and `addInnerLines`: 1-px lines on the far side of occlusions, in the material's own line colour.
+- `removeIslands`: floating crumbs < 6 px erased.
+- 79 Vitest tests; Playwright suite green; review sheets regenerated (new, baseline, outline/palette/height comparisons).
+
+**Decisions** D-029 … D-033.
+
+**Open**
+
+- The Knight's visor/face reads as a dark slit with eyes; acceptable for a helmeted knight, but a per-mesh material reservation (D-028) would still help at 16 colours.
+- Inner lines are depth-only; normal-based crease lines (folds) are not drawn.
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

@@ -1,12 +1,14 @@
-import { createImage, type RGBAImage } from '@pixiso/pixel-core';
+import { createImage, type PassFrame, type RGBAImage } from '@pixiso/pixel-core';
 import {
   Color,
   NearestFilter,
+  NoColorSpace,
   OrthographicCamera,
   RGBAFormat,
   SRGBColorSpace,
   UnsignedByteType,
   WebGLRenderTarget,
+  type ColorSpace,
   type Scene,
   type WebGLRenderer,
 } from 'three';
@@ -16,15 +18,19 @@ import { setPixisoPass } from '../scene/toon.js';
 /** Scene layer for helpers (grid, arrows) that the pixel pass must not see. */
 export const HELPER_LAYER = 1;
 
+/** Depth range of the pixel camera around the character, metres (near = distance − half, far = distance + half). */
+export const PIXEL_DEPTH_HALF_RANGE_M = 5;
+
 /**
- * Renders the scene into a small render target with the pixel frustum and reads
- * the bytes back (HANDOFF §6.3). The target stores sRGB8_ALPHA8, so the GPU
- * encodes linear → sRGB at full precision before quantisation (D-017); the
- * pixel-core pipeline receives ordinary 8-bit sRGB.
+ * Renders the scene into small render targets with the pixel frustum and reads
+ * the bytes back (HANDOFF §6.3). Colour passes use an sRGB8_ALPHA8 target so the
+ * GPU encodes linear → sRGB at full precision (D-017); data passes (light band,
+ * depth) use a linear target so bytes are the raw values.
  */
 export class PixelRenderer {
   readonly camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
-  private target: WebGLRenderTarget | null = null;
+  private colorTarget: WebGLRenderTarget | null = null;
+  private dataTarget: WebGLRenderTarget | null = null;
   private readonly clear = new Color(0x000000);
 
   constructor(
@@ -34,26 +40,36 @@ export class PixelRenderer {
   ) {
     this.camera.position.copy(viewerCamera.position);
     this.camera.quaternion.copy(viewerCamera.quaternion);
-    this.camera.near = viewerCamera.near;
-    this.camera.far = viewerCamera.far;
+    const distance = viewerCamera.position.length();
+    this.camera.near = distance - PIXEL_DEPTH_HALF_RANGE_M;
+    this.camera.far = distance + PIXEL_DEPTH_HALF_RANGE_M;
     this.camera.layers.set(0);
   }
 
-  private ensureTarget(w: number, h: number): WebGLRenderTarget {
-    if (this.target && this.target.width === w && this.target.height === h) return this.target;
-    this.target?.dispose();
-    this.target = new WebGLRenderTarget(w, h, {
+  /** Depth range in metres covered by the depth pass (0..1). */
+  get depthRangeM(): number {
+    return this.camera.far - this.camera.near;
+  }
+
+  private ensureTarget(kind: 'color' | 'data', w: number, h: number): WebGLRenderTarget {
+    const current = kind === 'color' ? this.colorTarget : this.dataTarget;
+    if (current && current.width === w && current.height === h) return current;
+    current?.dispose();
+    const colorSpace: ColorSpace = kind === 'color' ? SRGBColorSpace : NoColorSpace;
+    const target = new WebGLRenderTarget(w, h, {
       minFilter: NearestFilter,
       magFilter: NearestFilter,
       format: RGBAFormat,
       type: UnsignedByteType,
-      colorSpace: SRGBColorSpace,
+      colorSpace,
       depthBuffer: true,
       stencilBuffer: false,
       samples: 0,
       generateMipmaps: false,
     });
-    return this.target;
+    if (kind === 'color') this.colorTarget = target;
+    else this.dataTarget = target;
+    return target;
   }
 
   /** Sets the frustum so the world origin lands on the centre of pixel (pivotX, pivotY) (D-016). */
@@ -66,10 +82,9 @@ export class PixelRenderer {
     c.updateProjectionMatrix();
   }
 
-  /** Renders the current scene state and returns top-to-bottom RGBA bytes. */
-  render(f: PixelFrustum): RGBAImage {
+  private renderInto(f: PixelFrustum, kind: 'color' | 'data'): RGBAImage {
     const r = this.renderer;
-    const target = this.ensureTarget(f.widthPx, f.heightPx);
+    const target = this.ensureTarget(kind, f.widthPx, f.heightPx);
     this.setFrustum(f);
 
     const prevTarget = r.getRenderTarget();
@@ -97,11 +112,16 @@ export class PixelRenderer {
     return img;
   }
 
+  /** Renders the shaded scene (pass 0) and returns top-to-bottom sRGB bytes. */
+  render(f: PixelFrustum): RGBAImage {
+    return this.renderInto(f, 'color');
+  }
+
   /**
-   * The two data passes of the pixel-look pipeline at `k`× supersampling,
+   * The data passes of the pixel-look pipeline at `k`× supersampling,
    * pixel-centre aligned with the 1× frustum (block (x, y) covers 1× pixel (x, y)).
    */
-  renderPasses(f: PixelFrustum, k: number): { albedo: RGBAImage; light: RGBAImage } {
+  renderPasses(f: PixelFrustum, k: number): PassFrame {
     const fk: PixelFrustum = {
       widthPx: f.widthPx * k,
       heightPx: f.heightPx * k,
@@ -111,17 +131,21 @@ export class PixelRenderer {
     };
     try {
       setPixisoPass(1);
-      const albedo = this.render(fk);
+      const albedo = this.renderInto(fk, 'color');
       setPixisoPass(2);
-      const light = this.render(fk);
-      return { albedo, light };
+      const light = this.renderInto(fk, 'data');
+      setPixisoPass(3);
+      const depth = this.renderInto(fk, 'data');
+      return { albedo, light, depth };
     } finally {
       setPixisoPass(0);
     }
   }
 
   dispose(): void {
-    this.target?.dispose();
-    this.target = null;
+    this.colorTarget?.dispose();
+    this.dataTarget?.dispose();
+    this.colorTarget = null;
+    this.dataTarget = null;
   }
 }

@@ -58,11 +58,11 @@ export function createGradientMap(
 
 /**
  * Render pass selector shared by every Pixiso material:
- * 0 = shaded (viewer), 1 = albedo only (texture × recolour), 2 = toon light band as grey.
+ * 0 = shaded (viewer), 1 = albedo only (texture × recolour), 2 = toon light band as grey, 3 = depth.
  */
 export const pixisoPass = { value: 0 };
 
-export function setPixisoPass(pass: 0 | 1 | 2): void {
+export function setPixisoPass(pass: 0 | 1 | 2 | 3): void {
   pixisoPass.value = pass;
 }
 
@@ -163,6 +163,11 @@ if (uPixisoPass == 2) {
   gl_FragColor = vec4(vec3(band), diffuseColor.a);
 }
 #endif
+if (uPixisoPass == 3) {
+  // orthographic camera: gl_FragCoord.z is linear in view depth; 16 bits over R (high) and G (low)
+  float d = clamp(gl_FragCoord.z, 0.0, 1.0) * 255.0;
+  gl_FragColor = vec4(floor(d) / 255.0, fract(d), 0.0, diffuseColor.a);
+}
 `;
 
 function firstMap(source: Material | Material[]): Texture | null {
@@ -202,7 +207,7 @@ export function makeToonMaterial(
       .replace('#include <map_fragment>', RECOLOR_FRAG)
       .replace('#include <opaque_fragment>', PASS_FRAG);
   };
-  mat.customProgramCacheKey = () => 'pixiso-toon-recolor-v2';
+  mat.customProgramCacheKey = () => 'pixiso-toon-recolor-v3';
   return mat;
 }
 

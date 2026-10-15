@@ -22,6 +22,7 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 
 - Render hai pass (màu, ánh sáng) ở **4× độ phân giải** rồi hạ xuống 1× bằng **độ phủ**: ô 4×4 có ≥ 50 % điểm đặc thì thành pixel đặc. Rìa vì thế bám đúng hình thật, bước răng cưa đều hơn lấy mẫu điểm, và ít rung giữa các frame.
 - Không bao giờ có pixel bán trong suốt (alpha chỉ 0 hoặc 255).
+- Mảnh rời (đảo pixel 8-liên-thông) nhỏ hơn 6 px bị xoá: đó là vây mỏng hoặc dải lẹm rơi dưới ngưỡng độ phủ, không phải chi tiết.
 - Chưa làm AA nét trong (ngoài MVP, xem §6).
 
 ## 2. Cụm (clusters), không phải hạt
@@ -33,6 +34,7 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 - Khi hạ 4× → 1×, màu của pixel là **màu chiếm đa số** trong ô (cặp _vật liệu + bậc sáng_), không phải trung bình. Không bao giờ sinh màu mới.
 - **Dọn cụm nhỏ**: mọi cụm 4-liên-thông nhỏ hơn 3 px nhận màu của láng giềng phổ biến nhất quanh nó (`minCluster = 3`).
 - **Giữ chi tiết chủ ý**: cụm nhỏ nhưng khác biệt mạnh về độ sáng (ΔL > 0.3 trong OKLab, ví dụ mắt đen trên da, khóa thắt lưng) được giữ lại.
+- **Mảng sáng lớn**: trong cùng một vật liệu, pixel có bậc sáng khác với đa số rõ rệt của láng giềng cùng vật liệu nhận bậc của đa số (lọc mode 2 lượt), và đảo bậc sáng nhỏ hơn 4 px bị hòa vào mảng xung quanh. Ranh giới vật liệu không bao giờ bị vượt qua.
 - Pixel viền không bao giờ bị dọn.
 - Không dùng dithering (spec §6.5.5): dithering ở sprite nhỏ là nhiễu.
 
@@ -59,6 +61,7 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 - `selective` (mặc định): pixel viền lấy **bậc bóng của chính vật liệu láng giềng** khi láng giềng đang sáng và bậc bóng đó thật sự tối hơn (ΔL ≥ 0.12 và L < 0.55); nếu không thì dùng màu nét, để nét luôn đọc là nét. Chọn láng giềng tối nhất trong 4 hướng để nét bám theo phía bóng.
 - `none`: không viền.
 - Viền được bảo vệ khỏi dọn cụm.
+- **Nét trong theo độ sâu**: pass thứ ba ghi độ sâu 16 bit; ở nơi bề mặt gần che bề mặt xa hơn 12 cm, pixel phía xa dọc mép nhận màu nét của chính vật liệu đó (bậc bóng nếu đủ tối, nếu không thì màu nét). Nhờ vậy tay tách khỏi thân, đầu tách khỏi vai bằng một nét 1 px ở phía bóng, giống cách họa sĩ kẻ nét trong tối hơn một bậc.
 
 ## 5. Ánh sáng và hình khối
 
@@ -68,11 +71,11 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 
 - Đèn gắn với camera, từ trên-trái màn hình, giống nhau ở cả 8 hướng (spec §6.1).
 - Shading toon ba bậc qua gradient map nearest; không có gradient mịn.
+- **Normal được làm mịn theo vị trí** trước khi tính ánh sáng: mesh KayKit xuất với normal bị tách ở rất nhiều cạnh (Knight_Body: 540 vị trí nhưng 1025 cặp vị trí+normal), nên shading theo mặt phẳng vỡ thành mảnh ở độ phân giải sprite. Lấy trung bình normal của mọi đỉnh trùng vị trí (có trọng số diện tích) cho ra trường sáng tròn trịa và mảng sáng lớn, đúng với hình khối chibi.
 - KayKit là chibi, đầu to, hợp với 48 px.
 
 ## 6. Ngoài MVP (đã chừa chỗ)
 
-- **Nét trong** từ depth/normal (như `RenderPixelatedPass`): tách tay khỏi thân, đầu khỏi vai. Pass normal/depth đã có thể thêm vào `PixelRenderer.renderPasses`.
 - **AA chọn lọc** cho nét trong bằng màu trung gian của dải.
 - **Hiệu chỉnh nét theo frame** (giữ bước răng cưa ổn định giữa các frame) và **khóa pivot sub-pixel** sẽ được kiểm bằng "test rung" ở Phase 3.
 - **Tô tay / palette đặt sẵn** (Lospec palettes) qua chế độ `fixed`.
@@ -88,6 +91,9 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 | `ramp.shadowL`, `highlightL`                     | −0.16, +0.08                                         | Độ tương phản dải                          |
 | `baseCountFor`, `BASE_AXIS_WEIGHTS`, weightPower | 55 % ngân sách; L×0.5, a×2, b×2; 0.6                 | Số vật liệu và cách tách vật liệu          |
 | `allocateShades.minFormShare`                    | 3 %                                                  | Mảng nhỏ hơn thì không được shading        |
+| `bands.iterations`, `bands.minIsland`            | 2, 4                                                 | Mức gom mảng sáng trong một vật liệu       |
+| `innerLineDepth`                                 | 0.012 (12 cm / 10 m)                                 | Độ chênh sâu tạo nét trong; 0 tắt          |
+| `minIsland`                                      | 6                                                    | Mảnh rời nhỏ hơn thì xoá                   |
 | `ramp.maxHueShiftDeg`                            | 20                                                   | Mức dịch hue                               |
 | `minCluster`, `contrastKeep`                     | 3, 0.3                                               | Mức dọn nhiễu và ngưỡng giữ chi tiết       |
 

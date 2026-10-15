@@ -22,6 +22,7 @@ import {
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import type { RecolorMethod } from '../state/store.js';
 import { characterFile, loadGltf } from './loader.js';
+import { smoothNormalsByPosition } from './smoothNormals.js';
 import {
   createGradientMap,
   isPixisoMaterial,
@@ -134,6 +135,7 @@ export class CharacterRig {
       if (o instanceof SkinnedMesh) this.skinned.set(o.name, o);
       if (o instanceof Mesh) {
         o.frustumCulled = false;
+        smoothNormalsByPosition(o.geometry);
         o.material = makeToonMaterial(o.material, this.gradientMap);
       }
     });
@@ -190,6 +192,7 @@ export class CharacterRig {
         object.traverse((o) => {
           if (o instanceof Mesh) {
             o.frustumCulled = false;
+            smoothNormalsByPosition(o.geometry);
             o.material = makeToonMaterial(o.material, this.gradientMap);
           }
         });
