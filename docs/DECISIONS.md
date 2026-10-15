@@ -143,3 +143,7 @@ Texels are assigned to bases with the weights used to split the boxes (L×0.5, a
 ### D-033 Island removal
 
 Opaque 8-connected islands smaller than 6 px are erased after cleanup. The Knight's thin helmet crest seen edge-on produced floating crumbs above the head in the E frames; a sprite is one silhouette.
+
+### D-034 Bridging thin slivers during downsampling
+
+A block covered 30–50 % becomes a pixel when both its horizontal or both its vertical neighbours are solid (≥ 50 %). Thin geometry seen edge-on (the Knight's helmet crest, blades, staffs) stays continuous instead of leaving crumbs that the island filter would then erase; nothing is invented where no geometry exists.

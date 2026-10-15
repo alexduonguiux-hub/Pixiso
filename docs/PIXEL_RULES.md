@@ -22,6 +22,7 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 
 - Render hai pass (màu, ánh sáng) ở **4× độ phân giải** rồi hạ xuống 1× bằng **độ phủ**: ô 4×4 có ≥ 50 % điểm đặc thì thành pixel đặc. Rìa vì thế bám đúng hình thật, bước răng cưa đều hơn lấy mẫu điểm, và ít rung giữa các frame.
 - Không bao giờ có pixel bán trong suốt (alpha chỉ 0 hoặc 255).
+- **Bắc cầu mảnh mỏng**: ô chỉ phủ 30–50 % vẫn thành pixel nếu nó nối hai ô đặc ở hai phía (trái–phải hoặc trên–dưới), để vây mũ, lưỡi kiếm, gậy mỏng liền mạch thay vì đứt thành vụn. Không bao giờ bịa pixel ở nơi không có hình học.
 - Mảnh rời (đảo pixel 8-liên-thông) nhỏ hơn 6 px bị xoá: đó là vây mỏng hoặc dải lẹm rơi dưới ngưỡng độ phủ, không phải chi tiết.
 - Chưa làm AA nét trong (ngoài MVP, xem §6).
 
@@ -83,19 +84,19 @@ Pixiso tách **màu** và **ánh sáng** ở GPU, rồi dựng lại khung hình
 
 ## 7. Tham số và cách chỉnh
 
-| Tham số                                          | Mặc định                                             | Ảnh hưởng                                  |
-| ------------------------------------------------ | ---------------------------------------------------- | ------------------------------------------ |
-| `supersample`                                    | 4                                                    | Độ chính xác rìa; 2 nhanh hơn, 8 rất chậm  |
-| `coverage`                                       | 0.5                                                  | Thấp hơn → hình béo hơn, giữ chi tiết mảnh |
-| `bandValues` / `DEFAULT_TOON_BANDS`              | 0.35 / 0.7 / 1.0 tại dot(N,L) ≤ 0.15 / ≤ 0.8 / > 0.8 | Tỷ lệ bóng–trung bình–sáng                 |
-| `ramp.shadowL`, `highlightL`                     | −0.16, +0.08                                         | Độ tương phản dải                          |
-| `baseCountFor`, `BASE_AXIS_WEIGHTS`, weightPower | 55 % ngân sách; L×0.5, a×2, b×2; 0.6                 | Số vật liệu và cách tách vật liệu          |
-| `allocateShades.minFormShare`                    | 3 %                                                  | Mảng nhỏ hơn thì không được shading        |
-| `bands.iterations`, `bands.minIsland`            | 2, 4                                                 | Mức gom mảng sáng trong một vật liệu       |
-| `innerLineDepth`                                 | 0.012 (12 cm / 10 m)                                 | Độ chênh sâu tạo nét trong; 0 tắt          |
-| `minIsland`                                      | 6                                                    | Mảnh rời nhỏ hơn thì xoá                   |
-| `ramp.maxHueShiftDeg`                            | 20                                                   | Mức dịch hue                               |
-| `minCluster`, `contrastKeep`                     | 3, 0.3                                               | Mức dọn nhiễu và ngưỡng giữ chi tiết       |
+| Tham số                                          | Mặc định                                             | Ảnh hưởng                                                             |
+| ------------------------------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------- |
+| `supersample`                                    | 4                                                    | Độ chính xác rìa; 2 nhanh hơn, 8 rất chậm                             |
+| `coverage`, `bridgeCoverage`                     | 0.5, 0.3                                             | Ngưỡng độ phủ; ngưỡng thấp hơn chỉ áp dụng khi bắc cầu giữa hai ô đặc |
+| `bandValues` / `DEFAULT_TOON_BANDS`              | 0.35 / 0.7 / 1.0 tại dot(N,L) ≤ 0.15 / ≤ 0.8 / > 0.8 | Tỷ lệ bóng–trung bình–sáng                                            |
+| `ramp.shadowL`, `highlightL`                     | −0.16, +0.08                                         | Độ tương phản dải                                                     |
+| `baseCountFor`, `BASE_AXIS_WEIGHTS`, weightPower | 55 % ngân sách; L×0.5, a×2, b×2; 0.6                 | Số vật liệu và cách tách vật liệu                                     |
+| `allocateShades.minFormShare`                    | 3 %                                                  | Mảng nhỏ hơn thì không được shading                                   |
+| `bands.iterations`, `bands.minIsland`            | 2, 4                                                 | Mức gom mảng sáng trong một vật liệu                                  |
+| `innerLineDepth`                                 | 0.012 (12 cm / 10 m)                                 | Độ chênh sâu tạo nét trong; 0 tắt                                     |
+| `minIsland`                                      | 6                                                    | Mảnh rời nhỏ hơn thì xoá                                              |
+| `ramp.maxHueShiftDeg`                            | 20                                                   | Mức dịch hue                                                          |
+| `minCluster`, `contrastKeep`                     | 3, 0.3                                               | Mức dọn nhiễu và ngưỡng giữ chi tiết                                  |
 
 ## Nguồn tham khảo
 

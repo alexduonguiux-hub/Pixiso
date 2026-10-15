@@ -102,10 +102,10 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - Hue-weighted texel → material assignment; light/depth passes in a linear render target.
 - `smoothBands`: majority filter + island absorption of light bands inside one material.
 - Depth pass (16-bit) and `addInnerLines`: 1-px lines on the far side of occlusions, in the material's own line colour.
-- `removeIslands`: floating crumbs < 6 px erased.
-- 79 Vitest tests; Playwright suite green; review sheets regenerated (new, baseline, outline/palette/height comparisons).
+- `removeIslands`: floating crumbs < 6 px erased; `composeFrame` bridges 30–50 % slivers between solid blocks (thin crests/blades stay continuous).
+- 80 Vitest tests; Playwright suite green; review sheets regenerated (new, baseline, outline/palette/height comparisons).
 
-**Decisions** D-029 … D-033.
+**Decisions** D-029 … D-034.
 
 **Open**
 
