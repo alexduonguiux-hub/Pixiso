@@ -39,6 +39,12 @@ export interface RampOptions {
    * `shadowHueDeg`. Yellows then shade toward orange, not green, as in reference art.
    */
   shadowAwayFromHighlight?: boolean;
+  /**
+   * Lightness of the tinted outline. Unset: near black (L 0.12, the 32 px
+   * reference style). The 64 px reference draws brown lines at about L 0.38 that
+   * keep the material's shadow hue.
+   */
+  lineL?: number;
 }
 
 export const DEFAULT_RAMP_OPTIONS: RampOptions = {
@@ -147,9 +153,35 @@ export function buildRamp(base: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb
  */
 export function buildTintedLine(shadow: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb8 {
   const [, C, h] = oklabToOklch(...shadow);
+  if (o.lineL !== undefined) {
+    // Mid-dark line in the shadow's own hue (the 64 px reference: brown on skin).
+    const chroma = Math.min(0.08, Math.max(o.tintChroma, C * 0.8));
+    return clampToGamut(oklchToOklab(o.lineL, chroma, h));
+  }
   const tint = Math.min(0.05, Math.max(o.tintChroma, C * 0.5));
   return clampToGamut(oklchToOklab(0.12, tint, shiftHue(h, o.shadowHueDeg, 20)));
 }
+
+/**
+ * Ramp measured on the 64 px base-body reference (skin: shadow 200,143,111 /
+ * base 249,209,173 / light 253,233,200; outline 93,54,33): a deep, more
+ * saturated shadow a step toward red, a faint highlight a step toward yellow,
+ * and a brown outline instead of a near-black one.
+ */
+export const HERO_RAMP_OPTIONS: RampOptions = {
+  steps: 3,
+  shadowL: -0.19,
+  highlightL: 0.06,
+  shadowHueDeg: 264,
+  highlightHueDeg: 100,
+  maxHueShiftDeg: 15,
+  shadowChroma: 1.25,
+  highlightChroma: 0.75,
+  minChromaForShift: 0.025,
+  tintChroma: 0.02,
+  shadowAwayFromHighlight: true,
+  lineL: 0.38,
+};
 
 /** A line colour darker and cooler than the darkest shadow in the set. */
 export function buildLineColor(shadows: Lab[], o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb8 {

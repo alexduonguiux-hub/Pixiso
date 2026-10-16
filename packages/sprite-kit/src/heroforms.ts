@@ -1,0 +1,246 @@
+/**
+ * Body forms derived from the hand-drawn hero mannequin (hero64.ts) by
+ * duplicating rows and columns of the template: a fat build, a heavy build and
+ * giants. Duplication keeps every hand-placed pixel (ears, eyes, fists, feet)
+ * and keeps the outline one pixel wide as long as the duplicated columns are
+ * interior ones, so each form is a parameter set, not a second drawing. The
+ * figure stays mirror-symmetric around its centre column: columns are always
+ * duplicated in mirrored pairs, the centre column an even number of times, so
+ * every row keeps an odd width and centres on the same pixel.
+ */
+import { blank } from './draw.js';
+import { EMPTY, type Sprite } from './format.js';
+import { HERO_FIGURE_W, HERO_S_FIGURE } from './hero64.js';
+
+/** Extra copies of columns for a band of source rows. `pairs` lists a column left of the centre with its extra count; the mirrored column gets the same. */
+export interface ColumnBand {
+  rows: readonly [y0: number, y1: number];
+  pairs?: ReadonlyArray<readonly [x: number, extra: number]>;
+  /** Extra copies of the centre column (must be even). */
+  center?: number;
+}
+
+export interface FormSpec {
+  id: string;
+  label: string;
+  /** Source rows to repeat, with the number of extra copies. */
+  rows?: ReadonlyArray<readonly [y: number, extra: number]>;
+  bands?: readonly ColumnBand[];
+  /** Integer nearest-neighbour scale applied last (giants drawn at ×2). */
+  scale?: number;
+}
+
+const CENTER = (HERO_FIGURE_W - 1) / 2;
+
+/** Repeat counts per source column for one source row. */
+function columnRepeats(spec: FormSpec, y: number): number[] {
+  const rep = new Array<number>(HERO_FIGURE_W).fill(1);
+  for (const band of spec.bands ?? []) {
+    if (y < band.rows[0] || y > band.rows[1]) continue;
+    for (const [x, extra] of band.pairs ?? []) {
+      rep[x]! += extra;
+      rep[2 * CENTER - x]! += extra;
+    }
+    if (band.center) {
+      if (band.center % 2) throw new Error(`${spec.id}: centre extra must be even`);
+      rep[CENTER]! += band.center;
+    }
+  }
+  return rep;
+}
+
+/** Nearest-neighbour integer scale of a template. */
+export function scaleSprite(s: Sprite, k: number): Sprite {
+  const out = blank(s.w * k, s.h * k);
+  for (let y = 0; y < s.h; y++)
+    for (let x = 0; x < s.w; x++) {
+      const v = s.cells[y * s.w + x]!;
+      if (v < 0) continue;
+      for (let dy = 0; dy < k; dy++)
+        for (let dx = 0; dx < k; dx++) out.cells[(y * k + dy) * out.w + (x * k + dx)] = v;
+    }
+  return out;
+}
+
+/** Builds the figure of a form from the base mannequin. */
+export function buildForm(spec: FormSpec, base: Sprite = HERO_S_FIGURE): Sprite {
+  const rowExtra = new Map<number, number>(spec.rows ?? []);
+  const rows: { cells: number[] }[] = [];
+  for (let y = 0; y < base.h; y++) {
+    const rep = columnRepeats(spec, y);
+    const cells: number[] = [];
+    for (let x = 0; x < base.w; x++) {
+      const v = base.cells[y * base.w + x]!;
+      for (let i = 0; i < rep[x]!; i++) cells.push(v);
+    }
+    const copies = 1 + (rowExtra.get(y) ?? 0);
+    for (let i = 0; i < copies; i++) rows.push({ cells });
+  }
+  const w = Math.max(...rows.map((r) => r.cells.length));
+  const out = blank(w, rows.length);
+  rows.forEach((row, y) => {
+    if ((w - row.cells.length) % 2)
+      throw new Error(`${spec.id}: row parity differs from the widest row`);
+    const x0 = (w - row.cells.length) / 2;
+    row.cells.forEach((v, i) => {
+      if (v !== EMPTY) out.cells[y * w + x0 + i] = v;
+    });
+  });
+  return spec.scale && spec.scale > 1 ? scaleSprite(out, spec.scale) : out;
+}
+
+/** The base drawing itself, for line-ups. */
+export const FORM_BASE: FormSpec = { id: 'base', label: 'Thường' };
+
+/**
+ * Fat build: same height, round face, chest and belly four to six columns
+ * wider, hips and thighs to match, feet one column wider on each side.
+ */
+export const FORM_FAT: FormSpec = {
+  id: 'fat',
+  label: 'Mập',
+  bands: [
+    { rows: [1, 14], center: 2 }, // round face, wider chin line
+    { rows: [15, 20], center: 4 }, // neck well and shoulders
+    { rows: [21, 23], center: 4 }, // chest
+    { rows: [24, 28], center: 6 }, // belly
+    { rows: [29, 29], pairs: [[5, 3]] }, // hips: the skin beside the crotch, not the crotch line
+    { rows: [30, 35], pairs: [[5, 2]] }, // thighs and calves
+    {
+      rows: [36, 39],
+      pairs: [
+        [4, 1],
+        [5, 1],
+      ],
+    }, // feet
+  ],
+};
+
+/**
+ * Heavy build: four rows taller (longer torso and shins), shoulders and chest
+ * four columns wider tapering to the waist, thicker arms and legs, same head.
+ */
+export const FORM_HEAVY: FormSpec = {
+  id: 'heavy',
+  label: 'To con',
+  rows: [
+    [17, 1], // taller neck well
+    [22, 1], // longer torso
+    [26, 1],
+    [32, 1], // longer shins
+    [35, 1],
+  ],
+  bands: [
+    { rows: [15, 17], center: 2 },
+    { rows: [18, 24], center: 4, pairs: [[2, 1]] }, // shoulders and chest, arms one column thicker
+    { rows: [25, 28], center: 2, pairs: [[2, 1]] }, // waist
+    {
+      rows: [29, 29],
+      pairs: [
+        [2, 1],
+        [5, 1],
+      ],
+    }, // hands and hips
+    { rows: [30, 35], pairs: [[5, 1]] },
+    { rows: [36, 39], pairs: [[4, 1]] },
+  ],
+};
+
+/**
+ * Giant at about ×1.5 (25×60): every other interior row and column is
+ * doubled so the outline stays one pixel wide; outline rows (skull top, lid,
+ * chin line, hips, foot top, soles) are never doubled.
+ */
+export const FORM_GIANT_15: FormSpec = {
+  id: 'giant15',
+  label: 'Khổng lồ ×1,5',
+  rows: [
+    [2, 1],
+    [4, 1],
+    [6, 1],
+    [9, 1],
+    [11, 1],
+    [13, 1], // head: 6
+    [16, 1],
+    [18, 1],
+    [20, 1], // shoulders: 3
+    [22, 1],
+    [24, 1],
+    [26, 1],
+    [28, 1], // torso: 4
+    [31, 1],
+    [33, 1],
+    [34, 1],
+    [35, 1],
+    [37, 1],
+    [38, 1], // legs and feet: 6
+    [23, 1], // 20th row: one more in the torso
+  ],
+  bands: [
+    {
+      rows: [0, 14],
+      pairs: [
+        [2, 1],
+        [5, 1],
+        [6, 1],
+        [7, 1],
+      ],
+    }, // skull sides, both eye columns, between the eyes
+    {
+      rows: [15, 20],
+      pairs: [
+        [2, 1],
+        [5, 1],
+        [6, 1],
+        [7, 1],
+      ],
+    },
+    {
+      rows: [21, 28],
+      pairs: [
+        [2, 1],
+        [5, 1],
+        [6, 1],
+        [7, 1],
+      ],
+    }, // arm middle, chest highlight
+    {
+      rows: [29, 29],
+      pairs: [
+        [2, 1],
+        [5, 1],
+        [6, 1],
+        [7, 1],
+      ],
+    },
+    {
+      rows: [30, 35],
+      pairs: [
+        [2, 1],
+        [4, 1],
+        [5, 1],
+        [6, 1],
+      ],
+    },
+    {
+      rows: [36, 39],
+      pairs: [
+        [2, 1],
+        [3, 1],
+        [4, 1],
+        [5, 1],
+      ],
+    },
+  ],
+};
+
+/** Giant at ×2 (34×80): the base drawing scaled by two, lines two pixels wide. */
+export const FORM_GIANT_2: FormSpec = { id: 'giant2', label: 'Khổng lồ ×2', scale: 2 };
+
+export const FORMS: readonly FormSpec[] = [
+  FORM_BASE,
+  FORM_FAT,
+  FORM_HEAVY,
+  FORM_GIANT_15,
+  FORM_GIANT_2,
+];

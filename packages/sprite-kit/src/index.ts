@@ -11,3 +11,4 @@ export * from './parts32.js';
 export * from './anim.js';
 export * from './character.js';
 export * from './render.js';
+export * from './heroforms.js';
