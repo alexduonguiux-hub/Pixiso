@@ -113,6 +113,12 @@ export interface ShadeOptions {
   light?: [number, number];
   /** Omit the highlight band (matte materials, tiny shapes). */
   noHighlight?: boolean;
+  /**
+   * Rim highlight instead of a shifted mass: cells no longer covered when the
+   * shape is shifted away from the light by this much (a top-left rim of that
+   * thickness). Used for large shapes where a shifted copy would light most of them.
+   */
+  rimLight?: [number, number];
 }
 
 /**
@@ -133,7 +139,11 @@ export function shadeShape(shape: Sprite, material: Material, o: ShadeOptions = 
       if (!inside(x, y)) continue;
       let shade: Shade = 0;
       if (inside(x - bx, y - by)) shade = 1;
-      if (!o.noHighlight && shade === 1 && inside(x - lx, y - ly)) shade = 2;
+      if (!o.noHighlight && shade === 1) {
+        if (o.rimLight) {
+          if (!inside(x - o.rimLight[0], y - o.rimLight[1])) shade = 2;
+        } else if (inside(x - lx, y - ly)) shade = 2;
+      }
       set(out, x, y, cellOf(material, shade));
     }
   }
