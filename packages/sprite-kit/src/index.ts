@@ -13,3 +13,5 @@ export * from './character.js';
 export * from './render.js';
 export * from './heroforms.js';
 export * from './hero64.giant.js';
+export * from './outfit64.js';
+export * from './cast64.js';

@@ -81,14 +81,14 @@ export const HERO_64_TALL: HeroParams = {
 };
 
 /** Which material each region wears; the mannequin is all skin. */
-export interface Outfit {
+export interface HeroGenOutfit {
   torso: Material;
   arms: Material;
   legs: Material;
   feet: Material;
 }
-export const MANNEQUIN: Outfit = { torso: 'skin', arms: 'skin', legs: 'skin', feet: 'skin' };
-export const DRESSED: Outfit = { torso: 'cloth', arms: 'cloth', legs: 'pants', feet: 'boots' };
+export const MANNEQUIN: HeroGenOutfit = { torso: 'skin', arms: 'skin', legs: 'skin', feet: 'skin' };
+export const DRESSED: HeroGenOutfit = { torso: 'cloth', arms: 'cloth', legs: 'pants', feet: 'boots' };
 
 type Side = 'left' | 'right';
 type Vec = [number, number];
@@ -212,7 +212,7 @@ function leg(p: HeroParams, side: Side, legMat: Material, footMat: Material): Sp
 }
 
 /** The S view: head over neck over torso, arms hanging beside it, legs with a one-pixel gap. */
-export function heroBodyS(p: HeroParams, outfit: Outfit = MANNEQUIN): BodyView {
+export function heroBodyS(p: HeroParams, outfit: HeroGenOutfit = MANNEQUIN): BodyView {
   const C = center(p);
   const legTop = feetRow(p) - p.legH + 1;
   const torsoTop = legTop - p.torsoH + 2; // hips overlap the leg tops by two rows
@@ -259,7 +259,7 @@ function stackNeck(p: HeroParams, t: Sprite): Sprite {
 }
 
 /** Side view: narrow torso, near arm in front, far arm behind, legs overlapping. */
-export function heroBodyW(p: HeroParams, outfit: Outfit = MANNEQUIN): BodyView {
+export function heroBodyW(p: HeroParams, outfit: HeroGenOutfit = MANNEQUIN): BodyView {
   const C = center(p);
   const legTop = feetRow(p) - p.legH + 1;
   const torsoTop = legTop - p.torsoH + 2;
@@ -316,7 +316,7 @@ function torsoSide(p: HeroParams, w: number, material: Material): Sprite {
 
 export function heroBody(
   p: HeroParams,
-  outfit: Outfit = MANNEQUIN,
+  outfit: HeroGenOutfit = MANNEQUIN,
 ): Partial<Record<View, BodyView>> {
   return { S: heroBodyS(p, outfit), W: heroBodyW(p, outfit) };
 }

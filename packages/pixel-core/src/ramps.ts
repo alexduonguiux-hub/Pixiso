@@ -154,9 +154,10 @@ export function buildRamp(base: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb
 export function buildTintedLine(shadow: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb8 {
   const [, C, h] = oklabToOklch(...shadow);
   if (o.lineL !== undefined) {
-    // Mid-dark line in the shadow's own hue (the 64 px reference: brown on skin).
+    // Mid-dark line in the shadow's own hue (the 64 px reference: brown on
+    // skin); on a dark material it stays a step darker than the shadow.
     const chroma = Math.min(0.08, Math.max(o.tintChroma, C * 0.8));
-    return clampToGamut(oklchToOklab(o.lineL, chroma, h));
+    return clampToGamut(oklchToOklab(Math.min(o.lineL, shadow[0] - 0.12), chroma, h));
   }
   const tint = Math.min(0.05, Math.max(o.tintChroma, C * 0.5));
   return clampToGamut(oklchToOklab(0.12, tint, shiftHue(h, o.shadowHueDeg, 20)));
