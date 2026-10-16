@@ -1,4 +1,4 @@
-import { outline } from './compose.js';
+import { blank, fillRoundRect, set, shadeShape, stripOuterLines } from './draw.js';
 import { EMPTY, flipX, LEGEND, packCell, rotateCW, sprite, type Sprite } from './format.js';
 import type { SlotId, View } from './registry.js';
 
@@ -21,7 +21,7 @@ export interface PartDef {
 }
 
 /** Great helm: highlight on the upper-left dome, visor slit, shadow under the rim. */
-const HELMET_S = sprite`
+const HELMET_S = stripOuterLines(sprite`
   ....oooooo....
   ..owwwwwmmmo..
   .owwwwmmmmmMo.
@@ -35,9 +35,9 @@ const HELMET_S = sprite`
   ommmmmmmmmMMMo
   .oMMMMMMMMMMo.
   ..oooooooooo..
-`;
+`);
 
-const HELMET_W = sprite`
+const HELMET_W = stripOuterLines(sprite`
   ...oooooo...
   ..owwwwmmmo.
   .owwwwmmmmMo
@@ -51,10 +51,10 @@ const HELMET_W = sprite`
   ommmmmmmmMMo
   .oMMMMMMMMo.
   ..oooooooo..
-`;
+`);
 
 /** 13-wide three-quarter helm with the visor slit on the face side. */
-const HELMET_SW = sprite`
+const HELMET_SW = stripOuterLines(sprite`
   ...oooooo....
   ..owwwwmmmo..
   .owwwwmmmmMo.
@@ -68,10 +68,10 @@ const HELMET_SW = sprite`
   ommmmmmmmmMMo
   .oMMMMMMMMMo.
   ..ooooooooo..
-`;
+`);
 
 /** 13-wide helm seen from the three-quarter back: no slit, a seam down the back. */
-const HELMET_NW = sprite`
+const HELMET_NW = stripOuterLines(sprite`
   ...oooooo....
   ..owwwwmmmo..
   .owwwwmmmmMo.
@@ -85,10 +85,10 @@ const HELMET_NW = sprite`
   ommmmmmmmmMMo
   .oMMMMMMMMMo.
   ..ooooooooo..
-`;
+`);
 
 /** Back of the great helm. */
-const HELMET_N = sprite`
+const HELMET_N = stripOuterLines(sprite`
   ....oooooo....
   ..owwwwwmmmo..
   .owwwwmmmmmMo.
@@ -102,10 +102,10 @@ const HELMET_N = sprite`
   ommmmmmmmmMMMo
   .oMMMMMMMMMMo.
   ..oooooooooo..
-`;
+`);
 
 /** Upright sword, lit edge on the left of the blade. */
-const SWORD = sprite`
+const SWORD = stripOuterLines(sprite`
   ..o..
   .owo.
   .owmo
@@ -121,10 +121,10 @@ const SWORD = sprite`
   .oLo.
   .oao.
   ..o..
-`;
+`);
 
 /** Lowered sword for the side view: grip at the hand, blade toward the ground. */
-const SWORD_DOWN = sprite`
+const SWORD_DOWN = stripOuterLines(sprite`
   ..o..
   .oao.
   .olo.
@@ -137,7 +137,7 @@ const SWORD_DOWN = sprite`
   .owmo
   .owo.
   ..o..
-`;
+`);
 
 /** Horizontal sword, tip to the right: the upright blade turned a quarter turn (lossless). */
 const SWORD_H_R = rotateCW(SWORD);
@@ -163,13 +163,13 @@ function diagonalSword(): Sprite {
   put(8, 2, 'l');
   put(9, 1, 'L');
   put(10, 0, 'a');
-  return outline({ w: n, h: n, cells }, packCell(LEGEND.o!));
+  return { w: n, h: n, cells };
 }
 const SWORD_DIAG_DL = diagonalSword();
 const SWORD_DIAG_DR = flipX(SWORD_DIAG_DL);
 
 /** Round shield: wood ring lit at the top-left, metal boss with a specular pixel. */
-const SHIELD = sprite`
+const SHIELD = stripOuterLines(sprite`
   ...ooo...
   .oo%dDoo.
   .o%dddDo.
@@ -179,10 +179,10 @@ const SHIELD = sprite`
   .oDdddDo.
   .ooDDDoo.
   ...ooo...
-`;
+`);
 
 /** Back of the round shield: planks and a strap, no boss. */
-const SHIELD_BACK = sprite`
+const SHIELD_BACK = stripOuterLines(sprite`
   ...ooo...
   .oo%dDoo.
   .o%dddDo.
@@ -192,84 +192,24 @@ const SHIELD_BACK = sprite`
   .oDdddDo.
   .ooDDDoo.
   ...ooo...
-`;
+`);
 
-/** Cape seen from the front: only the edges show beside the body. */
-const CAPE_S = sprite`
-  .o&kkkkkkKo.
-  o&kkkkkkkKKo
-  o&kkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkKKKo
-  oKkkkkkkKKKo
-  oKKkkkkKKKKo
-  oKKKKKKKKKKo
-  .oooooooooo.
-`;
-
-const CAPE_W = sprite`
-  .o&kko
-  o&kkKo
-  okkkKo
-  okkkKo
-  okkkKo
-  okkkKo
-  okkkKo
-  okkKKo
-  oKKKKo
-  oKKKKo
-  .oooo.
-`;
-
-/** Cape in the three-quarter view: a strip behind the far side of the body. */
-const CAPE_SW = sprite`
-  .o&kkkkKo.
-  o&kkkkkKKo
-  okkkkkkKKo
-  okkkkkkKKo
-  okkkkkkKKo
-  okkkkkkKKo
-  okkkkkkKKo
-  okkkkkKKKo
-  oKkkkkKKKo
-  oKKKKKKKKo
-  .oooooooo.
-`;
-
-/** Cape covering the back (N and NW): drawn over torso and arms, under the head. */
-const CAPE_N = sprite`
-  .o&kkkkkkKo.
-  o&&kkkkkkKKo
-  o&kkkkkkkKKo
-  o&kkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkkKKo
-  okkkkkkkKKKo
-  oKkkkkkkKKKo
-  oKKkkkkKKKKo
-  oKKKKKKKKKKo
-  .oooooooooo.
-`;
-
-const CAPE_NW = sprite`
-  .o&kkkkkKo.
-  o&&kkkkkKKo
-  o&kkkkkkKKo
-  okkkkkkkKKo
-  okkkkkkkKKo
-  okkkkkkkKKo
-  okkkkkkkKKo
-  okkkkkkKKKo
-  oKkkkkkKKKo
-  oKKkkkKKKKo
-  oKKKKKKKKKo
-  .ooooooooo.
-`;
+/**
+ * Cape: a cloth2 sheet with a straight top, rounded hem and the shifted-shape
+ * shading; wider than the body in front views so its edges show beside it,
+ * narrower behind the body in back views so the arms stay visible.
+ */
+function cape(w: number, h: number): Sprite {
+  const mask = blank(w, h);
+  fillRoundRect(mask, 0, 0, w - 1, h - 1, 2, 0);
+  for (let x = 1; x < w - 1; x++) set(mask, x, 0, 0); // straight shoulder line
+  return shadeShape(mask, 'cloth2', { base: [-1, -1], light: [-4, -3] });
+}
+const CAPE_S = cape(18, 12);
+const CAPE_SW = cape(10, 12);
+const CAPE_W = cape(6, 12);
+const CAPE_NW = cape(11, 12);
+const CAPE_N = cape(12, 12);
 
 export const PARTS: PartDef[] = [
   {
@@ -318,7 +258,7 @@ export const PARTS: PartDef[] = [
         dx: 0,
         dy: -11,
         z: 5,
-        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -1, dy: -4, z: 5 } },
+        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -4, dy: -4, z: 5 } },
       },
       N: {
         sprite: SWORD,
@@ -326,7 +266,7 @@ export const PARTS: PartDef[] = [
         dy: -11,
         z: 50,
         // Mid-swing the blade is on the far side; the down-right diagonal keeps it visible beside the body.
-        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -2, dy: -4, z: 5 } },
+        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -3, dy: -4, z: 5 } },
       },
     },
   },
@@ -345,9 +285,9 @@ export const PARTS: PartDef[] = [
     id: 'cape',
     slot: 'back',
     views: {
-      S: { sprite: CAPE_S, dx: -6, dy: -1, z: 1 },
+      S: { sprite: CAPE_S, dx: -9, dy: -1, z: 1 },
       SW: { sprite: CAPE_SW, dx: -3, dy: -1, z: 1 },
-      W: { sprite: CAPE_W, dx: -2, dy: -1, z: 1 },
+      W: { sprite: CAPE_W, dx: 0, dy: -1, z: 1 },
       NW: { sprite: CAPE_NW, dx: -5, dy: -1, z: 35 },
       N: { sprite: CAPE_N, dx: -6, dy: -1, z: 35 },
     },

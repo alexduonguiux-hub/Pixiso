@@ -9,7 +9,7 @@ import {
   type RGBAImage,
 } from '@pixiso/pixel-core';
 import {
-  buildBodyS,
+  buildBody,
   buildPalette,
   CANVAS_H,
   CANVAS_W,
@@ -39,7 +39,7 @@ function writePng(file: string, img: RGBAImage): void {
 }
 
 function frameFor(p: BodyParams, limbs: Partial<Record<LimbId, [number, number]>>) {
-  const view = buildBodyS(p);
+  const view = buildBody(p).S;
   const layers: Layer[] = (
     Object.entries(view.parts) as [LimbId, (typeof view.parts)[LimbId]][]
   ).map(([id, part]) => {

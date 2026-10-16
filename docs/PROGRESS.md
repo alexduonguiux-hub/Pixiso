@@ -156,6 +156,19 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - Run in S/N differs from walk only by the leg lift and flight; a stronger lean/arm pose could come with the next template pass.
 - Only one body (`human`) and four parts; M3 adds the library.
 
+## Redraw from shapes ✅ (after the M2 review: "tạo hình chưa đủ tốt")
+
+**Done**
+
+- `draw.ts` (ellipse, rounded box, ASCII overlay, shifted-shape shading, trim, outline stripping) and `compose()` with the closed outer outline plus selective inner lines on overlap (D-044).
+- `bodygen.ts`: parametric chibi in all five views; three proportion presets (`CHIBI_ROUND`, `CHIBI_CLASSIC`, `CHIBI_TALL`), `CHIBI_CLASSIC` in the registry pending the user's pick; `scripts/body-variants.ts` renders them.
+- Parts: outer lines stripped from the hand-typed helmet/sword/shield; capes generated from shapes (wider than the body in S). Pose arms and the lying frame regenerated. All six clips and eight directions render through the new bodies; the clipping test is green.
+
+**Open**
+
+- The user's choice among A/B/C proportions; helmet, sword and shield are still hand-typed and could move to shapes for consistency.
+- The side view (W) is narrow and flat compared with the front; a slightly wider side torso or a nose bump would help.
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

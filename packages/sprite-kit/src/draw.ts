@@ -194,3 +194,29 @@ export function trim(s: Sprite): { sprite: Sprite; dx: number; dy: number } {
     for (let x = x0; x <= x1; x++) out.cells[(y - y0) * out.w + (x - x0)] = s.cells[y * s.w + x]!;
   return { sprite: out, dx: x0, dy: y0 };
 }
+
+/**
+ * Removes the hand-drawn outer outline of a template (line cells that touch
+ * transparency or the sprite border) so compose.ts can draw the single shared
+ * outline instead. Interior line cells (visor slits, panel seams) stay.
+ */
+export function stripOuterLines(s: Sprite): Sprite {
+  const line = cellOf('line', 1);
+  const out = { w: s.w, h: s.h, cells: Int16Array.from(s.cells) };
+  for (let y = 0; y < s.h; y++) {
+    for (let x = 0; x < s.w; x++) {
+      if (s.cells[y * s.w + x] !== line) continue;
+      const exposed =
+        x === 0 ||
+        y === 0 ||
+        x === s.w - 1 ||
+        y === s.h - 1 ||
+        get(s, x - 1, y) === EMPTY ||
+        get(s, x + 1, y) === EMPTY ||
+        get(s, x, y - 1) === EMPTY ||
+        get(s, x, y + 1) === EMPTY;
+      if (exposed) out.cells[y * s.w + x] = EMPTY;
+    }
+  }
+  return out;
+}

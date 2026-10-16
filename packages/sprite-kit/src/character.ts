@@ -42,7 +42,7 @@ export function buildFrame(spec: CharacterSpec, view: View, frame: FrameOffsets)
     if (frame.hideLimbs?.includes(id)) continue;
     const [dx, dy] = frame.limbs[id] ?? [0, 0];
     const sprite = frame.limbSprites?.[id] ?? part.sprite;
-    layers.push({ id, sprite, x: part.x + dx, y: part.y + dy, z: part.z });
+    layers.push({ id, sprite, x: part.x + dx, y: part.y + dy, z: part.z, edge: true });
   }
   for (const partId of spec.parts) {
     const def = partById(partId);
@@ -59,10 +59,11 @@ export function buildFrame(spec: CharacterSpec, view: View, frame: FrameOffsets)
       x: anchor.x + pv.dx + dx + ax,
       y: anchor.y + pv.dy + dy + ay,
       z: pv.z,
+      edge: true,
     });
   }
-  if (frame.extra) layers.push({ id: 'extra', ...frame.extra });
-  return compose(layers, w, h);
+  if (frame.extra) layers.push({ id: 'extra', ...frame.extra, edge: true });
+  return compose(layers, w, h, { outline: true });
 }
 
 /** All frames of a clip for a direction; mirrored directions flip the authored view. */

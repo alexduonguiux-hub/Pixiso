@@ -5,17 +5,8 @@
  * scripts/catalog-labels.yaml, never here.
  */
 import { DIRECTIONS_8, type Direction } from '@pixiso/shared';
-import {
-  BODY_N,
-  BODY_NW,
-  BODY_S,
-  BODY_SW,
-  BODY_W,
-  CANVAS_H,
-  CANVAS_W,
-  PIVOT,
-  type BodyView,
-} from './body32.js';
+import { CANVAS_H, CANVAS_W, PIVOT, type BodyView } from './body32.js';
+import { buildBody, CHIBI_CLASSIC } from './bodygen.js';
 import type { Material } from './format.js';
 
 export const SLOT_IDS = ['head', 'hand_right', 'hand_left', 'back'] as const;
@@ -57,7 +48,7 @@ export const BODIES: readonly BodyDef[] = [
     id: REFERENCE_BODY,
     canvas: { w: CANVAS_W, h: CANVAS_H },
     pivot: { x: PIVOT.x, y: PIVOT.y },
-    views: { S: BODY_S, SW: BODY_SW, W: BODY_W, NW: BODY_NW, N: BODY_N },
+    views: buildBody(CHIBI_CLASSIC),
   },
 ];
 

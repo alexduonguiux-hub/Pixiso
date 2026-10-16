@@ -54,10 +54,11 @@ describe('clips', () => {
 
   it('run flight frames never push the head out of the canvas', () => {
     for (const d of ['S', 'W', 'SW'] as const) {
+      const idleTop = toAscii(buildClip(knight, d, clip('idle'))[0]!).find((r) => /[^.]/.test(r))!;
       for (const f of buildClip(knight, d, clip('run'))) {
-        // the first drawn row is the helmet's full top edge, so nothing was cut above it
+        // the first drawn row is the same helmet top as in idle, so nothing was cut above it
         const top = toAscii(f).find((r) => /[^.]/.test(r))!;
-        expect(top).toMatch(/oooooo/);
+        expect(top.replace(/\./g, '').length).toBe(idleTop.replace(/\./g, '').length);
       }
     }
   });

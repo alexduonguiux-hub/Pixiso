@@ -5,7 +5,7 @@
  * (swung sword), hide limbs or add a bespoke drawing (lying body). One table
  * per authored view (registry.ts VIEWS).
  */
-import { ARM_FWD_W, ARM_UP_R, ARM_UP_S, ARM_UP_W, LYING } from './body32.js';
+import { buildPoses, CHIBI_CLASSIC } from './bodygen.js';
 import type { Sprite } from './format.js';
 import type { SlotId, View } from './registry.js';
 
@@ -37,6 +37,13 @@ export interface Clip {
   frameMs: number;
   frames: Record<View, FrameOffsets[]>;
 }
+
+const POSE = buildPoses(CHIBI_CLASSIC);
+const ARM_UP_S = POSE.armUpR;
+const ARM_UP_R = POSE.armUpL;
+const ARM_UP_W = POSE.armUpR;
+const ARM_FWD_W = POSE.armForward;
+const LYING = POSE.lying;
 
 type Limbs = Partial<Record<LimbId, [number, number]>>;
 type Vec = [number, number];
@@ -170,7 +177,7 @@ const death = (v: View): FrameOffsets[] => {
     limbs: {},
     hideLimbs: ALL,
     hideParts: true,
-    extra: { sprite: LYING, x: 1, y: 19, z: 20 },
+    extra: { sprite: LYING, x: 2, y: 19, z: 20 },
   };
   return [
     hit(v)[0]!,
