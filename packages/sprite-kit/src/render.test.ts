@@ -77,7 +77,10 @@ describe('config → frames', () => {
         for (let x = 0; x < w.width; x++)
           expect(pixel(e, w.width - 1 - x, y)).toEqual(pixel(w, x, y));
     }
-    expect(() => renderClip(knight, style, 'walk', 'N', table)).toThrow(/no drawn view/);
+    expect(() => renderClip(knight, style, 'walk', 'UP' as never, table)).toThrow(/no drawn view/);
+    for (const d of ['SW', 'NW', 'N', 'NE', 'SE'] as const) {
+      expect(renderClip(knight, style, 'walk', d, table).frames.length).toBe(4);
+    }
     expect(() => renderClip(knight, style, 'fly', 'S', table)).toThrow(/unknown animation/);
   });
 

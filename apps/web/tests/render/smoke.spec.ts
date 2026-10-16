@@ -43,7 +43,14 @@ test('preview draws the configured character, reacts to parts and directions, de
   await expect(overlay).toHaveText('Tây (W)');
   expect(west.hash).not.toBe(knight.hash);
   await page.getByTestId('preview-stage').screenshot({ path: path.join(dir, 'knight-W.png') });
-  await expect(page.getByTestId('dir-N')).toBeDisabled();
+
+  // Every catalog direction renders; the back view differs from the side view.
+  await page.getByTestId('dir-N').click();
+  const north = await drawn(page, 'N:idle:0:4:1');
+  expect(north.hash).not.toBe(west.hash);
+  await page.getByTestId('preview-stage').screenshot({ path: path.join(dir, 'knight-N.png') });
+  await page.getByTestId('dir-W').click();
+  await drawn(page, 'W:idle:0:4:1');
 
   // Same config twice → same bytes (localStorage keeps the config across the reload).
   await page.reload();

@@ -122,6 +122,15 @@ for (const { id, config } of SETUPS) {
     }
   }
   writePng(path.join(OUT, `${id}_x8.png`), sheet(rows));
+  // Turnaround: idle frame 0 for every direction in sheet-row order.
+  writePng(
+    path.join(OUT, `${id}_turnaround_x8.png`),
+    sheet([
+      catalog.directions.map(
+        (d) => renderClip(config, DEFAULT_PROJECT_STYLE, 'idle', d, table).frames[0]!,
+      ),
+    ]),
+  );
   const first = renderClip(config, DEFAULT_PROJECT_STYLE, 'idle', 'S', table);
   writePng(path.join(OUT, `${id}_S_idle0_x1.png`), first.frames[0]!);
   console.log(`${id}: ${first.palette.length} colours, cell ${first.cell.w}×${first.cell.h}`);

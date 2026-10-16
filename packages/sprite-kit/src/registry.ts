@@ -5,21 +5,36 @@
  * scripts/catalog-labels.yaml, never here.
  */
 import { DIRECTIONS_8, type Direction } from '@pixiso/shared';
-import { BODY_S, BODY_W, CANVAS_H, CANVAS_W, PIVOT, type BodyView } from './body32.js';
+import {
+  BODY_N,
+  BODY_NW,
+  BODY_S,
+  BODY_SW,
+  BODY_W,
+  CANVAS_H,
+  CANVAS_W,
+  PIVOT,
+  type BodyView,
+} from './body32.js';
 import type { Material } from './format.js';
 
 export const SLOT_IDS = ['head', 'hand_right', 'hand_left', 'back'] as const;
 export type SlotId = (typeof SLOT_IDS)[number];
 
-/** Authored views. Every other direction is a mirror of one of these. */
-export type View = 'S' | 'W';
-export const VIEWS: readonly View[] = ['S', 'W'];
+/** Authored views (PIVOT.md decision 2). SE, E and NE are horizontal mirrors of SW, W and NW. */
+export type View = 'S' | 'SW' | 'W' | 'NW' | 'N';
+export const VIEWS: readonly View[] = ['S', 'SW', 'W', 'NW', 'N'];
 
 /** How each renderable direction is produced from an authored view. */
 export const FACING_SOURCE: Partial<Record<Direction, { view: View; flip: boolean }>> = {
   S: { view: 'S', flip: false },
+  SW: { view: 'SW', flip: false },
   W: { view: 'W', flip: false },
+  NW: { view: 'NW', flip: false },
+  N: { view: 'N', flip: false },
+  NE: { view: 'NW', flip: true },
   E: { view: 'W', flip: true },
+  SE: { view: 'SW', flip: true },
 };
 
 /** Directions that render today, in sprite-sheet row order. */
@@ -42,7 +57,7 @@ export const BODIES: readonly BodyDef[] = [
     id: REFERENCE_BODY,
     canvas: { w: CANVAS_W, h: CANVAS_H },
     pivot: { x: PIVOT.x, y: PIVOT.y },
-    views: { S: BODY_S, W: BODY_W },
+    views: { S: BODY_S, SW: BODY_SW, W: BODY_W, NW: BODY_NW, N: BODY_N },
   },
 ];
 
