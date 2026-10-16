@@ -88,7 +88,12 @@ export interface HeroGenOutfit {
   feet: Material;
 }
 export const MANNEQUIN: HeroGenOutfit = { torso: 'skin', arms: 'skin', legs: 'skin', feet: 'skin' };
-export const DRESSED: HeroGenOutfit = { torso: 'cloth', arms: 'cloth', legs: 'pants', feet: 'boots' };
+export const DRESSED: HeroGenOutfit = {
+  torso: 'cloth',
+  arms: 'cloth',
+  legs: 'pants',
+  feet: 'boots',
+};
 
 type Side = 'left' | 'right';
 type Vec = [number, number];
