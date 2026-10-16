@@ -1,5 +1,7 @@
 export * from './format.js';
 export * from './compose.js';
+export * from './draw.js';
+export * from './bodygen.js';
 export * from './paint.js';
 export * from './body32.js';
 export * from './registry.js';
