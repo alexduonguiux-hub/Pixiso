@@ -44,9 +44,9 @@ function frameFor(p: BodyParams, limbs: Partial<Record<LimbId, [number, number]>
     Object.entries(view.parts) as [LimbId, (typeof view.parts)[LimbId]][]
   ).map(([id, part]) => {
     const [dx, dy] = limbs[id] ?? [0, 0];
-    return { id, sprite: part.sprite, x: part.x + dx, y: part.y + dy, z: part.z };
+    return { id, sprite: part.sprite, x: part.x + dx, y: part.y + dy, z: part.z, edge: true };
   });
-  return compose(layers, CANVAS_W, CANVAS_H);
+  return compose(layers, CANVAS_W, CANVAS_H, { outline: true });
 }
 
 const VARIANTS: [string, BodyParams][] = [
