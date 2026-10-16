@@ -11,6 +11,7 @@
 import { blank } from './draw.js';
 import { EMPTY, type Sprite } from './format.js';
 import { HERO_FIGURE_W, HERO_S_FIGURE } from './hero64.js';
+import { HERO_GIANT15_S, HERO_GIANT2_S } from './hero64.giant.js';
 
 /** Extra copies of columns for a band of source rows. `pairs` lists a column left of the centre with its extra count; the mirrored column gets the same. */
 export interface ColumnBand {
@@ -26,8 +27,10 @@ export interface FormSpec {
   /** Source rows to repeat, with the number of extra copies. */
   rows?: ReadonlyArray<readonly [y: number, extra: number]>;
   bands?: readonly ColumnBand[];
-  /** Integer nearest-neighbour scale applied last (giants drawn at ×2). */
+  /** Integer nearest-neighbour scale applied last (placeholder until a form is drawn). */
   scale?: number;
+  /** A hand-drawn figure: used as is, nothing derived. */
+  figure?: Sprite;
 }
 
 const CENTER = (HERO_FIGURE_W - 1) / 2;
@@ -64,6 +67,7 @@ export function scaleSprite(s: Sprite, k: number): Sprite {
 
 /** Builds the figure of a form from the base mannequin. */
 export function buildForm(spec: FormSpec, base: Sprite = HERO_S_FIGURE): Sprite {
+  if (spec.figure) return spec.figure;
   const rowExtra = new Map<number, number>(spec.rows ?? []);
   const rows: { cells: number[] }[] = [];
   for (let y = 0; y < base.h; y++) {
@@ -146,96 +150,15 @@ export const FORM_HEAVY: FormSpec = {
   ],
 };
 
-/**
- * Giant at about ×1.5 (25×60): every other interior row and column is
- * doubled so the outline stays one pixel wide; outline rows (skull top, lid,
- * chin line, hips, foot top, soles) are never doubled.
- */
+/** Giant at about ×1.5: a hand drawing, 25×60 (hero64.giant.ts). */
 export const FORM_GIANT_15: FormSpec = {
   id: 'giant15',
   label: 'Khổng lồ ×1,5',
-  rows: [
-    [2, 1],
-    [4, 1],
-    [6, 1],
-    [9, 1],
-    [11, 1],
-    [13, 1], // head: 6
-    [16, 1],
-    [18, 1],
-    [20, 1], // shoulders: 3
-    [22, 1],
-    [24, 1],
-    [26, 1],
-    [28, 1], // torso: 4
-    [31, 1],
-    [33, 1],
-    [34, 1],
-    [35, 1],
-    [37, 1],
-    [38, 1], // legs and feet: 6
-    [23, 1], // 20th row: one more in the torso
-  ],
-  bands: [
-    {
-      rows: [0, 14],
-      pairs: [
-        [2, 1],
-        [5, 1],
-        [6, 1],
-        [7, 1],
-      ],
-    }, // skull sides, both eye columns, between the eyes
-    {
-      rows: [15, 20],
-      pairs: [
-        [2, 1],
-        [5, 1],
-        [6, 1],
-        [7, 1],
-      ],
-    },
-    {
-      rows: [21, 28],
-      pairs: [
-        [2, 1],
-        [5, 1],
-        [6, 1],
-        [7, 1],
-      ],
-    }, // arm middle, chest highlight
-    {
-      rows: [29, 29],
-      pairs: [
-        [2, 1],
-        [5, 1],
-        [6, 1],
-        [7, 1],
-      ],
-    },
-    {
-      rows: [30, 35],
-      pairs: [
-        [2, 1],
-        [4, 1],
-        [5, 1],
-        [6, 1],
-      ],
-    },
-    {
-      rows: [36, 39],
-      pairs: [
-        [2, 1],
-        [3, 1],
-        [4, 1],
-        [5, 1],
-      ],
-    },
-  ],
+  figure: HERO_GIANT15_S,
 };
 
-/** Giant at ×2 (34×80): the base drawing scaled by two, lines two pixels wide. */
-export const FORM_GIANT_2: FormSpec = { id: 'giant2', label: 'Khổng lồ ×2', scale: 2 };
+/** Giant at ×2: a hand drawing, 33×80 (hero64.giant.ts). */
+export const FORM_GIANT_2: FormSpec = { id: 'giant2', label: 'Khổng lồ ×2', figure: HERO_GIANT2_S };
 
 export const FORMS: readonly FormSpec[] = [
   FORM_BASE,

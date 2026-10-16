@@ -189,6 +189,6 @@ Not started.
 
 - `packages/sprite-kit/src/hero64.ts`: mannequin 17×40 chép từ ảnh mẫu (bản lớn sạch làm chuẩn), tách bộ phận S có viền riêng (`heroViewS`), `heroFrames(view)` cho S/N/W (đứng + 2 bước đi), E = lật W. `hero64.frames.ts` sinh từ `scripts/research/gen_frames_ts.py`.
 - `pixel-core`: `HERO_RAMP_OPTIONS` + `RampOptions.lineL` (viền nâu L 0,38).
-- `heroforms.ts`: thể hình mập, to con bằng nhân hàng/cột; khổng lồ đang vẽ tay theo yêu cầu.
+- `heroforms.ts`: thể hình mập, to con bằng nhân hàng/cột; khổng lồ ×1,5 (25×60) và ×2 (33×80) vẽ tay trong `hero64.giant.ts` (không scale).
 - Script xem: `scripts/hero-copy.ts` (S ×6 hai bảng màu), `scripts/hero-frames.ts` (12 khung ×4), `scripts/hero-forms.ts` (dàn thể hình ×4); ảnh so với mẫu trong `test-output/variants/`.
 - Chưa làm: SW/NW, tách bộ phận cho N/W, trang phục lớp (đổi vật liệu + lớp vẽ thêm), nhân vật Vùng Xanh, đưa thân hero vào registry/catalog.
