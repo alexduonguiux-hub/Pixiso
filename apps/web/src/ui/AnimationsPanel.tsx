@@ -24,12 +24,12 @@ export function AnimationsPanel() {
               />
               <label
                 htmlFor={`anim-${a.id}`}
-                title={`${a.clip} · ${a.durationS.toFixed(2)}s · ${a.loop ? vi.animations.loop : vi.animations.once}`}
+                title={`${a.frameMs} ms/${vi.animations.frame} · ${a.loop ? vi.animations.loop : vi.animations.once}`}
               >
                 {a.label_vi}
               </label>
               <span className="frames">
-                {a.defaultFrames} {vi.animations.frames}
+                {a.frames} {vi.animations.frames}
               </span>
               <button
                 type="button"

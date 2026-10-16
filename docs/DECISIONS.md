@@ -161,3 +161,17 @@ After two review rounds the user judged the 3D→pixel output unfit at 32–48 p
 ### D-037 Reference ramp and tinted outline presets
 
 Measurements on the reference art (PIXEL_STYLE_REFERENCE.md §2.3–2.4) disagree with two assumptions baked into `DEFAULT_RAMP_OPTIONS`: shadows there are _less_ saturated (×0.7–0.85), not more, and yellow shades toward orange, never toward green. `REFERENCE_RAMP_OPTIONS` encodes the measured values (steps −0.14/+0.13 L, ≤16° hue per step, shadow chroma ×0.85, highlight chroma ×1.0) and a new `shadowAwayFromHighlight` rule: the shadow rotates in the direction the highlight does not take. `buildTintedLine` gives each material a near-black outline (L 0.12) tinted by its own hue, and `paint()` gains `lineStyle: 'tinted'`; selective outlines (`selout`) exist as an option but stay off because the reference sprites keep a closed dark outline on the lit side too. The defaults are unchanged until sprite-kit becomes the core (PIVOT.md M1).
+
+## M1 — sprite-kit là lõi
+
+### D-038 Catalog v2 is generated from the sprite-kit registry
+
+The catalog no longer describes glTF files. `packages/sprite-kit/src/registry.ts` is the single list of bodies (canvas + pivot), slots, colour targets (each bound to one material) and drawable directions; parts and clips come from `parts32.ts` and `anim.ts`. `scripts/build-catalog.ts` merges that registry with `scripts/catalog-labels.yaml` (Vietnamese labels and tags only) into `packages/shared/catalog.json` (schema `version: 2`), failing on any label without a definition or definition without a label, and a Vitest test keeps the committed JSON equal to what the registry generates. Server, web and Claude keep consuming one JSON; `CharacterConfig` is unchanged, so the Phase 5 schema design (HANDOFF §9.3) still applies.
+
+### D-039 Three.js, the 3D scene and the KayKit assets are removed
+
+With the pivot confirmed, `apps/web/src/scene`, `apps/web/src/render`, the three.js dependency, `scripts/fetch-assets.ts`, `scripts/inspect-assets.ts`, `assets/vendor/` (18 MB) and `docs/ASSET_REPORT.md` are deleted. They stay in git history before `b1560fc`. `pixel-core` keeps its pure image helpers (the ramp/outline/sheet code is used by sprite-kit and the exporter); its 3D post-processing passes (`look.ts`, `compose.ts`, cluster/island cleanup) are now unused but pure and tested, and are left in place for a future "import an image" path rather than deleted.
+
+### D-040 ProjectStyle after the pivot
+
+`characterHeightPx` becomes `32 | 64`: the base body is 32 px and output is nearest ×1 or ×2 (a 48 px set is a separate drawing, PIVOT.md decision 1). `outline` becomes `'ink' | 'soft' | 'none'`, the presets measured on reference art: ink = near-black outline tinted by the bordering material, soft = warm dark grey `#2e2428`, none = line cells take the material's shadow. The ramp is always `REFERENCE_RAMP_OPTIONS` (D-037 defaults are now in effect). The catalog lists the directions that have a drawn view (`S`, `W`, `E` today); the UI disables the rest until M2 draws them. `palette.mode === 'fixed'` and `directions: '5+mirror'` are kept in the type for Phase 4 and M4 but have no effect yet, and the palette size select is disabled with a note.

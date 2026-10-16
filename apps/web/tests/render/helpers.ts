@@ -11,26 +11,35 @@ export function outDir(name: string): string {
   return dir;
 }
 
-/** Resolves once the scene has applied the current store state. */
-export async function waitSceneReady(page: Page, timeout = 60_000): Promise<void> {
-  await page.waitForFunction(() => window.__pixiso?.scene?.ready === true, undefined, { timeout });
-  const err = await page.evaluate(() => window.__pixiso?.scene?.lastError ?? null);
-  if (err) throw new Error(`scene apply failed: ${err}`);
+/** Fresh app state: cleared localStorage, preview paused on S idle. */
+export async function openFresh(page: Page): Promise<void> {
+  await page.goto('http://localhost:5173/');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.waitForFunction(() => window.__pixiso !== undefined);
+  await page.evaluate(() => {
+    window
+      .__pixiso!.store.getState()
+      .setPreview({ playing: false, direction: 'S', animationId: 'idle' });
+  });
 }
 
-export async function rigDebug(page: Page) {
-  return page.evaluate(() => window.__pixiso!.scene!.rig.getDebugState());
-}
-
-/** Lets a couple of frames render so the canvas shows the latest state. */
-export async function settleFrames(page: Page, frames = 3): Promise<void> {
-  await page.evaluate(
-    (n) =>
-      new Promise<void>((resolve) => {
-        let left = n;
-        const tick = () => (--left <= 0 ? resolve() : requestAnimationFrame(tick));
-        requestAnimationFrame(tick);
-      }),
-    frames,
-  );
+/** Opaque pixel count and a hash of the preview canvas. */
+export async function canvasStats(page: Page, testId: string) {
+  return page.evaluate((id) => {
+    const canvas = document.querySelector(`[data-testid="${id}"]`) as HTMLCanvasElement | null;
+    if (!canvas || canvas.width === 0) return null;
+    const ctx = canvas.getContext('2d')!;
+    const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let opaque = 0;
+    let hash = 2166136261;
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] === 255) opaque++;
+      for (let k = 0; k < 4; k++) {
+        hash ^= data[i + k]!;
+        hash = Math.imul(hash, 16777619) >>> 0;
+      }
+    }
+    return { width: canvas.width, height: canvas.height, opaque, hash };
+  }, testId);
 }

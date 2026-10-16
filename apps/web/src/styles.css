@@ -184,25 +184,36 @@ canvas {
   background: repeating-conic-gradient(#555 0 25%, #333 0 50%) 0 0 / 8px 8px;
 }
 
-.viewport {
+.preview-stage {
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: #1c1c22;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 260px;
+  padding: 12px;
+  background: repeating-conic-gradient(#2a2a32 0 25%, #222228 0 50%) 0 0 / 16px 16px;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: auto;
 }
-.viewport canvas {
-  width: 100%;
-  height: 100%;
-}
-.viewport .overlay {
+.preview-stage .overlay {
   position: absolute;
   left: 8px;
   top: 8px;
   font-size: 12px;
   color: var(--muted);
   pointer-events: none;
+}
+.frame-strip {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px;
+  background: repeating-conic-gradient(#2a2a32 0 25%, #222228 0 50%) 0 0 / 16px 16px;
+  border-radius: 6px;
+}
+.frame-strip canvas.current {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .direction-buttons {
   display: flex;

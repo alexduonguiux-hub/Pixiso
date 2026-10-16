@@ -5,99 +5,73 @@ import { catalogSchema, checkCatalogReferences } from './schema.js';
 import { COLOR_NAMES } from './types.js';
 
 const fixture: Catalog = catalogSchema.parse({
-  version: 1,
-  asset: {
-    id: 'kit',
-    name: 'Kit',
-    license: 'CC0-1.0',
-    source: 'x',
-    commit: 'abc',
-    root: 'vendor/kit',
-  },
-  referenceCharacter: 'knight',
+  version: 2,
+  source: { id: 'fixture', name: 'Fixture', license: 'CC0-1.0' },
+  referenceCharacter: 'human',
   characters: [
     {
-      id: 'knight',
-      file: 'Knight.glb',
-      label_vi: 'Hiệp sĩ',
+      id: 'human',
+      label_vi: 'Người',
       tags: [],
-      heightM: 1.8,
-      projected: { heightM: 1.8, aboveM: 1.8, belowM: 0.2, widthM: 1.0, maxHeightM: 1.8 },
-      builtinNodes: ['Knight_Helmet'],
+      canvas: { w: 24, h: 32 },
+      pivot: { x: 12, y: 30 },
     },
     {
-      id: 'mage',
-      file: 'Mage.glb',
-      label_vi: 'Pháp sư',
+      id: 'dwarf',
+      label_vi: 'Người lùn',
       tags: [],
-      heightM: 1.7,
-      projected: { heightM: 1.7, aboveM: 1.7, belowM: 0.2, widthM: 1.0, maxHeightM: 1.7 },
-      builtinNodes: ['Mage_Hat'],
+      canvas: { w: 24, h: 32 },
+      pivot: { x: 12, y: 30 },
     },
   ],
   slots: [
-    { id: 'hand_right', label_vi: 'Tay phải', bone: 'handslot.r' },
-    { id: 'hand_left', label_vi: 'Tay trái', bone: 'handslot.l' },
-    { id: 'head', label_vi: 'Đầu', bone: 'head' },
+    { id: 'hand_right', label_vi: 'Tay phải' },
+    { id: 'hand_left', label_vi: 'Tay trái' },
+    { id: 'head', label_vi: 'Đầu' },
   ],
   parts: [
-    {
-      id: 'sword',
-      slots: ['hand_right'],
-      label_vi: 'Kiếm',
-      tags: [],
-      characters: ['*'],
-      source: { type: 'file', file: 'sword.gltf' },
-    },
+    { id: 'sword', slots: ['hand_right'], label_vi: 'Kiếm', tags: [], characters: ['*'] },
     {
       id: 'dagger',
       slots: ['hand_right', 'hand_left'],
       label_vi: 'Dao',
       tags: [],
       characters: ['*'],
-      source: { type: 'file', file: 'dagger.gltf' },
     },
-    {
-      id: 'knight_helmet',
-      slots: ['head'],
-      label_vi: 'Mũ',
-      tags: [],
-      characters: ['knight'],
-      source: { type: 'builtin', node: 'Knight_Helmet' },
-    },
+    { id: 'knight_helmet', slots: ['head'], label_vi: 'Mũ', tags: [], characters: ['human'] },
   ],
   colorTargets: [
-    { id: 'body', label_vi: 'Thân', kind: 'mesh', meshSuffixes: ['_Body'] },
-    { id: 'hand_right', label_vi: 'Tay phải', kind: 'slot', slot: 'hand_right' },
+    { id: 'body', label_vi: 'Thân', material: 'cloth' },
+    { id: 'metal', label_vi: 'Kim loại', material: 'metal' },
   ],
   colors: COLOR_NAMES.map((id) => ({ id, label_vi: id, hex: '#808080' })),
   animations: [
-    {
-      id: 'idle',
-      clip: 'Idle',
-      label_vi: 'Đứng',
-      loop: true,
-      defaultFrames: 4,
-      durationS: 1,
-      rootMotion: false,
-      tags: [],
-    },
-    {
-      id: 'walk',
-      clip: 'Walking_A',
-      label_vi: 'Đi',
-      loop: true,
-      defaultFrames: 8,
-      durationS: 1,
-      rootMotion: false,
-      tags: [],
-    },
+    { id: 'idle', label_vi: 'Đứng', loop: true, frames: 2, frameMs: 500, tags: [] },
+    { id: 'walk', label_vi: 'Đi', loop: true, frames: 4, frameMs: 140, tags: [] },
   ],
+  directions: ['S', 'W', 'E'],
 });
 
 describe('fixture catalog', () => {
   it('is internally consistent', () => {
     expect(checkCatalogReferences(fixture)).toEqual([]);
+  });
+
+  it('reports broken references', () => {
+    const broken: Catalog = {
+      ...fixture,
+      referenceCharacter: 'elf',
+      parts: [
+        ...fixture.parts,
+        { id: 'sword', slots: ['tail'], label_vi: 'x', tags: [], characters: ['orc'] },
+      ],
+    };
+    expect(checkCatalogReferences(broken)).toEqual([
+      'referenceCharacter "elf" is not a character',
+      'duplicate part id "sword"',
+      'part "sword" references unknown slot "tail"',
+      'part "sword" references unknown character "orc"',
+    ]);
   });
 });
 
@@ -105,7 +79,7 @@ describe('normalizeConfig', () => {
   it('keeps a valid config unchanged', () => {
     const cfg = {
       version: 1 as const,
-      baseCharacter: 'knight',
+      baseCharacter: 'human',
       parts: { hand_right: 'sword', hand_left: 'dagger', head: 'knight_helmet' },
       colors: [{ target: 'body', color: 'red' as const }],
       animations: ['idle', 'walk'],
@@ -119,7 +93,7 @@ describe('normalizeConfig', () => {
     const { config, dropped } = normalizeConfig(
       {
         version: 1,
-        baseCharacter: 'mage',
+        baseCharacter: 'dwarf',
         parts: { hand_right: 'sword', head: 'knight_helmet' },
         colors: [],
         animations: ['idle'],
@@ -134,7 +108,7 @@ describe('normalizeConfig', () => {
     const { config } = normalizeConfig(
       {
         version: 1,
-        baseCharacter: 'knight',
+        baseCharacter: 'human',
         parts: { hand_left: 'sword' },
         colors: [],
         animations: [],
@@ -149,7 +123,7 @@ describe('normalizeConfig', () => {
       { version: 1, baseCharacter: 'dragon', parts: {}, colors: [], animations: ['fly'] },
       fixture,
     );
-    expect(config.baseCharacter).toBe('knight');
+    expect(config.baseCharacter).toBe('human');
     expect(config.animations).toEqual(['idle', 'walk']);
     expect(dropped).toEqual(['character "dragon"', 'animation "fly"']);
   });
@@ -158,25 +132,25 @@ describe('normalizeConfig', () => {
     const { config } = normalizeConfig(
       {
         version: 1,
-        baseCharacter: 'knight',
+        baseCharacter: 'human',
         parts: {},
         colors: [
           { target: 'body', color: 'original' },
           { target: 'nose', color: 'red' },
-          { target: 'hand_right', color: 'gold' },
+          { target: 'metal', color: 'gold' },
         ],
         animations: ['walk'],
       },
       fixture,
     );
-    expect(config.colors).toEqual([{ target: 'hand_right', color: 'gold' }]);
+    expect(config.colors).toEqual([{ target: 'metal', color: 'gold' }]);
   });
 
   it('is idempotent', () => {
     const once = normalizeConfig(
       {
         version: 1,
-        baseCharacter: 'mage',
+        baseCharacter: 'dwarf',
         parts: { head: 'knight_helmet' },
         colors: [],
         animations: [],

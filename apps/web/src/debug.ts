@@ -1,14 +1,15 @@
 import type * as PixelCore from '@pixiso/pixel-core';
+import type * as SpriteKit from '@pixiso/sprite-kit';
 import type { StoreApi } from 'zustand/vanilla';
-import type { SceneController } from './scene/SceneController.js';
 import type { AppState } from './state/store.js';
 
-/** Dev/test hook. Playwright reads scene state through `window.__pixiso`. */
+/** Dev/test hook. Playwright drives the store and measures through `window.__pixiso`. */
 export interface PixisoDebug {
   store: StoreApi<AppState>;
-  scene: SceneController | null;
   /** pixel-core namespace, so render tests can measure in-page without a bundler import. */
   core: typeof PixelCore;
+  /** sprite-kit namespace: the same renderer the preview uses. */
+  kit: typeof SpriteKit;
 }
 
 declare global {

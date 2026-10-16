@@ -39,8 +39,11 @@ export interface Palette {
 }
 
 export interface PaintOptions {
-  /** 'flat': every line cell uses palette.line. 'tinted': the outline takes the tint of the material it borders. */
-  lineStyle: 'flat' | 'tinted';
+  /**
+   * 'flat': every line cell uses palette.line. 'tinted': the outline takes the tint of
+   * the material it borders. 'none': line cells become the bordering material's shadow.
+   */
+  lineStyle: 'flat' | 'tinted' | 'none';
   /** Selective outline: line cells on the lit (top/left) silhouette edge use the bordering material's shadow shade. */
   selout: boolean;
 }
@@ -121,6 +124,7 @@ function lineColor(s: Sprite, x: number, y: number, palette: Palette, opts: Pain
   if (opts.lineStyle === 'flat' && !opts.selout) return palette.line;
   const m = borderingMaterial(s, x, y);
   if (m < 0) return palette.line;
+  if (opts.lineStyle === 'none') return palette.ramps[m]![0]!;
   if (opts.selout && onLitEdge(s, x, y)) return palette.ramps[m]![0]!;
   return opts.lineStyle === 'tinted' ? palette.lines[m]! : palette.line;
 }

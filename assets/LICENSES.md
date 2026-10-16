@@ -1,11 +1,15 @@
-# Third-party assets
+# Assets and licences
 
-Only CC0 assets are bundled in this repository. Nothing from Mixamo is or may be committed.
+Pixiso no longer bundles any third-party asset. Every character, part and animation is a
+pixel template authored in this repository (`packages/sprite-kit/src/*.ts`), so there is
+nothing to attribute to an outside author.
 
-| Asset | Location | Source | Version / commit | License |
-|---|---|---|---|---|
-| KayKit Character Pack: Adventurers 1.0 (Kay Lousberg) | `assets/vendor/kaykit-adventurers/` | https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 (also https://kaylousberg.itch.io/kaykit-adventurers) | `672074b73ba276876a19e8816ecdc5241817ab47` | [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) — free for personal, educational and commercial use, no attribution required |
+| Asset | Location | Author | Licence |
+|---|---|---|---|
+| Pixiso base set (32 px chibi body, parts, clips) | `packages/sprite-kit/src/body32.ts`, `parts32.ts`, `anim.ts` | this project | decided by the project owner; not yet published separately from the repository |
 
-Only the glTF subset is kept (`Characters/gltf`, `Assets/gltf`, `LICENSE.txt`, `README.md`); the FBX files and sample renders are not needed. `pnpm assets:fetch` re-downloads exactly this subset from the pinned commit. `assets/vendor/kaykit-adventurers/SOURCE.json` records the provenance.
+Rules that still apply:
 
-Attribution is not required by the license, but appreciated by the author: Kay Lousberg, https://www.kaylousberg.com.
+- Nothing from Mixamo is or may be committed.
+- Reference images used for measurements (`docs/PIXEL_STYLE_REFERENCE.md`) are not committed; only the numbers derived from them are.
+- The KayKit Character Pack (CC0) used by the 3D prototype was removed in M1; it remains in git history before commit `b1560fc` if anyone needs to reproduce the Phase 0–2 renders.

@@ -52,7 +52,7 @@ describe('character builder', () => {
     for (const p of PARTS) {
       expect(p.views.S.sprite.w).toBeGreaterThan(0);
       expect(p.views.W.sprite.w).toBeGreaterThan(0);
-      expect(['head', 'handR', 'handL', 'back']).toContain(p.slot);
+      expect(['head', 'hand_right', 'hand_left', 'back']).toContain(p.slot);
     }
     expect(() => buildFrame({ parts: ['nope'] }, 'S', { limbs: {} })).toThrow(/unknown part/);
   });

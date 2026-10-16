@@ -2,6 +2,8 @@ export * from './format.js';
 export * from './compose.js';
 export * from './paint.js';
 export * from './body32.js';
+export * from './registry.js';
 export * from './parts32.js';
 export * from './anim.js';
 export * from './character.js';
+export * from './render.js';

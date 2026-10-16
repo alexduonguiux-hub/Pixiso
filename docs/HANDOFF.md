@@ -3,6 +3,8 @@
 > Đặt file này tại `docs/HANDOFF.md`, còn `CLAUDE.md` ở gốc repo. Đây là đặc tả cho **bản thử nghiệm (MVP)**.
 > Các quyết định ở mục 1 đã chốt sau một vòng nghiên cứu. Chỉ đổi khi có lý do kỹ thuật rõ ràng và phải ghi lại vào `docs/DECISIONS.md`.
 
+> **Cập nhật 16/10/2026 (pivot, D-035/D-039):** hướng "model 3D → render pixel" đã bị bỏ sau khi duyệt Phase 2. Nhân vật nay được vẽ trực tiếp trên lưới pixel bằng ma trận ngữ nghĩa trong `packages/sprite-kit`. Mục 5 (asset KayKit), 6.1–6.5 (camera, render, shading, hậu xử lý 3D) và Phase 1–2 **không còn áp dụng**; thay bằng `docs/PIVOT.md` (kế hoạch M1–M5) và `docs/PIXEL_STYLE_REFERENCE.md` (quy tắc vẽ). Mục 2, 3, 6.6 (lấy mẫu/lật hướng), 7 (định dạng xuất), 8 (giao diện), 9 (Claude API) vẫn là đích.
+
 ---
 
 ## 0. Câu lệnh khởi động (dán vào Claude Code)

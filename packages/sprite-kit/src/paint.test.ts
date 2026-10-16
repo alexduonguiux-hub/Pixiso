@@ -36,7 +36,7 @@ describe('paint outline styles', () => {
   });
 
   it('every tinted line is darker than every shade of a shaded material', () => {
-    const shaded = MATERIALS.map((m, i) => i).filter(
+    const shaded = MATERIALS.map((_m, i) => i).filter(
       (i) => !['line', 'eye', 'white'].includes(MATERIALS[i]!),
     );
     const minShade = Math.min(

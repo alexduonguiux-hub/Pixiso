@@ -2,10 +2,10 @@ import type { Catalog } from './schema.js';
 import { PART_NONE, type CharacterConfig, type ProjectStyle } from './types.js';
 
 export const DEFAULT_PROJECT_STYLE: ProjectStyle = {
-  characterHeightPx: 48,
+  characterHeightPx: 32,
   directions: 8,
   palette: { mode: 'auto', colors: 16 },
-  outline: 'selective',
+  outline: 'ink',
   cell: 'auto',
   fps: 'fromClip',
 };

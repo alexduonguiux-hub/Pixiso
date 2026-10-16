@@ -8,16 +8,16 @@ describe('app store', () => {
     const s = createAppStore(catalog).getState();
     expect(s.config.baseCharacter).toBe(catalog.referenceCharacter);
     expect(s.config.animations).toContain(s.preview.animationId);
+    expect(catalog.directions).toContain(s.preview.direction);
   });
 
-  it('resets parts that do not fit the new base character to "none"', () => {
+  it('falls back to the reference body for an unknown character', () => {
     const store = createAppStore(catalog);
-    store.getState().setBaseCharacter('knight');
     store.getState().setPart('head', 'knight_helmet');
     store.getState().setPart('hand_right', 'sword_1handed');
+    store.getState().setBaseCharacter('dragon');
+    expect(store.getState().config.baseCharacter).toBe(catalog.referenceCharacter);
     expect(store.getState().config.parts.head).toBe('knight_helmet');
-    store.getState().setBaseCharacter('mage');
-    expect(store.getState().config.parts.head).toBe('none');
     expect(store.getState().config.parts.hand_right).toBe('sword_1handed');
   });
 
@@ -25,19 +25,21 @@ describe('app store', () => {
     const store = createAppStore(catalog);
     store.getState().setPart('hand_right', 'shield_round');
     expect(store.getState().config.parts.hand_right).toBe('none');
+    store.getState().setPart('hand_left', 'shield_round');
+    expect(store.getState().config.parts.hand_left).toBe('shield_round');
   });
 
   it('replaces a colour per target and drops "original"', () => {
     const store = createAppStore(catalog);
     store.getState().setColor('body', 'red');
     store.getState().setColor('body', 'blue');
-    store.getState().setColor('hand_left', 'gold');
+    store.getState().setColor('metal', 'gold');
     expect(store.getState().config.colors).toEqual([
       { target: 'body', color: 'blue' },
-      { target: 'hand_left', color: 'gold' },
+      { target: 'metal', color: 'gold' },
     ]);
     store.getState().setColor('body', 'original');
-    expect(store.getState().config.colors).toEqual([{ target: 'hand_left', color: 'gold' }]);
+    expect(store.getState().config.colors).toEqual([{ target: 'metal', color: 'gold' }]);
   });
 
   it('keeps the preview animation inside the selected set', () => {
@@ -53,11 +55,10 @@ describe('app store', () => {
 
   it('round-trips the config through JSON without loss', () => {
     const store = createAppStore(catalog);
-    store.getState().setBaseCharacter('rogue');
-    store.getState().setPart('hand_right', 'dagger');
-    store.getState().setPart('hand_left', 'dagger');
-    store.getState().setColor('legs', 'navy');
-    store.getState().toggleAnimation('attack_dual');
+    store.getState().setPart('hand_right', 'sword_1handed');
+    store.getState().setPart('back', 'cape');
+    store.getState().setColor('cape', 'red');
+    store.getState().toggleAnimation('walk');
     const json = store.getState().exportConfigJson();
     const before = store.getState().config;
 
@@ -96,13 +97,13 @@ describe('app store', () => {
     const store = createAppStore(catalog, {
       config: {
         version: 1,
-        baseCharacter: 'mage',
-        parts: { head: 'knight_helmet' },
+        baseCharacter: 'human',
+        parts: { head: 'sword_1handed', back: 'cape' },
         colors: [],
         animations: ['idle'],
       },
     });
-    expect(store.getState().config.baseCharacter).toBe('mage');
     expect(store.getState().config.parts.head).toBe('none');
+    expect(store.getState().config.parts.back).toBe('cape');
   });
 });

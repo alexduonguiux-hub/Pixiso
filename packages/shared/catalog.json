@@ -1,609 +1,84 @@
 {
-  "version": 1,
-  "asset": {
-    "id": "kaykit_adventurers",
-    "name": "KayKit Character Pack: Adventurers 1.0",
-    "license": "CC0-1.0",
-    "source": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
-    "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
-    "root": "vendor/kaykit-adventurers"
+  "version": 2,
+  "source": {
+    "id": "pixiso_base",
+    "name": "Bộ nhân vật cơ bản Pixiso (vẽ trực tiếp trên lưới pixel trong repo này)",
+    "license": "Pixiso (chủ dự án quyết định giấy phép phân phối)",
+    "note": "Không dùng asset bên ngoài. Mọi template nằm trong packages/sprite-kit."
   },
-  "referenceCharacter": "knight",
+  "referenceCharacter": "human",
   "characters": [
     {
-      "id": "barbarian",
-      "file": "Characters/gltf/Barbarian.glb",
-      "label_vi": "Chiến binh man rợ",
-      "description_vi": "Cơ bắp, hợp với rìu",
+      "id": "human",
+      "label_vi": "Người (chibi 32 px)",
+      "description_vi": "Thân 32 px kiểu chibi, đầu 14 px, mắt 2×2",
       "tags": [
-        "rìu",
-        "cơ bắp",
-        "cận chiến",
-        "hoang dã",
-        "mạnh mẽ",
-        "man rợ"
+        "người",
+        "chibi",
+        "cơ bản",
+        "nhân vật"
       ],
-      "heightM": 2.1863,
-      "projected": {
-        "heightM": 2.1206,
-        "aboveM": 1.9959,
-        "belowM": 0.1247,
-        "widthM": 1.9425,
-        "maxHeightM": 2.1621
+      "canvas": {
+        "w": 24,
+        "h": 32
       },
-      "builtinNodes": [
-        "1H_Axe",
-        "1H_Axe_Offhand",
-        "2H_Axe",
-        "Barbarian_Cape",
-        "Barbarian_Hat",
-        "Barbarian_Round_Shield",
-        "Mug"
-      ]
-    },
-    {
-      "id": "knight",
-      "file": "Characters/gltf/Knight.glb",
-      "label_vi": "Hiệp sĩ",
-      "description_vi": "Giáp nặng, hợp với kiếm và khiên",
-      "tags": [
-        "giáp",
-        "cận chiến",
-        "kiếm",
-        "khiên",
-        "lính",
-        "chiến binh",
-        "bảo vệ"
-      ],
-      "heightM": 2.3145,
-      "projected": {
-        "heightM": 2.2387,
-        "aboveM": 2.0979,
-        "belowM": 0.1408,
-        "widthM": 1.9425,
-        "maxHeightM": 2.2781
-      },
-      "builtinNodes": [
-        "1H_Sword",
-        "1H_Sword_Offhand",
-        "2H_Sword",
-        "Badge_Shield",
-        "Knight_Cape",
-        "Knight_Helmet",
-        "Rectangle_Shield",
-        "Round_Shield",
-        "Spike_Shield"
-      ]
-    },
-    {
-      "id": "mage",
-      "file": "Characters/gltf/Mage.glb",
-      "label_vi": "Pháp sư",
-      "description_vi": "Áo choàng và mũ nhọn, hợp với gậy phép",
-      "tags": [
-        "phép thuật",
-        "gậy phép",
-        "áo choàng",
-        "mũ nhọn",
-        "phù thủy",
-        "thầy phù thủy"
-      ],
-      "heightM": 2.2027,
-      "projected": {
-        "heightM": 2.1057,
-        "aboveM": 1.9809,
-        "belowM": 0.1247,
-        "widthM": 1.9425,
-        "maxHeightM": 2.1471
-      },
-      "builtinNodes": [
-        "1H_Wand",
-        "2H_Staff",
-        "Mage_Cape",
-        "Mage_Hat",
-        "Spellbook",
-        "Spellbook_open"
-      ]
-    },
-    {
-      "id": "rogue",
-      "file": "Characters/gltf/Rogue.glb",
-      "label_vi": "Kẻ trộm",
-      "description_vi": "Nhẹ nhàng, hợp với dao găm và nỏ",
-      "tags": [
-        "dao găm",
-        "nỏ",
-        "lén lút",
-        "nhanh nhẹn",
-        "sát thủ",
-        "cung thủ",
-        "trộm"
-      ],
-      "heightM": 2.187,
-      "projected": {
-        "heightM": 2.104,
-        "aboveM": 1.9793,
-        "belowM": 0.1247,
-        "widthM": 1.9425,
-        "maxHeightM": 2.1458
-      },
-      "builtinNodes": [
-        "1H_Crossbow",
-        "2H_Crossbow",
-        "Knife",
-        "Knife_Offhand",
-        "Rogue_Cape",
-        "Throwable"
-      ]
-    },
-    {
-      "id": "rogue_hooded",
-      "file": "Characters/gltf/Rogue_Hooded.glb",
-      "label_vi": "Kẻ trộm trùm đầu",
-      "description_vi": "Như Kẻ trộm nhưng có mũ trùm",
-      "tags": [
-        "dao găm",
-        "nỏ",
-        "lén lút",
-        "trùm đầu",
-        "bí ẩn",
-        "sát thủ",
-        "cung thủ"
-      ],
-      "heightM": 2.2512,
-      "projected": {
-        "heightM": 2.2237,
-        "aboveM": 2.099,
-        "belowM": 0.1247,
-        "widthM": 1.9425,
-        "maxHeightM": 2.2237
-      },
-      "builtinNodes": [
-        "1H_Crossbow",
-        "2H_Crossbow",
-        "Knife",
-        "Knife_Offhand",
-        "Rogue_Cape",
-        "Throwable"
-      ]
+      "pivot": {
+        "x": 12,
+        "y": 30
+      }
     }
   ],
   "slots": [
     {
+      "id": "head",
+      "label_vi": "Đầu"
+    },
+    {
       "id": "hand_right",
-      "label_vi": "Tay phải",
-      "bone": "handslot.r"
+      "label_vi": "Tay phải"
     },
     {
       "id": "hand_left",
-      "label_vi": "Tay trái",
-      "bone": "handslot.l"
-    },
-    {
-      "id": "head",
-      "label_vi": "Đầu",
-      "bone": "head"
+      "label_vi": "Tay trái"
     },
     {
       "id": "back",
-      "label_vi": "Lưng",
-      "bone": "chest"
+      "label_vi": "Lưng"
     }
   ],
   "parts": [
     {
+      "id": "knight_helmet",
+      "slots": [
+        "head"
+      ],
+      "label_vi": "Mũ giáp hiệp sĩ",
+      "tags": [
+        "mũ",
+        "giáp",
+        "hiệp sĩ",
+        "kim loại",
+        "bảo vệ"
+      ],
+      "characters": [
+        "*"
+      ]
+    },
+    {
       "id": "sword_1handed",
       "slots": [
-        "hand_right",
-        "hand_left"
+        "hand_right"
       ],
       "label_vi": "Kiếm một tay",
       "tags": [
         "kiếm",
         "cận chiến",
-        "hiệp sĩ",
-        "vũ khí"
+        "vũ khí",
+        "chém"
       ],
       "characters": [
         "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/sword_1handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.033,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        },
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "sword_2handed",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Kiếm hai tay",
-      "tags": [
-        "kiếm",
-        "hai tay",
-        "cận chiến",
-        "đại kiếm",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/sword_2handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.033,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "sword_2handed_color",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Kiếm hai tay (bản màu)",
-      "tags": [
-        "kiếm",
-        "hai tay",
-        "cận chiến",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/sword_2handed_color.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.033,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "axe_1handed",
-      "slots": [
-        "hand_right",
-        "hand_left"
-      ],
-      "label_vi": "Rìu một tay",
-      "tags": [
-        "rìu",
-        "cận chiến",
-        "man rợ",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/axe_1handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.033,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        },
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "axe_2handed",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Rìu hai tay",
-      "tags": [
-        "rìu",
-        "hai tay",
-        "cận chiến",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/axe_2handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.033,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "dagger",
-      "slots": [
-        "hand_right",
-        "hand_left"
-      ],
-      "label_vi": "Dao găm",
-      "tags": [
-        "dao",
-        "dao găm",
-        "trộm",
-        "lén lút",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/dagger.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        },
-        "hand_left": {
-          "translation": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "staff",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Gậy phép",
-      "tags": [
-        "gậy",
-        "gậy phép",
-        "pháp sư",
-        "phép thuật",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/staff.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "wand",
-      "slots": [
-        "hand_right",
-        "hand_left"
-      ],
-      "label_vi": "Đũa phép",
-      "tags": [
-        "đũa",
-        "đũa phép",
-        "pháp sư",
-        "phép thuật"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/wand.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        },
-        "hand_left": {
-          "translation": [
-            0,
-            0,
-            0
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "crossbow_1handed",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Nỏ một tay",
-      "tags": [
-        "nỏ",
-        "cung",
-        "bắn",
-        "tầm xa",
-        "cung thủ",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/crossbow_1handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            -0.105,
-            -0.01,
-            0
-          ],
-          "rotation": [
-            0,
-            0.707,
-            0,
-            0.707
-          ]
-        }
-      }
-    },
-    {
-      "id": "crossbow_2handed",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Nỏ hai tay",
-      "tags": [
-        "nỏ",
-        "cung",
-        "bắn",
-        "tầm xa",
-        "hai tay",
-        "cung thủ",
-        "vũ khí"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/crossbow_2handed.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            -0.105,
-            -0.01,
-            0
-          ],
-          "rotation": [
-            0,
-            0.707,
-            0,
-            0.707
-          ]
-        }
-      }
+      ]
     },
     {
       "id": "shield_round",
@@ -614,681 +89,80 @@
       "tags": [
         "khiên",
         "phòng thủ",
+        "gỗ",
+        "bảo vệ"
+      ],
+      "characters": [
+        "*"
+      ]
+    },
+    {
+      "id": "cape",
+      "slots": [
+        "back"
+      ],
+      "label_vi": "Áo choàng",
+      "tags": [
+        "áo choàng",
+        "lưng",
+        "vải",
         "hiệp sĩ"
       ],
       "characters": [
         "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_round.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_round_color",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên tròn (bản màu)",
-      "tags": [
-        "khiên",
-        "phòng thủ"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_round_color.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_round_barbarian",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên tròn man rợ",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "man rợ",
-        "gỗ"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_round_barbarian.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_badge",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên huy hiệu",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "huy hiệu",
-        "hiệp sĩ"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_badge.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_badge_color",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên huy hiệu (bản màu)",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "huy hiệu"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_badge_color.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_square",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên vuông",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "vuông"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_square.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_square_color",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên vuông (bản màu)",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "vuông"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_square_color.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_spikes",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên gai",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "gai"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_spikes.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "shield_spikes_color",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Khiên gai (bản màu)",
-      "tags": [
-        "khiên",
-        "phòng thủ",
-        "gai"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/shield_spikes_color.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.017,
-            0.156
-          ],
-          "rotation": [
-            0,
-            0,
-            0,
-            1
-          ]
-        }
-      }
-    },
-    {
-      "id": "spellbook_closed",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Sách phép (đóng)",
-      "tags": [
-        "sách",
-        "sách phép",
-        "pháp sư",
-        "phép thuật"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/spellbook_closed.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.266,
-            0
-          ],
-          "rotation": [
-            0,
-            -0.707,
-            -0.707,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "spellbook_open",
-      "slots": [
-        "hand_left"
-      ],
-      "label_vi": "Sách phép (mở)",
-      "tags": [
-        "sách",
-        "sách phép",
-        "pháp sư",
-        "phép thuật"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/spellbook_open.gltf"
-      },
-      "attach": {
-        "hand_left": {
-          "translation": [
-            0,
-            0.145,
-            0
-          ],
-          "rotation": [
-            0,
-            -0.707,
-            -0.707,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "mug_full",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Cốc bia (đầy)",
-      "tags": [
-        "cốc",
-        "bia",
-        "uống",
-        "quán rượu"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/mug_full.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0.301,
-            -0.016,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "mug_empty",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Cốc bia (rỗng)",
-      "tags": [
-        "cốc",
-        "bia",
-        "uống",
-        "quán rượu"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/mug_empty.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0.301,
-            -0.016,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "smokebomb",
-      "slots": [
-        "hand_right"
-      ],
-      "label_vi": "Bom khói",
-      "tags": [
-        "bom khói",
-        "ném",
-        "trộm",
-        "lén lút"
-      ],
-      "characters": [
-        "*"
-      ],
-      "source": {
-        "type": "file",
-        "file": "Assets/gltf/smokebomb.gltf"
-      },
-      "attach": {
-        "hand_right": {
-          "translation": [
-            0,
-            0.18,
-            0
-          ],
-          "rotation": [
-            0,
-            -1,
-            0,
-            0
-          ]
-        }
-      }
-    },
-    {
-      "id": "knight_helmet",
-      "slots": [
-        "head"
-      ],
-      "label_vi": "Mũ giáp hiệp sĩ",
-      "tags": [
-        "mũ",
-        "mũ giáp",
-        "giáp"
-      ],
-      "characters": [
-        "knight"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Knight_Helmet"
-      }
-    },
-    {
-      "id": "knight_cape",
-      "slots": [
-        "back"
-      ],
-      "label_vi": "Áo choàng hiệp sĩ",
-      "tags": [
-        "áo choàng"
-      ],
-      "characters": [
-        "knight"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Knight_Cape"
-      }
-    },
-    {
-      "id": "barbarian_hat",
-      "slots": [
-        "head"
-      ],
-      "label_vi": "Mũ sừng",
-      "tags": [
-        "mũ",
-        "sừng",
-        "man rợ"
-      ],
-      "characters": [
-        "barbarian"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Barbarian_Hat"
-      }
-    },
-    {
-      "id": "barbarian_cape",
-      "slots": [
-        "back"
-      ],
-      "label_vi": "Áo choàng man rợ",
-      "tags": [
-        "áo choàng"
-      ],
-      "characters": [
-        "barbarian"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Barbarian_Cape"
-      }
-    },
-    {
-      "id": "mage_hat",
-      "slots": [
-        "head"
-      ],
-      "label_vi": "Mũ pháp sư",
-      "tags": [
-        "mũ",
-        "mũ nhọn",
-        "pháp sư"
-      ],
-      "characters": [
-        "mage"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Mage_Hat"
-      }
-    },
-    {
-      "id": "mage_cape",
-      "slots": [
-        "back"
-      ],
-      "label_vi": "Áo choàng pháp sư",
-      "tags": [
-        "áo choàng"
-      ],
-      "characters": [
-        "mage"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Mage_Cape"
-      }
-    },
-    {
-      "id": "rogue_cape",
-      "slots": [
-        "back"
-      ],
-      "label_vi": "Áo choàng kẻ trộm",
-      "tags": [
-        "áo choàng"
-      ],
-      "characters": [
-        "rogue"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Rogue_Cape"
-      }
-    },
-    {
-      "id": "rogue_hooded_cape",
-      "slots": [
-        "back"
-      ],
-      "label_vi": "Áo choàng kẻ trộm",
-      "tags": [
-        "áo choàng"
-      ],
-      "characters": [
-        "rogue_hooded"
-      ],
-      "source": {
-        "type": "builtin",
-        "node": "Rogue_Cape"
-      }
+      ]
     }
   ],
   "colorTargets": [
     {
+      "id": "skin",
+      "label_vi": "Da",
+      "material": "skin"
+    },
+    {
+      "id": "hair",
+      "label_vi": "Tóc",
+      "material": "hair"
+    },
+    {
       "id": "body",
-      "label_vi": "Thân / áo",
-      "kind": "mesh",
-      "meshSuffixes": [
-        "_Body"
-      ]
-    },
-    {
-      "id": "head",
-      "label_vi": "Đầu",
-      "kind": "mesh",
-      "meshSuffixes": [
-        "_Head",
-        "_Head_Hooded"
-      ]
-    },
-    {
-      "id": "arms",
-      "label_vi": "Tay",
-      "kind": "mesh",
-      "meshSuffixes": [
-        "_ArmLeft",
-        "_ArmRight"
-      ]
+      "label_vi": "Áo / thân",
+      "material": "cloth"
     },
     {
       "id": "legs",
-      "label_vi": "Chân / quần",
-      "kind": "mesh",
-      "meshSuffixes": [
-        "_LegLeft",
-        "_LegRight"
-      ]
+      "label_vi": "Quần",
+      "material": "pants"
     },
     {
-      "id": "headwear",
-      "label_vi": "Mũ",
-      "kind": "slot",
-      "slot": "head"
+      "id": "boots",
+      "label_vi": "Giày",
+      "material": "boots"
     },
     {
-      "id": "back",
+      "id": "cape",
       "label_vi": "Áo choàng",
-      "kind": "slot",
-      "slot": "back"
+      "material": "cloth2"
     },
     {
-      "id": "hand_right",
-      "label_vi": "Vật tay phải",
-      "kind": "slot",
-      "slot": "hand_right"
+      "id": "metal",
+      "label_vi": "Kim loại",
+      "material": "metal"
     },
     {
-      "id": "hand_left",
-      "label_vi": "Vật tay trái",
-      "kind": "slot",
-      "slot": "hand_left"
+      "id": "leather",
+      "label_vi": "Da thuộc",
+      "material": "leather"
+    },
+    {
+      "id": "wood",
+      "label_vi": "Gỗ",
+      "material": "wood"
+    },
+    {
+      "id": "accent",
+      "label_vi": "Điểm nhấn",
+      "material": "accent"
     }
   ],
   "colors": [
@@ -1381,12 +255,10 @@
   "animations": [
     {
       "id": "idle",
-      "clip": "Idle",
       "label_vi": "Đứng yên",
       "loop": true,
-      "defaultFrames": 4,
-      "durationS": 1.0667,
-      "rootMotion": false,
+      "frames": 2,
+      "frameMs": 500,
       "tags": [
         "đứng",
         "nghỉ",
@@ -1394,415 +266,21 @@
       ]
     },
     {
-      "id": "idle_unarmed",
-      "clip": "Unarmed_Idle",
-      "label_vi": "Đứng yên (tay không)",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "đứng",
-        "tay không"
-      ]
-    },
-    {
-      "id": "idle_2h",
-      "clip": "2H_Melee_Idle",
-      "label_vi": "Đứng yên (vũ khí hai tay)",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "đứng",
-        "hai tay"
-      ]
-    },
-    {
       "id": "walk",
-      "clip": "Walking_A",
       "label_vi": "Đi bộ",
       "loop": true,
-      "defaultFrames": 8,
-      "durationS": 1.0667,
-      "rootMotion": false,
+      "frames": 4,
+      "frameMs": 140,
       "tags": [
         "đi",
-        "di chuyển"
-      ]
-    },
-    {
-      "id": "walk_b",
-      "clip": "Walking_B",
-      "label_vi": "Đi bộ (kiểu B)",
-      "loop": true,
-      "defaultFrames": 8,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "đi",
-        "di chuyển"
-      ]
-    },
-    {
-      "id": "run",
-      "clip": "Running_A",
-      "label_vi": "Chạy",
-      "loop": true,
-      "defaultFrames": 8,
-      "durationS": 0.8,
-      "rootMotion": false,
-      "tags": [
-        "chạy",
         "di chuyển",
-        "nhanh"
-      ]
-    },
-    {
-      "id": "attack_1h",
-      "clip": "1H_Melee_Attack_Slice_Horizontal",
-      "label_vi": "Chém một tay",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "chém",
-        "kiếm",
-        "rìu"
-      ]
-    },
-    {
-      "id": "attack_1h_chop",
-      "clip": "1H_Melee_Attack_Chop",
-      "label_vi": "Bổ một tay",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "bổ",
-        "rìu"
-      ]
-    },
-    {
-      "id": "attack_stab",
-      "clip": "1H_Melee_Attack_Stab",
-      "label_vi": "Đâm",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.6,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "đâm",
-        "dao",
-        "kiếm"
-      ]
-    },
-    {
-      "id": "attack_2h",
-      "clip": "2H_Melee_Attack_Slice",
-      "label_vi": "Chém hai tay",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.1,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "chém",
-        "hai tay"
-      ]
-    },
-    {
-      "id": "attack_2h_spin",
-      "clip": "2H_Melee_Attack_Spin",
-      "label_vi": "Xoay chém",
-      "loop": false,
-      "defaultFrames": 8,
-      "durationS": 2.4,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "xoay",
-        "hai tay"
-      ]
-    },
-    {
-      "id": "attack_dual",
-      "clip": "Dualwield_Melee_Attack_Slice",
-      "label_vi": "Chém hai dao",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.1667,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "hai dao",
-        "song đao"
-      ]
-    },
-    {
-      "id": "punch",
-      "clip": "Unarmed_Melee_Attack_Punch_A",
-      "label_vi": "Đấm",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.4667,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "đấm",
-        "tay không"
-      ]
-    },
-    {
-      "id": "kick",
-      "clip": "Unarmed_Melee_Attack_Kick",
-      "label_vi": "Đá",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 0.9333,
-      "rootMotion": false,
-      "tags": [
-        "tấn công",
-        "đá",
-        "tay không"
-      ]
-    },
-    {
-      "id": "shoot",
-      "clip": "1H_Ranged_Shoot",
-      "label_vi": "Bắn nỏ",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "bắn",
-        "nỏ",
-        "tầm xa"
-      ]
-    },
-    {
-      "id": "aim",
-      "clip": "1H_Ranged_Aiming",
-      "label_vi": "Ngắm bắn",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "ngắm",
-        "nỏ",
-        "tầm xa"
-      ]
-    },
-    {
-      "id": "spellcast",
-      "clip": "Spellcast_Shoot",
-      "label_vi": "Phóng phép",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 0.9333,
-      "rootMotion": false,
-      "tags": [
-        "phép thuật",
-        "phóng",
-        "pháp sư"
-      ]
-    },
-    {
-      "id": "spellcast_long",
-      "clip": "Spellcast_Long",
-      "label_vi": "Niệm phép dài",
-      "loop": false,
-      "defaultFrames": 8,
-      "durationS": 2.5333,
-      "rootMotion": false,
-      "tags": [
-        "phép thuật",
-        "niệm",
-        "pháp sư"
-      ]
-    },
-    {
-      "id": "spellcasting",
-      "clip": "Spellcasting",
-      "label_vi": "Niệm phép (lặp)",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 0.6667,
-      "rootMotion": false,
-      "tags": [
-        "phép thuật",
-        "niệm",
-        "pháp sư"
-      ]
-    },
-    {
-      "id": "block",
-      "clip": "Blocking",
-      "label_vi": "Đỡ đòn",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "đỡ",
-        "phòng thủ",
-        "khiên"
-      ]
-    },
-    {
-      "id": "block_hit",
-      "clip": "Block_Hit",
-      "label_vi": "Đỡ đòn bị đánh",
-      "loop": false,
-      "defaultFrames": 3,
-      "durationS": 1.0667,
-      "rootMotion": false,
-      "tags": [
-        "đỡ",
-        "bị đánh",
-        "khiên"
-      ]
-    },
-    {
-      "id": "hit",
-      "clip": "Hit_A",
-      "label_vi": "Bị đánh",
-      "loop": false,
-      "defaultFrames": 3,
-      "durationS": 0.6667,
-      "rootMotion": false,
-      "tags": [
-        "bị đánh",
-        "trúng đòn",
-        "đau"
-      ]
-    },
-    {
-      "id": "death",
-      "clip": "Death_A",
-      "label_vi": "Chết",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 0.8,
-      "rootMotion": true,
-      "tags": [
-        "chết",
-        "ngã"
-      ]
-    },
-    {
-      "id": "death_b",
-      "clip": "Death_B",
-      "label_vi": "Chết (kiểu B)",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 2.6333,
-      "rootMotion": true,
-      "tags": [
-        "chết",
-        "ngã"
-      ]
-    },
-    {
-      "id": "jump",
-      "clip": "Jump_Full_Short",
-      "label_vi": "Nhảy",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.1667,
-      "rootMotion": false,
-      "tags": [
-        "nhảy"
-      ]
-    },
-    {
-      "id": "cheer",
-      "clip": "Cheer",
-      "label_vi": "Ăn mừng",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.6667,
-      "rootMotion": false,
-      "tags": [
-        "ăn mừng",
-        "vui",
-        "chiến thắng"
-      ]
-    },
-    {
-      "id": "interact",
-      "clip": "Interact",
-      "label_vi": "Tương tác",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.3,
-      "rootMotion": false,
-      "tags": [
-        "tương tác",
-        "mở",
-        "bấm"
-      ]
-    },
-    {
-      "id": "pickup",
-      "clip": "PickUp",
-      "label_vi": "Nhặt đồ",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.3,
-      "rootMotion": false,
-      "tags": [
-        "nhặt",
-        "cúi"
-      ]
-    },
-    {
-      "id": "throw",
-      "clip": "Throw",
-      "label_vi": "Ném",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.3667,
-      "rootMotion": false,
-      "tags": [
-        "ném",
-        "bom khói"
-      ]
-    },
-    {
-      "id": "use_item",
-      "clip": "Use_Item",
-      "label_vi": "Dùng vật phẩm",
-      "loop": false,
-      "defaultFrames": 6,
-      "durationS": 1.6,
-      "rootMotion": false,
-      "tags": [
-        "dùng",
-        "uống",
-        "vật phẩm"
-      ]
-    },
-    {
-      "id": "sit_floor",
-      "clip": "Sit_Floor_Idle",
-      "label_vi": "Ngồi đất",
-      "loop": true,
-      "defaultFrames": 4,
-      "durationS": 4,
-      "rootMotion": false,
-      "tags": [
-        "ngồi",
-        "nghỉ"
+        "bước"
       ]
     }
+  ],
+  "directions": [
+    "S",
+    "W",
+    "E"
   ]
 }

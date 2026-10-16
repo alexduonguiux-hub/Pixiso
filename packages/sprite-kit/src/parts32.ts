@@ -1,4 +1,5 @@
 import { mirrorFromLeft, sprite, type Sprite } from './format.js';
+import type { SlotId } from './registry.js';
 
 /** A part: a sprite per authored view plus where it sits relative to its anchor. */
 export interface PartView {
@@ -12,7 +13,7 @@ export interface PartView {
 
 export interface PartDef {
   id: string;
-  slot: 'head' | 'handR' | 'handL' | 'back';
+  slot: SlotId;
   views: { S: PartView; W: PartView };
 }
 
@@ -136,7 +137,7 @@ export const PARTS: PartDef[] = [
   },
   {
     id: 'sword_1handed',
-    slot: 'handR',
+    slot: 'hand_right',
     views: {
       // S: blade stands beside the arm, grip row 11 at the hand. W: lowered, grip row 2 at the hand.
       S: { sprite: SWORD, dx: -4, dy: -11, z: 50 },
@@ -145,7 +146,7 @@ export const PARTS: PartDef[] = [
   },
   {
     id: 'shield_round',
-    slot: 'handL',
+    slot: 'hand_left',
     views: {
       S: { sprite: SHIELD, dx: -3, dy: -5, z: 50 },
       W: { sprite: SHIELD, dx: -1, dy: -5, z: 5 }, // on the far arm, behind the body

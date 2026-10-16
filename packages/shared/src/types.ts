@@ -41,9 +41,17 @@ export interface CharacterConfig {
   animations: string[];
 }
 
-export type CharacterHeightPx = 32 | 48 | 64;
+/**
+ * Output height of the 32 px base body: 32 = native, 64 = nearest ×2.
+ * A 48 px set would be a separate drawing (PIVOT.md §5, decision 1).
+ */
+export type CharacterHeightPx = 32 | 64;
 export type DirectionsMode = 8 | '5+mirror';
-export type OutlineMode = 'none' | 'dark' | 'selective';
+/**
+ * Outline presets measured on reference art (PIXEL_STYLE_REFERENCE.md §2.4):
+ * 'ink' = near-black tinted by the material, 'soft' = warm dark grey, 'none' = material shadow.
+ */
+export type OutlineMode = 'ink' | 'soft' | 'none';
 
 export type PaletteSetting = { mode: 'auto'; colors: number } | { mode: 'fixed'; hex: string[] };
 

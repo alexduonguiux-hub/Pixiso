@@ -4,10 +4,10 @@ import { ColorsPanel } from './ui/ColorsPanel.js';
 import { ConfigJsonPanel } from './ui/ConfigJsonPanel.js';
 import { DescribeBar } from './ui/DescribeBar.js';
 import { ExportBar } from './ui/ExportBar.js';
+import { FramesPanel } from './ui/FramesPanel.js';
 import { PartsPanel } from './ui/PartsPanel.js';
-import { PixelPreviewPanel } from './ui/PixelPreviewPanel.js';
 import { StylePanel } from './ui/StylePanel.js';
-import { ViewportPanel } from './ui/ViewportPanel.js';
+import { PreviewPanel } from './ui/PreviewPanel.js';
 
 export function App() {
   return (
@@ -21,8 +21,8 @@ export function App() {
         <ColorsPanel />
       </aside>
       <main className="center">
-        <ViewportPanel />
-        <PixelPreviewPanel />
+        <PreviewPanel />
+        <FramesPanel />
       </main>
       <aside className="right">
         <StylePanel />

@@ -90,7 +90,7 @@ Bạn quyết định bỏ 3D. Cách mới: **nhân vật là tập các ma tr�
 | M4 Xuất        | sheet, JSON Aseprite, GIF, ZIP, `player.html` (pixel-core đã có phần lớn)                                                               | 2 ngày    |
 | M5 Mô tả       | endpoint Claude với catalog mới                                                                                                         | 2 ngày    |
 
-### Quyết định cần bạn xác nhận
+### Quyết định đã xác nhận (16/10, cả 4)
 
 1. Cỡ cơ sở **32 px** (xuất ×2 = 64 px bằng nearest). Bộ 48 px là bộ vẽ riêng, để vòng sau.
 2. Phong cách chibi như spike (đầu 14 px, mắt 2×2). Nếu muốn tỷ lệ khác phải quyết ngay vì mọi bộ phận vẽ theo khung này.

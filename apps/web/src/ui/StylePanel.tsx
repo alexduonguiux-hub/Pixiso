@@ -17,7 +17,7 @@ export function StylePanel() {
             setStyle({ characterHeightPx: Number(e.target.value) as CharacterHeightPx })
           }
         >
-          {[32, 48, 64].map((h) => (
+          {[32, 64].map((h) => (
             <option key={h} value={h}>
               {h}
             </option>
@@ -42,9 +42,9 @@ export function StylePanel() {
           value={style.outline}
           onChange={(e) => setStyle({ outline: e.target.value as OutlineMode })}
         >
+          <option value="ink">{vi.style.outlineInk}</option>
+          <option value="soft">{vi.style.outlineSoft}</option>
           <option value="none">{vi.style.outlineNone}</option>
-          <option value="dark">{vi.style.outlineDark}</option>
-          <option value="selective">{vi.style.outlineSelective}</option>
         </select>
       </div>
       <div className="row">
@@ -52,7 +52,8 @@ export function StylePanel() {
         <select
           id="style-palette"
           value={style.palette.mode === 'auto' ? style.palette.colors : 'fixed'}
-          disabled={style.palette.mode !== 'auto'}
+          disabled
+          title={vi.style.paletteLater}
           onChange={(e) => setStyle({ palette: { mode: 'auto', colors: Number(e.target.value) } })}
         >
           {[8, 12, 16, 24, 32].map((n) => (

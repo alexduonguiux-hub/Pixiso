@@ -2,7 +2,7 @@
 
 Living status for the MVP. One section per phase: done, decisions, open items.
 
-## Phase 0 — Monorepo and assets ✅
+## Phase 0 — Monorepo and assets ✅ (asset scripts and KayKit removed in M1, D-039)
 
 **Done**
 
@@ -25,7 +25,7 @@ Living status for the MVP. One section per phase: done, decisions, open items.
 
 - `heightM` is the T-pose bbox; the ±1 px height test in Phase 2 will decide whether to measure on the idle pose instead.
 
-## Phase 1 — 3D viewer and assembler ✅
+## Phase 1 — 3D viewer and assembler ✅ (removed in M1, D-039)
 
 **Done**
 
@@ -47,7 +47,7 @@ Living status for the MVP. One section per phase: done, decisions, open items.
 - Thumbnails on character cards (needs the pixel renderer).
 - Skin shares a mesh with sleeves on some characters; recolouring `arms` tints skin (known limitation, HANDOFF §6.7).
 
-## Phase 2 — Pixel render core ✅ (stopped here for review)
+## Phase 2 — Pixel render core ✅ (stopped here for review; 3D pipeline removed in M1, D-039)
 
 **Done**
 
@@ -112,7 +112,7 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - The Knight's visor/face reads as a dark slit with eyes; acceptable for a helmeted knight, but a per-mesh material reservation (D-028) would still help at 16 colours.
 - Inner lines are depth-only; normal-based crease lines (folds) are not drawn.
 
-## Pivot spike — pixel matrices (no 3D) ✅ (awaiting decision)
+## Pivot spike — pixel matrices (no 3D) ✅ (all four decisions confirmed 16/10)
 
 - `packages/sprite-kit`: template format (`format.ts`), composer (`compose.ts`), palette painter (`paint.ts`), 32 px body for S and W (`body32.ts`), parts (`parts32.ts`: helmet, sword, round shield, cape), offset-table clips (`anim.ts`), character builder (`character.ts`). Unit tests.
 - `scripts/spike-sprite-kit.ts` renders ×8 sheets to `test-output/spike-matrix/` in Node (pngjs), no browser.
@@ -124,6 +124,22 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - Surveyed open-source pixel-art skills/tools (pixel-art-studio, pixel-plugin, aseprite-mcp, LPC generator, ramp generators); what to borrow is listed in PIXEL_STYLE_REFERENCE.md §5.
 - Added `REFERENCE_RAMP_OPTIONS`, `buildTintedLine` (pixel-core) and `PaintOptions` with tinted/selective outlines (sprite-kit), with tests (D-037). `scripts/spike-sprite-kit.ts` now renders both looks; comparison in `test-output/spike-matrix/compare_ramps_x8.png`.
 - Still open: the four pivot decisions in PIVOT.md §5; templates need real 3-tone shading (rule 3 and 8 of the new doc).
+
+## M1 — sprite-kit as the core ✅
+
+**Done**
+
+- `packages/sprite-kit` is the pixel source of truth: registry (`human` body 24×32, pivot (12, 30); slots `head`, `hand_right`, `hand_left`, `back`; 10 colour targets bound to materials; drawable directions S/W/E), `render.ts` (`CharacterConfig` + `ProjectStyle` → painted frames, outline presets ink/soft/none, ×2 output, fps override, used-colour palette).
+- Catalog v2 generated from the registry + `scripts/catalog-labels.yaml` by `pnpm assets:catalog`; a test keeps `catalog.json` in sync (D-038). `normalizeConfig`, the store and the Claude contract are unchanged.
+- Web app without three.js: `PreviewPanel` (zoom ×4–×8, 8 direction buttons with undrawn ones disabled, play/pause, iso ground diamond) and `FramesPanel` (frame strip + palette), both fed synchronously by sprite-kit. Style panel: 32/64 px, ink/soft/none.
+- Removed: 3D scene and render code, KayKit assets (18 MB), fetch/inspect scripts, asset report (D-039). `assets/LICENSES.md` rewritten.
+- `pnpm sheets` renders review sheets through the real config path to `test-output/sheets/`.
+- Tests: 103 Vitest (shared, pixel-core, sprite-kit incl. render path, scripts catalog sync, store, server) and a Playwright smoke test (boot, parts/colour/direction changes, determinism across reload, frame strip).
+
+**Open / next (M2)**
+
+- Templates still use mostly one tone per material; redraw body and parts with the 3-tone rule and top-left light (PIXEL_STYLE_REFERENCE.md §3), then add SW/NW/N views and the remaining clips (run, attack, hit, death).
+- Palette lock, iso grid and style import/export stay in Phase 4; sheet/JSON/GIF/ZIP export in M4; describe in M5.
 
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 

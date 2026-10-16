@@ -16,15 +16,11 @@ import { createStore, type StoreApi } from 'zustand/vanilla';
 import { useStore } from 'zustand';
 import { catalog as defaultCatalog } from '@pixiso/shared/catalog';
 
-/** Recolour strategy (HANDOFF §6.7): 'hue' = A (OKLCh hue rotation), 'ramp' = B (luminance ramp). */
-export type RecolorMethod = 'hue' | 'ramp';
-
 export interface PreviewState {
-  /** Animation currently played in the viewport; always one of `config.animations`. */
+  /** Animation currently played in the preview; always one of `config.animations`. */
   animationId: string;
   direction: Direction;
   playing: boolean;
-  recolorMethod: RecolorMethod;
 }
 
 export interface PersistedState {
@@ -86,7 +82,6 @@ export function createAppStore(
         animationId: pickPreviewAnimation(initialConfig, 'walk'),
         direction: DIRECTIONS_8[0],
         playing: true,
-        recolorMethod: 'ramp',
       },
 
       setBaseCharacter: (id) => {

@@ -18,12 +18,13 @@ export interface BodyPart {
   z: number;
 }
 
+/** One anchor per slot (see registry.ts SLOT_IDS). */
 export interface Anchors {
   /** Top-left of the head box (hats/helmets are drawn relative to it). */
   head: { x: number; y: number };
   /** Right hand of the character (screen-left when facing S). */
-  handR: { x: number; y: number };
-  handL: { x: number; y: number };
+  hand_right: { x: number; y: number };
+  hand_left: { x: number; y: number };
   /** Point behind the shoulders for capes. */
   back: { x: number; y: number };
 }
@@ -103,8 +104,8 @@ export const BODY_S: BodyView = {
   },
   anchors: {
     head: { x: 5, y: 1 },
-    handR: { x: 5, y: 20 },
-    handL: { x: 18, y: 20 },
+    hand_right: { x: 5, y: 20 },
+    hand_left: { x: 18, y: 20 },
     back: { x: 12, y: 16 },
   },
 };
@@ -172,8 +173,8 @@ export const BODY_W: BodyView = {
   },
   anchors: {
     head: { x: 5, y: 1 },
-    handR: { x: 10, y: 20 },
-    handL: { x: 13, y: 20 },
+    hand_right: { x: 10, y: 20 },
+    hand_left: { x: 13, y: 20 },
     back: { x: 15, y: 16 },
   },
 };

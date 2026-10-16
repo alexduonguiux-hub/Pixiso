@@ -17,9 +17,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "assets:fetch": "tsx scripts/fetch-assets.ts",
-    "assets:inspect": "tsx scripts/inspect-assets.ts",
-    "assets:catalog": "tsx scripts/build-catalog.ts"
+    "assets:catalog": "tsx scripts/build-catalog.ts",
+    "sheets": "tsx scripts/render-sheets.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

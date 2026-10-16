@@ -1,241 +1,45 @@
-# Hand-written labels and curation for the catalog.
-# Node names, file ids and clip names must match what `pnpm assets:inspect`
-# found (see docs/ASSET_REPORT.md); build-catalog.ts fails loudly otherwise.
-# Vietnamese labels are user-facing; ids are stable English snake_case.
+# Hand-written labels for everything the sprite-kit registry defines.
+# Ids must match packages/sprite-kit exactly; build-catalog fails on any
+# missing or extra entry. Values are Vietnamese UI strings and search tags.
 
-referenceCharacter: knight
+source:
+  id: pixiso_base
+  name: Bộ nhân vật cơ bản Pixiso (vẽ trực tiếp trên lưới pixel trong repo này)
+  license: Pixiso (chủ dự án quyết định giấy phép phân phối)
+  note: Không dùng asset bên ngoài. Mọi template nằm trong packages/sprite-kit.
+
+referenceCharacter: human
 
 characters:
-  knight:
-    label_vi: Hiệp sĩ
-    description_vi: Giáp nặng, hợp với kiếm và khiên
-    tags: [giáp, cận chiến, kiếm, khiên, lính, chiến binh, bảo vệ]
-  barbarian:
-    label_vi: Chiến binh man rợ
-    description_vi: Cơ bắp, hợp với rìu
-    tags: [rìu, cơ bắp, cận chiến, hoang dã, mạnh mẽ, man rợ]
-  mage:
-    label_vi: Pháp sư
-    description_vi: Áo choàng và mũ nhọn, hợp với gậy phép
-    tags: [phép thuật, gậy phép, áo choàng, mũ nhọn, phù thủy, thầy phù thủy]
-  rogue:
-    label_vi: Kẻ trộm
-    description_vi: Nhẹ nhàng, hợp với dao găm và nỏ
-    tags: [dao găm, nỏ, lén lút, nhanh nhẹn, sát thủ, cung thủ, trộm]
-  rogue_hooded:
-    label_vi: Kẻ trộm trùm đầu
-    description_vi: Như Kẻ trộm nhưng có mũ trùm
-    tags: [dao găm, nỏ, lén lút, trùm đầu, bí ẩn, sát thủ, cung thủ]
+  human:
+    label_vi: Người (chibi 32 px)
+    description_vi: Thân 32 px kiểu chibi, đầu 14 px, mắt 2×2
+    tags: [người, chibi, cơ bản, nhân vật]
 
 slots:
-  hand_right: { label_vi: Tay phải, bone: handslot.r }
-  hand_left: { label_vi: Tay trái, bone: handslot.l }
-  head: { label_vi: Đầu, bone: head }
-  back: { label_vi: Lưng, bone: chest }
+  head: { label_vi: Đầu }
+  hand_right: { label_vi: Tay phải }
+  hand_left: { label_vi: Tay trái }
+  back: { label_vi: Lưng }
 
-# Default local transforms for file parts, copied from the equivalent built-in
-# meshes inside the GLBs (Knight `1H_Sword` under handslot.r, `1H_Sword_Offhand`
-# under handslot.l). Rotation is a quaternion [x, y, z, w].
-attachDefaults:
-  hand_right: { translation: [0, 0.033, 0], rotation: [0, -1, 0, 0] }
-  hand_left: { translation: [0, 0.017, 0], rotation: [0, 0, 0, 1] }
-
-# Shared attach presets referenced below.
-attachPresets:
-  shield_left: { translation: [0, 0.017, 0.156], rotation: [0, 0, 0, 1] }
-  grip_right: { translation: [0, 0, 0], rotation: [0, -1, 0, 0] }
-  grip_left: { translation: [0, 0, 0], rotation: [0, 0, 0, 1] }
-  crossbow_right: { translation: [-0.105, -0.010, 0], rotation: [0, 0.707, 0, 0.707] }
-  mug_right: { translation: [0.301, -0.016, 0], rotation: [0, -1, 0, 0] }
-  throwable_right: { translation: [0, 0.180, 0], rotation: [0, -1, 0, 0] }
-  spellbook_closed_left: { translation: [0, 0.266, 0], rotation: [0, -0.707, -0.707, 0] }
-  spellbook_open_left: { translation: [0, 0.145, 0], rotation: [0, -0.707, -0.707, 0] }
-
-# External accessory files (Assets/gltf/<id>.gltf). Files not listed here are
-# left out of the catalog (arrow, arrow_bundle, quiver: no attach point in the rig).
 parts:
-  sword_1handed:
-    slots: [hand_right, hand_left]
-    label_vi: Kiếm một tay
-    tags: [kiếm, cận chiến, hiệp sĩ, vũ khí]
-  sword_2handed:
-    slots: [hand_right]
-    label_vi: Kiếm hai tay
-    tags: [kiếm, hai tay, cận chiến, đại kiếm, vũ khí]
-  sword_2handed_color:
-    slots: [hand_right]
-    label_vi: Kiếm hai tay (bản màu)
-    tags: [kiếm, hai tay, cận chiến, vũ khí]
-  axe_1handed:
-    slots: [hand_right, hand_left]
-    label_vi: Rìu một tay
-    tags: [rìu, cận chiến, man rợ, vũ khí]
-  axe_2handed:
-    slots: [hand_right]
-    label_vi: Rìu hai tay
-    tags: [rìu, hai tay, cận chiến, vũ khí]
-  dagger:
-    slots: [hand_right, hand_left]
-    label_vi: Dao găm
-    tags: [dao, dao găm, trộm, lén lút, vũ khí]
-    attach: { hand_right: grip_right, hand_left: grip_left }
-  staff:
-    slots: [hand_right]
-    label_vi: Gậy phép
-    tags: [gậy, gậy phép, pháp sư, phép thuật, vũ khí]
-    attach: { hand_right: grip_right }
-  wand:
-    slots: [hand_right, hand_left]
-    label_vi: Đũa phép
-    tags: [đũa, đũa phép, pháp sư, phép thuật]
-    attach: { hand_right: grip_right, hand_left: grip_left }
-  crossbow_1handed:
-    slots: [hand_right]
-    label_vi: Nỏ một tay
-    tags: [nỏ, cung, bắn, tầm xa, cung thủ, vũ khí]
-    attach: { hand_right: crossbow_right }
-  crossbow_2handed:
-    slots: [hand_right]
-    label_vi: Nỏ hai tay
-    tags: [nỏ, cung, bắn, tầm xa, hai tay, cung thủ, vũ khí]
-    attach: { hand_right: crossbow_right }
-  shield_round:
-    slots: [hand_left]
-    label_vi: Khiên tròn
-    tags: [khiên, phòng thủ, hiệp sĩ]
-    attach: { hand_left: shield_left }
-  shield_round_color:
-    slots: [hand_left]
-    label_vi: Khiên tròn (bản màu)
-    tags: [khiên, phòng thủ]
-    attach: { hand_left: shield_left }
-  shield_round_barbarian:
-    slots: [hand_left]
-    label_vi: Khiên tròn man rợ
-    tags: [khiên, phòng thủ, man rợ, gỗ]
-    attach: { hand_left: shield_left }
-  shield_badge:
-    slots: [hand_left]
-    label_vi: Khiên huy hiệu
-    tags: [khiên, phòng thủ, huy hiệu, hiệp sĩ]
-    attach: { hand_left: shield_left }
-  shield_badge_color:
-    slots: [hand_left]
-    label_vi: Khiên huy hiệu (bản màu)
-    tags: [khiên, phòng thủ, huy hiệu]
-    attach: { hand_left: shield_left }
-  shield_square:
-    slots: [hand_left]
-    label_vi: Khiên vuông
-    tags: [khiên, phòng thủ, vuông]
-    attach: { hand_left: shield_left }
-  shield_square_color:
-    slots: [hand_left]
-    label_vi: Khiên vuông (bản màu)
-    tags: [khiên, phòng thủ, vuông]
-    attach: { hand_left: shield_left }
-  shield_spikes:
-    slots: [hand_left]
-    label_vi: Khiên gai
-    tags: [khiên, phòng thủ, gai]
-    attach: { hand_left: shield_left }
-  shield_spikes_color:
-    slots: [hand_left]
-    label_vi: Khiên gai (bản màu)
-    tags: [khiên, phòng thủ, gai]
-    attach: { hand_left: shield_left }
-  spellbook_closed:
-    slots: [hand_left]
-    label_vi: Sách phép (đóng)
-    tags: [sách, sách phép, pháp sư, phép thuật]
-    attach: { hand_left: spellbook_closed_left }
-  spellbook_open:
-    slots: [hand_left]
-    label_vi: Sách phép (mở)
-    tags: [sách, sách phép, pháp sư, phép thuật]
-    attach: { hand_left: spellbook_open_left }
-  mug_full:
-    slots: [hand_right]
-    label_vi: Cốc bia (đầy)
-    tags: [cốc, bia, uống, quán rượu]
-    attach: { hand_right: mug_right }
-  mug_empty:
-    slots: [hand_right]
-    label_vi: Cốc bia (rỗng)
-    tags: [cốc, bia, uống, quán rượu]
-    attach: { hand_right: mug_right }
-  smokebomb:
-    slots: [hand_right]
-    label_vi: Bom khói
-    tags: [bom khói, ném, trộm, lén lút]
-    attach: { hand_right: throwable_right }
+  knight_helmet: { label_vi: Mũ giáp hiệp sĩ, tags: [mũ, giáp, hiệp sĩ, kim loại, bảo vệ] }
+  sword_1handed: { label_vi: Kiếm một tay, tags: [kiếm, cận chiến, vũ khí, chém] }
+  shield_round: { label_vi: Khiên tròn, tags: [khiên, phòng thủ, gỗ, bảo vệ] }
+  cape: { label_vi: Áo choàng, tags: [áo choàng, lưng, vải, hiệp sĩ] }
 
-# Meshes already inside a character GLB, exposed as character-specific parts.
-# Every other non-skinned mesh in the GLB (built-in weapons/shields) stays hidden;
-# the file parts above cover the same items for all characters.
-builtinParts:
-  knight_helmet:
-    character: knight
-    node: Knight_Helmet
-    slot: head
-    label_vi: Mũ giáp hiệp sĩ
-    tags: [mũ, mũ giáp, giáp]
-  knight_cape:
-    character: knight
-    node: Knight_Cape
-    slot: back
-    label_vi: Áo choàng hiệp sĩ
-    tags: [áo choàng]
-  barbarian_hat:
-    character: barbarian
-    node: Barbarian_Hat
-    slot: head
-    label_vi: Mũ sừng
-    tags: [mũ, sừng, man rợ]
-  barbarian_cape:
-    character: barbarian
-    node: Barbarian_Cape
-    slot: back
-    label_vi: Áo choàng man rợ
-    tags: [áo choàng]
-  mage_hat:
-    character: mage
-    node: Mage_Hat
-    slot: head
-    label_vi: Mũ pháp sư
-    tags: [mũ, mũ nhọn, pháp sư]
-  mage_cape:
-    character: mage
-    node: Mage_Cape
-    slot: back
-    label_vi: Áo choàng pháp sư
-    tags: [áo choàng]
-  rogue_cape:
-    character: rogue
-    node: Rogue_Cape
-    slot: back
-    label_vi: Áo choàng kẻ trộm
-    tags: [áo choàng]
-  rogue_hooded_cape:
-    character: rogue_hooded
-    node: Rogue_Cape
-    slot: back
-    label_vi: Áo choàng kẻ trộm
-    tags: [áo choàng]
-
-# Recolour targets. kind=mesh matches character mesh nodes by suffix
-# (e.g. Knight_Body); kind=slot recolours whatever part sits in that slot.
 colorTargets:
-  body: { label_vi: Thân / áo, meshSuffixes: [_Body] }
-  head: { label_vi: Đầu, meshSuffixes: [_Head, _Head_Hooded] }
-  arms: { label_vi: Tay, meshSuffixes: [_ArmLeft, _ArmRight] }
-  legs: { label_vi: Chân / quần, meshSuffixes: [_LegLeft, _LegRight] }
-  headwear: { label_vi: Mũ, slot: head }
-  back: { label_vi: Áo choàng, slot: back }
-  hand_right: { label_vi: Vật tay phải, slot: hand_right }
-  hand_left: { label_vi: Vật tay trái, slot: hand_left }
+  skin: { label_vi: Da }
+  hair: { label_vi: Tóc }
+  body: { label_vi: Áo / thân }
+  legs: { label_vi: Quần }
+  boots: { label_vi: Giày }
+  cape: { label_vi: Áo choàng }
+  metal: { label_vi: Kim loại }
+  leather: { label_vi: Da thuộc }
+  wood: { label_vi: Gỗ }
+  accent: { label_vi: Điểm nhấn }
 
-# Named colours (ColorName in packages/shared). hex is the representative sRGB tone.
 colors:
   original: { label_vi: Màu gốc, hex: '#888888' }
   red: { label_vi: Đỏ, hex: '#d1343a' }
@@ -255,195 +59,6 @@ colors:
   gray: { label_vi: Xám, hex: '#8a8a92' }
   black: { label_vi: Đen, hex: '#1e1e24' }
 
-# Curated clips. defaultFrames follow HANDOFF §6.6 (idle 4, walk 8, run 8,
-# attack 6, hit 3, death 6). Dodge_* clips move the root bone (true root
-# motion) and are left out of the MVP.
 animations:
-  idle: { clip: Idle, label_vi: Đứng yên, loop: true, defaultFrames: 4, tags: [đứng, nghỉ, chờ] }
-  idle_unarmed:
-    {
-      clip: Unarmed_Idle,
-      label_vi: Đứng yên (tay không),
-      loop: true,
-      defaultFrames: 4,
-      tags: [đứng, tay không],
-    }
-  idle_2h:
-    {
-      clip: 2H_Melee_Idle,
-      label_vi: Đứng yên (vũ khí hai tay),
-      loop: true,
-      defaultFrames: 4,
-      tags: [đứng, hai tay],
-    }
-  walk: { clip: Walking_A, label_vi: Đi bộ, loop: true, defaultFrames: 8, tags: [đi, di chuyển] }
-  walk_b:
-    {
-      clip: Walking_B,
-      label_vi: Đi bộ (kiểu B),
-      loop: true,
-      defaultFrames: 8,
-      tags: [đi, di chuyển],
-    }
-  run:
-    {
-      clip: Running_A,
-      label_vi: Chạy,
-      loop: true,
-      defaultFrames: 8,
-      tags: [chạy, di chuyển, nhanh],
-    }
-  attack_1h:
-    {
-      clip: 1H_Melee_Attack_Slice_Horizontal,
-      label_vi: Chém một tay,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, chém, kiếm, rìu],
-    }
-  attack_1h_chop:
-    {
-      clip: 1H_Melee_Attack_Chop,
-      label_vi: Bổ một tay,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, bổ, rìu],
-    }
-  attack_stab:
-    {
-      clip: 1H_Melee_Attack_Stab,
-      label_vi: Đâm,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, đâm, dao, kiếm],
-    }
-  attack_2h:
-    {
-      clip: 2H_Melee_Attack_Slice,
-      label_vi: Chém hai tay,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, chém, hai tay],
-    }
-  attack_2h_spin:
-    {
-      clip: 2H_Melee_Attack_Spin,
-      label_vi: Xoay chém,
-      loop: false,
-      defaultFrames: 8,
-      tags: [tấn công, xoay, hai tay],
-    }
-  attack_dual:
-    {
-      clip: Dualwield_Melee_Attack_Slice,
-      label_vi: Chém hai dao,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, hai dao, song đao],
-    }
-  punch:
-    {
-      clip: Unarmed_Melee_Attack_Punch_A,
-      label_vi: Đấm,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, đấm, tay không],
-    }
-  kick:
-    {
-      clip: Unarmed_Melee_Attack_Kick,
-      label_vi: Đá,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tấn công, đá, tay không],
-    }
-  shoot:
-    {
-      clip: 1H_Ranged_Shoot,
-      label_vi: Bắn nỏ,
-      loop: false,
-      defaultFrames: 6,
-      tags: [bắn, nỏ, tầm xa],
-    }
-  aim:
-    {
-      clip: 1H_Ranged_Aiming,
-      label_vi: Ngắm bắn,
-      loop: true,
-      defaultFrames: 4,
-      tags: [ngắm, nỏ, tầm xa],
-    }
-  spellcast:
-    {
-      clip: Spellcast_Shoot,
-      label_vi: Phóng phép,
-      loop: false,
-      defaultFrames: 6,
-      tags: [phép thuật, phóng, pháp sư],
-    }
-  spellcast_long:
-    {
-      clip: Spellcast_Long,
-      label_vi: Niệm phép dài,
-      loop: false,
-      defaultFrames: 8,
-      tags: [phép thuật, niệm, pháp sư],
-    }
-  spellcasting:
-    {
-      clip: Spellcasting,
-      label_vi: Niệm phép (lặp),
-      loop: true,
-      defaultFrames: 4,
-      tags: [phép thuật, niệm, pháp sư],
-    }
-  block:
-    { clip: Blocking, label_vi: Đỡ đòn, loop: true, defaultFrames: 4, tags: [đỡ, phòng thủ, khiên] }
-  block_hit:
-    {
-      clip: Block_Hit,
-      label_vi: Đỡ đòn bị đánh,
-      loop: false,
-      defaultFrames: 3,
-      tags: [đỡ, bị đánh, khiên],
-    }
-  hit:
-    {
-      clip: Hit_A,
-      label_vi: Bị đánh,
-      loop: false,
-      defaultFrames: 3,
-      tags: [bị đánh, trúng đòn, đau],
-    }
-  death: { clip: Death_A, label_vi: Chết, loop: false, defaultFrames: 6, tags: [chết, ngã] }
-  death_b:
-    { clip: Death_B, label_vi: Chết (kiểu B), loop: false, defaultFrames: 6, tags: [chết, ngã] }
-  jump: { clip: Jump_Full_Short, label_vi: Nhảy, loop: false, defaultFrames: 6, tags: [nhảy] }
-  cheer:
-    {
-      clip: Cheer,
-      label_vi: Ăn mừng,
-      loop: false,
-      defaultFrames: 6,
-      tags: [ăn mừng, vui, chiến thắng],
-    }
-  interact:
-    {
-      clip: Interact,
-      label_vi: Tương tác,
-      loop: false,
-      defaultFrames: 6,
-      tags: [tương tác, mở, bấm],
-    }
-  pickup: { clip: PickUp, label_vi: Nhặt đồ, loop: false, defaultFrames: 6, tags: [nhặt, cúi] }
-  throw: { clip: Throw, label_vi: Ném, loop: false, defaultFrames: 6, tags: [ném, bom khói] }
-  use_item:
-    {
-      clip: Use_Item,
-      label_vi: Dùng vật phẩm,
-      loop: false,
-      defaultFrames: 6,
-      tags: [dùng, uống, vật phẩm],
-    }
-  sit_floor:
-    { clip: Sit_Floor_Idle, label_vi: Ngồi đất, loop: true, defaultFrames: 4, tags: [ngồi, nghỉ] }
+  idle: { label_vi: Đứng yên, tags: [đứng, nghỉ, chờ] }
+  walk: { label_vi: Đi bộ, tags: [đi, di chuyển, bước] }

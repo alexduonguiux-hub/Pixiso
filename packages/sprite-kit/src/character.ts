@@ -1,38 +1,45 @@
+import type { Direction } from '@pixiso/shared';
 import type { Clip, FrameOffsets, LimbId } from './anim.js';
-import { BODY_S, BODY_W, CANVAS_H, CANVAS_W, type BodyView } from './body32.js';
+import type { BodyView } from './body32.js';
 import { compose, type Layer } from './compose.js';
 import { flipX, type Sprite } from './format.js';
 import { PARTS, type PartDef } from './parts32.js';
-
-export type View = 'S' | 'W';
-export type Facing = 'S' | 'W' | 'E';
+import { bodyById, FACING_SOURCE, REFERENCE_BODY, type SlotId, type View } from './registry.js';
 
 export interface CharacterSpec {
+  /** Body id from the registry; defaults to the reference body. */
+  body?: string;
   parts: string[];
 }
 
-function bodyFor(view: View): BodyView {
-  return view === 'S' ? BODY_S : BODY_W;
+function viewFor(bodyId: string, view: View): { body: BodyView; w: number; h: number } {
+  const def = bodyById(bodyId);
+  if (!def) throw new Error(`unknown body "${bodyId}"`);
+  return { body: def.views[view], w: def.canvas.w, h: def.canvas.h };
 }
 
 /** Which limb an anchor follows, so attached parts move with the animation. */
-const ANCHOR_LIMB: Record<PartDef['slot'], LimbId> = {
+const ANCHOR_LIMB: Record<SlotId, LimbId> = {
   head: 'head',
-  handR: 'armR',
-  handL: 'armL',
+  hand_right: 'armR',
+  hand_left: 'armL',
   back: 'torso',
 };
 
+export function partById(id: string): PartDef | undefined {
+  return PARTS.find((p) => p.id === id);
+}
+
 /** Builds one frame: body limbs plus attached parts, all offset by the clip frame. */
 export function buildFrame(spec: CharacterSpec, view: View, offsets: FrameOffsets): Sprite {
-  const body = bodyFor(view);
+  const { body, w, h } = viewFor(spec.body ?? REFERENCE_BODY, view);
   const layers: Layer[] = [];
   for (const [id, part] of Object.entries(body.parts) as [LimbId, BodyView['parts'][LimbId]][]) {
     const [dx, dy] = offsets.limbs[id] ?? [0, 0];
     layers.push({ id, sprite: part.sprite, x: part.x + dx, y: part.y + dy, z: part.z });
   }
   for (const partId of spec.parts) {
-    const def = PARTS.find((p) => p.id === partId);
+    const def = partById(partId);
     if (!def) throw new Error(`unknown part "${partId}"`);
     const pv = def.views[view];
     const anchor = body.anchors[def.slot];
@@ -45,12 +52,13 @@ export function buildFrame(spec: CharacterSpec, view: View, offsets: FrameOffset
       z: pv.z,
     });
   }
-  return compose(layers, CANVAS_W, CANVAS_H);
+  return compose(layers, w, h);
 }
 
-/** All frames of a clip for a facing; E is the mirror of W. */
-export function buildClip(spec: CharacterSpec, facing: Facing, clip: Clip): Sprite[] {
-  const view: View = facing === 'S' ? 'S' : 'W';
-  const frames = clip.frames[view].map((f) => buildFrame(spec, view, f));
-  return facing === 'E' ? frames.map(flipX) : frames;
+/** All frames of a clip for a direction; mirrored directions flip the authored view. */
+export function buildClip(spec: CharacterSpec, direction: Direction, clip: Clip): Sprite[] {
+  const src = FACING_SOURCE[direction];
+  if (!src) throw new Error(`direction "${direction}" has no drawn view yet`);
+  const frames = clip.frames[src.view].map((f) => buildFrame(spec, src.view, f));
+  return src.flip ? frames.map(flipX) : frames;
 }
