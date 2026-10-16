@@ -24,6 +24,8 @@ export interface FrameOffsets {
   pose?: string;
   /** Draw no attached parts (dropped gear). */
   hideParts?: boolean;
+  /** Parts in these slots are not drawn (weapon let go before the body falls). */
+  hideSlots?: readonly SlotId[];
   /** Extra layer in canvas coordinates (bespoke frames such as the lying body). */
   extra?: { sprite: Sprite; x: number; y: number; z: number };
 }
@@ -162,7 +164,7 @@ const hit = (v: View): FrameOffsets[] => [
   { limbs: { head: back(v) } },
 ];
 
-/** Jolt, collapse to the knees (legs hidden, body down), lie down, hold. */
+/** Jolt, collapse (weapon and shield dropped, legs hidden, body down), lie down, hold. */
 const death = (v: View): FrameOffsets[] => {
   const lie: FrameOffsets = {
     limbs: {},
@@ -172,7 +174,11 @@ const death = (v: View): FrameOffsets[] => {
   };
   return [
     hit(v)[0]!,
-    { limbs: add(move(UPPER, [0, 4]), { head: back(v) }), hideLimbs: ['legR', 'legL'] },
+    {
+      limbs: add(move(UPPER, [0, 3]), { head: back(v) }),
+      hideLimbs: ['legR', 'legL'],
+      hideSlots: ['hand_right', 'hand_left'],
+    },
     lie,
     lie,
   ];

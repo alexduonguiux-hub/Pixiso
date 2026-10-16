@@ -326,7 +326,7 @@ export const PARTS: PartDef[] = [
         dy: -11,
         z: 50,
         // Mid-swing the blade is on the far side; the down-right diagonal keeps it visible beside the body.
-        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -1, dy: -4, z: 5 } },
+        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -2, dy: -4, z: 5 } },
       },
     },
   },

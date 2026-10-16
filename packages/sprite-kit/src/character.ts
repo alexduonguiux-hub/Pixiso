@@ -47,7 +47,7 @@ export function buildFrame(spec: CharacterSpec, view: View, frame: FrameOffsets)
   for (const partId of spec.parts) {
     const def = partById(partId);
     if (!def) throw new Error(`unknown part "${partId}"`);
-    if (frame.hideParts) continue;
+    if (frame.hideParts || frame.hideSlots?.includes(def.slot)) continue;
     const base = def.views[view];
     const pv = (frame.pose && base.poses?.[frame.pose]) || base;
     const anchor = body.anchors[def.slot];
