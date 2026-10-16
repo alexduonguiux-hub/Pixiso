@@ -20,6 +20,8 @@ export interface Remap {
   /** Materials replaced (default: skin only). */
   from?: readonly Material[];
   to: Material;
+  /** Boxes left untouched inside `box` (a neck opening). */
+  except?: readonly Box[];
 }
 
 export interface Overlay {
@@ -56,6 +58,7 @@ export function dress(figure: Sprite, outfit: Outfit): Sprite {
       for (let x = 0; x < out.w; x++) {
         const v = out.cells[y * out.w + x]!;
         if (v < 0 || !inBox(x, y, r.box)) continue;
+        if (r.except?.some((b) => inBox(x, y, b))) continue;
         const m = Math.floor(v / 4);
         if (from.includes(m)) out.cells[y * out.w + x] = to * 4 + (v % 4);
       }

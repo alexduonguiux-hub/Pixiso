@@ -9,7 +9,8 @@
  */
 import { parseSprite } from './format.js';
 import { FORM_FAT, FORM_HEAVY } from './heroforms.js';
-import type { Outfit, Overlay } from './outfit64.js';
+import type { Outfit, Overlay, Remap } from './outfit64.js';
+import type { Box } from './hero64.js';
 
 /** Overlay from ASCII rows at a figure position. */
 function ov(x: number, y: number, rows: string[]): Overlay {
@@ -17,13 +18,32 @@ function ov(x: number, y: number, rows: string[]): Overlay {
 }
 
 /* Regions of the base figure (17×40). */
-const TORSO = [4, 18, 12, 28] as const;
-const SLEEVE_R_SHORT = [0, 18, 4, 22] as const;
-const SLEEVE_L_SHORT = [12, 18, 16, 22] as const;
-const SLEEVE_R_LONG = [0, 18, 4, 24] as const;
-const SLEEVE_L_LONG = [12, 18, 16, 24] as const;
-const PANTS = [0, 29, 16, 35] as const;
-const SHOES = [0, 36, 16, 39] as const;
+/** Neck opening of a crew neck: the neck well on rows 15–16 and its bottom on row 17. */
+const NECK: Box[] = [
+  [6, 15, 10, 16],
+  [7, 17, 9, 17],
+];
+/** Shirt body: torso from the shoulders to the hem minus the neck opening, plus the shoulder caps (not the arms). */
+const SHIRT: Remap[] = [
+  { box: [4, 15, 12, 28], except: NECK, to: 'cloth' },
+  { box: [1, 15, 3, 18], to: 'cloth' },
+  { box: [13, 15, 15, 18], to: 'cloth' },
+];
+const SLEEVE_R_SHORT: Remap = { box: [0, 18, 4, 22], to: 'cloth' };
+const SLEEVE_L_SHORT: Remap = { box: [12, 18, 16, 22], to: 'cloth' };
+const SLEEVE_R_LONG: Remap = { box: [0, 18, 4, 24], to: 'cloth' };
+const SLEEVE_L_LONG: Remap = { box: [12, 18, 16, 24], to: 'cloth' };
+const PANTS: Remap = { box: [0, 29, 16, 35], to: 'pants' };
+const SHOES: Remap = { box: [0, 36, 16, 39], to: 'boots' };
+/** Seams: collar under the neck opening and the hem. */
+const COLLAR: Box[] = [
+  [6, 17, 6, 17],
+  [10, 17, 10, 17],
+  [7, 18, 9, 18],
+];
+const HEM: Box = [5, 28, 11, 28];
+const TEE = [...SHIRT, SLEEVE_R_SHORT, SLEEVE_L_SHORT, PANTS, SHOES];
+const LONG_SLEEVES = [...SHIRT, SLEEVE_R_LONG, SLEEVE_L_LONG, PANTS, SHOES];
 
 /** Short dark hair, parted, tips over the brow. */
 const HAIR_SHORT = ov(0, 0, [
@@ -89,14 +109,8 @@ const MEDIC_BAG: Overlay[] = [
 export const DUONG: Outfit = {
   id: 'duong',
   label: 'Dương',
-  remaps: [
-    { box: TORSO, to: 'cloth' },
-    { box: SLEEVE_R_SHORT, to: 'cloth' },
-    { box: SLEEVE_L_SHORT, to: 'cloth' },
-    { box: PANTS, to: 'pants' },
-    { box: SHOES, to: 'boots' },
-  ],
-  lines: [[5, 28, 11, 28]],
+  remaps: TEE,
+  lines: [...COLLAR, HEM],
   overlays: [HAIR_SHORT],
   colors: {
     skin: [249, 209, 173],
@@ -116,6 +130,8 @@ export const HUNG: Outfit = {
   // Heavy form: head rows 0–16 unchanged (centre column 11, so +3 on x), torso
   // interior columns 6–16 on rows 19–24 and 7–15 on rows 25–31, hips row 32.
   remaps: [
+    { box: [7, 15, 7, 18], to: 'cloth' }, // tank-top straps over the shoulders
+    { box: [15, 15, 15, 18], to: 'cloth' },
     { box: [6, 19, 16, 24], to: 'cloth' },
     { box: [7, 25, 15, 31], to: 'cloth' },
     { box: [0, 32, 22, 37], to: 'pants' }, // shorts to the knee
@@ -137,14 +153,8 @@ export const HUNG: Outfit = {
 export const NY: Outfit = {
   id: 'ny',
   label: 'Ny',
-  remaps: [
-    { box: TORSO, to: 'cloth' },
-    { box: SLEEVE_R_SHORT, to: 'cloth' },
-    { box: SLEEVE_L_SHORT, to: 'cloth' },
-    { box: PANTS, to: 'pants' },
-    { box: SHOES, to: 'boots' },
-  ],
-  lines: [[5, 28, 11, 28]],
+  remaps: TEE,
+  lines: [...COLLAR, HEM],
   overlays: [HAIR_BOB, ...MEDIC_BAG],
   colors: {
     skin: [250, 214, 180],
@@ -161,17 +171,8 @@ export const NY: Outfit = {
 export const SON: Outfit = {
   id: 'son',
   label: 'Sơn',
-  remaps: [
-    { box: TORSO, to: 'cloth' },
-    { box: SLEEVE_R_LONG, to: 'cloth' },
-    { box: SLEEVE_L_LONG, to: 'cloth' },
-    { box: PANTS, to: 'pants' },
-    { box: SHOES, to: 'boots' },
-  ],
-  lines: [
-    [5, 28, 11, 28],
-    [8, 19, 8, 27], // jacket zip
-  ],
+  remaps: LONG_SLEEVES,
+  lines: [...COLLAR, HEM, [8, 19, 8, 27]], // collar, hem, jacket zip
   overlays: [HAIR_SWEPT, GLASSES],
   colors: {
     skin: [240, 200, 165],
@@ -187,6 +188,9 @@ export const SON: Outfit = {
 /** Ranger hat: the crown is the skull remapped to leather, this is the brim. */
 const HAT_BRIM = ov(0, 7, ['oLlllllllllllllLo', '.ooooooooooooooo.']);
 
+/** Grey moustache under the nose and a goatee on the chin (hair material). */
+const MOUSTACHE = ov(5, 12, ['#hhHhh#', '.HhhhH.']);
+
 /** Blood and tears on a shirt. */
 const STAINS = ov(5, 21, ['.A.....', '.......', '......A', 'A......', '.......', '....A..']);
 
@@ -197,21 +201,12 @@ const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', 
 export const ONG_TU: Outfit = {
   id: 'ong_tu',
   label: 'Ông Tư',
-  remaps: [
-    { box: [0, 0, 16, 6], to: 'leather' }, // hat crown
-    { box: TORSO, to: 'cloth' },
-    { box: SLEEVE_R_LONG, to: 'cloth' },
-    { box: SLEEVE_L_LONG, to: 'cloth' },
-    { box: PANTS, to: 'pants' },
-    { box: SHOES, to: 'boots' },
-  ],
-  lines: [
-    [3, 6, 13, 6], // hat band
-    [5, 28, 11, 28],
-  ],
-  overlays: [HAT_BRIM],
+  remaps: [{ box: [0, 0, 16, 6], to: 'leather' }, ...LONG_SLEEVES], // hat crown, then the clothes
+  lines: [[3, 6, 13, 6], ...COLLAR, HEM], // hat band, collar, hem
+  overlays: [HAT_BRIM, MOUSTACHE],
   colors: {
     skin: [226, 182, 144],
+    hair: [196, 190, 178],
     leather: [120, 92, 60],
     cloth: [176, 158, 112],
     pants: [70, 72, 70],
@@ -221,19 +216,40 @@ export const ONG_TU: Outfit = {
   },
 };
 
-/** Biến Thể, the common infected: grey-green skin, torn grey shirt, red eyes, no hair. */
+/** Sunken eye sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
+const ZOMBIE_FACE = ov(4, 9, ['...S.S...', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']);
+/** Scalp patches and a scalp wound. */
+const ZOMBIE_SCALP = ov(5, 2, ['.SS...A', '..S....']);
+/** A gash down the bare arm and one on the cheek. */
+const ZOMBIE_WOUNDS: Overlay[] = [ov(2, 21, ['A', 'A', 'A']), ov(11, 5, ['A', 'A'])];
+/** Torn tee: one sleeve ripped off, holes at the hem, the hem itself frayed. */
+const TORN_TEE: Remap[] = [
+  {
+    box: [4, 15, 12, 28],
+    except: [...NECK, [6, 27, 6, 28], [10, 27, 10, 28]],
+    to: 'cloth',
+  },
+  { box: [1, 15, 3, 18], to: 'cloth' },
+  { box: [13, 15, 15, 18], to: 'cloth' },
+  { box: [0, 18, 4, 20], to: 'cloth' }, // ripped short
+  SLEEVE_L_SHORT,
+  PANTS,
+  { box: [9, 36, 15, 39], to: 'boots' }, // the other shoe is lost
+];
+const FRAYED_HEM: Box[] = [
+  [5, 28, 5, 28],
+  [7, 28, 7, 28],
+  [9, 28, 9, 28],
+  [11, 28, 11, 28],
+];
+
+/** Biến Thể, the common infected: grey-green skin, torn grey shirt, red eyes, a bare foot, no hair. */
 export const BIEN_THE: Outfit = {
   id: 'bien_the',
   label: 'Biến Thể',
-  remaps: [
-    { box: TORSO, to: 'cloth' },
-    { box: SLEEVE_R_SHORT, to: 'cloth' },
-    { box: SLEEVE_L_SHORT, to: 'cloth' },
-    { box: PANTS, to: 'pants' },
-    { box: SHOES, to: 'boots' },
-  ],
-  lines: [[5, 28, 11, 28]],
-  overlays: [STAINS],
+  remaps: TORN_TEE,
+  lines: [...COLLAR, ...FRAYED_HEM],
+  overlays: [ZOMBIE_SCALP, ZOMBIE_FACE, ...ZOMBIE_WOUNDS, STAINS],
   colors: {
     skin: [172, 182, 142],
     cloth: [122, 120, 112],
@@ -241,7 +257,7 @@ export const BIEN_THE: Outfit = {
     boots: [52, 46, 40],
     accent: [120, 30, 30],
     eye: [180, 50, 40],
-    white: [200, 190, 170],
+    white: [206, 196, 160],
   },
 };
 
@@ -252,7 +268,7 @@ export const KE_PHUN: Outfit = {
   form: FORM_FAT,
   // Fat form (23 wide): hips and legs span the full width; the torso stays bare.
   remaps: [
-    { box: [0, 29, 22, 34], to: 'pants' },
+    { box: [0, 29, 22, 35], to: 'pants' },
     { box: [0, 36, 22, 39], to: 'boots' },
   ],
   overlays: [PUSTULES],
