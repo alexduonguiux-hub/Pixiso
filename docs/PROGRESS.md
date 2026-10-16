@@ -118,6 +118,13 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - `scripts/spike-sprite-kit.ts` renders ×8 sheets to `test-output/spike-matrix/` in Node (pngjs), no browser.
 - Plan and open decisions in `docs/PIVOT.md` §5.
 
+## Reference-image study ✅
+
+- Measured the 4 reference images (native scale, palette size, ramps in OKLCh, outline colour and thickness, dithering, object sizes, light direction) with `scripts/research/`; findings and 14 derived rules in `docs/PIXEL_STYLE_REFERENCE.md`.
+- Surveyed open-source pixel-art skills/tools (pixel-art-studio, pixel-plugin, aseprite-mcp, LPC generator, ramp generators); what to borrow is listed in PIXEL_STYLE_REFERENCE.md §5.
+- Added `REFERENCE_RAMP_OPTIONS`, `buildTintedLine` (pixel-core) and `PaintOptions` with tinted/selective outlines (sprite-kit), with tests (D-037). `scripts/spike-sprite-kit.ts` now renders both looks; comparison in `test-output/spike-matrix/compare_ramps_x8.png`.
+- Still open: the four pivot decisions in PIVOT.md §5; templates need real 3-tone shading (rule 3 and 8 of the new doc).
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

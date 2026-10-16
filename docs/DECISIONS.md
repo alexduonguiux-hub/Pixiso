@@ -153,3 +153,11 @@ A block covered 30–50 % becomes a pixel when both its horizontal or both its v
 ### D-035 Drop 3D rendering; characters are semantic pixel matrices
 
 After two review rounds the user judged the 3D→pixel output unfit at 32–48 px (see docs/PIVOT.md §1 for the diagnosis). The new source of truth for pixels is `packages/sprite-kit`: ASCII matrices of (material, shade) cells composed by layer and anchor on a 24×32 grid, animated by per-limb offset tables, coloured by `pixel-core` ramps. Deterministic by construction, no WebGL, no vendor assets. The 3D code and KayKit assets stay in git history until the user confirms their removal (PIVOT.md §5).
+
+### D-036 Reference-image analysis lives in Python research scripts
+
+`scripts/research/study_reference.py` and `study_crops.py` (Pillow + numpy, run with `python3 -I`) measure native pixel scale, tolerance-merged palettes, OKLCh ramps, outline colour/thickness and texture of any reference image. Decoding webp and doing the measurements in Node would have meant adding image-codec dependencies to a TypeScript monorepo for a one-off research task; the scripts are dev-only, not imported by any package, and their findings are written up in `docs/PIXEL_STYLE_REFERENCE.md`. The reference images themselves are not committed (copyright unknown).
+
+### D-037 Reference ramp and tinted outline presets
+
+Measurements on the reference art (PIXEL_STYLE_REFERENCE.md §2.3–2.4) disagree with two assumptions baked into `DEFAULT_RAMP_OPTIONS`: shadows there are _less_ saturated (×0.7–0.85), not more, and yellow shades toward orange, never toward green. `REFERENCE_RAMP_OPTIONS` encodes the measured values (steps −0.14/+0.13 L, ≤16° hue per step, shadow chroma ×0.85, highlight chroma ×1.0) and a new `shadowAwayFromHighlight` rule: the shadow rotates in the direction the highlight does not take. `buildTintedLine` gives each material a near-black outline (L 0.12) tinted by its own hue, and `paint()` gains `lineStyle: 'tinted'`; selective outlines (`selout`) exist as an option but stay off because the reference sprites keep a closed dark outline on the lit side too. The defaults are unchanged until sprite-kit becomes the core (PIVOT.md M1).

@@ -33,6 +33,12 @@ export interface RampOptions {
   minChromaForShift: number;
   /** Chroma of the tint applied to grey shadows/highlights. */
   tintChroma: number;
+  /**
+   * When true the shadow hue rotates away from the highlight hue (the direction
+   * the highlight does not take) instead of along the shorter arc toward
+   * `shadowHueDeg`. Yellows then shade toward orange, not green, as in reference art.
+   */
+  shadowAwayFromHighlight?: boolean;
 }
 
 export const DEFAULT_RAMP_OPTIONS: RampOptions = {
@@ -46,6 +52,25 @@ export const DEFAULT_RAMP_OPTIONS: RampOptions = {
   highlightChroma: 0.85,
   minChromaForShift: 0.025,
   tintChroma: 0.02,
+};
+
+/**
+ * Ramp measured on reference pixel art (docs/PIXEL_STYLE_REFERENCE.md §2.3):
+ * steps of about 0.13 L, 10–18° of hue per step, shadows slightly desaturated,
+ * highlights keep their chroma, warm hues shade toward orange rather than green.
+ */
+export const REFERENCE_RAMP_OPTIONS: RampOptions = {
+  steps: 3,
+  shadowL: -0.14,
+  highlightL: 0.13,
+  shadowHueDeg: 264,
+  highlightHueDeg: 100,
+  maxHueShiftDeg: 16,
+  shadowChroma: 0.85,
+  highlightChroma: 1.0,
+  minChromaForShift: 0.025,
+  tintChroma: 0.02,
+  shadowAwayFromHighlight: true,
 };
 
 const DEG = Math.PI / 180;
@@ -97,6 +122,12 @@ function shade(base: Lab, dL: number, hueDeg: number, chromaMul: number, o: Ramp
     // Greys: a faint cool/warm tint instead of a rotation.
     return oklchToOklab(L2, o.tintChroma, hueDeg * DEG);
   }
+  if (dL < 0 && o.shadowAwayFromHighlight) {
+    // Rotate opposite to the highlight's direction; a hue sitting on the highlight hue goes warm (orange).
+    const towardHighlight = shiftHue(h, o.highlightHueDeg, o.maxHueShiftDeg) - h;
+    const sign = towardHighlight > 1e-9 ? -1 : 1;
+    return oklchToOklab(L2, C * chromaMul, h + sign * o.maxHueShiftDeg * DEG);
+  }
   return oklchToOklab(L2, C * chromaMul, shiftHue(h, hueDeg, o.maxHueShiftDeg));
 }
 
@@ -108,6 +139,16 @@ export function buildRamp(base: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb
   if (o.steps === 3)
     out.push(clampToGamut(shade(base, o.highlightL, o.highlightHueDeg, o.highlightChroma, o)));
   return out;
+}
+
+/**
+ * Reference-style outline for one material: near black (L ≈ 0.12) with a faint
+ * cool tint of the material's hue (docs/PIXEL_STYLE_REFERENCE.md §2.4).
+ */
+export function buildTintedLine(shadow: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb8 {
+  const [, C, h] = oklabToOklch(...shadow);
+  const tint = Math.min(0.05, Math.max(o.tintChroma, C * 0.5));
+  return clampToGamut(oklchToOklab(0.12, tint, shiftHue(h, o.shadowHueDeg, 20)));
 }
 
 /** A line colour darker and cooler than the darkest shadow in the set. */

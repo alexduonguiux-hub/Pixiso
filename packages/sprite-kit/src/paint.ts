@@ -1,5 +1,6 @@
 import {
   buildRamp,
+  buildTintedLine,
   createImage,
   DEFAULT_RAMP_OPTIONS,
   srgb8ToOklab,
@@ -32,8 +33,25 @@ export interface Palette {
   /** ramps[materialIndex][shade] */
   ramps: Rgb8[][];
   line: Rgb8;
+  /** Per-material outline colour (near black, tinted by the material); lines[materialIndex]. */
+  lines: Rgb8[];
   colors: Rgb8[];
 }
+
+export interface PaintOptions {
+  /** 'flat': every line cell uses palette.line. 'tinted': the outline takes the tint of the material it borders. */
+  lineStyle: 'flat' | 'tinted';
+  /** Selective outline: line cells on the lit (top/left) silhouette edge use the bordering material's shadow shade. */
+  selout: boolean;
+}
+
+export const DEFAULT_PAINT_OPTIONS: PaintOptions = { lineStyle: 'flat', selout: false };
+
+/**
+ * Paint options matching the reference art (docs/PIXEL_STYLE_REFERENCE.md §2.4): a closed
+ * 1-px outline, near black, tinted by the material it borders; no selective outline.
+ */
+export const REFERENCE_PAINT_OPTIONS: PaintOptions = { lineStyle: 'tinted', selout: false };
 
 /** Builds the concrete palette for a material colour set. Fixed-tone materials get flat ramps. */
 export function buildPalette(
@@ -41,28 +59,86 @@ export function buildPalette(
   ramp: RampOptions = DEFAULT_RAMP_OPTIONS,
 ): Palette {
   const ramps: Rgb8[][] = [];
+  const lines: Rgb8[] = [];
   const line = colors.line ?? DEFAULT_MATERIAL_COLORS.line;
   for (const m of MATERIALS) {
     const base = colors[m] ?? DEFAULT_MATERIAL_COLORS[m];
     if (m === 'line' || m === 'eye' || m === 'white') {
       ramps.push([base, base, base]);
+      lines.push(line);
       continue;
     }
-    const r = buildRamp(srgb8ToOklab(...base), ramp);
+    const lab = srgb8ToOklab(...base);
+    const r = buildRamp(lab, ramp);
     ramps.push([r[0]!, r[1]!, r[2] ?? r[1]!]);
+    lines.push(buildTintedLine(srgb8ToOklab(...r[0]!), ramp));
   }
   const seen = new Map<string, Rgb8>();
   for (const r of ramps) for (const c of r) seen.set(c.join(','), c);
-  return { ramps, line, colors: [...seen.values()] };
+  return { ramps, line, lines, colors: [...seen.values()] };
 }
 
-export function paint(s: Sprite, palette: Palette): RGBAImage {
+const LINE_INDEX = MATERIALS.indexOf('line');
+
+const N8 = [
+  [-1, -1],
+  [0, -1],
+  [1, -1],
+  [-1, 0],
+  [1, 0],
+  [-1, 1],
+  [0, 1],
+  [1, 1],
+] as const;
+
+function cellAt(s: Sprite, x: number, y: number): number {
+  if (x < 0 || y < 0 || x >= s.w || y >= s.h) return -1;
+  return s.cells[y * s.w + x]!;
+}
+
+/** Most frequent non-line material among the 8 neighbours (ties: lower material index), or -1. */
+function borderingMaterial(s: Sprite, x: number, y: number): number {
+  const counts = new Array<number>(MATERIALS.length).fill(0);
+  for (const [dx, dy] of N8) {
+    const v = cellAt(s, x + dx, y + dy);
+    if (v < 0) continue;
+    const m = v >> 2;
+    if (m !== LINE_INDEX) counts[m]!++;
+  }
+  let best = -1;
+  for (let m = 0; m < counts.length; m++) if (counts[m]! > (best < 0 ? 0 : counts[best]!)) best = m;
+  return best;
+}
+
+/** True for a line cell on the lit silhouette edge: open above or to the left, closed below and to the right. */
+function onLitEdge(s: Sprite, x: number, y: number): boolean {
+  const openTop = cellAt(s, x, y - 1) < 0 || cellAt(s, x - 1, y) < 0;
+  const openBottom = cellAt(s, x, y + 1) < 0 || cellAt(s, x + 1, y) < 0;
+  return openTop && !openBottom;
+}
+
+function lineColor(s: Sprite, x: number, y: number, palette: Palette, opts: PaintOptions): Rgb8 {
+  if (opts.lineStyle === 'flat' && !opts.selout) return palette.line;
+  const m = borderingMaterial(s, x, y);
+  if (m < 0) return palette.line;
+  if (opts.selout && onLitEdge(s, x, y)) return palette.ramps[m]![0]!;
+  return opts.lineStyle === 'tinted' ? palette.lines[m]! : palette.line;
+}
+
+export function paint(
+  s: Sprite,
+  palette: Palette,
+  opts: PaintOptions = DEFAULT_PAINT_OPTIONS,
+): RGBAImage {
   const img = createImage(s.w, s.h);
   for (let i = 0; i < s.cells.length; i++) {
     const v = s.cells[i]!;
     if (v < 0) continue;
     const cell = unpackCell(v);
-    const c = palette.ramps[MATERIALS.indexOf(cell.material)]![cell.shade]!;
+    const c =
+      cell.material === 'line'
+        ? lineColor(s, i % s.w, Math.floor(i / s.w), palette, opts)
+        : palette.ramps[MATERIALS.indexOf(cell.material)]![cell.shade]!;
     img.data[i * 4] = c[0];
     img.data[i * 4 + 1] = c[1];
     img.data[i * 4 + 2] = c[2];

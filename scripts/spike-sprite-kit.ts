@@ -5,13 +5,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { blit, createImage, scaleNearest, type RGBAImage, type Rgb8 } from '@pixiso/pixel-core';
+import {
+  blit,
+  createImage,
+  REFERENCE_RAMP_OPTIONS,
+  scaleNearest,
+  type RGBAImage,
+  type Rgb8,
+} from '@pixiso/pixel-core';
 import {
   CLIPS,
   buildClip,
   buildPalette,
   paint,
+  REFERENCE_PAINT_OPTIONS,
   toAscii,
+  type PaintOptions,
+  type Palette,
   type CharacterSpec,
   type MaterialColors,
 } from '@pixiso/sprite-kit';
@@ -54,12 +64,11 @@ const SETUPS: Setup[] = [
 const SCALE = 8;
 const PAD = 8;
 
-function sheetFor(setup: Setup): RGBAImage {
-  const palette = buildPalette(setup.colors);
+function sheetFor(setup: Setup, palette: Palette, opts?: PaintOptions): RGBAImage {
   const rows: RGBAImage[][] = [];
   for (const facing of ['S', 'E', 'W'] as const) {
     for (const clip of CLIPS) {
-      rows.push(buildClip(setup.spec, facing, clip).map((s) => paint(s, palette)));
+      rows.push(buildClip(setup.spec, facing, clip).map((s) => paint(s, palette, opts)));
     }
   }
   const cellW = 24 * SCALE;
@@ -108,12 +117,20 @@ function blitOpaque(dst: RGBAImage, src: RGBAImage, x: number, y: number): void 
 }
 
 for (const setup of SETUPS) {
-  const sheet = sheetFor(setup);
-  writePng(path.join(OUT, `${setup.id}_x8.png`), sheet);
+  // Current look (DEFAULT_RAMP_OPTIONS, flat line colour).
   const palette = buildPalette(setup.colors);
+  writePng(path.join(OUT, `${setup.id}_x8.png`), sheetFor(setup, palette));
   const first = paint(buildClip(setup.spec, 'S', CLIPS[0]!)[0]!, palette);
   writePng(path.join(OUT, `${setup.id}_S_idle0_x1.png`), first);
-  console.log(`${setup.id}: ${palette.colors.length} colours`);
+  // Reference look (ramp + outline measured on reference art, PIXEL_STYLE_REFERENCE.md §4).
+  const refPalette = buildPalette(setup.colors, REFERENCE_RAMP_OPTIONS);
+  writePng(
+    path.join(OUT, `${setup.id}_ref_x8.png`),
+    sheetFor(setup, refPalette, REFERENCE_PAINT_OPTIONS),
+  );
+  console.log(
+    `${setup.id}: ${palette.colors.length} colours (current), ${refPalette.colors.length} (reference)`,
+  );
 }
 // ASCII dump of the knight S idle frame for eyeballing in the terminal
 console.log(toAscii(buildClip(SETUPS[1]!.spec, 'S', CLIPS[0]!)[0]!).join('\n'));
