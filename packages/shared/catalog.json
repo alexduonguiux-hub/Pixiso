@@ -19,11 +19,11 @@
         "nhân vật"
       ],
       "canvas": {
-        "w": 24,
+        "w": 32,
         "h": 32
       },
       "pivot": {
-        "x": 12,
+        "x": 16,
         "y": 30
       }
     }
@@ -275,6 +275,57 @@
         "đi",
         "di chuyển",
         "bước"
+      ]
+    },
+    {
+      "id": "run",
+      "label_vi": "Chạy",
+      "loop": true,
+      "frames": 4,
+      "frameMs": 100,
+      "tags": [
+        "chạy",
+        "di chuyển",
+        "nhanh"
+      ]
+    },
+    {
+      "id": "attack",
+      "label_vi": "Chém",
+      "loop": false,
+      "frames": 3,
+      "frameMs": 120,
+      "tags": [
+        "tấn công",
+        "chém",
+        "kiếm",
+        "đánh"
+      ]
+    },
+    {
+      "id": "hit",
+      "label_vi": "Trúng đòn",
+      "loop": false,
+      "frames": 2,
+      "frameMs": 120,
+      "tags": [
+        "bị đánh",
+        "trúng",
+        "đau",
+        "lùi"
+      ]
+    },
+    {
+      "id": "death",
+      "label_vi": "Ngã gục",
+      "loop": false,
+      "frames": 4,
+      "frameMs": 160,
+      "tags": [
+        "chết",
+        "ngã",
+        "gục",
+        "thua"
       ]
     }
   ],

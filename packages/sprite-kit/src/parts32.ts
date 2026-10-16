@@ -1,4 +1,5 @@
-import { sprite, type Sprite } from './format.js';
+import { outline } from './compose.js';
+import { EMPTY, flipX, LEGEND, packCell, rotateCW, sprite, type Sprite } from './format.js';
 import type { SlotId, View } from './registry.js';
 
 /** A part: a sprite per authored view plus where it sits relative to its anchor. */
@@ -9,6 +10,8 @@ export interface PartView {
   dy: number;
   /** Draw order relative to the body (body layers use 10–40). */
   z: number;
+  /** Variants a clip frame can ask for by pose id (anim.ts FrameOffsets.pose). */
+  poses?: Record<string, Omit<PartView, 'poses'>>;
 }
 
 export interface PartDef {
@@ -136,6 +139,35 @@ const SWORD_DOWN = sprite`
   ..o..
 `;
 
+/** Horizontal sword, tip to the right: the upright blade turned a quarter turn (lossless). */
+const SWORD_H_R = rotateCW(SWORD);
+
+/**
+ * A 45° sword with the tip at the bottom-left and the pommel at the top-right,
+ * drawn on the anti-diagonal of a 12×12 box: 7 blade steps (2 px thick), a
+ * guard, 2 grip steps and a pommel, then a 1-px outline.
+ */
+function diagonalSword(): Sprite {
+  const n = 12;
+  const cells = new Int16Array(n * n).fill(EMPTY);
+  const put = (x: number, y: number, g: string) => {
+    if (x >= 0 && y >= 0 && x < n && y < n) cells[y * n + x] = packCell(LEGEND[g]!);
+  };
+  for (let i = 0; i <= 6; i++) {
+    put(i, n - 1 - i - 1, 'w');
+    put(i + 1, n - 1 - i - 1, 'm');
+  }
+  put(7, 3, 'a');
+  put(6, 2, 'a');
+  put(8, 4, 'a');
+  put(8, 2, 'l');
+  put(9, 1, 'L');
+  put(10, 0, 'a');
+  return outline({ w: n, h: n, cells }, packCell(LEGEND.o!));
+}
+const SWORD_DIAG_DL = diagonalSword();
+const SWORD_DIAG_DR = flipX(SWORD_DIAG_DL);
+
 /** Round shield: wood ring lit at the top-left, metal boss with a specular pixel. */
 const SHIELD = sprite`
   ...ooo...
@@ -256,12 +288,46 @@ export const PARTS: PartDef[] = [
     slot: 'hand_right',
     views: {
       // S: blade stands beside the arm, grip row 11 at the hand. W: lowered, grip row 2 at the hand.
-      S: { sprite: SWORD, dx: -4, dy: -11, z: 50 },
-      SW: { sprite: SWORD, dx: -4, dy: -11, z: 50 },
-      W: { sprite: SWORD_DOWN, dx: -2, dy: -2, z: 50 },
+      S: {
+        sprite: SWORD,
+        dx: -4,
+        dy: -11,
+        z: 50,
+        poses: { swing: { sprite: SWORD_H_R, dx: -1, dy: -2, z: 55 } },
+      },
+      SW: {
+        sprite: SWORD,
+        dx: -4,
+        dy: -11,
+        z: 50,
+        poses: { swing: { sprite: SWORD_DIAG_DL, dx: -9, dy: -4, z: 55 } },
+      },
+      W: {
+        sprite: SWORD_DOWN,
+        dx: -2,
+        dy: -2,
+        z: 50,
+        poses: {
+          up: { sprite: SWORD, dx: -2, dy: -11, z: 50 },
+          swing: { sprite: SWORD_DIAG_DL, dx: -9, dy: -1, z: 55 },
+        },
+      },
       // Far hand: upright beside the body, behind the arm.
-      NW: { sprite: SWORD, dx: 0, dy: -11, z: 5 },
-      N: { sprite: SWORD, dx: 1, dy: -11, z: 50 },
+      NW: {
+        sprite: SWORD,
+        dx: 0,
+        dy: -11,
+        z: 5,
+        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -1, dy: -4, z: 5 } },
+      },
+      N: {
+        sprite: SWORD,
+        dx: 1,
+        dy: -11,
+        z: 50,
+        // Mid-swing the blade is on the far side; the down-right diagonal keeps it visible beside the body.
+        poses: { swing: { sprite: SWORD_DIAG_DR, dx: -1, dy: -4, z: 5 } },
+      },
     },
   },
   {

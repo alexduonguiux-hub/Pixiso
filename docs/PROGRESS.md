@@ -141,6 +141,21 @@ Knight (sword, round shield, helmet, cape) walk cell 45×55 px; Mage (staff, spe
 - Templates still use mostly one tone per material; redraw body and parts with the 3-tone rule and top-left light (PIXEL_STYLE_REFERENCE.md §3), then add SW/NW/N views and the remaining clips (run, attack, hit, death).
 - Palette lock, iso grid and style import/export stay in Phase 4; sheet/JSON/GIF/ZIP export in M4; describe in M5.
 
+## M2 — full base: five views, six clips ✅ (reviewed in three batches)
+
+**Done**
+
+- Batch 1: S and W body and parts redrawn with three tones per material, one top-left light, closed tinted outline, 2×3 eyes with a glint (PIXEL_STYLE_REFERENCE.md §3). Templates are authored at full width so the light can be asymmetric.
+- Batch 2: authored SW, NW and N views (head, torso, limbs, helmet, sword, shield back, capes); SE, E, NE mirrored (D-042). Walk tables per view. All eight directions in the catalog and the preview.
+- Batch 3: canvas 32×32 (D-041); frame model with limb swaps, part poses, hidden limbs/parts and bespoke layers (D-043); clips run, attack (wind-up, slash, recover with upright, horizontal and diagonal sword poses), hit (knock-back away from the facing) and death (jolt, collapse, lying, hold). Review sheets: `pnpm sheets` → `test-output/sheets/knight_clips_x8.png`.
+- Tests: frame counts per view, no frame touches the side or bottom edge (nothing clipped), swing uses the pose, death drops gear and lies on the sole row, run never cuts the head, hit direction.
+
+**Open**
+
+- The lying frame is one drawing for every direction and shows the bare head (gear dropped); the kneel frame hides the legs instead of folding them.
+- Run in S/N differs from walk only by the leg lift and flight; a stronger lean/arm pose could come with the next template pass.
+- Only one body (`human`) and four parts; M3 adds the library.
+
 ## Phase 3 — Directions, frames, sprite sheet, export ⏳
 
 Not started.

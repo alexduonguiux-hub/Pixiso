@@ -120,7 +120,7 @@ trên da thú hơi nâu — tức là màu đen pha chút hue vật liệu bên 
 5. **Vật liệu xám** (kim loại, đá): không dịch hue, chỉ nhuốm lạnh rất nhẹ; bước L nhỏ hơn (0,08–0,10).
 6. **Viền 1 px khép kín toàn silhouette**, màu gần đen (L 0,12) pha hue của vật liệu kề bên; bên trong chỉ kẻ đường tối ở ranh giới bộ phận.
 7. **Hai preset viền** cho `ProjectStyle`: `outline: 'ink'` (đen pha) và `outline: 'soft'` (xám nâu ấm `#2e2428`, không đen).
-8. **Một nguồn sáng trên–trái** cho mọi khung, mọi hướng quay; khi lật E từ W, dải sáng vẫn phải ở bên trái → tông sáng/bóng tính theo vị trí sau khi lật, không lật theo ma trận.
+8. **Một nguồn sáng trên–trái** cho mọi góc nhìn vẽ tay (S, SW, W, NW, N). Hướng lật (SE, E, NE) chấp nhận sáng từ bên phải (D-042); vì vậy góc nhìn ngang chỉ đổ bóng ngang nhẹ, chủ yếu đổ bóng theo chiều dọc.
 9. **Bóng đổ** 1 elip tông bóng của nền, rộng bằng thân, lệch phải–dưới 1 px; không đốm đen.
 10. **Không dither, không AA ra nền, không alpha trung gian.**
 11. **Cụm ≥ 3 px**; điểm 1 px chỉ cho điểm sáng mắt/kim loại.

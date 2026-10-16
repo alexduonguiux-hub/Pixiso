@@ -65,8 +65,8 @@ describe('config → frames', () => {
     const idle = renderClip(knight, style, 'idle', 'S', table);
     expect(idle.frames.length).toBe(2);
     expect(idle.frameMs).toBe(500);
-    expect(idle.cell).toEqual({ w: 24, h: 32 });
-    expect(idle.pivot).toEqual({ x: 12, y: 30 });
+    expect(idle.cell).toEqual({ w: 32, h: 32 });
+    expect(idle.pivot).toEqual({ x: 16, y: 30 });
     const walkW = renderClip(knight, style, 'walk', 'W', table);
     const walkE = renderClip(knight, style, 'walk', 'E', table);
     expect(walkW.frames.length).toBe(4);
@@ -88,8 +88,8 @@ describe('config → frames', () => {
     const a = renderClip(knight, style, 'idle', 'S', table);
     const b = renderClip(knight, { ...style, characterHeightPx: 64 }, 'idle', 'S', table);
     expect(b.scale).toBe(2);
-    expect(b.cell).toEqual({ w: 48, h: 64 });
-    expect(b.pivot).toEqual({ x: 24, y: 60 });
+    expect(b.cell).toEqual({ w: 64, h: 64 });
+    expect(b.pivot).toEqual({ x: 32, y: 60 });
     expect(countColors(b.frames[0]!)).toBe(countColors(a.frames[0]!));
     expect(pixel(b.frames[0]!, 24, 24)).toEqual(pixel(a.frames[0]!, 12, 12));
   });

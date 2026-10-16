@@ -3,7 +3,8 @@ import { sprite, type Sprite } from './format.js';
 /**
  * Base body, 32 px tall chibi, authored directly on the pixel grid.
  * Each view is a set of limb layers positioned on a 24×32 canvas so animation
- * is a table of per-layer offsets. Canvas origin (pivot) is the bottom centre: (12, 30).
+ * is a table of per-layer offsets. Canvas origin (pivot) is the bottom centre: (16, 30);
+ * the 4 px of slack on each side leave room for swung weapons.
  *
  * Shading follows docs/PIXEL_STYLE_REFERENCE.md §3: one light from the top-left,
  * three tones per material (highlight on the upper-left masses, shadow on the
@@ -11,9 +12,9 @@ import { sprite, type Sprite } from './format.js';
  * are authored at full width (no mirroring) so the light can be asymmetric.
  */
 
-export const CANVAS_W = 24;
+export const CANVAS_W = 32;
 export const CANVAS_H = 32;
-export const PIVOT = { x: 12, y: 30 } as const;
+export const PIVOT = { x: 16, y: 30 } as const;
 
 export interface BodyPart {
   sprite: Sprite;
@@ -117,18 +118,18 @@ const LEG_L_S = sprite`
 
 export const BODY_S: BodyView = {
   parts: {
-    legR: { sprite: LEG_R_S, x: 8, y: 22, z: 10 },
-    legL: { sprite: LEG_L_S, x: 12, y: 22, z: 11 },
-    torso: { sprite: TORSO_S, x: 7, y: 15, z: 20 },
-    armR: { sprite: ARM_R_S, x: 4, y: 16, z: 30 },
-    armL: { sprite: ARM_L_S, x: 17, y: 16, z: 30 },
-    head: { sprite: HEAD_S, x: 5, y: 1, z: 40 },
+    legR: { sprite: LEG_R_S, x: 12, y: 22, z: 10 },
+    legL: { sprite: LEG_L_S, x: 16, y: 22, z: 11 },
+    torso: { sprite: TORSO_S, x: 11, y: 15, z: 20 },
+    armR: { sprite: ARM_R_S, x: 8, y: 16, z: 30 },
+    armL: { sprite: ARM_L_S, x: 21, y: 16, z: 30 },
+    head: { sprite: HEAD_S, x: 9, y: 1, z: 40 },
   },
   anchors: {
-    head: { x: 5, y: 1 },
-    hand_right: { x: 5, y: 20 },
-    hand_left: { x: 18, y: 20 },
-    back: { x: 12, y: 16 },
+    head: { x: 9, y: 1 },
+    hand_right: { x: 9, y: 20 },
+    hand_left: { x: 22, y: 20 },
+    back: { x: 16, y: 16 },
   },
 };
 
@@ -211,18 +212,18 @@ const LEG_FAR_W = sprite`
 
 export const BODY_W: BodyView = {
   parts: {
-    legL: { sprite: LEG_FAR_W, x: 11, y: 22, z: 10 }, // far leg
-    legR: { sprite: LEG_NEAR_W, x: 8, y: 22, z: 12 }, // near leg
-    torso: { sprite: TORSO_W, x: 8, y: 15, z: 20 },
-    armL: { sprite: ARM_FAR_W, x: 12, y: 16, z: 15 }, // far arm, behind the torso
-    armR: { sprite: ARM_NEAR_W, x: 9, y: 16, z: 30 }, // near arm
-    head: { sprite: HEAD_W, x: 5, y: 1, z: 40 },
+    legL: { sprite: LEG_FAR_W, x: 15, y: 22, z: 10 }, // far leg
+    legR: { sprite: LEG_NEAR_W, x: 12, y: 22, z: 12 }, // near leg
+    torso: { sprite: TORSO_W, x: 12, y: 15, z: 20 },
+    armL: { sprite: ARM_FAR_W, x: 16, y: 16, z: 15 }, // far arm, behind the torso
+    armR: { sprite: ARM_NEAR_W, x: 13, y: 16, z: 30 }, // near arm
+    head: { sprite: HEAD_W, x: 9, y: 1, z: 40 },
   },
   anchors: {
-    head: { x: 5, y: 1 },
-    hand_right: { x: 10, y: 20 },
-    hand_left: { x: 13, y: 20 },
-    back: { x: 15, y: 16 },
+    head: { x: 9, y: 1 },
+    hand_right: { x: 14, y: 20 },
+    hand_left: { x: 17, y: 20 },
+    back: { x: 19, y: 16 },
   },
 };
 
@@ -261,18 +262,18 @@ const TORSO_SW = sprite`
 
 export const BODY_SW: BodyView = {
   parts: {
-    legL: { sprite: LEG_L_S, x: 12, y: 21, z: 10 }, // far leg, a step back and up
-    legR: { sprite: LEG_R_S, x: 8, y: 22, z: 12 }, // near leg
-    torso: { sprite: TORSO_SW, x: 7, y: 15, z: 20 },
-    armL: { sprite: ARM_L_S, x: 15, y: 16, z: 15 }, // far arm, behind the torso
-    armR: { sprite: ARM_R_S, x: 4, y: 16, z: 30 }, // near arm
-    head: { sprite: HEAD_SW, x: 5, y: 1, z: 40 },
+    legL: { sprite: LEG_L_S, x: 16, y: 21, z: 10 }, // far leg, a step back and up
+    legR: { sprite: LEG_R_S, x: 12, y: 22, z: 12 }, // near leg
+    torso: { sprite: TORSO_SW, x: 11, y: 15, z: 20 },
+    armL: { sprite: ARM_L_S, x: 19, y: 16, z: 15 }, // far arm, behind the torso
+    armR: { sprite: ARM_R_S, x: 8, y: 16, z: 30 }, // near arm
+    head: { sprite: HEAD_SW, x: 9, y: 1, z: 40 },
   },
   anchors: {
-    head: { x: 5, y: 1 },
-    hand_right: { x: 5, y: 20 },
-    hand_left: { x: 16, y: 20 },
-    back: { x: 12, y: 16 },
+    head: { x: 9, y: 1 },
+    hand_right: { x: 9, y: 20 },
+    hand_left: { x: 20, y: 20 },
+    back: { x: 16, y: 16 },
   },
 };
 
@@ -311,18 +312,18 @@ const TORSO_NW = sprite`
 
 export const BODY_NW: BodyView = {
   parts: {
-    legR: { sprite: LEG_L_S, x: 12, y: 21, z: 10 }, // far leg (character's right)
-    legL: { sprite: LEG_R_S, x: 8, y: 22, z: 12 }, // near leg (character's left)
-    torso: { sprite: TORSO_NW, x: 7, y: 15, z: 20 },
-    armR: { sprite: ARM_L_S, x: 15, y: 16, z: 15 }, // far arm
-    armL: { sprite: ARM_R_S, x: 4, y: 16, z: 30 }, // near arm
-    head: { sprite: HEAD_NW, x: 5, y: 1, z: 40 },
+    legR: { sprite: LEG_L_S, x: 16, y: 21, z: 10 }, // far leg (character's right)
+    legL: { sprite: LEG_R_S, x: 12, y: 22, z: 12 }, // near leg (character's left)
+    torso: { sprite: TORSO_NW, x: 11, y: 15, z: 20 },
+    armR: { sprite: ARM_L_S, x: 19, y: 16, z: 15 }, // far arm
+    armL: { sprite: ARM_R_S, x: 8, y: 16, z: 30 }, // near arm
+    head: { sprite: HEAD_NW, x: 9, y: 1, z: 40 },
   },
   anchors: {
-    head: { x: 5, y: 1 },
-    hand_right: { x: 16, y: 20 },
-    hand_left: { x: 5, y: 20 },
-    back: { x: 12, y: 16 },
+    head: { x: 9, y: 1 },
+    hand_right: { x: 20, y: 20 },
+    hand_left: { x: 9, y: 20 },
+    back: { x: 16, y: 16 },
   },
 };
 
@@ -361,17 +362,80 @@ const TORSO_N = sprite`
 
 export const BODY_N: BodyView = {
   parts: {
-    legL: { sprite: LEG_R_S, x: 8, y: 22, z: 10 },
-    legR: { sprite: LEG_L_S, x: 12, y: 22, z: 11 },
-    torso: { sprite: TORSO_N, x: 7, y: 15, z: 20 },
-    armL: { sprite: ARM_R_S, x: 4, y: 16, z: 30 },
-    armR: { sprite: ARM_L_S, x: 17, y: 16, z: 30 },
-    head: { sprite: HEAD_N, x: 5, y: 1, z: 40 },
+    legL: { sprite: LEG_R_S, x: 12, y: 22, z: 10 },
+    legR: { sprite: LEG_L_S, x: 16, y: 22, z: 11 },
+    torso: { sprite: TORSO_N, x: 11, y: 15, z: 20 },
+    armL: { sprite: ARM_R_S, x: 8, y: 16, z: 30 },
+    armR: { sprite: ARM_L_S, x: 21, y: 16, z: 30 },
+    head: { sprite: HEAD_N, x: 9, y: 1, z: 40 },
   },
   anchors: {
-    head: { x: 5, y: 1 },
-    hand_right: { x: 18, y: 20 },
-    hand_left: { x: 5, y: 20 },
-    back: { x: 12, y: 16 },
+    head: { x: 9, y: 1 },
+    hand_right: { x: 22, y: 20 },
+    hand_left: { x: 9, y: 20 },
+    back: { x: 16, y: 16 },
   },
 };
+
+// ---------------------------------------------------------------------------
+// Pose drawings used by clips (anim.ts): raised and extended arms, lying body.
+// ---------------------------------------------------------------------------
+
+/** Right arm raised straight up (S/SW), hand at the top; 8 tall so the sleeve still covers the shoulder. */
+export const ARM_UP_S = sprite`
+  osS
+  osS
+  o^C
+  o^C
+  ocC
+  ocC
+  ocC
+  ocC
+`;
+
+/** Shadow-side arm raised (N/NW far arm). */
+export const ARM_UP_R = sprite`
+  sSo
+  sSo
+  cCo
+  cCo
+  cCo
+  cCo
+  cCo
+  cCo
+`;
+
+/** Near arm raised in the side view. */
+export const ARM_UP_W = sprite`
+  osSo
+  osSo
+  o^co
+  o^co
+  occo
+  occo
+  ocCo
+  ocCo
+`;
+
+/** Near arm extended forward (screen-left) in the side view; hand at the left end. */
+export const ARM_FWD_W = sprite`
+  .ooooo.
+  osS^cco
+  oSScCCo
+  .ooooo.
+`;
+
+/** Lying on the back, head to the left, eyes closed. Used by every view (mirrored views flip it). */
+export const LYING = sprite`
+  ...oooo.......................
+  .oo####oo.....................
+  .o###hhSSo...oooooooooo.......
+  o##hhSssso..o^cccccccCoooooooo
+  o#hhhsseeo..o^ccccccCCo+pPPbBo
+  ohhhhSsSSoSSo|llaallLCo+pPPbBo
+  ohhhhsseeoSSoccccccccCopPPPBBo
+  oHhhhSssSo..oCCCCCCCCCoPPPPBBo
+  .oHHhhSsSo..oCCCCCCCCCoooooooo
+  .ooHHHSSo....oooooooooo.......
+  ...ooooo......................
+`;

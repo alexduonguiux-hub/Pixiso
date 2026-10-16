@@ -139,6 +139,16 @@ export function flipX(s: Sprite): Sprite {
   return { w: s.w, h: s.h, cells: out };
 }
 
+/** Rotates 90° clockwise (lossless on the pixel grid): the top row becomes the right column. */
+export function rotateCW(s: Sprite): Sprite {
+  const out = new Int16Array(s.w * s.h).fill(EMPTY);
+  const w = s.h;
+  const h = s.w;
+  for (let y = 0; y < s.h; y++)
+    for (let x = 0; x < s.w; x++) out[x * w + (s.h - 1 - y)] = s.cells[y * s.w + x]!;
+  return { w, h, cells: out };
+}
+
 /** Mirrors the left half onto the right so symmetric templates only need one side authored. */
 export function mirrorFromLeft(s: Sprite): Sprite {
   const out = Int16Array.from(s.cells);

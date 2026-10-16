@@ -175,3 +175,17 @@ With the pivot confirmed, `apps/web/src/scene`, `apps/web/src/render`, the three
 ### D-040 ProjectStyle after the pivot
 
 `characterHeightPx` becomes `32 | 64`: the base body is 32 px and output is nearest ×1 or ×2 (a 48 px set is a separate drawing, PIVOT.md decision 1). `outline` becomes `'ink' | 'soft' | 'none'`, the presets measured on reference art: ink = near-black outline tinted by the bordering material, soft = warm dark grey `#2e2428`, none = line cells take the material's shadow. The ramp is always `REFERENCE_RAMP_OPTIONS` (D-037 defaults are now in effect). The catalog lists the directions that have a drawn view (`S`, `W`, `E` today); the UI disables the rest until M2 draws them. `palette.mode === 'fixed'` and `directions: '5+mirror'` are kept in the type for Phase 4 and M4 but have no effect yet, and the palette size select is disabled with a note.
+
+## M2 — thân đầy đủ
+
+### D-041 Frame canvas is 32×32 with the pivot at (16, 30)
+
+The 24-px-wide spike canvas had no room for a swung weapon: a horizontal or diagonal sword from the hand left the frame. Every frame is now 32×32 (64×64 at ×2), the body sits in the middle 24 columns and the four spare columns on each side hold attack poses. All frames of a character share the cell and pivot (HANDOFF §7).
+
+### D-042 Mirrored directions keep a mirrored light
+
+SE, E and NE are horizontal flips of SW, W and NW, so their light comes from the top-right. Re-lighting a flipped sprite would need either a second set of drawings per direction or a shading model separate from the artwork; neither is worth it at 32 px, and flipping side views is what the reference Pokémon-style sprites do. Rule 8 of PIXEL_STYLE_REFERENCE.md is relaxed accordingly: side views keep their lateral shading subtle so the flip reads naturally.
+
+### D-043 Clip frames can swap drawings, request part poses and hide gear
+
+Offset tables alone cannot raise an arm, swing a sword or lie down. `FrameOffsets` gained `limbSprites` (replace a limb drawing for one frame), `anchors` (move a slot anchor with the raised hand), `pose` (a part answers with a variant from `PartView.poses`, e.g. the sword's `up` and `swing`), `hideLimbs`, `hideParts` and `extra` (a bespoke layer). Six clips exist in every view: idle 2, walk 4, run 4, attack 3, hit 2, death 4. Death uses one lying drawing for every direction (mirrored directions flip it), with the gear dropped; a per-direction lying pose can replace it later without touching the clip model. Horizontal and diagonal swords are derived from the upright drawing by lossless quarter turns and a small generator, so one authored blade serves every pose.

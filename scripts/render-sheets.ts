@@ -136,6 +136,19 @@ for (const { id, config } of SETUPS) {
   console.log(`${id}: ${first.palette.length} colours, cell ${first.cell.w}×${first.cell.h}`);
 }
 
+// Every clip, S and W rows, for the knight: the review sheet for animation batches.
+const knightCfg = SETUPS[1]!.config;
+writePng(
+  path.join(OUT, 'knight_clips_x8.png'),
+  sheet(
+    (['S', 'W', 'SW', 'N'] as const).flatMap((d) =>
+      catalog.animations.map(
+        (a) => renderClip(knightCfg, DEFAULT_PROJECT_STYLE, a.id, d, table).frames,
+      ),
+    ),
+  ),
+);
+
 // Outline presets and the 64 px output side by side, knight S walk.
 const knight = SETUPS[1]!.config;
 const variants: ProjectStyle[] = [

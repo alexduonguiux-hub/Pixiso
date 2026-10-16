@@ -30,28 +30,38 @@ export function partById(id: string): PartDef | undefined {
   return PARTS.find((p) => p.id === id);
 }
 
-/** Builds one frame: body limbs plus attached parts, all offset by the clip frame. */
-export function buildFrame(spec: CharacterSpec, view: View, offsets: FrameOffsets): Sprite {
+/**
+ * Builds one frame: body limbs plus attached parts, all offset by the clip
+ * frame, which may also swap limb drawings, hide limbs or parts, nudge anchors,
+ * request a part pose and add a bespoke layer (anim.ts FrameOffsets).
+ */
+export function buildFrame(spec: CharacterSpec, view: View, frame: FrameOffsets): Sprite {
   const { body, w, h } = viewFor(spec.body ?? REFERENCE_BODY, view);
   const layers: Layer[] = [];
   for (const [id, part] of Object.entries(body.parts) as [LimbId, BodyView['parts'][LimbId]][]) {
-    const [dx, dy] = offsets.limbs[id] ?? [0, 0];
-    layers.push({ id, sprite: part.sprite, x: part.x + dx, y: part.y + dy, z: part.z });
+    if (frame.hideLimbs?.includes(id)) continue;
+    const [dx, dy] = frame.limbs[id] ?? [0, 0];
+    const sprite = frame.limbSprites?.[id] ?? part.sprite;
+    layers.push({ id, sprite, x: part.x + dx, y: part.y + dy, z: part.z });
   }
   for (const partId of spec.parts) {
     const def = partById(partId);
     if (!def) throw new Error(`unknown part "${partId}"`);
-    const pv = def.views[view];
+    if (frame.hideParts) continue;
+    const base = def.views[view];
+    const pv = (frame.pose && base.poses?.[frame.pose]) || base;
     const anchor = body.anchors[def.slot];
-    const [dx, dy] = offsets.limbs[ANCHOR_LIMB[def.slot]] ?? [0, 0];
+    const [dx, dy] = frame.limbs[ANCHOR_LIMB[def.slot]] ?? [0, 0];
+    const [ax, ay] = frame.anchors?.[def.slot] ?? [0, 0];
     layers.push({
       id: `part:${partId}`,
       sprite: pv.sprite,
-      x: anchor.x + pv.dx + dx,
-      y: anchor.y + pv.dy + dy,
+      x: anchor.x + pv.dx + dx + ax,
+      y: anchor.y + pv.dy + dy + ay,
       z: pv.z,
     });
   }
+  if (frame.extra) layers.push({ id: 'extra', ...frame.extra });
   return compose(layers, w, h);
 }
 

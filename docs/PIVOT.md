@@ -82,13 +82,13 @@ Bạn quyết định bỏ 3D. Cách mới: **nhân vật là tập các ma tr�
 
 ### Kế hoạch mới
 
-| Giai đoạn      | Việc                                                                                                                                    | Ước lượng |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| M1 Nền tảng    | `sprite-kit` thành package chính; catalog mới (base + parts + materials); bỏ three.js khỏi web; preview từ sprite-kit; UI giữ bố cục cũ | 2 ngày    |
-| M2 Base đầy đủ | 5 hướng (S, SW, W, NW, N; lật cho SE, E, NE), 6 clip: idle 2, walk 4, run 4, attack 3, hit 2, death 4 (offset + vài khung vẽ riêng)     | 3–4 ngày  |
-| M3 Thư viện    | tóc ×6, mũ ×4, giáp/áo choàng/váy ×4, vũ khí ×8, khiên ×3; mỗi món 5 hướng                                                              | 4–5 ngày  |
-| M4 Xuất        | sheet, JSON Aseprite, GIF, ZIP, `player.html` (pixel-core đã có phần lớn)                                                               | 2 ngày    |
-| M5 Mô tả       | endpoint Claude với catalog mới                                                                                                         | 2 ngày    |
+| Giai đoạn         | Việc                                                                                                                                                                 | Ước lượng |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| M1 Nền tảng       | `sprite-kit` thành package chính; catalog mới (base + parts + materials); bỏ three.js khỏi web; preview từ sprite-kit; UI giữ bố cục cũ                              | 2 ngày    |
+| M2 Base đầy đủ ✅ | 5 hướng (S, SW, W, NW, N; lật cho SE, E, NE), 6 clip: idle 2, walk 4, run 4, attack 3, hit 2, death 4 (offset + vài khung vẽ riêng). Xong 16/10, duyệt qua 3 đợt ảnh | 3–4 ngày  |
+| M3 Thư viện       | tóc ×6, mũ ×4, giáp/áo choàng/váy ×4, vũ khí ×8, khiên ×3; mỗi món 5 hướng                                                                                           | 4–5 ngày  |
+| M4 Xuất           | sheet, JSON Aseprite, GIF, ZIP, `player.html` (pixel-core đã có phần lớn)                                                                                            | 2 ngày    |
+| M5 Mô tả          | endpoint Claude với catalog mới                                                                                                                                      | 2 ngày    |
 
 ### Quyết định đã xác nhận (16/10, cả 4)
 

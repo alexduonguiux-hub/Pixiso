@@ -62,3 +62,7 @@ colors:
 animations:
   idle: { label_vi: Đứng yên, tags: [đứng, nghỉ, chờ] }
   walk: { label_vi: Đi bộ, tags: [đi, di chuyển, bước] }
+  run: { label_vi: Chạy, tags: [chạy, di chuyển, nhanh] }
+  attack: { label_vi: Chém, tags: [tấn công, chém, kiếm, đánh] }
+  hit: { label_vi: Trúng đòn, tags: [bị đánh, trúng, đau, lùi] }
+  death: { label_vi: Ngã gục, tags: [chết, ngã, gục, thua] }
