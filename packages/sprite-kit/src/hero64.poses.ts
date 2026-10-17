@@ -370,13 +370,11 @@ export const POSE_STAND: ZombiePose = {
     rows: [
       '..o&kkkkkkkKo..',
       '..o&kkkkkkkKo..',
-      '.o&kkkkkkkkkKo.',
-      '.o&kkkkkkkkkKo.',
       '.o&kkkkKkkkkKo.',
-      'o&kkkkkKkkkkkKo',
-      'o&kkkkkKkkkkkKo',
-      'o&kkkKkKkKkkkKo',
-      'oo.oo.ooo.oo.oo',
+      '.o&kkkkKkkkkKo.',
+      '.o&kkKkKkkKkKo.',
+      'o&kookkkkkkooKo',
+      'ooo..oooooo..oo',
     ],
   },
 };

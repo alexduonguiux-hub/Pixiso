@@ -343,6 +343,27 @@ export const ONG_TU: Outfit = {
   },
 };
 
+/** Lab-coat tails over the hips, open at the front (base form, figure space). */
+const COAT_TAILS = ov(2, 29, ['o^ccccoccccCo', '.o^cccocccCo.', '.o^cccocccCo.', '.ooooo.ooooo.']);
+
+/** Bác sĩ Lan, the doctor: auburn bob, round glasses, white coat open at the front over blue trousers, dark shoes. */
+export const BAC_SI_LAN: Outfit = {
+  id: 'bac_si_lan',
+  label: 'Bác sĩ Lan',
+  remaps: LONG_SLEEVES,
+  lines: [...COLLAR, seam([8, 19, 8, 28])], // collar, coat opening
+  overlays: [HAIR_BOB, GLASSES, COAT_TAILS],
+  colors: {
+    skin: [240, 206, 176],
+    hair: [118, 42, 40],
+    cloth: [228, 226, 220],
+    pants: [62, 80, 112],
+    boots: [42, 44, 50],
+    eye: [40, 95, 110],
+    white: [212, 230, 238],
+  },
+};
+
 /** Kẻ Phun, the bloated spore spitter: fat form, bare swollen torso with pustules, torn trousers. */
 export const KE_PHUN: Outfit = {
   id: 'ke_phun',
@@ -485,10 +506,11 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
     remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
   if (Array.isArray(look.hair)) overlays.push(...look.hair);
   else if (look.hair) remaps.push(look.hair);
-  if (look.hat) overlays.push(look.hat);
   if (look.glasses) overlays.push(GLASSES);
   if (look.details.includes('scalp')) overlays.push(ZOMBIE_SCALP);
   if ((look.face ?? 'zombie') === 'zombie') overlays.push(ZOMBIE_FACE, ZOMBIE_CHEEK);
+  // Hats go on after the face so a scalp wound or cheek gash never lands on the hat.
+  if (look.hat) overlays.push(look.hat);
   for (const d of look.details) {
     const [cx, cy] = pose.chest;
     if (d === 'stains')
@@ -602,6 +624,30 @@ export const ZOMBIE_SOLDIER = zombie('zombie_soldier', 'Zombie quân đội', PO
   },
 });
 
+/** Sores on both bare forearms (drag pose). */
+const SORES: Overlay[] = [ov(1, 24, ['D.', '..', '.D', 'D.']), ov(13, 25, ['..D', '...', '.D.'])];
+/** Dog tag on the sternum (drag pose). */
+const DOG_TAG = ov(8, 21, ['w', 'm']);
+
+/** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */
+export const LINH_NHIEM = zombie('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
+  hat: HELMET,
+  top: 'torn',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['stains'],
+  extras: [...SORES, DOG_TAG],
+  colors: {
+    skin: [184, 186, 156],
+    cloth: [104, 110, 70],
+    pants: [90, 94, 64],
+    boots: [146, 130, 102],
+    metal: [204, 204, 194],
+    ...BLOOD,
+    ...ZOMBIE_EYES,
+  },
+});
+
 /** Athlete (man): drooped stance mirrored, sweatband, sleeveless jersey with a number, shorts, sneakers. */
 export const ZOMBIE_ATHLETE_M = zombie(
   'zombie_athlete_m',
@@ -674,10 +720,45 @@ export const ZOMBIE_OFFICE = zombie('zombie_office', 'Zombie nhân viên văn ph
 /* Mutants.                                                            */
 /* ------------------------------------------------------------------ */
 
-/** Huge pointed ears of Kẻ Thính (head space, both sides). */
+/**
+ * Huge pointed ears of Kẻ Thính (head space): they rise beside the skull to
+ * above its crown, kept within one column of the head grid so no pose
+ * canvas cuts their outline, and sit behind the head so the skull keeps its
+ * own line.
+ */
 const BIG_EARS: Overlay[] = [
-  hov(-3, 5, ['....oo.', '...osSo', '..ossSo', '.ossSSo', '.osSSSo', '..oSSo.', '...oo..']),
-  hov(13, 5, ['.oo....', 'oSso...', 'oSsso..', 'oSSsso.', 'oSSSso.', '.oSSo..', '..oo...']),
+  {
+    ...hov(-1, 0, [
+      '.o...',
+      'osoo.',
+      'ossS.',
+      'ossS.',
+      'osS..',
+      'osS..',
+      'osS..',
+      'oSS..',
+      'oS...',
+      'oS...',
+      'oo...',
+    ]),
+    under: true,
+  },
+  {
+    ...hov(13, 0, [
+      '...o.',
+      '.ooso',
+      '.Ssso',
+      '.Ssso',
+      '..Sso',
+      '..Sso',
+      '..Sso',
+      '..SSo',
+      '...So',
+      '...So',
+      '...oo',
+    ]),
+    under: true,
+  },
 ];
 /** Eyes sewn shut: a dark slit where each eye was. */
 const SEALED_EYES = hov(5, 9, ['SS...SS', 'oo...oo', 'SS...SS']);
@@ -791,63 +872,57 @@ export const DOT_BIEN: Outfit = {
 };
 
 /**
- * Hair of the mimic (head space): long black hair past the shoulders, the
- * left half of the face hidden behind a curtain of strands, two strands
- * falling onto the chest.
+ * Hair of the mimic (head space): black hair to the shoulders, matted,
+ * strands sticking out at the sides and ragged ends on the shoulders. The
+ * face stays visible, as on the game's own sprite.
  */
-const HAIR_MIMIC = hov(0, 0, [
+const HAIR_WILD = hov(0, 0, [
   '......ooooo......',
   '....oo#hhhhoo....',
   '...o##hhhhhhho...',
   '..o##hhhhhhhhho..',
   '..o#hhhhhhhhhho..',
   '.o#hhhhhhhhhhhho.',
-  '.o#hhhhhhhhhhhho.',
-  '.o#hhhhhhhhHhhho.',
-  '.o#hhhhhHH...hho.',
-  '.ohhhHhhH....hho.',
-  '.ohhhHhhH....hho.',
-  '.ohhhHhH.....hho.',
-  '.ohhhH.......hho.',
-  '.ohhH.......Hhho.',
+  '.ohhhhhhhhhhhhho.',
+  '.ohhhhHhhhhhHhho.',
+  '.ohhH..HHH..Hhho.',
   '.ohh.........hho.',
-  '.ohh.........hho.',
+  'ohhh.........hho.',
+  '.ohh.........hhho',
   '.ohh.........hho.',
   '.ohH.........Hho.',
-  '..hH.........Hh..',
-  '..hH.........Hh..',
-  '..hH.........Hh..',
-  '..hH.........Hh..',
+  'ohhH.........Hhho',
+  '.oHH.........HHo.',
+  '.oHo.........oHo.',
+  '..o...........o..',
 ]);
-/** A smile far too wide: a line from the hair to the far cheek, bared teeth above the chin. */
-const WIDE_SMILE = hov(6, 12, ['oooooo', 'xxxxx.']);
+/** Sunken sockets with a glowing point in each. */
+const SUNKEN_EYES = hov(5, 9, ['SS...SS', 'Se...eS', 'SS...SS']);
+/** A smile far too wide: corners lifted at the cheeks, a line across the face, bared teeth above the chin. */
+const WIDE_SMILE = hov(4, 11, ['o.......o', '.ooooooo.', '..xxxxx..']);
 /** Blood dripping down the dress. */
-const DRESS_STAINS = ov(4, 30, [
-  '....D....',
-  '.........',
-  '.D.......',
-  '.........',
-  '......D..',
-  '.........',
-  '..D......',
-]);
+const DRESS_STAINS = ov(4, 30, ['....D....', '.........', '.D.......', '.........', '......D..']);
 
-/** Kẻ Bắt Chước: stands still like a person, white dress to the ankles, long black hair over half the face, a smile too wide. */
+/**
+ * Kẻ Bắt Chước: stands still like a person (base figure), a dirty off-white
+ * slip dress to the shins with a torn hem, bare feet, shoulder-length black
+ * hair, red points in sunken sockets and a smile too wide.
+ */
 export const KE_BAT_CHUOC = zombie('ke_bat_chuoc', 'Kẻ Bắt Chước', POSE_STAND, {
-  hair: [HAIR_MIMIC],
-  top: 'long',
+  hair: [HAIR_WILD],
+  top: 'tank',
   bottoms: 'dress',
   shoes: 'none',
   details: [],
   face: 'plain',
-  extras: [WIDE_SMILE, DRESS_STAINS],
+  extras: [SUNKEN_EYES, WIDE_SMILE, DRESS_STAINS],
   colors: {
-    skin: [204, 206, 210],
-    hair: [26, 24, 28],
-    cloth: [238, 236, 230],
-    cloth2: [236, 234, 228],
-    eye: [16, 16, 20],
-    white: [244, 244, 240],
+    skin: [184, 184, 164],
+    hair: [38, 34, 36],
+    cloth: [226, 216, 196],
+    cloth2: [226, 216, 196],
+    eye: [214, 70, 40],
+    white: [236, 232, 222],
     ...BLOOD,
   },
 });
@@ -863,7 +938,17 @@ export const MUTANTS: readonly Outfit[] = [
 /** The common infected of the game is the civilian man. */
 export const BIEN_THE: Outfit = { ...ZOMBIE_CIV_M, id: 'bien_the', label: 'Biến Thể' };
 
-export const CAST: readonly Outfit[] = [DUONG, HUNG, NY, SON, ONG_TU, BIEN_THE, KE_PHUN];
+export const CAST: readonly Outfit[] = [
+  DUONG,
+  HUNG,
+  NY,
+  SON,
+  ONG_TU,
+  BAC_SI_LAN,
+  LINH_NHIEM,
+  BIEN_THE,
+  KE_PHUN,
+];
 export const ZOMBIES: readonly Outfit[] = [
   ZOMBIE_CIV_M,
   ZOMBIE_CIV_F,
