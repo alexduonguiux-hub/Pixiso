@@ -39,9 +39,9 @@ export const ZOMBIE_BODY = sprite`
   o$sSoSSsssSSssoSs$o
   o$sSosssssssssoSs$o
   o$soos$$$$$sssoSs$o
-  o$sooss$$$sssSoSs$o
-  osssos$$$$$ssSoos$o
-  osSsos$$$$$ssSoos$o
+  o$sooss$$$sssSoSsso
+  osssos$$$$$ssSoosso
+  osSsos$$$$$ssSoosso
   ososossSSsSSssossso
   osososssssssssosSso
   osososssssssssosSso

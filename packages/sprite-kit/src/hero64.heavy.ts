@@ -40,10 +40,10 @@ export const HEAVY_BODY = sprite`
   o$ssSos$$$sss$$$soSss$o
   o$ssSos$$$sSs$$$soSss$o
   o$ssSos$$$sSs$$$soSss$o
-  o$ssSosSSSsSsSSSsoSss$o
+  o$ssSossSSsSssSSsoSss$o
   o$ssoosssssSsssssooss$o
-  o$ssoossSSsSsSSssooss$o
-  o$ssoosssssSsssssooss$o
+  osssoossSSsSsSSssoossso
+  osssoosssssSsssssoossso
   ossssossSSsSsSSssosssso
   osossosssssssssssossoso
   osossosssssssssssossoso

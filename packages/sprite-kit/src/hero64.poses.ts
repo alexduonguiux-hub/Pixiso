@@ -163,15 +163,15 @@ export const BODY_HUNCH = sprite`
   o$sSos$$SsS$$soSs$o
   o$sSoSSsssssSSoSs$o
   o$sSosssssssssoSs$o
-  o$sSos$$$$$$$soSs$o
-  o$sSos$$$$$$$soSs$o
-  o$sSosssssssssoSs$o
-  o$sSossSSsSSssoSs$o
-  o$sSosssssssssoSs$o
-  o$sSosssooosssoSs$o
-  o$sSoSsso.ossSoSs$o
-  o$sSoSsso.ossSoSs$o
-  o$sSoSsso.ossSoSs$o
+  o$ssos$$$$$$$soss$o
+  o$ssos$$$$$$$soss$o
+  osssosssssssssossso
+  osssossSSsSSssossso
+  osssosssssssssossso
+  o$ssosssooosssoss$o
+  o$ssoSsso.ossSoss$o
+  o$ssoSsso.ossSoss$o
+  osssoSsso.ossSossso
   ossso$sSo.oSs$ossso
   osSso$sSo.oSs$osSso
   ososo$sSo.oSs$ososo
@@ -211,15 +211,15 @@ export const BODY_CRAWL = sprite`
   o$ssSoSSsssssSSoSss$o
   o$ssSosssssssssoSss$o
   o$ssSosssssssssoSss$o
-  o$ssSossooooossoSss$o
-  o$ssSo$$so.os$$oSss$o
-  o$ssSo$sso.oss$oSss$o
-  o$ssSoSSso.ossSoSss$o
-  o$ssSo$sSo.oSs$oSss$o
-  o$ssSo$sSo.oSs$oSss$o
-  o$ssSo$sSo.oSs$oSss$o
+  o$sssossooooossosss$o
+  o$ssso$$so.os$$osss$o
+  o$ssso$sso.oss$osss$o
+  ossssoSSso.ossSosssso
   osssso$sSo.oSs$osssso
-  ososoo$sSo.oSs$oososo
+  osssso$sSo.oSs$osssso
+  osssso$sso.oss$osssso
+  ossssossso.osssosssso
+  ososoossso.osssoososo
   ososoooSso.osSooososo
   ososoo$sso.oss$oososo
   oooooooooo.oooooooooo

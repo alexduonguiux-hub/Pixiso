@@ -20,14 +20,14 @@ const BRUTE_ARM = sprite`
   .o$ssssSo
   .o$ssssSo
   .o$ssssSo
-  .o$ssssSo
-  .o$ssssSo
-  .o$ssssSo
-  .o$ssssSo
+  .osssssso
+  .osssssso
+  .osssssso
+  .osssssso
   o$sssssSo
   o$sssssSo
-  o$sssssSo
-  o$sssssSo
+  ossssssso
+  ossssssso
   oSsssssSo
   ooSsssSoo
   .oSsssSo.

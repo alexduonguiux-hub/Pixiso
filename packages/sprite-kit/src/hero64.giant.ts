@@ -41,12 +41,12 @@ export const HERO_GIANT15_S = sprite`
   .ossso$$$$$sss$$$$$ossso.
   .ossso$$$$$sss$$$$$ossso.
   o$ssSoSSSsssssssSSSoSss$o
-  o$ssSoSSsssssssssSSoSss$o
-  o$ssSosssssssssssssoSss$o
-  o$ssSosssssssssssssoSss$o
-  o$ssoos$$$$$$$$$$$sooss$o
-  o$ssooss$$$$$$$$$ssooss$o
-  o$ssooss$$$$$$$$$ssooss$o
+  o$ssSoSSsssssssssSSosss$o
+  o$ssSosssssssssssssosss$o
+  o$ssSosssssssssssssosss$o
+  o$ssoos$$$$$$$$$$$soossso
+  o$ssooss$$$$$$$$$ssoossso
+  o$ssooss$$$$$$$$$ssoossso
   ossssos$$$$$$$$$$$sosssso
   osossoss$$$$$$$$$ssossoso
   osossoss$$$$$$$$$ssossoso
