@@ -406,42 +406,44 @@ CRAWL_SW = body(21, 40, 20, [
 '.ooooooooo.oooooooooo',
 ])
 # ------------------------------------------------------------------ heavy build (23×45 in S; W 18×46 with the soles a row lower)
-# Side view of the heavy build: the base W figure widened by hand (torso two
-# columns deeper, arm and legs a column thicker, five more torso rows), the W
-# head two columns in from the left edge; the neck fills the jaw row under it.
-HEAVY_W = body(18, 46, 14, [
-'.........SSsSo....',
-'......ossssssso...',
-'.....o$SSssss$$o..',
-'....osSssssssSs$o.',
-'...ossss$sosssssso',
-'...o$ss$$sosssssso',
-'...o$ss$$$oSsss$o.',
-'...oSssSSSoosss$o.',
-'...osssssSoSsss$o.',
-'...o$$$sssossss$o.',
-'...osssssSoSsss$o.',
-'...o$$$sssossss$o.',
-'...ossssssoSsss$o.',
-'...o$$$sssossss$o.',
-'...osssssSossss$o.',
-'...o$$sssossss$so.',
-'...o$$$ssooSsssSo.',
-'...o$$ssoSsssssSo.',
-'...ossssoSssssSo..',
-'...oSSsssoSsssSo..',
-'...oSSsosssoooo...',
-'...oSSSo$sssso....',
-'...oSSSSosssso....',
-'....oSSSoS$ssSo...',
-'....oSSSoo$sSSo...',
-'....oSSSSos$sso...',
-'....oSSSSoS$ssso..',
-'...ooooSSoSsssso..',
-'..oSSSSSoooSSSso..',
-'..ooSSSSosssssso..',
-'..ooooooo$ssss$o..',
-'........oooooooo..',
+# Side view of the heavy build (20×46): a barrel chest that juts out in front
+# of the near arm (columns 2–4), the arm hanging over the middle of the flank
+# (columns 5–10), the back at column 16; legs a column thicker than the base,
+# five more torso rows; the W head three columns in, the neck filling the jaw
+# row under it.
+HEAVY_W = body(20, 46, 14, [
+'..........SSsSo.....',
+'.......ossssssso....',
+'.....oo$SSssss$o....',
+'....o$$Sssssss$so...',
+'...o$ossssossssso...',
+'..o$$o$sssossssso...',
+'..o$$o$ssSoSsss$o...',
+'..o$$o$ssSoSsss$o...',
+'..o$so$ssSoSsss$o...',
+'..o$so$ssSoSsss$o...',
+'..o$soSssSoSsss$o...',
+'..ossoSssSoSsss$o...',
+'..ossoSssSoSsss$o...',
+'...osoSssSoSsss$o...',
+'...osossssossssso...',
+'....oossssossssso...',
+'.....ossssosssssso..',
+'.....o$sssosssssso..',
+'.....o$$ssoSsssSo...',
+'.....oSSssoSsssSo...',
+'.....oSSsosssoooo...',
+'.....osSSo$sssso....',
+'.....osSSSosssso....',
+'......osSSoS$ssSo...',
+'......osSSoo$sSSo...',
+'......osSSSos$sso...',
+'......osSSSoS$ssso..',
+'.....ooooSSoSsssso..',
+'....osSSSSoooSSSso..',
+'....ooSSSSosssssso..',
+'....ooooooo$ssss$o..',
+'..........oooooooo..',
 ])
 # Three-quarter front of the heavy build: the far arm behind the torso with one
 # skin column showing, the raised far shoulder pulled in, the near flank in
@@ -675,15 +677,16 @@ add('crawl', 'SW', CRAWL_SW, ('SW', 2, 6, lambda k: 0), {
     'chest': [7, 25], 'number': [8, 25], 'tie': [10, 24], 'belt': [10, 27], 'stains': [6, 24], 'gash': [2, 29],
     'skirt': {'x': 4, 'y': 28, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
-add('heavy', 'W', HEAVY_W, ('W', 2, 0, lambda k: 0), {
-    'torso': [10, 16, 15, 34], 'neck': [[10, 16, 10, 17]], 'shoulders': [[6, 16, 9, 17]],
-    'sleeveL': {'short': [3, 18, 9, 22], 'long': [3, 18, 9, 27], 'torn': [3, 18, 9, 19]},
-    'sleeveR': {'short': [3, 18, 9, 22], 'long': [3, 18, 9, 27]},
-    'pants': [[3, 34, 15, 40]], 'shorts': [[3, 34, 15, 37]],
-    'shoeL': [2, 41, 8, 45], 'shoeR': [9, 41, 15, 45], 'flats': [[2, 44, 8, 45], [9, 44, 15, 45]],
-    'collar': [[7, 16, 13, 16]], 'hem': [10, 33, 14, 33], 'frayedXs': [11, 13],
-    'chest': [12, 21], 'gash': [5, 24],
-    'skirt': {'x': 3, 'y': 34, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
+add('heavy', 'W', HEAVY_W, ('W', 3, 0, lambda k: 0), {
+    # the torso box spans chest front and back; the arm hanging over the flank is excluded through `neck`
+    'torso': [3, 16, 15, 33], 'neck': [[5, 16, 10, 17], [5, 18, 10, 33]], 'shoulders': [[5, 16, 10, 17]],
+    'sleeveL': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 27], 'torn': [5, 18, 10, 19]},
+    'sleeveR': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 27]},
+    'pants': [[5, 34, 16, 40]], 'shorts': [[5, 34, 16, 37]],
+    'shoeL': [4, 41, 10, 45], 'shoeR': [11, 41, 17, 45], 'flats': [[4, 44, 10, 45], [11, 44, 17, 45]],
+    'collar': [[8, 16, 14, 16]], 'hem': [11, 33, 15, 33], 'frayedXs': [11, 13, 15],
+    'chest': [12, 21], 'gash': [6, 24],
+    'skirt': {'x': 5, 'y': 34, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
 })
 add('heavy', 'SW', HEAVY_SW, ('SW', 3, 0, lambda k: 0), {
     'torso': [6, 15, 16, 33], 'neck': [[8, 15, 14, 18], [6, 15, 6, 18], [16, 15, 16, 18]],

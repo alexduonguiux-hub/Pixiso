@@ -1165,9 +1165,57 @@ const KE_PHUN_LOOK: Look = {
 };
 export const KE_PHUN = wearPosed('ke_phun', 'Kẻ Phun', STAND_FAT, KE_PHUN_LOOK);
 
+/**
+ * A shaven head: the base heads keep the back of the skull in shadow where
+ * hair normally sits, which reads as dark hair on a bald man from the side
+ * and behind. These lighten that zone to mid skin, leaving a shadow on the
+ * lower back of the skull. S needs nothing.
+ */
+const BALD_V: ViewItem = {
+  S: {},
+  SW: same(hov(10, 8, ['...s.', '...s.', '..s..', '.s...', 's....'])),
+  W: same(
+    hov(7, 1, [
+      '.ss..',
+      '...s.',
+      '.....',
+      '...s.',
+      '...s.',
+      '..ss.',
+      '..ss.',
+      '...s.',
+      '...s.',
+      '..s..',
+      'sss..',
+      '.....',
+      '.s...',
+    ]),
+  ),
+  NW: same(
+    hov(2, 8, [
+      'sssssssssssS',
+      '..ssssssssSS',
+      '..sssssssSS.',
+      '..ssssssSS..',
+      '...ssssSS...',
+      '....ssSS....',
+    ]),
+  ),
+  N: same(
+    hov(2, 8, [
+      'sssssssssssss',
+      '..ssssssssS..',
+      '..sssssssSS..',
+      '..sssssssSS..',
+      '...sssssSS...',
+      '....sssSS....',
+    ]),
+  ),
+};
+
 /** Hùng: heavy build, headband, grey tank top, khaki shorts to the knee, boots; shaven head. */
 const HUNG_LOOK: Look = {
-  hair: HEADBAND_V,
+  hair: [BALD_V, HEADBAND_V],
   top: 'tank',
   bottoms: 'shorts',
   shoes: 'both',
