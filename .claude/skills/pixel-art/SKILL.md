@@ -74,6 +74,16 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 
 ## 4. Đầu và dáng
 
+- **Dáng = mannequin + đúng những gì dáng đó làm thay đổi.** Thân 7 ô, tay 3 ô, chân 3 ô,
+  đũng ở hàng 29, chân 11 hàng là bất biến; chỉ vai, tay, đầu, bàn chân di chuyển. Không vẽ
+  lại thân từ đầu; không nới thân cho khỏi chồng chi: chi che lên thân hay đùi thì vẽ nó
+  **trước** (nắm tay rủ trước hông, tay buông trước mép đùi). Đầu hạ n hàng thì thân mất n
+  hàng, chân giữ nguyên.
+- **Thể hình** (mập, to con) lấy tỉ lệ từ form nhân hàng/cột đã duyệt; bản vẽ tay chỉ sửa
+  cách tô. **Người khổng lồ**: silhouette theo tỉ lệ mannequin, nhưng viền 1 ô, mắt 2–3 ô,
+  chân mày 2 ô, một đường ngón, một hàng đốt ngón, bóng là cụm đặt tay (D-055); sinh bằng
+  `scripts/research/gen_giants.py`, khoá silhouette, đổi hàng nào phải khai báo `allow`.
+
 - Lưới đầu 17 cột, hàng mắt `HEAD_EYE_ROW = 10`; mắt 2×2 đen + 1 ô trắng góc trên, đặt ở
   ~60 % chiều cao đầu. Gốc lưới đầu là `headX` của dáng (chỉ zombie gục đầu vẽ từ cột 0).
 - Nghiêng đầu bằng `shift` theo hàng, và **chỉ ở hàng 3, 5, 6, 7, 9** của sọ (chỗ cạnh sọ
@@ -102,6 +112,7 @@ Dáng lật (`_m`) dùng chung W/SW/NW của dáng gốc và có N riêng.
 
 ```bash
 DUMP=test-output/view_figures.json pnpm exec tsx scripts/hero-views.ts   # thân S + dáng -> JSON
+python3 -I scripts/research/gen_giants.py                                  # khổng lồ ×1,5/×2 -> hero64.giant.ts (nếu sửa)
 python3 -I scripts/research/gen_pose_views.py | tee test-output/gen.log   # suy mọi góc, kiểm tra
 grep -q '^problems: 0' test-output/gen.log || echo 'CÒN LỖI HÌNH'          # exit code bị tee che
 pnpm exec prettier --write packages/sprite-kit/src/hero64.poses.views.ts
@@ -143,6 +154,8 @@ pnpm typecheck && pnpm test
 | Đỉnh tóc nhìn từ sau có "hai mắt" | hai ô bóng vệt ngôi                                                    | bỏ vệt ngôi ở N/NW                                                                            |
 | Tai Kẻ Thính mất viền             | tai vượt khung 19 cột                                                  | tai dựng đứng trong một cột ngoài lưới, vẽ `under`                                            |
 | Ô da hở ở vai/đỉnh đầu thân mập   | dải nhân cột nhảy 2 cột                                                | mỗi hàng viền bước ≤ 1 cột; assert thân suy ra trùng `buildForm`                              |
+| "Tạo hình bị lỗi dù có form mẫu"  | thân dáng vẽ tự do: thân 9 ô, chân ngắn 1–3 hàng; to con đùi ngắn      | mục 4: dáng = mannequin + thay đổi của dáng; thể hình theo form nhân hàng                     |
+| "Khổng lồ vẽ chứ không scale"     | mannequin chép theo tỉ lệ từng ô: mắt 3–4 ô, mảng sáng nhân lên        | nét ở cỡ pixel, bóng đặt tay; `gen_giants.py` khoá silhouette                                 |
 
 ## 9. Nguồn đã khảo sát (17/10/2026)
 
