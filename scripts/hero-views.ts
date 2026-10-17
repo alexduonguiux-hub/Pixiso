@@ -19,6 +19,7 @@ import {
   FORM_FAT,
   HEAVY_BODY,
   HEAVY_HEAD_X,
+  HERO_BRUTE_S,
   HERO_CANVAS,
   HERO_VIEWS,
   heroStand,
@@ -78,6 +79,8 @@ if (process.env.DUMP) {
   out['mirrored'] = ZOMBIE_POSES.filter((q) => q.id.endsWith('_m')).map((q) => q.id.slice(0, -2));
   // The band-built fat figure, which the generator rebuilds for every view and checks against this.
   out['fat_S'] = toAscii(buildForm(FORM_FAT));
+  // The brute (giant with the claw arm and spikes), whose other views the generator edits from this.
+  out['brute_S'] = toAscii(HERO_BRUTE_S);
   fs.mkdirSync(path.dirname(process.env.DUMP), { recursive: true });
   fs.writeFileSync(process.env.DUMP, JSON.stringify(out));
   console.log(`-> ${process.env.DUMP}`);

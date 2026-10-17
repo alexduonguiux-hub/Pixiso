@@ -538,7 +538,7 @@ POSE_S = FIG['poses']               # id -> {body, hx, hy, shift, regions}: the 
 MIRRORED = FIG.get('mirrored', [])  # poses that also exist flipped (`*_m`)
 LABELS = {'droop': 'Zombie gục đầu', 'reach': 'Zombie vươn tay', 'drag': 'Zombie lết chân',
           'hunch': 'Zombie khom lưng', 'twist': 'Zombie ngoẹo cổ', 'crawl': 'Dáng bò rình',
-          'heavy': 'To con', 'fat': 'Mập'}
+          'heavy': 'To con', 'fat': 'Mập', 'brute': 'Đột biến khổng lồ'}
 HEAD_W = 17
 
 def flipx(rows): return [r[::-1] for r in rows]
@@ -814,6 +814,141 @@ add('fat', 'W', FAT_W, None, {
     'chest': [11, 20], 'gash': [5, 23],
     'skirt': {'x': 3, 'y': 29, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
 }, headcols=FAT_W_HEADCOLS)
+
+# ------------------------------------------------------------------ brute (Đột Biến): the ×1.5 giant with the claw arm and spikes
+# S is HERO_BRUTE_S (31×60). SW turns the face (eyes slid to the far edge, the
+# far ear gone), tucks the claw arm two columns behind the torso and shades the
+# near flank. N is S flipped with the torso flattened and the head's lower half
+# redrawn as a bald nape (mid skin, shadow on the lower right, the ears). NW is
+# the back of SW with the far side of the nape a column narrower. W is drawn
+# by hand (22×61): the claw arm is shown on the near side so the brute's mark
+# stays visible from the side (as D-042 lets a mirrored view keep the drawn
+# side), the spikes rise from the near shoulder in front of the jaw.
+BRUTE_S = FIG['brute_S']
+def replace_span(rows, y, x0, text):
+    g = list(rows); r = list(g[y]); r[x0:x0 + len(text)] = list(text); g[y] = ''.join(r); return g
+# SW: face turned to the far (left) side
+BRUTE_SW = list(BRUTE_S)
+BRUTE_SW = replace_span(BRUTE_SW, 12, 6, 'oooosssssssoooSSSSSso')
+BRUTE_SW = replace_span(BRUTE_SW, 13, 6, 'oxeessssssseexoSSSSSo')
+BRUTE_SW = replace_span(BRUTE_SW, 14, 6, 'oxeessssssseexoSSSSSo')
+BRUTE_SW = replace_span(BRUTE_SW, 15, 7, 'oxeessssssseexoSSSo')
+BRUTE_SW = replace_span(BRUTE_SW, 16, 8, 'oxee$$$$$$$eexSSo')
+# the claw arm two columns behind the torso edge (rows 28-46 hold it in columns 0-8; the torso keeps columns 9-10)
+for y in range(28, 45):
+    r = BRUTE_SW[y]
+    BRUTE_SW[y] = '..' + r[0:9] + r[11:]
+    assert len(BRUTE_SW[y]) == len(r)
+# the claws (rows 45-46) hang in front of the far thigh
+r = BRUTE_SW[45]; BRUTE_SW[45] = '...' + r[1:8] + r[10:]
+r = BRUTE_SW[46]; BRUTE_SW[46] = '....' + r[2:7] + r[9:]
+assert all(len(t) == 31 for t in BRUTE_SW)
+# near flank in shadow (the torso's last interior column)
+BRUTE_SW = [(''.join('S' if (x == 22 and 27 <= y <= 44 and c in 's$') else c for x, c in enumerate(r))) for y, r in enumerate(BRUTE_SW)]
+# N: flipped, flattened, bald nape
+NAPE = ['ossssssssssssssSSSSso', 'o$ossssssssssssSSSo$o', 'o$ossssssssssssSSSo$o', 'oosssssssssssSSSSoo',
+        'ossssssssssSSSSSo', 'ossssssssSSSSSo', 'ossssssSSSSSo', 'ossssSSSSSo', 'ossSSSSSo', 'oosooSSSoosoo']
+NAPE_X = [4, 4, 4, 5, 6, 7, 8, 9, 10, 8]   # columns in the flipped figure (the giant's head is centred on column 16 of 31)
+def nape(rows, narrow_far=False):
+    out = list(rows)
+    for i, (x, t) in enumerate(zip(NAPE_X, NAPE)):
+        if narrow_far and i < 8:   # rows 20-21 keep their width: the shoulders below need their outline
+            t = t[:-2] + t[-1]          # drop the last interior column: the far side a column narrower
+            out = replace_span(out, 12 + i, x, t + '.')
+        else:
+            out = replace_span(out, 12 + i, x, t)
+    return out
+BRUTE_N = nape(flatten(flipx(BRUTE_S), [8, 24, 20, 44]))
+BRUTE_NW = nape(flatten(flipx(BRUTE_SW), [8, 24, 20, 44]), narrow_far=True)
+BRUTE_W = body(22, 61, 0, [
+'.......ooooooooo......',
+'.....ooSsssssSSSoo....',
+'....oSs$$$$$$sssSSo...',
+'...os$$$$$$$$$sssSSo..',
+'..os$$$$$$$$$$ssSSSo..',
+'..os$$$$$$$$$$ssSSSo..',
+'.oss$$$$$$$$$sssSSSSo.',
+'.osss$$$$$$$ssssSSSSo.',
+'.ossss$$$$$sssssSSSSo.',
+'.ossssssssssssssSSSSo.',
+'.osssssoooosSsSSSSSSo.',
+'.ossssseexoSssSSSSSSo.',
+'.ossssseexosssSSSSSSo.',
+'.ossssseexosssSSSSSSo.',
+'o$$ssssoooossssSSSSSo.',
+'o$$$sssssssssssSSSSo..',
+'.o$$$ssssssssssSSSo...',
+'..o$$$sssssssssSSo....',
+'...o$sssssssssSSo.....',
+'....ossssosssSSo......',
+'.....ossoxosoSo.......',
+'......oooxooxoSo......',
+'......ooxxxoxosso.....',
+'.....osoxxxxxossso....',
+'....o$$SSssssss$$$o...',
+'....ossSsssssSs$$$o...',
+'...ossSSssssssSss$$o..',
+'...o$ssss$osssssssso..',
+'..o$$sss$$oSssssss$$o.',
+'..o$$sss$$oSssssss$$o.',
+'..o$$sss$$oSssssss$$o.',
+'..o$ssSSSSoSSsssss$$o.',
+'..o$sssssSoSSsssss$$o.',
+'..o$$$ssssossssss$$so.',
+'..o$$$ssssossssss$$so.',
+'..o$$sssssosssss$$sso.',
+'.o$$$ssssSosssss$$sso.',
+'.o$$$ssssSoSsssss$sSo.',
+'.o$$$$sssSoSsssss$sSo.',
+'.o$$$ssssSoSSssssssSo.',
+'.o$sssssSSoSSssssssSo.',
+'.oSssssssSoSSsssssSo..',
+'.oSsssssSSoSsssssSo...',
+'..oSsssSoossssooooo...',
+'..oSsssSoo$ssssso.....',
+'..oSsssSoo$ssssso.....',
+'..oSsssSoo$ssssso.....',
+'..oSoSoSoo$ssssso.....',
+'...o.o.o.o$ssssso.....',
+'....oooooo$ssssso.....',
+'....oSSSSo$ssssso.....',
+'....oSSSSo$ssssso.....',
+'.....oSSSoS$ssSo......',
+'.....oSSSoo$sSSo......',
+'.....oSSSSos$sso......',
+'.....oSSSSoS$ssso.....',
+'....ooooSSoSsssso.....',
+'...oSSSSSoooSSSso.....',
+'...ooSSSSosssssso.....',
+'...ooooooo$ssss$o.....',
+'.........oooooooo.....',
+])
+def brute_regions(**over):
+    r = {
+        'torso': [10, 24, 22, 44], 'neck': [[12, 24, 20, 25]], 'shoulders': [],
+        'sleeveL': {'short': [0, 28, 8, 32], 'long': [0, 28, 8, 40], 'torn': [0, 28, 8, 29]},
+        'sleeveR': {'short': [23, 27, 28, 31], 'long': [23, 27, 28, 40]},
+        'pants': [[8, 45, 24, 56]], 'shorts': [[8, 45, 24, 50]],
+        'shoeL': [5, 54, 15, 59], 'shoeR': [17, 54, 27, 59], 'flats': [[5, 58, 15, 59], [17, 58, 27, 59]],
+        'collar': [[12, 25, 20, 25]], 'hem': [11, 44, 21, 44], 'frayedXs': [11, 13, 15, 17, 19, 21],
+        'chest': [12, 30], 'stains': [12, 32], 'gash': [25, 34],
+        'skirt': {'x': 7, 'y': 45, 'rows': ['.o&kkkkkkkkkkkKo.', '.o&kkkkkkkkkkkKo.', 'o&kkkkkkkkkkkkkKo', 'o&kkkkkkkkkkkkkKo', 'oo.ooo.oooo.ooo.o']},
+    }
+    r.update(over)
+    return r
+add('brute', 'SW', BRUTE_SW, None, brute_regions(sleeveL={'short': [2, 28, 8, 32], 'long': [2, 28, 8, 40], 'torn': [2, 28, 8, 29]}))
+add('brute', 'N', BRUTE_N, None, back_regions(mirror_regions(brute_regions(), 31)))
+add('brute', 'NW', BRUTE_NW, None, back_regions(mirror_regions(brute_regions(), 31)))
+add('brute', 'W', BRUTE_W, None, {
+    'torso': [11, 24, 19, 43], 'neck': [], 'shoulders': [[5, 22, 10, 23]],
+    'sleeveL': {'short': [1, 27, 10, 32], 'long': [1, 27, 10, 42], 'torn': [1, 27, 10, 28]},
+    'sleeveR': {'short': [1, 27, 10, 32], 'long': [1, 27, 10, 42]},
+    'pants': [[9, 44, 16, 48], [4, 49, 16, 55]], 'shorts': [[9, 44, 16, 48], [4, 49, 16, 51]],
+    'shoeL': [3, 56, 9, 60], 'shoeR': [10, 56, 16, 60], 'flats': [[3, 59, 9, 60], [10, 59, 16, 60]],
+    'collar': [[11, 24, 17, 24]], 'hem': [11, 43, 13, 43], 'frayedXs': [11, 13],
+    'chest': [13, 30], 'gash': [4, 33],
+    'skirt': {'x': 4, 'y': 44, 'rows': ['o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
+})
 
 # ------------------------------------------------------------------ derived views
 # Cells of an S body that the view's head (a different footprint) leaves open next to where the S head was.

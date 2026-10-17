@@ -11,7 +11,6 @@
 import type { Rgb8 } from '@pixiso/pixel-core';
 import { flipX, parseSprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
-import { FORM_BRUTE } from './hero64.mutants.js';
 import {
   POSE_CRAWL,
   POSE_DRAG,
@@ -28,7 +27,7 @@ import {
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
-import { STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
+import { STAND_BRUTE, STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
 import {
   BEARD_VIEWS,
   BERET_W,
@@ -1251,13 +1250,32 @@ const KE_MANG_VO_LOOK: Look = {
 };
 export const KE_MANG_VO = wearPosed('ke_mang_vo', 'Kẻ Mang Vỏ', STAND_HEAVY, KE_MANG_VO_LOOK);
 
+/** The brute's face and boils per view (figure space of the brute in that view). */
+const BRUTE_EYE_ROWS = ['ooooo', 'oxeeo', 'oeeeo', 'oeeeo', 'ooooo'];
+const BRUTE_FACE_V: ViewItem = {
+  S: { overlays: [BRUTE_EYE, BRUTE_MAW, BRUTE_BOILS] },
+  SW: {
+    overlays: [ov(6, 12, BRUTE_EYE_ROWS), ov(10, 18, ['oxoxoxoxoxo', 'ooooooooooo']), BRUTE_BOILS],
+  },
+  W: {
+    overlays: [
+      ov(6, 10, BRUTE_EYE_ROWS),
+      ov(3, 17, ['oxoxoxo', 'ooooooo']),
+      ov(12, 30, ['.a..', '....', '...a', 'a...', '....', '..a.']),
+    ],
+  },
+  NW: { overlays: [ov(10, 30, ['.a....', '......', '....a.', 'a.....', '......', '..a...'])] },
+  N: { overlays: [ov(10, 30, ['.a....', '......', '....a.', 'a.....', '......', '..a...'])] },
+};
+
 /** Đột Biến: the ×1.5 giant with a mutated claw arm, bone spikes, a bulging eye and a maw. */
-export const DOT_BIEN: Outfit = {
-  id: 'dot_bien',
-  label: 'Đột Biến',
-  form: FORM_BRUTE,
-  remaps: [{ box: [8, 45, 24, 56], to: 'pants' }],
-  overlays: [BRUTE_EYE, BRUTE_MAW, BRUTE_BOILS],
+const DOT_BIEN_LOOK: Look = {
+  top: 'none',
+  bottoms: 'pants',
+  shoes: 'none',
+  details: [],
+  face: 'plain',
+  extras: BRUTE_FACE_V,
   colors: {
     skin: [150, 162, 128],
     pants: [60, 56, 60],
@@ -1267,6 +1285,7 @@ export const DOT_BIEN: Outfit = {
     ...BLOOD,
   },
 };
+export const DOT_BIEN = wearPosed('dot_bien', 'Đột Biến', STAND_BRUTE, DOT_BIEN_LOOK);
 
 /**
  * Hair of the mimic (head space): black hair to the shoulders, matted,

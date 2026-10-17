@@ -9,6 +9,7 @@ import { heroStand, type HeroView } from './hero64.js';
 import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 import { POSE_STAND, type ZombiePose } from './hero64.poses.js';
 import { buildForm, FORM_FAT, FORM_HEAVY, type FormSpec } from './heroforms.js';
+import { FORM_BRUTE } from './hero64.mutants.js';
 import type { Sprite } from './format.js';
 
 const standForm = (id: string, label: string, figure: Sprite): FormSpec => ({
@@ -229,6 +230,48 @@ export const STAND_FAT: ZombiePose = {
       'o&kkkkkkkkkkkkkkkKo',
       'o&kkkkkkkkkkkkkkkKo',
       'oo.ooo.ooooo.ooo.oo',
+    ],
+  },
+};
+
+/**
+ * The brute (31×60, hero64.mutants.ts: the ×1.5 giant with the claw arm and
+ * spikes) as a pose: torso columns 10–22 from row 24 to the hem row 44, the
+ * claw arm in columns 0–8, legs 45–53, bare feet 54–59. Its other views are
+ * in hero64.poses.views.ts (W drawn, SW/N/NW edited from S).
+ */
+export const STAND_BRUTE: ZombiePose = {
+  id: 'brute',
+  form: FORM_BRUTE,
+  w: 31,
+  torso: [10, 24, 22, 44],
+  neck: [[12, 24, 20, 25]],
+  shoulders: [],
+  sleeveL: { short: [0, 28, 8, 32], long: [0, 28, 8, 40], torn: [0, 28, 8, 29] },
+  sleeveR: { short: [23, 27, 28, 31], long: [23, 27, 28, 40] },
+  pants: [[8, 45, 24, 56]],
+  shorts: [[8, 45, 24, 50]],
+  shoeL: [5, 54, 15, 59],
+  shoeR: [17, 54, 27, 59],
+  flats: [
+    [5, 58, 15, 59],
+    [17, 58, 27, 59],
+  ],
+  collar: [[12, 25, 20, 25]],
+  hem: [11, 44, 21, 44],
+  frayedXs: [11, 13, 15, 17, 19, 21],
+  chest: [12, 30],
+  stains: [12, 32],
+  gash: [25, 34],
+  skirt: {
+    x: 7,
+    y: 45,
+    rows: [
+      '.o&kkkkkkkkkkkKo.',
+      '.o&kkkkkkkkkkkKo.',
+      'o&kkkkkkkkkkkkkKo',
+      'o&kkkkkkkkkkkkkKo',
+      'oo.ooo.oooo.ooo.o',
     ],
   },
 };
