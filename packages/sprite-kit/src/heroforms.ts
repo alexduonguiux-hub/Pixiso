@@ -12,7 +12,8 @@ import { blank } from './draw.js';
 import { EMPTY, type Sprite } from './format.js';
 import { HERO_FIGURE_W, HERO_S_FIGURE } from './hero64.js';
 import { HERO_GIANT15_S, HERO_GIANT2_S } from './hero64.giant.js';
-import { HERO_ZOMBIE_S } from './hero64.zombie.js';
+import { HERO_HEAVY_S } from './hero64.heavy.js';
+import { HERO_ZOMBIE_S, ZOMBIE_HEAD_TOP, zombieHeadShift } from './hero64.zombie.js';
 
 /** Extra copies of columns for a band of source rows. `pairs` lists a column left of the centre with its extra count; the mirrored column gets the same. */
 export interface ColumnBand {
@@ -22,9 +23,14 @@ export interface ColumnBand {
   center?: number;
 }
 
+/** Maps base-head coordinates (the standing 17×40 figure) onto a form's own grid. */
+export type HeadMap = (x: number, y: number) => readonly [number, number];
+
 export interface FormSpec {
   id: string;
   label: string;
+  /** Where the base head sits on this form (default: same place). */
+  headMap?: HeadMap;
   /** Source rows to repeat, with the number of extra copies. */
   rows?: ReadonlyArray<readonly [y: number, extra: number]>;
   bands?: readonly ColumnBand[];
@@ -104,6 +110,7 @@ export const FORM_BASE: FormSpec = { id: 'base', label: 'Thường' };
 export const FORM_FAT: FormSpec = {
   id: 'fat',
   label: 'Mập',
+  headMap: (x, y) => (y === 0 ? [x + 3, y] : [x < 8 ? x + 2 : x > 8 ? x + 4 : x + 3, y]),
   bands: [
     { rows: [1, 14], center: 2 }, // round face, wider chin line
     { rows: [15, 20], center: 4 }, // neck well and shoulders
@@ -121,34 +128,12 @@ export const FORM_FAT: FormSpec = {
   ],
 };
 
-/**
- * Heavy build: four rows taller (longer torso and shins), shoulders and chest
- * four columns wider tapering to the waist, thicker arms and legs, same head.
- */
+/** Heavy build: a hand drawing, 23×45 (hero64.heavy.ts); the base head sits three columns to the right. */
 export const FORM_HEAVY: FormSpec = {
   id: 'heavy',
   label: 'To con',
-  rows: [
-    [17, 1], // taller neck well
-    [22, 1], // longer torso
-    [26, 1],
-    [32, 1], // longer shins
-    [35, 1],
-  ],
-  bands: [
-    { rows: [15, 17], center: 2 },
-    { rows: [18, 24], center: 4, pairs: [[2, 1]] }, // shoulders and chest, arms one column thicker
-    { rows: [25, 28], center: 2, pairs: [[2, 1]] }, // waist
-    {
-      rows: [29, 29],
-      pairs: [
-        [2, 1],
-        [5, 1],
-      ],
-    }, // hands and hips
-    { rows: [30, 35], pairs: [[5, 1]] },
-    { rows: [36, 39], pairs: [[4, 1]] },
-  ],
+  headMap: (x, y) => [x + 3, y],
+  figure: HERO_HEAVY_S,
 };
 
 /** Giant at about ×1.5: a hand drawing, 25×60 (hero64.giant.ts). */
@@ -162,7 +147,12 @@ export const FORM_GIANT_15: FormSpec = {
 export const FORM_GIANT_2: FormSpec = { id: 'giant2', label: 'Khổng lồ ×2', figure: HERO_GIANT2_S };
 
 /** Zombie stance: drooped, tilted head, uneven shoulders, open hands, a dragged foot (hero64.zombie.ts). */
-export const FORM_ZOMBIE: FormSpec = { id: 'zombie', label: 'Dáng zombie', figure: HERO_ZOMBIE_S };
+export const FORM_ZOMBIE: FormSpec = {
+  id: 'zombie',
+  label: 'Dáng zombie',
+  headMap: (x, y) => [x + zombieHeadShift(y), y + ZOMBIE_HEAD_TOP],
+  figure: HERO_ZOMBIE_S,
+};
 
 export const FORMS: readonly FormSpec[] = [
   FORM_BASE,

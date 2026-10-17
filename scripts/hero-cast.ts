@@ -1,15 +1,29 @@
-/** Line-up of the Vùng Xanh cast dressed on the hero mannequin (front view), ×SCALE. */
+/**
+ * Line-up of outfits on the hero mannequin (front view), ×SCALE.
+ * SET=cast (default) renders the Vùng Xanh cast, SET=zombies the zombie
+ * variants, SET=all both in one row.
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 import { HERO_RAMP_OPTIONS, scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
-import { buildForm, buildPalette, CAST, dress, FORM_BASE, paint } from '@pixiso/sprite-kit';
+import {
+  buildForm,
+  buildPalette,
+  CAST,
+  dress,
+  FORM_BASE,
+  paint,
+  ZOMBIES,
+} from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
 const OUT = path.join(TEST_OUTPUT_DIR, 'variants');
 fs.mkdirSync(OUT, { recursive: true });
 const SCALE = Number(process.env.SCALE ?? 5);
-const figures = CAST.map((outfit) => {
+const SET = process.env.SET ?? 'cast';
+const outfits = SET === 'zombies' ? ZOMBIES : SET === 'all' ? [...CAST, ...ZOMBIES] : CAST;
+const figures = outfits.map((outfit) => {
   const figure = dress(buildForm(outfit.form ?? FORM_BASE), outfit);
   const palette = buildPalette(outfit.colors, HERO_RAMP_OPTIONS);
   return { outfit, img: paint(figure, palette, { lineStyle: 'tinted', selout: false }) };
@@ -34,5 +48,6 @@ for (const f of figures) {
 const big = scaleNearest(sheet, SCALE);
 const png = new PNG({ width: big.width, height: big.height });
 png.data = Buffer.from(big.data.buffer, big.data.byteOffset, big.data.byteLength);
-fs.writeFileSync(path.join(OUT, `hero_cast_x${SCALE}.png`), PNG.sync.write(png));
-console.log(`-> test-output/variants/hero_cast_x${SCALE}.png`);
+const name = SET === 'cast' ? 'hero_cast' : `hero_${SET}`;
+fs.writeFileSync(path.join(OUT, `${name}_x${SCALE}.png`), PNG.sync.write(png));
+console.log(`-> test-output/variants/${name}_x${SCALE}.png`);

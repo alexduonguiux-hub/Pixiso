@@ -59,9 +59,13 @@ const ZOMBIE_BODY = sprite`
 
 /** Head top row on the zombie canvas. */
 export const ZOMBIE_HEAD_TOP = 2;
-/** Column shift of each head row: the tilt (top rows +1, middle +2, chin +3). */
+/**
+ * Column shift of each head row: the tilt (top rows +1, middle +2, chin +3).
+ * Steps sit on rows 5 and 9, where both sides of the base skull run vertical,
+ * so the outline stays 8-connected after the shear.
+ */
 export function zombieHeadShift(headRow: number): number {
-  return headRow < 5 ? 1 : headRow < 10 ? 2 : 3;
+  return headRow < 5 ? 1 : headRow < 9 ? 2 : 3;
 }
 
 /** The base head (with its chin line only on the last row) drooped and tilted onto the body. */

@@ -16,3 +16,5 @@ export * from './hero64.giant.js';
 export * from './outfit64.js';
 export * from './cast64.js';
 export * from './hero64.zombie.js';
+export * from './hero64.heavy.js';
+export * from './hero64.poses.js';
