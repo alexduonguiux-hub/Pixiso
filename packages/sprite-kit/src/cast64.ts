@@ -137,8 +137,14 @@ const GLASSES = hov(4, 8, ['...o.o...', '...ooo...', '...o.o...', 'o..o.o..o', '
 /** Headband across the forehead (accent material). */
 const HEADBAND = hov(2, 6, ['o*aaaaaaaaaAo', 'oAaaaaaaaaAAo']);
 
-/** Grey moustache under the nose and a goatee on the chin (hair material). */
-const MOUSTACHE = hov(5, 12, ['#hhHhh#', '.HhhhH.']);
+/** Full beard (hair material): moustache under the nose, a line under it (the mouth, parting it from the beard), a bushy beard wider than the jaw down to the collar, its own outline. */
+const BEARD = hov(3, 12, [
+  '.o#hhhhhHo.',
+  'o#oooooooHo',
+  'o#hhhhhhhHo',
+  'oHhhhhhhHHo',
+  '.ooooooooo.',
+]);
 
 /** Ranger hat: crown is the skull in leather, band and brim as lines/overlay. */
 const RANGER_HAT = {
@@ -324,16 +330,16 @@ export const SON: Outfit = {
   },
 };
 
-/** Ông Tư, the old forest ranger: hat, moustache, khaki shirt with long sleeves, dark trousers, boots. */
+/** Ông Tư, the old forest ranger: hat, full grey beard, khaki shirt with long sleeves, dark trousers, boots. */
 export const ONG_TU: Outfit = {
   id: 'ong_tu',
   label: 'Ông Tư',
   remaps: [RANGER_HAT.remap, ...LONG_SLEEVES],
   lines: [...RANGER_HAT.seams, ...COLLAR, HEM],
-  overlays: [RANGER_HAT.overlay, MOUSTACHE],
+  overlays: [RANGER_HAT.overlay, BEARD],
   colors: {
     skin: [226, 182, 144],
-    hair: [196, 190, 178],
+    hair: [104, 100, 96], // dark grey beard
     leather: [120, 92, 60],
     cloth: [176, 158, 112],
     pants: [70, 72, 70],

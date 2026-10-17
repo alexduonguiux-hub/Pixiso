@@ -39,7 +39,9 @@ export interface Overlay {
   space?: Space;
   /**
    * Head-space item that must not be sheared with a tilted head (a hat): the
-   * whole drawing takes the translation of its bottom-left cell.
+   * whole drawing is translated as one piece, horizontally by the eye row's
+   * shift (so it sits centred on the face, not on the sheared dome) and
+   * vertically by its bottom row's.
    */
   rigid?: boolean;
   /** Stamped only where the figure is still transparent (a shell behind the body). */
@@ -64,6 +66,8 @@ export interface Outfit {
 }
 
 const LINE = packCell(LEGEND.o!);
+/** Row of the eyes in head space (base head rows 9–11; the middle one). */
+const HEAD_EYE_ROW = 10;
 const IDENTITY: HeadMap = (x, y) => [x, y];
 
 /** Applies remaps, seams and overlays to a figure; returns a new sprite of the same size. */
@@ -108,9 +112,8 @@ export function dress(figure: Sprite, outfit: Outfit): Sprite {
     if (o.rigid) {
       const ax = o.x;
       const ay = o.y + o.sprite.h - 1;
-      const [mx, my] = map(ax, ay);
-      const dx = mx - ax;
-      const dy = my - ay;
+      const dx = map(ax, HEAD_EYE_ROW)[0] - ax;
+      const dy = map(ax, ay)[1] - ay;
       map = (x, y) => [x + dx, y + dy];
     }
     for (let y = 0; y < o.sprite.h; y++)
