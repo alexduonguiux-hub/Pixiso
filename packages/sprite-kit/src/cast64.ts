@@ -298,7 +298,7 @@ export const NY: Outfit = {
   colors: {
     skin: [250, 214, 180],
     hair: [160, 56, 40],
-    cloth: [235, 232, 226],
+    cloth: [128, 192, 168], // mint scrub top: tells her apart from Bác sĩ Lan's white coat
     pants: [170, 170, 176],
     boots: [236, 236, 236],
     accent: [200, 40, 50],
