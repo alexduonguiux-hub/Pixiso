@@ -128,15 +128,15 @@ const BODY_DRAG = sprite`
   ososossSSsSSsososo...
   ososossssssssososo...
   ooooosssssssooooo....
-  ....osssossso........
-  ....oSssooSsSo.......
-  ....o$sSo.oSsSo......
+  ....osssoosssso......
+  ....oSsso.oSsSo......
   ....o$sSo..oSsSo.....
-  ...osssso....osssso..
-  ...osssso.....osssso.
-  ...oooSso.....osSoooo
-  ..o$$$sso....ossss$$o
-  ..ooooooo....oooooooo
+  ....o$sSo..oSsSo.....
+  ...osssso..osssso....
+  ...osssso..osssso....
+  ...oooSso..ossSoooo..
+  ..o$$$sso..osss$$$$o.
+  ..ooooooo..ooooooooo.
 `;
 /** Hunched: head sunk between raised shoulders, arms hanging to the knees, short bent legs (19×40). */
 const BODY_HUNCH = sprite`
@@ -180,6 +180,49 @@ const BODY_HUNCH = sprite`
   ..oooSsso.ossSooo..
   ..o$$ssso.osss$$o..
   ..ooooooo.ooooooo..
+`;
+/** Crawl: head low and forward, hunched shoulders, long arms reaching the ground with clawed hands, crouched legs (21×40). */
+const BODY_CRAWL = sprite`
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  .....................
+  ......os.....so......
+  .....ossssssssso.....
+  ...ossssSSsSSsssso...
+  ..oSsss$$SsS$$sssSo..
+  .oSsSo$$$sss$$$oSsSo.
+  o$ssSoSSsssssSSoSss$o
+  o$ssSosssssssssoSss$o
+  o$ssSosssssssssoSss$o
+  o$ssSossooooossoSss$o
+  o$ssSo$$so.os$$oSss$o
+  o$ssSo$sso.oss$oSss$o
+  o$ssSoSSso.ossSoSss$o
+  o$ssSo$sSo.oSs$oSss$o
+  o$ssSo$sSo.oSs$oSss$o
+  o$ssSo$sSo.oSs$oSss$o
+  osssso$sSo.oSs$osssso
+  ososoo$sSo.oSs$oososo
+  ososoooSso.osSooososo
+  ososoo$sso.oss$oososo
+  oooooooooo.oooooooooo
 `;
 /** Twisted neck: head slid to the right, knees knocked together, feet apart (19×40). */
 const BODY_TWIST = sprite`
@@ -400,10 +443,10 @@ export const POSE_DRAG: ZombiePose = {
   pants: [[3, 31, 19, 36]],
   shorts: [[3, 31, 19, 34]],
   shoeL: [2, 37, 8, 39],
-  shoeR: [13, 37, 20, 39],
+  shoeR: [11, 37, 19, 39],
   flats: [
     [2, 38, 8, 39],
-    [13, 38, 20, 39],
+    [11, 38, 19, 39],
   ],
   collar: [
     [6, 17, 6, 17],
@@ -513,6 +556,46 @@ export const POSE_TWIST: ZombiePose = {
   skirt: {
     x: 3,
     y: 31,
+    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+  },
+};
+
+const CRAWL_SHIFT: HeadShift = () => 0;
+export const HERO_CRAWL_S = posedFigure(BODY_CRAWL, 2, 6, CRAWL_SHIFT);
+/* P6 — crawl (ceiling crawler on the ground) */
+export const POSE_CRAWL: ZombiePose = {
+  id: 'crawl',
+  form: form('zombie_crawl', 'Dáng bò rình', HERO_CRAWL_S, headMapOf(2, 6, CRAWL_SHIFT)),
+  w: 21,
+  torso: [5, 21, 15, 28],
+  neck: [[7, 20, 13, 22]],
+  shoulders: [],
+  sleeveL: { short: [0, 24, 5, 27], long: [0, 24, 5, 31], torn: [0, 24, 5, 25] },
+  sleeveR: { short: [15, 24, 20, 27], long: [15, 24, 20, 31] },
+  pants: [[5, 28, 15, 36]],
+  shorts: [[5, 28, 15, 31]],
+  shoeL: [5, 37, 9, 39],
+  shoeR: [11, 37, 15, 39],
+  flats: [
+    [5, 38, 9, 39],
+    [11, 38, 15, 39],
+  ],
+  collar: [
+    [7, 22, 7, 22],
+    [13, 22, 13, 22],
+    [8, 23, 12, 23],
+  ],
+  hem: [6, 27, 14, 27],
+  frayedXs: [6, 8, 10, 12, 14],
+  chest: [7, 25],
+  number: [8, 25],
+  tie: [10, 24],
+  belt: [10, 27],
+  stains: [6, 24],
+  gash: [2, 29],
+  skirt: {
+    x: 4,
+    y: 28,
     rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
   },
 };

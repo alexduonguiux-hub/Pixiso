@@ -42,6 +42,8 @@ export interface Overlay {
    * whole drawing takes the translation of its bottom-left cell.
    */
   rigid?: boolean;
+  /** Stamped only where the figure is still transparent (a shell behind the body). */
+  under?: boolean;
 }
 
 export interface Seam {
@@ -116,6 +118,7 @@ export function dress(figure: Sprite, outfit: Outfit): Sprite {
         const v = o.sprite.cells[y * o.sprite.w + x]!;
         if (v === EMPTY) continue;
         const [fx, fy] = map(o.x + x, o.y + y);
+        if (o.under && get(fx, fy) !== EMPTY) continue;
         put(fx, fy, v);
       }
   }

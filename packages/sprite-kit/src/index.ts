@@ -18,3 +18,4 @@ export * from './cast64.js';
 export * from './hero64.zombie.js';
 export * from './hero64.heavy.js';
 export * from './hero64.poses.js';
+export * from './hero64.mutants.js';

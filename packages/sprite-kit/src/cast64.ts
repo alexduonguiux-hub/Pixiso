@@ -12,7 +12,9 @@ import type { Rgb8 } from '@pixiso/pixel-core';
 import { parseSprite } from './format.js';
 import type { Box } from './hero64.js';
 import { FORM_FAT, FORM_HEAVY } from './heroforms.js';
+import { FORM_BRUTE } from './hero64.mutants.js';
 import {
+  POSE_CRAWL,
   POSE_DRAG,
   POSE_DRAG_M,
   POSE_DROOP,
@@ -181,23 +183,18 @@ const PEAKED_CAP: Overlay = {
   rigid: true,
 };
 
-/** Combat helmet: wide dome that comes down over the ears, front rim over the brow, chin strap. */
+/** Combat helmet: flat top, vertical sides, dark band and a flared rim sitting on the brow. */
 const HELMET: Overlay = {
   ...hov(-1, 0, [
     '......ooooooo......',
     '....oo^ccccc^oo....',
     '...o^ccccccccc^o...',
     '..o^cccccccccccCo..',
-    '.o^ccccccccccccCCo.',
-    '.occcccccccccccCCo.',
-    'occcccccccccccccCCo',
-    'oCccoooooooooooocCo',
-    'oCcco.........occCo',
-    'oCcco.........occCo',
-    'ooooo.........ooooo',
-    '.....L.......L.....',
-    '......L.....L......',
-    '.......L...L.......',
+    '..occccccccccccCo..',
+    '..occccccccccccCo..',
+    '..oCcccccccccccCo..',
+    '.oCCCCCCCCCCCCCCCo.',
+    '.ooooooooooooooooo.',
   ]),
   rigid: true,
 };
@@ -384,6 +381,8 @@ interface Look {
   bottoms: Bottoms;
   shoes: Footwear;
   details: Detail[];
+  /** Overlays stamped last (mutations on top of the face). */
+  extras?: Overlay[];
   colors: MaterialColors;
 }
 
@@ -499,6 +498,7 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
     if (d === 'camo')
       overlays.push(camo([tx0 + 1, pose.collar[2]![1] + 1, tx1 - 1, hemY - 1], 'C'));
   }
+  overlays.push(...(look.extras ?? []));
   return { id, label, form: pose.form, remaps, lines, overlays, colors: look.colors };
 }
 
@@ -660,6 +660,128 @@ export const ZOMBIE_OFFICE = zombie('zombie_office', 'Zombie nhân viên văn ph
     ...ZOMBIE_EYES,
   },
 });
+
+/* ------------------------------------------------------------------ */
+/* Mutants.                                                            */
+/* ------------------------------------------------------------------ */
+
+/** Huge pointed ears of Kẻ Thính (head space, both sides). */
+const BIG_EARS: Overlay[] = [
+  hov(-3, 5, ['....oo.', '...osSo', '..ossSo', '.ossSSo', '.osSSSo', '..oSSo.', '...oo..']),
+  hov(13, 5, ['.oo....', 'oSso...', 'oSsso..', 'oSSsso.', 'oSSSso.', '.oSSo..', '..oo...']),
+];
+/** Eyes sewn shut: a dark slit where each eye was. */
+const SEALED_EYES = hov(5, 9, ['SS...SS', 'oo...oo', 'SS...SS']);
+
+/** Carapace behind the heavy body (stamped only on empty cells) and plates over the shoulders. */
+const SHELL_HUMP: Overlay = {
+  ...ov(0, 2, [
+    '........ooooooo........',
+    '......oo|lllll|oo......',
+    '.....o|lllllllll|o.....',
+    '....o|lllllllllll|o....',
+    '...o|lllllllllllllLo...',
+    '..o|oooooooooooooooLo..',
+    '.o|lllllllllllllllllLo.',
+    'o|lllllllllllllllllllLo',
+    'olllllllllllllllllllLLo',
+    'olllllllllllllllllllLLo',
+    'ooooooooooooooooooooooo',
+    'olllllllllllllllllllLLo',
+    'olllllllllllllllllllLLo',
+    'olllllllllllllllllllLLo',
+    'oLLLLLLLLLLLLLLLLLLLLLo',
+    'ooooooooooooooooooooooo',
+  ]),
+  under: true,
+};
+const SHELL_PLATES: Overlay[] = [
+  ov(0, 16, ['oooooo', 'o|llLo', 'ollllo', 'oLlLLo', 'oooooo']),
+  ov(17, 16, ['oooooo', 'oLll|o', 'ollllo', 'oLLlLo', 'oooooo']),
+];
+
+/** Brute face: one bulging eye, a maw of teeth; boils on the torso (brute figure space). */
+const BRUTE_EYE = ov(8, 12, ['ooooo', 'oxeeo', 'oeeeo', 'oeeeo', 'ooooo']);
+const BRUTE_MAW = ov(11, 18, ['oxoxoxoxoxo', 'ooooooooooo']);
+const BRUTE_BOILS = ov(12, 33, [
+  '.a......',
+  '........',
+  '........',
+  '.......a',
+  '........',
+  '........',
+  'a.......',
+  '........',
+  '.....a..',
+]);
+
+/** Kẻ Thính: blind, hears everything. Upright, feeling forward; pale, huge ears, eyes sewn shut, rags. */
+export const KE_THINH = zombie('ke_thinh', 'Kẻ Thính', POSE_REACH, {
+  top: 'torn',
+  bottoms: 'shorts',
+  shoes: 'none',
+  details: ['stains', 'gash'],
+  extras: [...BIG_EARS, SEALED_EYES],
+  colors: {
+    skin: [196, 196, 186],
+    cloth: [120, 110, 100],
+    pants: [70, 66, 62],
+    ...BLOOD,
+    ...ZOMBIE_EYES,
+  },
+});
+
+/** Kẻ Bám Trần: the ceiling crawler on the ground, crouched with long clawed arms, yellow eyes. */
+export const KE_BAM_TRAN = zombie('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
+  top: 'torn',
+  bottoms: 'shorts',
+  shoes: 'none',
+  details: ['scalp', 'stains', 'gash'],
+  colors: {
+    skin: [120, 112, 132],
+    cloth: [80, 76, 84],
+    pants: [50, 46, 56],
+    eye: [230, 200, 60],
+    white: [160, 150, 120],
+    ...BLOOD,
+  },
+});
+
+/** Kẻ Mang Vỏ: heavy build with a chitin carapace behind and plates over the shoulders. */
+export const KE_MANG_VO: Outfit = {
+  id: 'ke_mang_vo',
+  label: 'Kẻ Mang Vỏ',
+  form: FORM_HEAVY,
+  remaps: [{ box: [0, 34, 22, 38], to: 'pants' }],
+  overlays: [SHELL_HUMP, ...SHELL_PLATES, ZOMBIE_FACE, ZOMBIE_CHEEK],
+  colors: {
+    skin: [160, 152, 132],
+    leather: [92, 72, 58],
+    pants: [64, 58, 52],
+    eye: [220, 120, 40],
+    white: [200, 190, 170],
+    ...BLOOD,
+  },
+};
+
+/** Đột Biến: the ×1.5 giant with a mutated claw arm, bone spikes, a bulging eye and a maw. */
+export const DOT_BIEN: Outfit = {
+  id: 'dot_bien',
+  label: 'Đột Biến',
+  form: FORM_BRUTE,
+  remaps: [{ box: [8, 45, 24, 56], to: 'pants' }],
+  overlays: [BRUTE_EYE, BRUTE_MAW, BRUTE_BOILS],
+  colors: {
+    skin: [150, 162, 128],
+    pants: [60, 56, 60],
+    eye: [210, 40, 40],
+    white: [236, 230, 210],
+    accent: [230, 200, 80],
+    ...BLOOD,
+  },
+};
+
+export const MUTANTS: readonly Outfit[] = [KE_THINH, KE_BAM_TRAN, KE_MANG_VO, DOT_BIEN];
 
 /** The common infected of the game is the civilian man. */
 export const BIEN_THE: Outfit = { ...ZOMBIE_CIV_M, id: 'bien_the', label: 'Biến Thể' };
