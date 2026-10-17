@@ -8,7 +8,7 @@
  * mannequin's scale.
  */
 import { parseSprite } from './format.js';
-import { FORM_FAT, FORM_HEAVY } from './heroforms.js';
+import { FORM_FAT, FORM_HEAVY, FORM_ZOMBIE } from './heroforms.js';
 import type { Outfit, Overlay, Remap } from './outfit64.js';
 import type { Box } from './hero64.js';
 
@@ -191,9 +191,6 @@ const HAT_BRIM = ov(0, 7, ['oLlllllllllllllLo', '.ooooooooooooooo.']);
 /** Grey moustache under the nose and a goatee on the chin (hair material). */
 const MOUSTACHE = ov(5, 12, ['#hhHhh#', '.HhhhH.']);
 
-/** Blood and tears on a shirt. */
-const STAINS = ov(5, 21, ['.A.....', '.......', '......A', 'A......', '.......', '....A..']);
-
 /** Pustules on a bloated belly (fat form coordinates). */
 const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.']);
 
@@ -216,40 +213,59 @@ export const ONG_TU: Outfit = {
   },
 };
 
-/** Sunken eye sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
-const ZOMBIE_FACE = ov(4, 9, ['...S.S...', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']);
-/** Scalp patches and a scalp wound. */
-const ZOMBIE_SCALP = ov(5, 2, ['.SS...A', '..S....']);
-/** A gash down the bare arm and one on the cheek. */
-const ZOMBIE_WOUNDS: Overlay[] = [ov(2, 21, ['A', 'A', 'A']), ov(11, 5, ['A', 'A'])];
-/** Torn tee: one sleeve ripped off, holes at the hem, the hem itself frayed. */
-const TORN_TEE: Remap[] = [
+/* Biến Thể is drawn on the zombie stance (19×40): the head sits two rows lower and is
+ * tilted (+1/+2/+3 columns from crown to chin), the left shoulder tops out on row 14, the
+ * right on row 18, the left arm is columns 0–3 from row 19, the right arm columns 14–18
+ * from row 20, hips on row 31, legs 32–39. */
+/** Sunken eye sockets, a gaping mouth with yellowed teeth, bags under the eyes (head rows 9–13). */
+const ZOMBIE_FACE: Overlay[] = [
+  ov(6, 11, ['...S.S...']),
+  ov(7, 12, ['...S.S...', '.........', '.SoxxxoS.', '...ooo...']),
+];
+/** Scalp patches and a scalp wound (head rows 2–3). */
+const ZOMBIE_SCALP = ov(6, 4, ['.SS...A', '..S....']);
+/** A gash down the bare left arm and one on the cheek. */
+const ZOMBIE_WOUNDS: Overlay[] = [ov(2, 22, ['A', 'A', 'A']), ov(13, 7, ['A', 'A'])];
+/** Blood on the shirt. */
+const ZOMBIE_STAINS = ov(6, 21, ['.A.....', '.......', '......A', 'A......', '.......', '....A..']);
+/** Torn tee on the zombie stance: left sleeve ripped off, holes and a frayed hem, one shoe lost. */
+const ZOMBIE_TEE: Remap[] = [
   {
-    box: [4, 15, 12, 28],
-    except: [...NECK, [6, 27, 6, 28], [10, 27, 10, 28]],
+    box: [4, 14, 14, 30],
+    except: [
+      [8, 17, 14, 17], // neck well under the drooped chin
+      [6, 29, 6, 30], // holes at the hem
+      [10, 29, 10, 30],
+    ],
     to: 'cloth',
   },
-  { box: [1, 15, 3, 18], to: 'cloth' },
-  { box: [13, 15, 15, 18], to: 'cloth' },
-  { box: [0, 18, 4, 20], to: 'cloth' }, // ripped short
-  SLEEVE_L_SHORT,
-  PANTS,
-  { box: [9, 36, 15, 39], to: 'boots' }, // the other shoe is lost
+  { box: [1, 14, 3, 18], to: 'cloth' }, // raised left shoulder
+  { box: [15, 16, 17, 19], to: 'cloth' }, // dropped right shoulder
+  { box: [0, 19, 4, 20], to: 'cloth' }, // ripped short
+  { box: [14, 20, 18, 24], to: 'cloth' }, // right sleeve
+  { box: [4, 31, 14, 32], to: 'pants' }, // hips (the right hand hangs beside them)
+  { box: [3, 33, 16, 36], to: 'pants' },
+  { box: [2, 37, 8, 39], to: 'boots' }, // the other shoe is lost
 ];
-const FRAYED_HEM: Box[] = [
-  [5, 28, 5, 28],
-  [7, 28, 7, 28],
-  [9, 28, 9, 28],
-  [11, 28, 11, 28],
+const ZOMBIE_SEAMS: Box[] = [
+  [8, 17, 8, 17], // collar
+  [14, 17, 14, 17],
+  [9, 18, 13, 18],
+  [5, 30, 5, 30], // frayed hem
+  [7, 30, 7, 30],
+  [9, 30, 9, 30],
+  [11, 30, 11, 30],
+  [13, 30, 13, 30],
 ];
 
-/** Biến Thể, the common infected: grey-green skin, torn grey shirt, red eyes, a bare foot, no hair. */
+/** Biến Thể, the common infected: zombie stance, grey-green skin, torn grey shirt, red eyes, a bare foot, no hair. */
 export const BIEN_THE: Outfit = {
   id: 'bien_the',
   label: 'Biến Thể',
-  remaps: TORN_TEE,
-  lines: [...COLLAR, ...FRAYED_HEM],
-  overlays: [ZOMBIE_SCALP, ZOMBIE_FACE, ...ZOMBIE_WOUNDS, STAINS],
+  form: FORM_ZOMBIE,
+  remaps: ZOMBIE_TEE,
+  lines: ZOMBIE_SEAMS,
+  overlays: [ZOMBIE_SCALP, ...ZOMBIE_FACE, ...ZOMBIE_WOUNDS, ZOMBIE_STAINS],
   colors: {
     skin: [172, 182, 142],
     cloth: [122, 120, 112],

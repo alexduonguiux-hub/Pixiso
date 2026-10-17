@@ -12,6 +12,7 @@ import { blank } from './draw.js';
 import { EMPTY, type Sprite } from './format.js';
 import { HERO_FIGURE_W, HERO_S_FIGURE } from './hero64.js';
 import { HERO_GIANT15_S, HERO_GIANT2_S } from './hero64.giant.js';
+import { HERO_ZOMBIE_S } from './hero64.zombie.js';
 
 /** Extra copies of columns for a band of source rows. `pairs` lists a column left of the centre with its extra count; the mirrored column gets the same. */
 export interface ColumnBand {
@@ -160,10 +161,14 @@ export const FORM_GIANT_15: FormSpec = {
 /** Giant at ×2: a hand drawing, 33×80 (hero64.giant.ts). */
 export const FORM_GIANT_2: FormSpec = { id: 'giant2', label: 'Khổng lồ ×2', figure: HERO_GIANT2_S };
 
+/** Zombie stance: drooped, tilted head, uneven shoulders, open hands, a dragged foot (hero64.zombie.ts). */
+export const FORM_ZOMBIE: FormSpec = { id: 'zombie', label: 'Dáng zombie', figure: HERO_ZOMBIE_S };
+
 export const FORMS: readonly FormSpec[] = [
   FORM_BASE,
   FORM_FAT,
   FORM_HEAVY,
+  FORM_ZOMBIE,
   FORM_GIANT_15,
   FORM_GIANT_2,
 ];
