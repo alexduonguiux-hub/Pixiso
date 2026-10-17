@@ -9,6 +9,7 @@ import {
   HERO_S_FIGURE,
   MATERIALS,
   MUTANTS,
+  posedInView,
   SOLDIERS,
   toAscii,
   ZOMBIES,
@@ -50,6 +51,44 @@ function check(outfit: Outfit): void {
   if (floating.length) {
     problems++;
     console.log(`${outfit.id}: floating cells ${floating.join(' ')}`);
+  }
+  // Transparent cells must reach the border: an enclosed pocket of 3+ cells is a hole (a 1–2 cell slit between limbs is daylight).
+  const seen = new Uint8Array(W * H);
+  const flood = (sx: number, sy: number): number => {
+    const stack = [[sx, sy]];
+    let n = 0;
+    while (stack.length) {
+      const [x, y] = stack.pop()!;
+      if (seen[y * W + x]) continue;
+      seen[y * W + x] = 1;
+      n++;
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        const X = x + dx;
+        const Y = y + dy;
+        if (X >= 0 && Y >= 0 && X < W && Y < H && at(X, Y) === '.' && !seen[Y * W + X])
+          stack.push([X, Y]);
+      }
+    }
+    return n;
+  };
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++)
+      if ((x === 0 || y === 0 || x === W - 1 || y === H - 1) && at(x, y) === '.') flood(x, y);
+  const holes: string[] = [];
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++)
+      if (at(x, y) === '.' && !seen[y * W + x]) {
+        const n = flood(x, y);
+        if (n >= 3) holes.push(`${n} at (${x},${y})`);
+      }
+  if (holes.length) {
+    problems++;
+    console.log(`${outfit.id}: holes ${holes.join(', ')}`);
   }
   // With a hat (a rigid head overlay), no skin may show above the brow line (head row 8).
   const hat = outfit.overlays?.find((o) => o.rigid && o.space === 'head');
@@ -107,6 +146,7 @@ for (const pose of ZOMBIE_POSES) {
 }
 for (const o of [...CAST, ...SOLDIERS, ...ZOMBIES, ...MUTANTS]) check(o);
 for (const view of HERO_VIEWS)
-  for (const o of castInView(view)) check({ ...o, id: `${o.id}@${view}` });
+  for (const o of [...castInView(view), ...posedInView(view)])
+    check({ ...o, id: `${o.id}@${view}` });
 console.log(problems ? `${problems} problem(s)` : 'QA clean');
 process.exitCode = problems ? 1 : 0;

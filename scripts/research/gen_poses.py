@@ -86,7 +86,7 @@ check('P3', P3, 21)
 # ---- P6 crawl (21 wide): head low and forward, hunched shoulders, long arms to the ground with claws, crouched legs ----
 P6 = BLANK(21,20) + [
 '......os.....so......',
-'.....ossssssssso.....',
+'....oosssssssssoo....',
 '...ossssSSsSSsssso...',
 '..oSsss$$SsS$$sssSo..',
 '.oSsSo$$$sss$$$oSsSo.',
@@ -146,7 +146,7 @@ check('P4', P4, 19)
 # ---- P5 twisted neck (19 wide): head slid to the right, knees knocked, feet apart ----
 P5 = BLANK(19,15) + [
 '.......os.....so...',
-'....ooossssssso....',
+'....ooosssssssoo...',
 '...osssssSSsSSsso..',
 '...oss$$$sSsS$sso..',
 '..oSsS$$sss$$SsSo..',

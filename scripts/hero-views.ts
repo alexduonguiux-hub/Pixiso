@@ -19,9 +19,15 @@ import {
   HERO_VIEWS,
   heroStand,
   paint,
+  POSE_BODIES,
+  POSE_CRAWL,
   STAND_VIEWS,
   toAscii,
   wearView,
+  ZOMBIE_BODY,
+  ZOMBIE_HEAD_TOP,
+  ZOMBIE_POSES,
+  zombieHeadShift,
   type DressedSprite,
   type HeroView,
   type MaterialColors,
@@ -33,10 +39,37 @@ fs.mkdirSync(OUT, { recursive: true });
 const SCALE = Number(process.env.SCALE ?? 4);
 const BG = (process.env.BG ?? '110,106,100').split(',').map(Number) as [number, number, number];
 const ONLY = process.env.ONLY?.split(',').filter(Boolean);
-// DUMP=path writes the five standing figures as ASCII JSON (input of scripts/research/gen_view_items.py).
+// DUMP=path writes the five standing figures as ASCII JSON (input of scripts/research/gen_view_items.py)
+// and, for scripts/research/gen_pose_views.py, the S body of every zombie pose with where its
+// 17-column head grid sits and its clothes regions, plus which poses also exist mirrored.
 if (process.env.DUMP) {
-  const out: Record<string, string[]> = {};
+  const out: Record<string, unknown> = {};
   for (const v of HERO_VIEWS) out[v] = toAscii(STAND_VIEWS[v].form.figure!);
+  // `headX` is where column 0 of the 17-column head grid sits (posedFigure's convention; the drooped zombie draws its head from column 0).
+  const bodies = {
+    droop: { body: ZOMBIE_BODY, headX: 0, headTop: ZOMBIE_HEAD_TOP, shift: zombieHeadShift },
+    ...POSE_BODIES,
+  };
+  const allPoses = [...ZOMBIE_POSES, POSE_CRAWL];
+  out['poses'] = Object.fromEntries(
+    Object.entries(bodies).map(([k, b]) => {
+      const { id: _id, form: _form, w: _w, ...regions } = allPoses.find((q) => q.id === k)!;
+      void _id;
+      void _form;
+      void _w;
+      return [
+        k,
+        {
+          body: toAscii(b.body),
+          hx: b.headX,
+          hy: b.headTop,
+          shift: Array.from({ length: 17 }, (_, i) => b.shift(i)),
+          regions,
+        },
+      ];
+    }),
+  );
+  out['mirrored'] = ZOMBIE_POSES.filter((q) => q.id.endsWith('_m')).map((q) => q.id.slice(0, -2));
   fs.mkdirSync(path.dirname(process.env.DUMP), { recursive: true });
   fs.writeFileSync(process.env.DUMP, JSON.stringify(out));
   console.log(`-> ${process.env.DUMP}`);

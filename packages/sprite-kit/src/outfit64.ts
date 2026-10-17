@@ -170,6 +170,9 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         put(fx, fy, LINE);
       }
   }
+  // The dressed body before any overlay: what the front cells go back to.
+  const front = outfit.form?.front;
+  const bare = front ? Int16Array.from(out.cells) : undefined;
   for (const o of outfit.overlays ?? []) {
     const map = shift(rigidMap(o, o.space === 'head' ? headMap : IDENTITY));
     for (let y = 0; y < o.sprite.h; y++)
@@ -181,5 +184,12 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         put(fx, fy, v);
       }
   }
+  if (front && bare)
+    for (let y = 0; y < front.h; y++)
+      for (let x = 0; x < front.w; x++) {
+        if (front.cells[y * front.w + x] === EMPTY) continue;
+        const i = (y + top) * out.w + x + left;
+        out.cells[i] = bare[i]!;
+      }
   return out;
 }

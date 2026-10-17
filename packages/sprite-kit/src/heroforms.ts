@@ -38,6 +38,11 @@ export interface FormSpec {
   scale?: number;
   /** A hand-drawn figure: used as is, nothing derived. */
   figure?: Sprite;
+  /**
+   * Figure cells that stay in front of every overlay (same canvas as the
+   * figure): a body part that hides the head, such as a hump seen from behind.
+   */
+  front?: Sprite;
 }
 
 const CENTER = (HERO_FIGURE_W - 1) / 2;
