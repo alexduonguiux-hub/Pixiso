@@ -28,6 +28,7 @@ import {
 } from './hero64.poses.js';
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
+import { poseInView } from './poseviews64.js';
 import { STAND_VIEWS } from './views64.js';
 import {
   BEARD_VIEWS,
@@ -41,7 +42,11 @@ import {
   HAIR_PONYTAIL_VIEWS,
   HAIR_SPIKY_VIEWS,
   HAIR_SWEPT_VIEWS,
+  HAIR_LONG_VIEWS,
+  HAIR_SHORT_VIEWS,
   HAIR_WILD_VIEWS,
+  HARD_HAT_W,
+  HEADBAND_VIEWS,
   HELMET_W,
   MEDIC_BAG_N,
   MEDIC_BAG_W,
@@ -49,6 +54,10 @@ import {
   PEAKED_CAP_N,
   PEAKED_CAP_W,
   RANGER_HAT_W,
+  SEALED_EYES_VIEWS,
+  BIG_EAR_W,
+  ZOMBIE_CHEEK_VIEWS,
+  ZOMBIE_FACE_VIEWS,
 } from './views64.items.js';
 
 /** Overlay from ASCII rows at a figure position. */
@@ -297,6 +306,37 @@ const HAIR_SPIKY_V: ViewItem = { S: same(HAIR_SPIKY), ...HAIR_SPIKY_VIEWS };
 const HAIR_CURLY_V: ViewItem = { S: same(HAIR_CURLY), ...HAIR_CURLY_VIEWS };
 const HAIR_SWEPT_V: ViewItem = { S: same(HAIR_SWEPT), ...HAIR_SWEPT_VIEWS };
 const HAIR_BOB_V: ViewItem = { S: same(HAIR_BOB), ...HAIR_BOB_VIEWS };
+const HAIR_SHORT_V: ViewItem = { S: same(HAIR_SHORT), ...HAIR_SHORT_VIEWS };
+const HAIR_LONG_V: ViewItem = { S: same(HAIR_LONG), ...HAIR_LONG_VIEWS };
+const HEADBAND_V: ViewItem = {
+  S: same(HEADBAND),
+  SW: same(HEADBAND),
+  N: same(HEADBAND),
+  NW: same(HEADBAND),
+  ...HEADBAND_VIEWS,
+};
+const HARD_HAT_V: ViewItem = {
+  S: same(HARD_HAT),
+  SW: same(HARD_HAT),
+  N: same(HARD_HAT),
+  NW: same(HARD_HAT),
+  W: HARD_HAT_W,
+};
+/** Zombie face per view: sockets and mouth (none from behind), the cheek gash, the scalp wound (seen from everywhere). */
+const ZOMBIE_FACE_V: ViewItem = { S: same(ZOMBIE_FACE), ...ZOMBIE_FACE_VIEWS };
+const ZOMBIE_CHEEK_V: ViewItem = {
+  S: same(ZOMBIE_CHEEK),
+  N: same(ZOMBIE_CHEEK),
+  NW: same(ZOMBIE_CHEEK),
+  ...ZOMBIE_CHEEK_VIEWS,
+};
+const ZOMBIE_SCALP_V: ViewItem = {
+  S: same(ZOMBIE_SCALP),
+  SW: same(ZOMBIE_SCALP),
+  W: same(ZOMBIE_SCALP),
+  N: same(ZOMBIE_SCALP),
+  NW: same(ZOMBIE_SCALP),
+};
 const HAIR_PONYTAIL_V: ViewItem = { S: { overlays: HAIR_PONYTAIL }, ...HAIR_PONYTAIL_VIEWS };
 const BUZZ_V: ViewItem = { S: { remaps: [BUZZ] }, ...BUZZ_VIEWS };
 const GLASSES_V: ViewItem = { S: same(GLASSES), ...GLASSES_VIEWS };
@@ -534,7 +574,7 @@ function isViewItem(x: object): x is ViewItem {
 
 export interface Look {
   /** Hair overlays (S head space), a buzz-cut remap, or a per-view item. */
-  hair?: Overlay[] | Remap | ViewItem;
+  hair?: Overlay[] | Remap | ViewItem | ViewItem[];
   hat?: Overlay | ViewItem;
   glasses?: boolean;
   top: Top;
@@ -542,7 +582,7 @@ export interface Look {
   shoes: Footwear;
   details: Detail[];
   /** Overlays stamped last (mutations on top of the face), S only or per view. */
-  extras?: Overlay[] | ViewItem;
+  extras?: Overlay[] | ViewItem | ViewItem[];
   /** Zombie sockets, mouth and cheek gash (default), or the plain base face. */
   face?: 'zombie' | 'plain';
   /** False drops the hem line at the waist (a coat that carries on below it). */
@@ -552,11 +592,21 @@ export interface Look {
 
 /** The layer an item contributes in a view; S-only items (plain overlays, remaps) count for S alone. */
 function layer(
-  item: Overlay | Overlay[] | Remap | ViewItem | undefined,
+  item: Overlay | Overlay[] | Remap | ViewItem | ViewItem[] | undefined,
   view: HeroView,
 ): ViewLayer {
   if (!item) return {};
-  if (Array.isArray(item)) return view === 'S' ? { overlays: item } : {};
+  if (Array.isArray(item)) {
+    if (item.length && isViewItem(item[0]!)) {
+      const parts = (item as ViewItem[]).map((i) => i[view] ?? {});
+      return {
+        overlays: parts.flatMap((l) => l.overlays ?? []),
+        remaps: parts.flatMap((l) => l.remaps ?? []),
+        lines: parts.flatMap((l) => l.lines ?? []),
+      };
+    }
+    return view === 'S' ? { overlays: item as Overlay[] } : {};
+  }
   if (isViewItem(item)) return item[view] ?? {};
   if (view !== 'S') return {};
   return 'sprite' in item ? { overlays: [item] } : { remaps: [item] };
@@ -668,9 +718,10 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
   push(out, layer(look.hair, view));
   if (look.glasses) push(out, layer(GLASSES_V, view));
-  if (view === 'S') {
-    if (look.details.includes('scalp')) overlays.push(ZOMBIE_SCALP);
-    if ((look.face ?? 'zombie') === 'zombie') overlays.push(ZOMBIE_FACE, ZOMBIE_CHEEK);
+  if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view));
+  if ((look.face ?? 'zombie') === 'zombie') {
+    push(out, layer(ZOMBIE_FACE_V, view));
+    push(out, layer(ZOMBIE_CHEEK_V, view));
   }
   // Hats go on after the face so a scalp wound or cheek gash never lands on the hat.
   push(out, layer(look.hat, view));
@@ -712,14 +763,31 @@ function wear(id: string, label: string, pose: ZombiePose, look: Look): Outfit {
   return build(id, label, pose, look, 'S');
 }
 
+/** Looks on zombie poses, kept so they can be dressed in the other views (poseInView). */
+export const POSED_LOOKS: { id: string; label: string; pose: ZombiePose; look: Look }[] = [];
+function wearPosed(id: string, label: string, pose: ZombiePose, look: Look): Outfit {
+  POSED_LOOKS.push({ id, label, pose, look });
+  return wear(id, label, pose, look);
+}
+
+/** Every posed look dressed for one view; poses without that view drawn yet are left out. */
+export function posedInView(view: HeroView): Outfit[] {
+  const out: Outfit[] = [];
+  for (const z of POSED_LOOKS) {
+    const pose = poseInView(z.pose, view);
+    if (pose) out.push(build(z.id, z.label, pose, z.look, view));
+  }
+  return out;
+}
+
 /** The outfit of a look on the standing base figure in a drawn view. */
 export function wearView(id: string, label: string, look: Look, view: HeroView): Outfit {
   return build(id, label, STAND_VIEWS[view], look, view);
 }
 
 /** Civilian man: drooped stance, torn tee, jeans, one shoe lost, messy short hair. */
-export const ZOMBIE_CIV_M = wear('zombie_civ_m', 'Zombie dân thường (nam)', POSE_DROOP, {
-  hair: [HAIR_SHORT],
+export const ZOMBIE_CIV_M = wearPosed('zombie_civ_m', 'Zombie dân thường (nam)', POSE_DROOP, {
+  hair: HAIR_SHORT_V,
   top: 'torn',
   bottoms: 'pants',
   shoes: 'right',
@@ -736,8 +804,8 @@ export const ZOMBIE_CIV_M = wear('zombie_civ_m', 'Zombie dân thường (nam)', 
 });
 
 /** Civilian woman: twisted neck, long hair, blouse, torn skirt, flats. */
-export const ZOMBIE_CIV_F = wear('zombie_civ_f', 'Zombie dân thường (nữ)', POSE_TWIST, {
-  hair: [HAIR_LONG],
+export const ZOMBIE_CIV_F = wearPosed('zombie_civ_f', 'Zombie dân thường (nữ)', POSE_TWIST, {
+  hair: HAIR_LONG_V,
   top: 'tee',
   bottoms: 'skirt',
   shoes: 'flats',
@@ -754,8 +822,8 @@ export const ZOMBIE_CIV_F = wear('zombie_civ_f', 'Zombie dân thường (nữ)',
 });
 
 /** Construction worker: reaching, hard hat, hi-vis shirt, jeans, boots. */
-export const ZOMBIE_WORKER = wear('zombie_worker', 'Zombie công nhân', POSE_REACH, {
-  hat: HARD_HAT,
+export const ZOMBIE_WORKER = wearPosed('zombie_worker', 'Zombie công nhân', POSE_REACH, {
+  hat: HARD_HAT_V,
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
@@ -773,8 +841,8 @@ export const ZOMBIE_WORKER = wear('zombie_worker', 'Zombie công nhân', POSE_RE
 });
 
 /** Police officer: dragging a leg, peaked cap, green uniform, badge, belt, black shoes. */
-export const ZOMBIE_POLICE = wear('zombie_police', 'Zombie cảnh sát', POSE_DRAG, {
-  hat: PEAKED_CAP,
+export const ZOMBIE_POLICE = wearPosed('zombie_police', 'Zombie cảnh sát', POSE_DRAG, {
+  hat: PEAKED_CAP_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -792,8 +860,8 @@ export const ZOMBIE_POLICE = wear('zombie_police', 'Zombie cảnh sát', POSE_DR
 });
 
 /** Soldier: hunched, helmet, camouflage fatigues, boots. */
-export const ZOMBIE_SOLDIER = wear('zombie_soldier', 'Zombie quân đội', POSE_HUNCH, {
-  hat: HELMET,
+export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội', POSE_HUNCH, {
+  hat: HELMET_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -815,8 +883,8 @@ const dogTag = (pose: ZombiePose): Overlay => {
 };
 
 /** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */
-export const LINH_NHIEM = wear('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
-  hat: HELMET,
+export const LINH_NHIEM = wearPosed('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
+  hat: HELMET_V,
   top: 'torn',
   bottoms: 'pants',
   shoes: 'both',
@@ -831,12 +899,12 @@ export const LINH_NHIEM = wear('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
 });
 
 /** Athlete (man): drooped stance mirrored, sweatband, sleeveless jersey with a number, shorts, sneakers. */
-export const ZOMBIE_ATHLETE_M = wear(
+export const ZOMBIE_ATHLETE_M = wearPosed(
   'zombie_athlete_m',
   'Zombie vận động viên (nam)',
   POSE_DROOP_M,
   {
-    hair: [HAIR_SHORT, HEADBAND],
+    hair: [HAIR_SHORT_V, HEADBAND_V],
     top: 'tank',
     bottoms: 'shorts',
     shoes: 'both',
@@ -856,42 +924,52 @@ export const ZOMBIE_ATHLETE_M = wear(
 );
 
 /** Athlete (woman): dragging mirrored, ponytail, sports top, shorts, sneakers. */
-export const ZOMBIE_ATHLETE_F = wear('zombie_athlete_f', 'Zombie vận động viên (nữ)', POSE_DRAG_M, {
-  hair: HAIR_PONYTAIL,
-  top: 'crop',
-  bottoms: 'shorts',
-  shoes: 'both',
-  details: ['gash'],
-  colors: {
-    skin: SKIN_F,
-    hair: [120, 70, 40],
-    cloth: [222, 60, 96],
-    pants: [40, 40, 52],
-    boots: [240, 240, 240],
-    ...BLOOD,
-    ...ZOMBIE_EYES,
+export const ZOMBIE_ATHLETE_F = wearPosed(
+  'zombie_athlete_f',
+  'Zombie vận động viên (nữ)',
+  POSE_DRAG_M,
+  {
+    hair: HAIR_PONYTAIL_V,
+    top: 'crop',
+    bottoms: 'shorts',
+    shoes: 'both',
+    details: ['gash'],
+    colors: {
+      skin: SKIN_F,
+      hair: [120, 70, 40],
+      cloth: [222, 60, 96],
+      pants: [40, 40, 52],
+      boots: [240, 240, 240],
+      ...BLOOD,
+      ...ZOMBIE_EYES,
+    },
   },
-});
+);
 
 /** Office worker: twisted neck mirrored, white shirt, tie, glasses, dark trousers, black shoes. */
-export const ZOMBIE_OFFICE = wear('zombie_office', 'Zombie nhân viên văn phòng', POSE_TWIST_M, {
-  hair: BUZZ,
-  glasses: true,
-  top: 'long',
-  bottoms: 'pants',
-  shoes: 'both',
-  details: ['tie', 'stains'],
-  colors: {
-    skin: SKIN_M,
-    hair: [50, 46, 46],
-    cloth: [236, 236, 232],
-    leather: [120, 30, 40],
-    pants: [50, 50, 60],
-    boots: [30, 30, 34],
-    ...BLOOD,
-    ...ZOMBIE_EYES,
+export const ZOMBIE_OFFICE = wearPosed(
+  'zombie_office',
+  'Zombie nhân viên văn phòng',
+  POSE_TWIST_M,
+  {
+    hair: BUZZ_V,
+    glasses: true,
+    top: 'long',
+    bottoms: 'pants',
+    shoes: 'both',
+    details: ['tie', 'stains'],
+    colors: {
+      skin: SKIN_M,
+      hair: [50, 46, 46],
+      cloth: [236, 236, 232],
+      leather: [120, 30, 40],
+      pants: [50, 50, 60],
+      boots: [30, 30, 34],
+      ...BLOOD,
+      ...ZOMBIE_EYES,
+    },
   },
-});
+);
 
 /* ------------------------------------------------------------------ */
 /* Mutants.                                                            */
@@ -939,6 +1017,15 @@ const BIG_EARS: Overlay[] = [
 ];
 /** Eyes sewn shut: a dark slit where each eye was. */
 const SEALED_EYES = hov(5, 9, ['SS...SS', 'oo...oo', 'SS...SS']);
+const SEALED_EYES_V: ViewItem = { S: same(SEALED_EYES), N: {}, NW: {}, ...SEALED_EYES_VIEWS };
+/** The ears stand beside the skull in every view; in profile one ear rises over the ear of the side head. */
+const BIG_EARS_V: ViewItem = {
+  S: { overlays: BIG_EARS },
+  SW: { overlays: BIG_EARS },
+  N: { overlays: BIG_EARS },
+  NW: { overlays: BIG_EARS },
+  W: BIG_EAR_W,
+};
 
 /** Carapace behind the heavy body (stamped only on empty cells) and plates over the shoulders. */
 const SHELL_HUMP: Overlay = {
@@ -983,12 +1070,12 @@ const BRUTE_BOILS = ov(12, 33, [
 ]);
 
 /** Kẻ Thính: blind, hears everything. Upright, feeling forward; pale, huge ears, eyes sewn shut, rags. */
-export const KE_THINH = wear('ke_thinh', 'Kẻ Thính', POSE_REACH, {
+export const KE_THINH = wearPosed('ke_thinh', 'Kẻ Thính', POSE_REACH, {
   top: 'torn',
   bottoms: 'shorts',
   shoes: 'none',
   details: ['stains', 'gash'],
-  extras: [...BIG_EARS, SEALED_EYES],
+  extras: [BIG_EARS_V, SEALED_EYES_V],
   colors: {
     skin: [196, 196, 186],
     cloth: [120, 110, 100],
@@ -999,7 +1086,7 @@ export const KE_THINH = wear('ke_thinh', 'Kẻ Thính', POSE_REACH, {
 });
 
 /** Kẻ Bám Trần: the ceiling crawler on the ground, crouched with long clawed arms, yellow eyes. */
-export const KE_BAM_TRAN = wear('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
+export const KE_BAM_TRAN = wearPosed('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
   top: 'torn',
   bottoms: 'shorts',
   shoes: 'none',

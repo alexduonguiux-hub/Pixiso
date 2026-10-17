@@ -525,6 +525,178 @@ export const HAIR_PONYTAIL_VIEWS: Views = {
   },
 };
 
+export const HAIR_SHORT_VIEWS: Views = {
+  SW: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '...o#hhhhhhhho...',
+        '..o#hhhhhhhhhho..',
+        '..ohhhhhhhhhhho..',
+        '..ohhhhhHhhhhho..',
+        '..oHhhhhHHhhhHo..',
+        '.....HHH..HHHhH..',
+      ]),
+    ],
+  },
+  N: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '...o#hhhhhhhho...',
+        '..o#hhhhhhhhhho..',
+        '..ohhhhhhhhhhho..',
+        '..ohhhhhhhhhhho..',
+        '..oHhhhhhhhhhHo..',
+        '.ohhhhhhhhhhhhho.',
+        '...ohhhhhhhhho...',
+        '...ohhhhhhhhho...',
+        '...ohhhhhhhhHo...',
+        '....ohhhhhHHo....',
+        '.....ooooooo.....',
+      ]),
+    ],
+  },
+  W: {
+    overlays: [
+      hov(0, 0, [
+        '...oooooooo...',
+        '..o#hhhhhhho..',
+        '.o#hhhhhhhhho.',
+        '.o#hhhhhhhhho.',
+        'o#hhhhhhhhhhho',
+        'o#hhhhhhhhhhho',
+        'ohhhhhhhhhhhHo',
+        'oHhH.....hhHo.',
+        '.ohH......hHo.',
+        '..........hHo.',
+        '.........hho..',
+        '........hhHo..',
+        '.........o....',
+      ]),
+    ],
+  },
+  NW: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '...o#hhhhhhhho...',
+        '..o#hhhhhhhhhho..',
+        '..ohhhhhhhhhhho..',
+        '..ohhhhhhhhhhho..',
+        '..oHhhhhhhhhhHo..',
+        '.ohhhhhhhhhhhhho.',
+        '...ohhhhhhhhho...',
+        '...ohhhhhhhhho...',
+        '...ohhhhhhhhHo...',
+        '....ohhhhhHHo....',
+        '.....ooooooo.....',
+      ]),
+    ],
+  },
+};
+
+export const HAIR_LONG_VIEWS: Views = {
+  SW: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '..o##hhhhhhhhho..',
+        '..o#hhhhhhhhhho..',
+        '.o#hhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhHhhhHhhho.',
+        '.oh..HHH..HHhhho.',
+        '.oh..........hhho',
+        '.oh..........hhho',
+        '.oh..........hhho',
+        '.oh..........hhho',
+        '.oh.........ohhho',
+        '.oh..........hhho',
+        '.oH..........hHo.',
+        '..o..........oo..',
+      ]),
+    ],
+  },
+  N: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '..o##hhhhhhhhho..',
+        '..o#hhhhhhhhhho..',
+        '.o#hhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.oHhhhhhhhhhhhHo.',
+        '..ooooooooooooo..',
+      ]),
+    ],
+  },
+  W: {
+    overlays: [
+      hov(0, 0, [
+        '...oooooooo...',
+        '..o#hhhhhhho..',
+        '.o#hhhhhhhhho.',
+        '.o#hhhhhhhhho.',
+        'o#hhhhhhhhhhho',
+        'o#hhhhhhhhhhho',
+        'ohhhhhhhhhhhHo',
+        'oHhH..hhhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhhho',
+        '......ohhhhHho',
+        '......oooooooo',
+      ]),
+    ],
+  },
+  NW: {
+    overlays: [
+      hov(0, 0, [
+        '......ooooo......',
+        '....oo#hhhhoo....',
+        '...o##hhhhhhho...',
+        '..o##hhhhhhhhho..',
+        '..o#hhhhhhhhhho..',
+        '.o#hhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.ohhhhhhhhhhhhho.',
+        '.oHhhhhhhhhhhhHo.',
+        '..ooooooooooooo..',
+      ]),
+    ],
+  },
+};
+
 export const BUZZ_VIEWS: Views = {
   SW: { remaps: [{ box: [0, 0, 16, 7], to: 'hair', space: 'head' }] },
   W: {
@@ -608,6 +780,60 @@ export const PEAKED_CAP_N: ViewLayer = {
       ]),
       rigid: true,
     },
+  ],
+};
+
+export const HARD_HAT_W: ViewLayer = {
+  overlays: [
+    {
+      ...hov(-2, 0, [
+        '.....ooooooo......',
+        '...oo*aaaaaoo.....',
+        '..o*aaaaaaaaao....',
+        '.o*aaaaaaaaaaAo...',
+        '.oaaaaaaaaaaaAAo..',
+        '.oaaaaaaaaaaaAAo..',
+        'o*aaaaaaaaaaaaAAo.',
+        'ooooooooooooooooo.',
+      ]),
+      rigid: true,
+    },
+  ],
+};
+
+export const HEADBAND_VIEWS: Views = {
+  W: { overlays: [hov(0, 6, ['o*aaaaaaaaAAo', 'oAaaaaaaaAAAo'])] },
+};
+
+export const ZOMBIE_FACE_VIEWS: Views = {
+  SW: { overlays: [hov(2, 9, ['...S.S...', '...S.S...', '.........', '.SoxxxoS.', '...ooo...'])] },
+  W: { overlays: [hov(2, 12, ['xxxo', '.ooo'])] },
+};
+
+export const ZOMBIE_CHEEK_VIEWS: Views = {
+  SW: { overlays: [hov(10, 5, ['d', 'd'])] },
+  W: { overlays: [hov(9, 5, ['d', 'd'])] },
+};
+
+export const SEALED_EYES_VIEWS: Views = {
+  SW: { overlays: [hov(3, 9, ['SS...SS', 'oo...oo', 'SS...SS'])] },
+  W: { overlays: [hov(4, 8, ['SS', 'oo', 'SS'])] },
+};
+
+export const BIG_EAR_W: ViewLayer = {
+  overlays: [
+    hov(5, 0, [
+      '...o..',
+      '..oso.',
+      '..osSo',
+      '.ossSo',
+      '.ossSo',
+      '.ossSo',
+      '.osSSo',
+      '.oSSSo',
+      '.oSS$o',
+      '..ooo.',
+    ]),
   ],
 };
 

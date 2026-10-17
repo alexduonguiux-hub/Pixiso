@@ -53,7 +53,7 @@ const headMapOf =
   (x, y) => [x + headX + shift(Math.min(y, 14)), y + headTop];
 
 /** Reaching: upright head, upper arms out to the sides, open hands in front of the chest (19×40). */
-const BODY_REACH = sprite`
+export const BODY_REACH = sprite`
   ...................
   ...................
   ...................
@@ -96,7 +96,7 @@ const BODY_REACH = sprite`
   ..ooooooo.ooooooo..
 `;
 /** Dragging: head tilted left, left leg under the body, right leg stretched out and the foot flat (21×40). */
-const BODY_DRAG = sprite`
+export const BODY_DRAG = sprite`
   .....................
   .....................
   .....................
@@ -139,7 +139,7 @@ const BODY_DRAG = sprite`
   ..ooooooo..ooooooooo.
 `;
 /** Hunched: head sunk between raised shoulders, arms hanging to the knees, short bent legs (19×40). */
-const BODY_HUNCH = sprite`
+export const BODY_HUNCH = sprite`
   ...................
   ...................
   ...................
@@ -182,7 +182,7 @@ const BODY_HUNCH = sprite`
   ..ooooooo.ooooooo..
 `;
 /** Crawl: head low and forward, hunched shoulders, long arms reaching the ground with clawed hands, crouched legs (21×40). */
-const BODY_CRAWL = sprite`
+export const BODY_CRAWL = sprite`
   .....................
   .....................
   .....................
@@ -225,7 +225,7 @@ const BODY_CRAWL = sprite`
   oooooooooo.oooooooooo
 `;
 /** Twisted neck: head slid to the right, knees knocked together, feet apart (19×40). */
-const BODY_TWIST = sprite`
+export const BODY_TWIST = sprite`
   ...................
   ...................
   ...................
@@ -729,3 +729,15 @@ export const ZOMBIE_POSES: readonly ZombiePose[] = [
   POSE_DRAG_M,
   POSE_TWIST_M,
 ];
+
+/** The hand-drawn S bodies and where their head goes, for the views derived from them (poseviews64.ts). */
+export const POSE_BODIES: Record<
+  string,
+  { body: Sprite; headX: number; headTop: number; shift: HeadShift }
+> = {
+  reach: { body: BODY_REACH, headX: 1, headTop: 0, shift: REACH_SHIFT },
+  drag: { body: BODY_DRAG, headX: 0, headTop: 1, shift: DRAG_SHIFT },
+  hunch: { body: BODY_HUNCH, headX: 1, headTop: 4, shift: HUNCH_SHIFT },
+  twist: { body: BODY_TWIST, headX: 1, headTop: 1, shift: TWIST_SHIFT },
+  crawl: { body: BODY_CRAWL, headX: 2, headTop: 6, shift: CRAWL_SHIFT },
+};

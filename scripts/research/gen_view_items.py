@@ -75,6 +75,21 @@ HAIR['PONYTAIL'] = {
   'W':  [O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhho','o#hhhhhhhhhhho','ohhhhhhhhhhhHo',
                  'oHhH.....hhHo.','.ohH......hHo.']), O(10,8, ['.ooo','ohHo','ohHo','ohHo','oHHo','.oo.'])],
 }
+CROWN_SHORT = ['......ooooo......','....oo#hhhhoo....','...o##hhhhhhho...','...o#hhhhhhhho...','..o#hhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhHhhhhho..','..oHhhhhHHhhhHo..']
+CROWN_SHORT_BACK = CROWN_SHORT[:6] + ['..ohhhhhhhhhhho..','..oHhhhhhhhhhHo..']
+HAIR['SHORT'] = {
+  'SW': O(0,0, CROWN_SHORT + ['.....HHH..HHHhH..']),
+  'N':  O(0,0, CROWN_SHORT_BACK + NAPE_SHORT),
+  'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhho','o#hhhhhhhhhhho','ohhhhhhhhhhhHo',
+                'oHhH.....hhHo.','.ohH......hHo.','..........hHo.','.........hho..','........hhHo..','.........o....']),
+}
+HAIR['LONG'] = {
+  'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh.........ohhho','.oh..........hhho','.oH..........hHo.','..o..........oo..']),
+  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.']*7 + ['.oHhhhhhhhhhhhHo.','..ooooooooooooo..']),
+  'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhho','o#hhhhhhhhhhho','ohhhhhhhhhhhHo',
+                'oHhH..hhhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho',
+                '......ohhhhhho','......ohhhhHho','......oooooooo']),
+}
 for k in HAIR: HAIR[k]['NW'] = HAIR[k]['N']
 HAIR['PONYTAIL']['NW'] = [O(0,0, CROWN_PONY + ['..HhHhhhhhhhhHo..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhHo....','....ohhhhHHo.....']), O(7,12, ['.ooo','ohHo','ohHo','ohHo','oHHo','.oo.'])]
 
@@ -90,6 +105,8 @@ HATS = {
                       '..okkkkkkkkkkko...','..oKKKKKKKKKKKKo..','oooooooooooooooo..'], rigid=True),
  'CAP_N':    O(-1,0, ['....ooooooooooo....','...o&kkkkkkkkkKo...','..o&kkkkkkkkkkkKo..','..o&kkkkkkkkkkkKo..','..oKKKKKKKKKKKKKo..',
                       '...okkkkkkkkkkko...','..oKKKKKKKKKKKKKo..','..ooooooooooooooo..'], rigid=True),
+ 'HARD_HAT_W': O(-2,0, ['.....ooooooo......','...oo*aaaaaoo.....','..o*aaaaaaaaao....','.o*aaaaaaaaaaAo...','.oaaaaaaaaaaaAAo..',
+                        '.oaaaaaaaaaaaAAo..','o*aaaaaaaaaaaaAAo.','ooooooooooooooooo.'], rigid=True),
  'RANGER_W_BRIM': O(-2,6, ['.o.............oo.','oLlllllllllllllLo.','.ooooooooooooooo..'], rigid=True),
 }
 RANGER_W_REMAP = R([0,0,13,6],'leather'); RANGER_W_SEAM = L([1,6,11,6])
@@ -104,6 +121,14 @@ FACE = {
  'SMILE_SW':   O(3,12, ['ooooooooo','.xxxxxx..']),
  'SUNKEN_W':   O(3,8, ['.SS','.eS','SSS']),
  'SMILE_W':    O(2,12, ['oooooo','.xxxx.']),
+ 'HEADBAND_W': O(0,6, ['o*aaaaaaaaAAo','oAaaaaaaaAAAo']),
+ 'ZFACE_SW':   O(2,9, ['...S.S...','...S.S...','.........','.SoxxxoS.','...ooo...']),
+ 'ZFACE_W':    O(2,12, ['xxxo','.ooo']),
+ 'ZCHEEK_SW':  O(10,5, ['d','d']),
+ 'ZCHEEK_W':   O(9,5, ['d','d']),
+ 'SEALED_SW':  O(3,9, ['SS...SS','oo...oo','SS...SS']),
+ 'SEALED_W':   O(4,8, ['SS','oo','SS']),
+ 'BIG_EAR_W':  O(5,0, ['...o..','..oso.','..osSo','.ossSo','.ossSo','.ossSo','.osSSo','.oSSSo','.oSS$o','..ooo.']),
 }
 # ---------------------------------------------------------------- body items (figure space)
 BODY = {
@@ -208,6 +233,12 @@ out.append("export const HELMET_W: ViewLayer = "+ts_layers(HATS['HELMET_W'])+";\
 out.append("export const BERET_W: ViewLayer = "+ts_layers(HATS['BERET_W'])+";\n")
 out.append("export const PEAKED_CAP_W: ViewLayer = "+ts_layers(HATS['CAP_W'])+";\n")
 out.append("export const PEAKED_CAP_N: ViewLayer = "+ts_layers(HATS['CAP_N'])+";\n")
+out.append("export const HARD_HAT_W: ViewLayer = "+ts_layers(HATS['HARD_HAT_W'])+";\n")
+out.append("export const HEADBAND_VIEWS: Views = { W: "+ts_layers(FACE['HEADBAND_W'])+" };\n")
+out.append("export const ZOMBIE_FACE_VIEWS: Views = { SW: "+ts_layers(FACE['ZFACE_SW'])+", W: "+ts_layers(FACE['ZFACE_W'])+" };\n")
+out.append("export const ZOMBIE_CHEEK_VIEWS: Views = { SW: "+ts_layers(FACE['ZCHEEK_SW'])+", W: "+ts_layers(FACE['ZCHEEK_W'])+" };\n")
+out.append("export const SEALED_EYES_VIEWS: Views = { SW: "+ts_layers(FACE['SEALED_SW'])+", W: "+ts_layers(FACE['SEALED_W'])+" };\n")
+out.append("export const BIG_EAR_W: ViewLayer = "+ts_layers(FACE['BIG_EAR_W'])+";\n")
 out.append("export const RANGER_HAT_W: ViewLayer = "+ts_layers([RANGER_W_REMAP, RANGER_W_SEAM, HATS['RANGER_W_BRIM']])+";\n")
 out.append("export const GLASSES_VIEWS: Views = { SW: "+ts_layers(FACE['GLASSES_SW'])+", W: "+ts_layers(FACE['GLASSES_W'])+" };\n")
 out.append("export const BEARD_VIEWS: Views = { SW: "+ts_layers(FACE['BEARD_SW'])+", W: "+ts_layers(FACE['BEARD_W'])+" };\n")
