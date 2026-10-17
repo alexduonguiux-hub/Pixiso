@@ -15,7 +15,7 @@
 import type { MaterialColors } from './paint.js';
 import { EMPTY, LEGEND, MATERIALS, packCell, type Material, type Sprite } from './format.js';
 import { blank } from './draw.js';
-import type { Box } from './hero64.js';
+import type { Box, HeroView } from './hero64.js';
 import type { FormSpec, HeadMap } from './heroforms.js';
 
 export type Space = 'figure' | 'head';
@@ -63,19 +63,45 @@ export interface Outfit {
   lines?: readonly Seam[];
   overlays?: readonly Overlay[];
   colors: MaterialColors;
+  /** Rows added above the figure (hair rising past the skull); the result is taller by this much. */
+  headroom?: number;
 }
+
+/** What one item adds in one view: drawings, material changes, seam lines. */
+export interface ViewLayer {
+  overlays?: Overlay[];
+  remaps?: Remap[];
+  lines?: Seam[];
+}
+/**
+ * An item drawn per view (hair, hat, glasses, bag...). S is required; a view
+ * that is missing simply leaves the item out (glasses seen from behind).
+ */
+export type ViewItem = { S: ViewLayer } & Partial<Record<HeroView, ViewLayer>>;
 
 const LINE = packCell(LEGEND.o!);
 /** Row of the eyes in head space (base head rows 9–11; the middle one). */
 const HEAD_EYE_ROW = 10;
 const IDENTITY: HeadMap = (x, y) => [x, y];
 
-/** Applies remaps, seams and overlays to a figure; returns a new sprite of the same size. */
+/**
+ * Applies remaps, seams and overlays to a figure; returns a new sprite of the
+ * same width, `outfit.headroom` rows taller (the figure sits at the bottom).
+ */
 export function dress(figure: Sprite, outfit: Outfit): Sprite {
-  const out = blank(figure.w, figure.h);
-  out.cells.set(figure.cells);
+  const top = outfit.headroom ?? 0;
+  const out = blank(figure.w, figure.h + top);
+  for (let y = 0; y < figure.h; y++)
+    out.cells.set(figure.cells.subarray(y * figure.w, (y + 1) * figure.w), (y + top) * figure.w);
   const headMap = outfit.form?.headMap ?? IDENTITY;
-  const mapper = (space: Space | undefined): HeadMap => (space === 'head' ? headMap : IDENTITY);
+  const lower =
+    (m: HeadMap): HeadMap =>
+    (x, y) => {
+      const [fx, fy] = m(x, y);
+      return [fx, fy + top];
+    };
+  const mapper = (space: Space | undefined): HeadMap =>
+    lower(space === 'head' ? headMap : IDENTITY);
   const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
     x >= x0 && x <= x1 && y >= y0 && y <= y1;
   const put = (x: number, y: number, v: number) => {

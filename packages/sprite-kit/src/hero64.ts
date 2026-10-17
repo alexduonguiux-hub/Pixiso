@@ -19,6 +19,7 @@ import type { BodyView } from './body32.js';
 import { blank } from './draw.js';
 import { parseSprite, sprite, type Sprite } from './format.js';
 import { HERO_FRAME_DATA, type HeroFrameData } from './hero64.frames.js';
+import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 
 export const HERO_CANVAS = 64;
 export const HERO_PIVOT = { x: 32, y: 62 } as const;
@@ -77,8 +78,11 @@ export const HERO_S_FIGURE = sprite`
   .ooooooo.ooooooo.
 `;
 
-export type HeroView = 'S' | 'N' | 'W';
-export const HERO_VIEWS: readonly HeroView[] = ['S', 'N', 'W'];
+/** Drawn views; SE, E and NE come from mirroring SW, W and NW (plain flip, D-042). */
+export type HeroView = 'S' | 'SW' | 'W' | 'NW' | 'N';
+export const HERO_VIEWS: readonly HeroView[] = ['S', 'SW', 'W', 'NW', 'N'];
+/** Views with transcribed walk frames; SW and NW have the standing frame only so far. */
+export type HeroWalkView = 'S' | 'N' | 'W';
 
 /** One frame placed on the 64×64 canvas: `x`, `y` is the sprite's top-left. */
 export interface HeroFrame {
@@ -97,6 +101,15 @@ function place(d: HeroFrameData, name: string): HeroFrame {
 
 /** The three frames of a view: [step A, standing, step B]. */
 export function heroFrames(view: HeroView): [HeroFrame, HeroFrame, HeroFrame] {
+  if (view === 'SW' || view === 'NW') {
+    const fig = view === 'SW' ? HERO_SW_FIGURE : HERO_NW_FIGURE;
+    const stand: HeroFrame = {
+      sprite: fig,
+      x: HERO_PIVOT.x - Math.floor(fig.w / 2),
+      y: HERO_GROUND - (HERO_FIGURE_H - 1),
+    };
+    return [stand, stand, stand];
+  }
   const d = HERO_FRAME_DATA[view];
   return [place(d[0], `${view}0`), place(d[1], `${view}1`), place(d[2], `${view}2`)];
 }

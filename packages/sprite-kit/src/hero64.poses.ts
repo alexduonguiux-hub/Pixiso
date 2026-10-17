@@ -302,13 +302,13 @@ export interface ZombiePose {
   hem: Box;
   /** Columns of the frayed hem (same row as `hem`). */
   frayedXs: number[];
-  /** Anchors (top-left) for details. */
-  chest: [number, number];
-  number: [number, number];
-  tie: [number, number];
-  belt: [number, number];
-  stains: [number, number];
-  gash: [number, number];
+  /** Anchors (top-left) for details; absent where a view cannot show them. */
+  chest?: [number, number];
+  number?: [number, number];
+  tie?: [number, number];
+  belt?: [number, number];
+  stains?: [number, number];
+  gash?: [number, number];
   /** Skirt rows as an overlay drawing with its top-left. */
   skirt: { x: number; y: number; rows: string[] };
   /** Long dress to the ankles (optional). */
@@ -692,7 +692,12 @@ export function mirrorPose(p: ZombiePose, id: string, label: string): ZombiePose
     collar: p.collar.map(mb),
     hem: mb(p.hem),
     frayedXs: p.frayedXs.map((x) => W - 1 - x),
-    chest: mp(p.chest, 1),
+    ...(p.chest ? { chest: mp(p.chest, 1) } : {}),
+    ...(p.number ? { number: mp(p.number, 3) } : {}),
+    ...(p.tie ? { tie: mp(p.tie, 1) } : {}),
+    ...(p.belt ? { belt: mp(p.belt, 1) } : {}),
+    ...(p.stains ? { stains: mp(p.stains, 7) } : {}),
+    ...(p.gash ? { gash: mp(p.gash, 1) } : {}),
     ...(p.dress
       ? {
           dress: {
@@ -702,11 +707,6 @@ export function mirrorPose(p: ZombiePose, id: string, label: string): ZombiePose
           },
         }
       : {}),
-    number: mp(p.number, 3),
-    tie: mp(p.tie, 1),
-    belt: mp(p.belt, 1),
-    stains: mp(p.stains, 7),
-    gash: mp(p.gash, 1),
     skirt: {
       x: W - p.skirt.rows[0]!.length - p.skirt.x,
       y: p.skirt.y,

@@ -2,6 +2,8 @@
 import {
   buildForm,
   CAST,
+  castInView,
+  HERO_VIEWS,
   dress,
   FORM_BASE,
   HERO_S_FIGURE,
@@ -53,9 +55,10 @@ function check(outfit: Outfit): void {
   const hat = outfit.overlays?.find((o) => o.rigid && o.space === 'head');
   if (hat && outfit.form?.headMap) {
     const [, hatBottom] = outfit.form.headMap(0, 8);
+    const top = outfit.headroom ?? 0;
     const skin = MATERIALS.indexOf('skin');
     const peeking: string[] = [];
-    for (let y = 0; y < hatBottom; y++)
+    for (let y = 0; y < hatBottom + top; y++)
       for (let x = 0; x < W; x++) {
         const v = s.cells[y * W + x]!;
         if (v >= 0 && Math.floor(v / 4) === skin) peeking.push(`(${x},${y})`);
@@ -103,5 +106,7 @@ for (const pose of ZOMBIE_POSES) {
   }
 }
 for (const o of [...CAST, ...SOLDIERS, ...ZOMBIES, ...MUTANTS]) check(o);
+for (const view of HERO_VIEWS)
+  for (const o of castInView(view)) check({ ...o, id: `${o.id}@${view}` });
 console.log(problems ? `${problems} problem(s)` : 'QA clean');
 process.exitCode = problems ? 1 : 0;
