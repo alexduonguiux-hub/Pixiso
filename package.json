@@ -18,7 +18,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "assets:catalog": "tsx scripts/build-catalog.ts",
-    "sheets": "tsx scripts/render-sheets.ts"
+    "sheets": "tsx scripts/render-sheets.ts",
+    "qa:hero": "tsx scripts/hero-qa.ts",
+    "qa:pixel": "DUMP=test-output/view_figures.json tsx scripts/hero-views.ts > /dev/null && python3 -I scripts/research/pixel_lint.py test-output/view_figures.json -q && python3 -I scripts/research/pixel_lint.py packages/sprite-kit/src/hero64.poses.views.ts -q"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

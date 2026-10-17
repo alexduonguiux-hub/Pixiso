@@ -398,9 +398,9 @@ CRAWL_SW = body(21, 40, 20, [
 '.o$sSoSSso.ossSoSss$o',
 '.o$sSo$sSo.oSs$oSss$o',
 '.o$sSo$sSo.oSs$oSss$o',
-'.o$sSo$sSo.oSs$oSss$o',
-'.ossso$sSo.oSs$osssso',
-'.ososo$sSo.oSs$oososo',
+'.o$sSo$sso.oss$oSss$o',
+'.osssossso.osssosssso',
+'.ososossso.osssoososo',
 '.ososooSso.osSooososo',
 '.ososo$sso.oss$oososo',
 '.ooooooooo.oooooooooo',
@@ -421,11 +421,11 @@ HEAVY_W = body(20, 46, 14, [
 '..o$$o$ssSoSsss$o...',
 '..o$$o$ssSoSsss$o...',
 '..o$so$ssSoSsss$o...',
-'..o$so$ssSoSsss$o...',
-'..o$soSssSoSsss$o...',
-'..ossoSssSoSsss$o...',
-'..ossoSssSoSsss$o...',
-'...osoSssSoSsss$o...',
+'..o$so$sssossss$o...',
+'..o$soSsssossssso...',
+'..ossoSsssossssso...',
+'..ossoSsssossssso...',
+'...osoSsssossssso...',
 '...osossssossssso...',
 '....oossssossssso...',
 '.....ossssosssssso..',
@@ -460,7 +460,7 @@ HEAVY_SW = body(23, 45, 14, [
 '...o$os$$$sss$$$SoSss$o',
 '...o$os$$$sSs$$$SoSss$o',
 '...o$os$$$sSs$$$SoSss$o',
-'...o$osSSSsSsSSSSoSss$o',
+'...o$ossSSsSssSSSoSss$o',
 '...o$osssssSssssSooss$o',
 '...o$ossSSsSsSSsSooss$o',
 '...o$osssssSssssSooss$o',
@@ -550,6 +550,13 @@ def flatten(rows, box):
         for x in range(x0, x1 + 1):
             if g[y][x] in '$S': g[y][x] = 's'
     return [''.join(r) for r in g]
+def break_column(rows, x, y0, y1, keep):
+    """A shade column hugging an outline reads as a stripe: keep it only in the row
+    ranges `keep` (2-3 cell clusters), mid skin elsewhere."""
+    g = [list(r) for r in rows]
+    for y in range(y0, y1 + 1):
+        if g[y][x] in '$S' and not any(a <= y <= b for a, b in keep): g[y][x] = 's'
+    return [''.join(r) for r in g]
 def patched(rows, patches):
     g = [list(r) for r in rows]
     for (x, y), c in patches.items(): g[y][x] = c
@@ -616,6 +623,23 @@ add('hunch', 'W', HUNCH_W, ('W', 0, 5, lambda k: 0), regions_w(2, 2,
     pants=[[4, 30, 15, 35]], shorts=[[4, 30, 15, 33]], collar=[[9, 17, 13, 17]], hem=[10, 29, 14, 29], frayedXs=[10, 12, 14],
     chest=[11, 20], gash=[5, 23]))
 add('twist', 'W', TWIST_W, ('SW', 0, 1, lambda k: 0 if k < 5 else 1), regions_w(1, 1), corners=True)
+DROOP_SW = break_column(DROOP_SW, 13, 17, 30, [(19, 21), (28, 30)])
+DROOP_SW = break_column(DROOP_SW, 17, 20, 26, [(20, 23)])                 # near arm highlight: 4 rows
+HUNCH_SW = break_column(HUNCH_SW, 3, 19, 31, [(19, 22), (28, 30)])         # far arm highlight
+HUNCH_SW = break_column(HUNCH_SW, 15, 19, 31, [(19, 22)])                  # near arm inner shadow
+HUNCH_SW = break_column(HUNCH_SW, 17, 16, 31, [(16, 22), (28, 30)])        # near arm highlight
+HUNCH_N = break_column(HUNCH_N, 1, 16, 31, [(16, 22), (28, 30)])
+HUNCH_N = break_column(HUNCH_N, 3, 19, 31, [(19, 22)])
+HUNCH_N = break_column(HUNCH_N, 15, 19, 31, [(19, 22)])
+HUNCH_N = break_column(HUNCH_N, 17, 16, 31, [(16, 22), (28, 30)])
+CRAWL_SW = break_column(CRAWL_SW, 2, 24, 34, [(24, 30)])
+CRAWL_SW = break_column(CRAWL_SW, 4, 24, 34, [(24, 27)])
+CRAWL_SW = break_column(CRAWL_SW, 16, 24, 34, [(24, 27)])
+CRAWL_SW = break_column(CRAWL_SW, 19, 24, 34, [(24, 30)])
+HEAVY_SW = break_column(HEAVY_SW, 21, 20, 27, [(20, 23)])
+DRAG_SW = break_column(DRAG_SW, 11, 18, 29, [(20, 22), (27, 29)])
+HUNCH_SW = break_column(HUNCH_SW, 13, 19, 33, [(19, 21), (31, 33)])
+HEAVY_SW = break_column(HEAVY_SW, 16, 16, 33, [(19, 21), (31, 33)])
 add('droop', 'SW', DROOP_SW, ('SW', 0, 2, lambda k: 1 if k < 5 else 2 if k < 9 else 3), {
     'torso': [4, 14, 14, 30], 'neck': [[8, 17, 14, 17]], 'shoulders': [[2, 14, 3, 18], [15, 16, 17, 19]],
     'sleeveL': {'short': [2, 19, 4, 22], 'long': [2, 19, 4, 24], 'torn': [2, 19, 4, 20]},
@@ -844,7 +868,7 @@ r = BRUTE_SW[45]; BRUTE_SW[45] = '...' + r[1:8] + r[10:]
 r = BRUTE_SW[46]; BRUTE_SW[46] = '....' + r[2:7] + r[9:]
 assert all(len(t) == 31 for t in BRUTE_SW)
 # near flank in shadow (the torso's last interior column)
-BRUTE_SW = [(''.join('S' if (x == 22 and 27 <= y <= 44 and c in 's$') else c for x, c in enumerate(r))) for y, r in enumerate(BRUTE_SW)]
+BRUTE_SW = [(''.join('S' if (x == 22 and (27 <= y <= 30 or 41 <= y <= 44) and c in 's$') else c for x, c in enumerate(r))) for y, r in enumerate(BRUTE_SW)]
 # N: flipped, flattened, bald nape
 NAPE = ['ossssssssssssssSSSSso', 'o$ossssssssssssSSSo$o', 'o$ossssssssssssSSSo$o', 'oosssssssssssSSSSoo',
         'ossssssssssSSSSSo', 'ossssssssSSSSSo', 'ossssssSSSSSo', 'ossssSSSSSo', 'ossSSSSSo', 'oosooSSSoosoo']
@@ -909,10 +933,10 @@ BRUTE_W = body(22, 61, 0, [
 '..oSsssSoo$ssssso.....',
 '..oSsssSoo$ssssso.....',
 '..oSoSoSoo$ssssso.....',
-'...o.o.o.o$ssssso.....',
-'....oooooo$ssssso.....',
-'....oSSSSo$ssssso.....',
-'....oSSSSo$ssssso.....',
+'...o.o.o.osssssso.....',
+'....oooooosssssso.....',
+'....oSSSSosssssso.....',
+'....oSSSSosssssso.....',
 '.....oSSSoS$ssSo......',
 '.....oSSSoo$sSSo......',
 '.....oSSSSos$sso......',
@@ -1018,6 +1042,16 @@ for pose,views in POSES.items():
         ps=problems(d['rows'])
         if ps: bad+=1; print(f'{pose}@{view}: '+'; '.join(ps[:10]))
 print('problems:', bad)
+# craft lint (pixel_lint.py, calibrated on the reference): warnings only, printed so stripes and jaggies get fixed
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pixel_lint
+nwarn = 0
+for pose, views in POSES.items():
+    for view, d in views.items():
+        ws = pixel_lint.lint(d['rows'])
+        nwarn += len(ws)
+        if ws and '--quiet' not in sys.argv: pixel_lint.summarize(f'lint {pose}@{view}', ws, show=4)
+print('lint warnings:', nwarn)
 if '--print' in sys.argv:
     for pose,views in POSES.items():
         for view,d in views.items():

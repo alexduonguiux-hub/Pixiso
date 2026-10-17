@@ -55,7 +55,7 @@ function check(outfit: Outfit): void {
   // Transparent cells must reach the border: an enclosed pocket of 3+ cells is a hole (a 1–2 cell slit between limbs is daylight).
   const seen = new Uint8Array(W * H);
   const flood = (sx: number, sy: number): number => {
-    const stack = [[sx, sy]];
+    const stack: Array<[number, number]> = [[sx, sy]];
     let n = 0;
     while (stack.length) {
       const [x, y] = stack.pop()!;
