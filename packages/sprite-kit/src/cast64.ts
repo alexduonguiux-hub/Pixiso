@@ -21,6 +21,7 @@ import {
   POSE_DROOP_M,
   POSE_HUNCH,
   POSE_REACH,
+  POSE_STAND,
   POSE_TWIST,
   POSE_TWIST_M,
   type ZombiePose,
@@ -368,7 +369,7 @@ export const KE_PHUN: Outfit = {
 /* ------------------------------------------------------------------ */
 
 type Top = 'tee' | 'torn' | 'long' | 'tank' | 'crop' | 'none';
-type Bottoms = 'pants' | 'shorts' | 'skirt';
+type Bottoms = 'pants' | 'shorts' | 'skirt' | 'dress';
 type Footwear = 'both' | 'right' | 'flats' | 'none';
 type Detail = 'stains' | 'gash' | 'hivis' | 'badge' | 'belt' | 'tie' | 'number' | 'camo' | 'scalp';
 
@@ -383,6 +384,8 @@ interface Look {
   details: Detail[];
   /** Overlays stamped last (mutations on top of the face). */
   extras?: Overlay[];
+  /** Zombie sockets, mouth and cheek gash (default), or the plain base face. */
+  face?: 'zombie' | 'plain';
   colors: MaterialColors;
 }
 
@@ -416,6 +419,8 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
   });
   const caps = pose.shoulders.map((box): Remap => ({ box, to: 'cloth' }));
   const collar = pose.collar.map(seam);
+  // A dress is one piece: no hem line at the waist.
+  const waist = look.bottoms === 'dress' ? [] : [seam(pose.hem)];
   switch (look.top) {
     case 'tee':
       remaps.push(
@@ -424,7 +429,7 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
         { box: pose.sleeveL.short, to: 'cloth' },
         { box: pose.sleeveR.short, to: 'cloth' },
       );
-      lines.push(...collar, seam(pose.hem));
+      lines.push(...collar, ...waist);
       break;
     case 'torn': {
       const holes: Box[] = [pose.frayedXs[0]! + 1, pose.frayedXs[2]! + 1].map((x) => [
@@ -449,11 +454,11 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
         { box: pose.sleeveL.long, to: 'cloth' },
         { box: pose.sleeveR.long, to: 'cloth' },
       );
-      lines.push(...collar, seam(pose.hem));
+      lines.push(...collar, ...waist);
       break;
     case 'tank':
       remaps.push(torso([]));
-      lines.push(...collar, seam(pose.hem));
+      lines.push(...collar, ...waist);
       break;
     case 'crop': {
       const y1 = ty0 + 10;
@@ -469,6 +474,10 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
   if (look.bottoms === 'shorts')
     remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants' })));
   if (look.bottoms === 'skirt') overlays.push(ov(pose.skirt.x, pose.skirt.y, pose.skirt.rows));
+  if (look.bottoms === 'dress') {
+    const d = pose.dress ?? pose.skirt;
+    overlays.push(ov(d.x, d.y, d.rows));
+  }
   if (look.shoes === 'both')
     remaps.push({ box: pose.shoeL, to: 'boots' }, { box: pose.shoeR, to: 'boots' });
   if (look.shoes === 'right') remaps.push({ box: pose.shoeR, to: 'boots' });
@@ -479,7 +488,7 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
   if (look.hat) overlays.push(look.hat);
   if (look.glasses) overlays.push(GLASSES);
   if (look.details.includes('scalp')) overlays.push(ZOMBIE_SCALP);
-  overlays.push(ZOMBIE_FACE, ZOMBIE_CHEEK);
+  if ((look.face ?? 'zombie') === 'zombie') overlays.push(ZOMBIE_FACE, ZOMBIE_CHEEK);
   for (const d of look.details) {
     const [cx, cy] = pose.chest;
     if (d === 'stains')
@@ -781,7 +790,75 @@ export const DOT_BIEN: Outfit = {
   },
 };
 
-export const MUTANTS: readonly Outfit[] = [KE_THINH, KE_BAM_TRAN, KE_MANG_VO, DOT_BIEN];
+/**
+ * Hair of the mimic (head space): long black hair past the shoulders, the
+ * left half of the face hidden behind a curtain of strands, two strands
+ * falling onto the chest.
+ */
+const HAIR_MIMIC = hov(0, 0, [
+  '......ooooo......',
+  '....oo#hhhhoo....',
+  '...o##hhhhhhho...',
+  '..o##hhhhhhhhho..',
+  '..o#hhhhhhhhhho..',
+  '.o#hhhhhhhhhhhho.',
+  '.o#hhhhhhhhhhhho.',
+  '.o#hhhhhhhhHhhho.',
+  '.o#hhhhhHH...hho.',
+  '.ohhhHhhH....hho.',
+  '.ohhhHhhH....hho.',
+  '.ohhhHhH.....hho.',
+  '.ohhhH.......hho.',
+  '.ohhH.......Hhho.',
+  '.ohh.........hho.',
+  '.ohh.........hho.',
+  '.ohh.........hho.',
+  '.ohH.........Hho.',
+  '..hH.........Hh..',
+  '..hH.........Hh..',
+  '..hH.........Hh..',
+  '..hH.........Hh..',
+]);
+/** A smile far too wide: a line from the hair to the far cheek, bared teeth above the chin. */
+const WIDE_SMILE = hov(6, 12, ['oooooo', 'xxxxx.']);
+/** Blood dripping down the dress. */
+const DRESS_STAINS = ov(4, 30, [
+  '....D....',
+  '.........',
+  '.D.......',
+  '.........',
+  '......D..',
+  '.........',
+  '..D......',
+]);
+
+/** Kẻ Bắt Chước: stands still like a person, white dress to the ankles, long black hair over half the face, a smile too wide. */
+export const KE_BAT_CHUOC = zombie('ke_bat_chuoc', 'Kẻ Bắt Chước', POSE_STAND, {
+  hair: [HAIR_MIMIC],
+  top: 'long',
+  bottoms: 'dress',
+  shoes: 'none',
+  details: [],
+  face: 'plain',
+  extras: [WIDE_SMILE, DRESS_STAINS],
+  colors: {
+    skin: [204, 206, 210],
+    hair: [26, 24, 28],
+    cloth: [238, 236, 230],
+    cloth2: [236, 234, 228],
+    eye: [16, 16, 20],
+    white: [244, 244, 240],
+    ...BLOOD,
+  },
+});
+
+export const MUTANTS: readonly Outfit[] = [
+  KE_THINH,
+  KE_BAM_TRAN,
+  KE_MANG_VO,
+  DOT_BIEN,
+  KE_BAT_CHUOC,
+];
 
 /** The common infected of the game is the civilian man. */
 export const BIEN_THE: Outfit = { ...ZOMBIE_CIV_M, id: 'bien_the', label: 'Biến Thể' };

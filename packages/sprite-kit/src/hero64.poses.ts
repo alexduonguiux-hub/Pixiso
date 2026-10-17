@@ -311,6 +311,8 @@ export interface ZombiePose {
   gash: [number, number];
   /** Skirt rows as an overlay drawing with its top-left. */
   skirt: { x: number; y: number; rows: string[] };
+  /** Long dress to the ankles (optional). */
+  dress?: { x: number; y: number; rows: string[] };
 }
 
 const form = (id: string, label: string, figure: Sprite, headMap: HeadMap): FormSpec => ({
@@ -319,6 +321,65 @@ const form = (id: string, label: string, figure: Sprite, headMap: HeadMap): Form
   figure,
   headMap,
 });
+
+/* P0 — standing still: the base figure itself (17×40), head upright. */
+export const POSE_STAND: ZombiePose = {
+  id: 'stand',
+  form: form('zombie_stand', 'Đứng im', HERO_S_FIGURE, (x, y) => [x, y]),
+  w: 17,
+  torso: [4, 15, 12, 28],
+  neck: [
+    [6, 15, 10, 16],
+    [7, 17, 9, 17],
+  ],
+  shoulders: [
+    [1, 15, 3, 18],
+    [13, 15, 15, 18],
+  ],
+  sleeveL: { short: [0, 18, 4, 22], long: [0, 18, 4, 24], torn: [0, 18, 4, 20] },
+  sleeveR: { short: [12, 18, 16, 22], long: [12, 18, 16, 24] },
+  pants: [[0, 29, 16, 35]],
+  shorts: [[0, 29, 16, 32]],
+  shoeL: [1, 36, 7, 39],
+  shoeR: [9, 36, 15, 39],
+  flats: [
+    [1, 38, 7, 39],
+    [9, 38, 15, 39],
+  ],
+  collar: [
+    [6, 17, 6, 17],
+    [10, 17, 10, 17],
+    [7, 18, 9, 18],
+  ],
+  hem: [5, 28, 11, 28],
+  frayedXs: [5, 7, 9, 11],
+  chest: [6, 20],
+  number: [7, 21],
+  tie: [8, 19],
+  belt: [8, 28],
+  stains: [5, 21],
+  gash: [2, 23],
+  skirt: {
+    x: 2,
+    y: 29,
+    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+  },
+  dress: {
+    x: 1,
+    y: 29,
+    rows: [
+      '..o&kkkkkkkKo..',
+      '..o&kkkkkkkKo..',
+      '.o&kkkkkkkkkKo.',
+      '.o&kkkkkkkkkKo.',
+      '.o&kkkkKkkkkKo.',
+      'o&kkkkkKkkkkkKo',
+      'o&kkkkkKkkkkkKo',
+      'o&kkkKkKkKkkkKo',
+      'oo.oo.ooo.oo.oo',
+    ],
+  },
+};
 
 /* P1 — drooped (hero64.zombie.ts) */
 export const POSE_DROOP: ZombiePose = {
@@ -634,6 +695,15 @@ export function mirrorPose(p: ZombiePose, id: string, label: string): ZombiePose
     hem: mb(p.hem),
     frayedXs: p.frayedXs.map((x) => W - 1 - x),
     chest: mp(p.chest, 1),
+    ...(p.dress
+      ? {
+          dress: {
+            x: W - p.dress.rows[0]!.length - p.dress.x,
+            y: p.dress.y,
+            rows: p.dress.rows.map((r) => [...r].reverse().join('')),
+          },
+        }
+      : {}),
     number: mp(p.number, 3),
     tie: mp(p.tie, 1),
     belt: mp(p.belt, 1),
