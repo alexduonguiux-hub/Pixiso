@@ -224,43 +224,42 @@ CRAWL_W = body(26, 41, 24, [
 
 BODIES = FIG.get('bodies', {})
 
-# ------------------------------------------------------------------ SW / N bodies (40 tall, soles on row 39, same canvas as the S body)
-# Drooped stance, three-quarter (facing SW, far side on the left): the far arm is
-# mostly behind the torso (one skin column shows), the far leg a column narrower,
-# the near flank in shadow, the near foot turned to the viewer; the SW head drooped
-# and tilted towards the far shoulder as in S.
+# Drooped stance, three-quarter: the base SW body (far arm two skin columns, near
+# flank in shadow) with the same changes as the S body: far shoulder raised two rows
+# into the hump beside the jaw, near arm dropped two rows with its fist in front of
+# the hip, near foot turned out; the SW head drooped and tilted as in S.
 DROOP_SW = body(19, 40, 14, [
-'....oooo...........',
-'...osssss..........',
-'..ossssss.....so...',
-'..oSsssssSSsSSsSo..',
-'..oso$$$sSsssSsSo..',
-'..o$o$$$s$$$ssSSSo.',
-'..o$o$$$s$$$sSoSs$o',
-'..o$oSSsssSSsSoSs$o',
-'..o$ossssssssSoSs$o',
-'..o$os$$$$$ssSoSs$o',
-'..o$oss$$$sssSoSs$o',
-'..osos$$$$$ssSoos$o',
-'..osos$$$$$ssSoos$o',
-'..osossSSsSSsSossso',
-'..osossssssssSosSso',
-'..osossssssssSosSso',
-'..ooossssssssSososo',
-'.....ossooosssososo',
-'.....oSso.osssooooo',
-'.....o$So.oSs$o....',
-'.....o$So.oSs$o....',
-'....ossso.osssso...',
-'....ossso.osssso...',
-'...oooSso.osSoooo..',
-'...o$$sso.o$$sSSo..',
-'...oooooo.ooooooo..',
+'...ooooo...........',
+'..osssss...........',
+'.osssssss....so....',
+'.oSsssssSSsSSso....',
+'.osso$$$sSsssso....',
+'.o$so$$s$$$Ssso....',
+'.o$so$$s$$$SSsSo...',
+'.o$soSSsSSsSosso...',
+'.o$sosssssssosso...',
+'.osso$$$$ssSoSs$o..',
+'.osso$$$sssSoSs$o..',
+'.osoo$$$$ssSoos$o..',
+'.osoos$$$ssSoos$o..',
+'..ooosssssssossso..',
+'....osSSsSSsososo..',
+'...oossooossoooso..',
+'...oSsso.ossoosso..',
+'...o$sSo.oSsoooo...',
+'...o$$So.oS$$o.....',
+'...o$sSo.oSs$o.....',
+'..osssso.osssso....',
+'..osssso.osssso....',
+'..oooSso.osSooooo..',
+'.o$$$sso.o$$sSSso..',
+'.ossssso.osssssso..',
+'.ooooooo.oooooooo..',
 ])
 # Reaching forward, three-quarter (21 wide: the body sits two columns right of
 # its S canvas so both hands can swing a column towards the far side). Far
 # shoulder pulled in, both hands shifted a column to the far side, the near hand
-# crossing in front of the flank; far leg a column narrower, near foot facing.
+# crossing in front of the flank; below the hands the base SW hips and legs.
 REACH_SW = body(21, 40, 14, [
 '.......os.....so.....',
 '.......osssssssso....',
@@ -275,84 +274,84 @@ REACH_SW = body(21, 40, 14, [
 '.ossssso$$$$Sossssso.',
 '.oSsssSo$$$$SoSsssSo.',
 '.oooooooossssSooooooo',
-'.......osSSsSSSo.....',
-'.......ossssssSo.....',
-'.......ossssssSo.....',
-'.......ossssssSo.....',
-'........osooosso.....',
-'.......oSso.ossSo....',
-'.......o$So.oSs$o....',
-'.......o$So.oSs$o....',
-'......ossso.osssso...',
-'......ossso.osssso...',
-'.....oooSso.osSoooo..',
-'.....o$$sso.o$$sSSo..',
-'.....oooooo.ooooooo..',
+'.......ossssssso.....',
+'.......osSSsSSso.....',
+'......oossooossoo....',
+'.....oSsso.ossSo.....',
+'.....o$sSo.oSs$o.....',
+'.....o$$So.oS$$o.....',
+'.....o$sSo.oSs$o.....',
+'....osssso.osssso....',
+'....osssso.osssso....',
+'....oooSso.osSooo....',
+'...o$$$sso.o$$sSSo...',
+'...ossssso.ossssso...',
+'...ooooooo.ooooooo...',
 ])
 # Dragging a leg, three-quarter: far shoulder and arm pulled in (one skin
-# column), near flank in shadow, the trailing foot two cells shorter (it points
-# back, away from the viewer), far foot a cell shorter.
+# column), near flank in shadow; fists one row lower than the base, the base
+# SW hips and legs with the near leg stretched out, its trailing foot a cell
+# shorter than in S (it points back, away from the viewer).
 DRAG_SW = body(21, 40, 15, [
 '....os.....so........',
 '....osssssssso.......',
 '...ossSSsSSsSso......',
 '...os$$SsS$$Sso......',
 '..osS$$sss$$SsSo.....',
-'..oso$$$s$$Sosso.....',
 '..o$o$$$s$$SoSs$o....',
 '..o$oSSsssSSoSs$o....',
 '..o$ossssssSoSs$o....',
 '..o$os$$$$$Soos$o....',
 '..o$oss$$$sSoos$o....',
 '..osos$$$$$Sossso....',
-'..osossssssSosSso....',
-'..osossSSsSSSososo...',
-'..ososssssssSososo...',
-'..ooossssssSooooo....',
-'.....ossoosssso......',
-'.....oSso.oSsSo......',
-'.....o$So..oSsSo.....',
-'.....o$So..oSsSo.....',
-'....ossso..osssso....',
-'....ossso..osssso....',
-'...oooSso..ossSoo....',
-'...o$$sso..osss$$o...',
-'...oooooo..ooooooo...',
+'..osos$$$ssSossso....',
+'..osossssssssososo...',
+'..ososSSsSSSoooso....',
+'..ooossooossoosso....',
+'...oSsso.ossSooo.....',
+'...o$sSo.oSs$o.......',
+'...o$$So..oS$$o......',
+'...o$sSo..oSs$o......',
+'..osssso..osssso.....',
+'..osssso..osssso.....',
+'..oooSso..osSoooooo..',
+'.o$$$sso..osss$$$$o..',
+'.ossssso..ossssssso..',
+'.ooooooo..ooooooooo..',
 ])
-# Hunched, three-quarter: the raised far shoulder pulled in two columns, the far
-# arm one skin column with the hand turned in beside the knee, near flank in
-# shadow; the legs keep their width (the far arm hangs along the far leg).
+# Hunched, three-quarter: the far shoulder and arm pulled in one column (two
+# skin columns), the near flank in shadow; as in S the arms hang in front of
+# the thighs' outer columns down to the knees, the base SW feet below.
 HUNCH_SW = body(19, 40, 14, [
-'...oo.........oooo.',
-'..osS.........Sssso',
-'..ossS.......Ssss$o',
-'..ossS.......sSss$o',
-'..ossSs.....sSsss$o',
-'..o$ossSSsSSsSoSs$o',
-'..o$os$$SsS$$SoSs$o',
-'..o$oSSsssssSSoSs$o',
-'..o$ossssssssSoSs$o',
-'..o$os$$$$$$$SoSs$o',
-'..o$os$$$$$$$SoSs$o',
-'..o$ossssssssSoSs$o',
-'..o$ossSSsSSsSoSs$o',
-'..o$ossssssssSoSs$o',
-'..o$osssooossSoSs$o',
-'..o$oSsso.ossSoSs$o',
-'..o$oSsso.ossSoSs$o',
-'..o$oSsso.ossSoSs$o',
-'..oso$sSo.oSs$ossso',
-'..oso$sSo.oSs$osSso',
-'..oso$sSo.oSs$ososo',
-'..osossso.osssososo',
-'..ooossso.osssooooo',
-'...ooSsso.osSoooo..',
-'...o$$sso.o$$sSSo..',
-'...oooooo.ooooooo..',
+'...ooo.......oooo..',
+'..ossS.......Sssso.',
+'..o$ssS.....Ssss$o.',
+'..o$sSs.....sSss$o.',
+'..o$ssSs...sSsss$o.',
+'..o$sosSSsSSsoSs$o.',
+'..osSo$$SsS$$oSsso.',
+'..ossoSSsssSSossso.',
+'..ossosssssssossso.',
+'..ossos$$$$$sossso.',
+'..ossoss$$$ssossso.',
+'..ossos$$$$$sossso.',
+'..ossosSSsSSsossso.',
+'..ossosssssssossso.',
+'..o$sossooossoss$o.',
+'..o$sosso.ossoss$o.',
+'..o$sosso.ossoss$o.',
+'..ossosSo.oSsossso.',
+'..osSosSo.oSsosSso.',
+'..osSosSo.oSsosSso.',
+'..osoosso.ossososo.',
+'..osoosso.ossososo.',
+'...oooSso.osSooooo.',
+'..o$$$sso.o$$sSSo..',
+'..ossssso.ossssso..',
+'..ooooooo.ooooooo..',
 ])
 # Twisted neck, three-quarter: far shoulder and arm pulled in, flank in shadow,
-# far leg a column narrower (the knees still touch), far foot a cell shorter,
-# near foot facing the viewer.
+# open hands one row above the crotch, knees knocked together, the base SW feet.
 TWIST_SW = body(19, 40, 15, [
 '.......os.....so...',
 '.....oosssssssoo...',
@@ -360,24 +359,24 @@ TWIST_SW = body(19, 40, 15, [
 '....os$$$sSsS$sSo..',
 '...osS$$sss$$SsSo..',
 '...oso$$$s$$Sosso..',
-'...oso$$$s$$Sosso..',
 '...o$oSSsssSSoSs$o.',
 '...o$ossssssSoSs$o.',
 '...o$os$$$$$Soos$o.',
 '...o$oss$$$sSoos$o.',
 '...osos$$$$$Sossso.',
-'...osossssssSosSso.',
+'...osos$$$ssSosSso.',
+'...ososssssssososo.',
 '...ososSSsSSSososo.',
-'...osossssssSososo.',
-'...ooossssssSooooo.',
-'......osooosso.....',
-'.....oSso.ossSo....',
-'......oSsossSo.....',
-'......o$soss$o.....',
-'......o$soss$o.....',
-'.....osso.ossso....',
-'...ooSsso.osSoooo..',
-'..o$$ssso.o$$sSSo..',
+'...ooossooossooooo.',
+'....oSsso.ossSo....',
+'....o$sSo.oSs$o....',
+'.....oSssossSo.....',
+'.....o$ssoss$o.....',
+'.....o$ssoss$o.....',
+'....ossso.ossso....',
+'...oooSso.osSooo...',
+'..o$$$sso.o$$sSSo..',
+'..ossssso.ossssso..',
 '..ooooooo.ooooooo..',
 ])
 # Crawling, three-quarter: the far arm a skin column narrower with its hand
@@ -419,14 +418,11 @@ HEAVY_W = body(20, 46, 14, [
 '...o$ossssossssso...',
 '..o$$o$sssossssso...',
 '..o$$o$ssSoSsss$o...',
-'..o$$o$ssSoSsss$o...',
 '..o$so$ssSoSsss$o...',
 '..o$so$sssossss$o...',
 '..o$soSsssossssso...',
 '..ossoSsssossssso...',
-'..ossoSsssossssso...',
 '...osoSsssossssso...',
-'...osossssossssso...',
 '....oossssossssso...',
 '.....ossssosssssso..',
 '.....o$sssosssssso..',
@@ -434,9 +430,12 @@ HEAVY_W = body(20, 46, 14, [
 '.....oSSssoSsssSo...',
 '.....oSSsosssoooo...',
 '.....osSSo$sssso....',
+'.....osSSo$sssso....',
+'.....osSSSosssso....',
 '.....osSSSosssso....',
 '......osSSoS$ssSo...',
 '......osSSoo$sSSo...',
+'......osSSSos$sso...',
 '......osSSSos$sso...',
 '......osSSSoS$ssso..',
 '.....ooooSSoSsssso..',
@@ -459,13 +458,10 @@ HEAVY_SW = body(23, 45, 14, [
 '...o$o$$$sssss$$SoSss$o',
 '...o$os$$$sss$$$SoSss$o',
 '...o$os$$$sSs$$$SoSss$o',
-'...o$os$$$sSs$$$SoSss$o',
 '...o$ossSSsSssSSSoSss$o',
 '...o$osssssSssssSooss$o',
 '...o$ossSSsSsSSsSooss$o',
 '...o$osssssSssssSooss$o',
-'...osossSSsSsSSsSosssso',
-'...osossssssssssSossoso',
 '...osossssssssssSossoso',
 '...osossssssssssSossoso',
 '...ososssSSsSSssSooooso',
@@ -473,10 +469,13 @@ HEAVY_SW = body(23, 45, 14, [
 '...oooossooooosssooooo.',
 '......oSsso.osssSo.....',
 '......o$sSo.oSss$o.....',
+'......o$$So.oSs$$o.....',
 '......o$sSo.oSss$o.....',
-'......o$sSo.oSss$o.....',
+'......ossso.osssso.....',
 '.....osssso.ossssso....',
-'.....osssso.ossssso....',
+'.....os$sso.osss$so....',
+'.....os$sso.osss$so....',
+'.....ossSso.osSssso....',
 '.....ooSsso.osSoooo....',
 '....o$$ssso.o$$ssSSo...',
 '....ossssso.osssssso...',
@@ -484,35 +483,36 @@ HEAVY_SW = body(23, 45, 14, [
 ])
 # Hunched back seen from behind: the hump rises between the raised shoulders and
 # hides the nape; the head sits behind it (stamped under), only the crown and the
-# ears show. Flat back shading as the derived N views, light on the left.
+# ears show. Flat back shading as the derived N views, light on the left; from
+# behind the legs pass in front of the hanging arms.
 HUNCH_N = body(19, 40, 12, [
 '.......ooooo.......',
 '.....oo$$ssSoo.....',
-'.oooo$$sssssSSoooo.',
-'osss$$ssssssSSSssso',
-'o$sssssssssSSSsss$o',
-'o$ssssssssSSSSsss$o',
-'o$sssssssSSSSssss$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSossSSsSSssoSs$o',
-'o$sSosssssssssoSs$o',
-'o$sSosssooosssoSs$o',
-'o$sSoSsso.ossSoSs$o',
-'o$sSoSsso.ossSoSs$o',
-'o$sSoSsso.ossSoSs$o',
-'ossso$sSo.oSs$ossso',
-'osSso$sSo.oSs$osSso',
-'ososo$sSo.oSs$ososo',
-'ososossso.osssososo',
-'ooooossso.osssooooo',
-'..oooSsso.ossSooo..',
-'..o$$ssso.osss$$o..',
+'..oooo$$sssSSoooo..',
+'.osss$$ssssSSSssso.',
+'.o$sssssssSSSsss$o.',
+'.o$ssssssSSSSsss$o.',
+'.o$sssssSSSSssss$o.',
+'.o$sSosssssssoSs$o.',
+'.ossSosssssssoSsso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.osssosssssssossso.',
+'.o$ssossooossoss$o.',
+'.o$soSsso.ossSos$o.',
+'.o$soSsso.ossSos$o.',
+'.ossoSsso.ossSosso.',
+'.osso$sSo.oSs$osso.',
+'.osSo$sSo.oSs$oSso.',
+'.ososssso.ossssoso.',
+'.ososssso.ossssoso.',
+'.oooooSso.osSooooo.',
+'..o$$$sso.oss$$$o..',
+'..ossssso.ossssso..',
 '..ooooooo.ooooooo..',
 ])
 
@@ -623,73 +623,62 @@ add('hunch', 'W', HUNCH_W, ('W', 0, 5, lambda k: 0), regions_w(2, 2,
     pants=[[4, 30, 15, 35]], shorts=[[4, 30, 15, 33]], collar=[[9, 17, 13, 17]], hem=[10, 29, 14, 29], frayedXs=[10, 12, 14],
     chest=[11, 20], gash=[5, 23]))
 add('twist', 'W', TWIST_W, ('SW', 0, 1, lambda k: 0 if k < 5 else 1), regions_w(1, 1), corners=True)
-DROOP_SW = break_column(DROOP_SW, 13, 17, 30, [(19, 21), (28, 30)])
-DROOP_SW = break_column(DROOP_SW, 17, 20, 26, [(20, 23)])                 # near arm highlight: 4 rows
-HUNCH_SW = break_column(HUNCH_SW, 3, 19, 31, [(19, 22), (28, 30)])         # far arm highlight
-HUNCH_SW = break_column(HUNCH_SW, 15, 19, 31, [(19, 22)])                  # near arm inner shadow
-HUNCH_SW = break_column(HUNCH_SW, 17, 16, 31, [(16, 22), (28, 30)])        # near arm highlight
-HUNCH_N = break_column(HUNCH_N, 1, 16, 31, [(16, 22), (28, 30)])
-HUNCH_N = break_column(HUNCH_N, 3, 19, 31, [(19, 22)])
-HUNCH_N = break_column(HUNCH_N, 15, 19, 31, [(19, 22)])
-HUNCH_N = break_column(HUNCH_N, 17, 16, 31, [(16, 22), (28, 30)])
 CRAWL_SW = break_column(CRAWL_SW, 2, 24, 34, [(24, 30)])
 CRAWL_SW = break_column(CRAWL_SW, 4, 24, 34, [(24, 27)])
 CRAWL_SW = break_column(CRAWL_SW, 16, 24, 34, [(24, 27)])
 CRAWL_SW = break_column(CRAWL_SW, 19, 24, 34, [(24, 30)])
 HEAVY_SW = break_column(HEAVY_SW, 21, 20, 27, [(20, 23)])
-DRAG_SW = break_column(DRAG_SW, 11, 18, 29, [(20, 22), (27, 29)])
-HUNCH_SW = break_column(HUNCH_SW, 13, 19, 33, [(19, 21), (31, 33)])
-HEAVY_SW = break_column(HEAVY_SW, 16, 16, 33, [(19, 21), (31, 33)])
-add('droop', 'SW', DROOP_SW, ('SW', 0, 2, lambda k: 1 if k < 5 else 2 if k < 9 else 3), {
-    'torso': [4, 14, 14, 30], 'neck': [[8, 17, 14, 17]], 'shoulders': [[2, 14, 3, 18], [15, 16, 17, 19]],
-    'sleeveL': {'short': [2, 19, 4, 22], 'long': [2, 19, 4, 24], 'torn': [2, 19, 4, 20]},
-    'sleeveR': {'short': [14, 20, 18, 24], 'long': [14, 20, 18, 26]},
-    'pants': [[5, 31, 14, 32], [4, 33, 15, 36]], 'shorts': [[5, 31, 14, 32], [4, 33, 15, 34]],
-    'shoeL': [3, 37, 8, 39], 'shoeR': [10, 37, 16, 39], 'flats': [[3, 38, 8, 39], [10, 38, 16, 39]],
-    'collar': [[8, 17, 8, 17], [14, 17, 14, 17], [9, 18, 13, 18]], 'hem': [5, 30, 13, 30], 'frayedXs': [5, 7, 9, 11, 13],
-    'chest': [6, 20], 'number': [8, 21], 'tie': [9, 19], 'belt': [9, 30], 'stains': [6, 21], 'gash': [16, 22],
-    'skirt': {'x': 4, 'y': 31, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooooo']},
+HEAVY_SW = break_column(HEAVY_SW, 16, 16, 30, [(19, 21), (28, 30)])
+add('droop', 'SW', DROOP_SW, ('SW', 0, 2, lambda k: 0 if k < 5 else 1 if k < 9 else 2), {
+    'torso': [4, 14, 12, 28], 'neck': [[7, 17, 13, 17]], 'shoulders': [[1, 14, 3, 18], [13, 16, 15, 19]],
+    'sleeveL': {'short': [1, 19, 4, 22], 'long': [1, 19, 4, 24], 'torn': [1, 19, 4, 20]},
+    'sleeveR': {'short': [12, 20, 16, 24], 'long': [12, 20, 16, 26]},
+    'pants': [[3, 29, 11, 31], [2, 32, 14, 35]], 'shorts': [[3, 29, 11, 31], [2, 32, 14, 32]],
+    'shoeL': [1, 36, 7, 39], 'shoeR': [9, 36, 16, 39], 'flats': [[1, 38, 7, 39], [9, 38, 16, 39]],
+    'collar': [[7, 17, 7, 17], [13, 17, 13, 17], [8, 18, 12, 18]], 'hem': [5, 28, 11, 28], 'frayedXs': [5, 7, 9, 11],
+    'chest': [6, 20], 'number': [7, 21], 'tie': [9, 19], 'belt': [8, 28], 'stains': [5, 21], 'gash': [14, 22],
+    'skirt': {'x': 2, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('reach', 'SW', REACH_SW, ('SW', 3, 0, lambda k: 0), {
-    'torso': [7, 15, 15, 30], 'neck': [[9, 15, 13, 16], [10, 17, 12, 17]], 'shoulders': [[5, 15, 6, 18], [16, 15, 18, 18]],
+    'torso': [7, 15, 15, 28], 'neck': [[9, 15, 13, 16], [10, 17, 12, 17]], 'shoulders': [[5, 15, 6, 18], [16, 15, 18, 18]],
     'sleeveL': {'short': [1, 19, 7, 22], 'long': [1, 19, 7, 22], 'torn': [1, 19, 7, 20]},
     'sleeveR': {'short': [13, 19, 20, 22], 'long': [13, 19, 20, 22]},
-    'pants': [[6, 31, 17, 36]], 'shorts': [[6, 31, 17, 34]],
-    'shoeL': [5, 37, 10, 39], 'shoeR': [12, 37, 18, 39], 'flats': [[5, 38, 10, 39], [12, 38, 18, 39]],
-    'collar': [[9, 17, 9, 17], [13, 17, 13, 17], [10, 18, 12, 18]], 'hem': [8, 30, 14, 30], 'frayedXs': [8, 10, 12, 14],
-    'chest': [9, 24], 'number': [10, 23], 'tie': [11, 19], 'belt': [11, 30], 'stains': [8, 25], 'gash': [5, 23],
-    'skirt': {'x': 5, 'y': 31, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
+    'pants': [[5, 29, 17, 35]], 'shorts': [[5, 29, 17, 32]],
+    'shoeL': [4, 36, 10, 39], 'shoeR': [12, 36, 18, 39], 'flats': [[4, 38, 10, 39], [12, 38, 18, 39]],
+    'collar': [[9, 17, 9, 17], [13, 17, 13, 17], [10, 18, 12, 18]], 'hem': [8, 28, 14, 28], 'frayedXs': [8, 10, 12, 14],
+    'chest': [9, 24], 'number': [10, 23], 'tie': [11, 19], 'belt': [11, 28], 'stains': [8, 25], 'gash': [5, 23],
+    'skirt': {'x': 5, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('drag', 'SW', DRAG_SW, ('SW', 0, 1, lambda k: 2 if k < 3 else 1 if k < 9 else 0), {
-    'torso': [4, 15, 12, 30], 'neck': [[6, 15, 10, 16], [7, 17, 9, 17]], 'shoulders': [[2, 15, 3, 19], [13, 15, 15, 19]],
+    'torso': [4, 15, 12, 28], 'neck': [[6, 15, 10, 16], [7, 17, 9, 17]], 'shoulders': [[2, 15, 3, 19], [13, 15, 15, 19]],
     'sleeveL': {'short': [2, 21, 4, 23], 'long': [2, 21, 4, 25], 'torn': [2, 21, 4, 22]},
     'sleeveR': {'short': [12, 21, 16, 23], 'long': [12, 21, 16, 25]},
-    'pants': [[4, 31, 17, 36]], 'shorts': [[4, 31, 17, 34]],
-    'shoeL': [3, 37, 8, 39], 'shoeR': [11, 37, 17, 39], 'flats': [[3, 38, 8, 39], [11, 38, 17, 39]],
-    'collar': [[6, 17, 6, 17], [10, 17, 10, 17], [7, 18, 9, 18]], 'hem': [5, 30, 11, 30], 'frayedXs': [5, 7, 9, 11],
-    'chest': [6, 22], 'number': [7, 23], 'tie': [8, 19], 'belt': [8, 30], 'stains': [5, 21], 'gash': [14, 24],
-    'skirt': {'x': 3, 'y': 31, 'rows': ['.o&kkkkkkKo.', '.o&kkkkkkKo.', 'o&kkkkkkkkKo', 'o&kkkkkkkkKo', 'oo.ooo.ooo.o']},
+    'pants': [[0, 29, 20, 35]], 'shorts': [[0, 29, 20, 32]],
+    'shoeL': [1, 36, 7, 39], 'shoeR': [10, 36, 18, 39], 'flats': [[1, 38, 7, 39], [10, 38, 18, 39]],
+    'collar': [[6, 17, 6, 17], [10, 17, 10, 17], [7, 18, 9, 18]], 'hem': [5, 28, 11, 28], 'frayedXs': [5, 7, 9, 11],
+    'chest': [6, 22], 'number': [7, 23], 'tie': [8, 19], 'belt': [8, 28], 'stains': [5, 21], 'gash': [14, 24],
+    'skirt': {'x': 2, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('hunch', 'SW', HUNCH_SW, ('SW', 1, 4, lambda k: 0), {
-    'torso': [4, 19, 14, 27], 'neck': [[7, 19, 11, 19]],
-    'shoulders': [[3, 14, 4, 15], [2, 15, 4, 16], [2, 17, 5, 17], [2, 18, 6, 18], [16, 14, 18, 15], [14, 16, 18, 16], [13, 17, 18, 17], [12, 18, 18, 18]],
-    'sleeveL': {'short': [2, 19, 4, 22], 'long': [2, 19, 4, 26], 'torn': [2, 19, 4, 20]},
-    'sleeveR': {'short': [14, 19, 18, 22], 'long': [14, 19, 18, 26]},
-    'pants': [[4, 28, 14, 36]], 'shorts': [[4, 28, 14, 31]],
-    'shoeL': [3, 37, 8, 39], 'shoeR': [10, 37, 16, 39], 'flats': [[3, 38, 8, 39], [10, 38, 16, 39]],
-    'collar': [[6, 19, 6, 19], [12, 19, 12, 19], [7, 20, 11, 20]], 'hem': [5, 27, 13, 27], 'frayedXs': [5, 7, 9, 11, 13],
-    'chest': [6, 21], 'number': [8, 22], 'tie': [9, 21], 'belt': [9, 27], 'stains': [5, 21], 'gash': [16, 23],
-    'skirt': {'x': 3, 'y': 28, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', '.o.ooo.ooo.o.']},
+    'torso': [5, 19, 13, 27], 'neck': [[7, 19, 11, 19]],
+    'shoulders': [[3, 14, 4, 15], [2, 15, 5, 16], [2, 17, 6, 17], [2, 18, 7, 18], [15, 14, 17, 15], [13, 16, 17, 16], [12, 17, 17, 17], [11, 18, 17, 18]],
+    'sleeveL': {'short': [2, 19, 5, 22], 'long': [2, 19, 5, 26], 'torn': [2, 19, 5, 20]},
+    'sleeveR': {'short': [13, 19, 17, 22], 'long': [13, 19, 17, 26]},
+    'pants': [[5, 28, 13, 35]], 'shorts': [[5, 28, 13, 31]],
+    'shoeL': [2, 36, 8, 39], 'shoeR': [10, 36, 16, 39], 'flats': [[2, 38, 8, 39], [10, 38, 16, 39]],
+    'collar': [[6, 19, 6, 19], [12, 19, 12, 19], [7, 20, 11, 20]], 'hem': [6, 27, 12, 27], 'frayedXs': [6, 8, 10, 12],
+    'chest': [7, 21], 'number': [8, 22], 'tie': [9, 21], 'belt': [9, 27], 'stains': [6, 21], 'gash': [15, 23],
+    'skirt': {'x': 4, 'y': 28, 'rows': ['.o&kkkkkKo.', '.o&kkkkkKo.', 'o&kkkkkkkKo', 'o&kkkkkkkKo', 'o.ooo.ooo.o']},
 })
 add('twist', 'SW', TWIST_SW, ('SW', 1, 1, lambda k: -1 if k < 3 else 0 if k < 6 else 1 if k < 9 else 2), {
-    'torso': [4, 16, 14, 30], 'neck': [[8, 15, 14, 17]], 'shoulders': [[3, 19, 4, 21], [15, 19, 17, 21]],
-    'sleeveL': {'short': [3, 22, 5, 23], 'long': [3, 22, 5, 25], 'torn': [3, 22, 5, 22]},
-    'sleeveR': {'short': [13, 22, 17, 23], 'long': [13, 22, 17, 25]},
-    'pants': [[5, 31, 14, 36]], 'shorts': [[5, 31, 14, 34]],
-    'shoeL': [2, 37, 8, 39], 'shoeR': [10, 37, 16, 39], 'flats': [[2, 38, 8, 39], [10, 38, 16, 39]],
-    'collar': [[7, 17, 7, 17], [15, 17, 15, 17], [8, 18, 14, 18]], 'hem': [6, 30, 12, 30], 'frayedXs': [6, 8, 10, 12],
-    'chest': [7, 22], 'number': [8, 23], 'tie': [9, 19], 'belt': [9, 30], 'stains': [6, 21], 'gash': [15, 24],
-    'skirt': {'x': 3, 'y': 31, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
+    'torso': [5, 16, 13, 28], 'neck': [[8, 15, 14, 17]], 'shoulders': [[3, 19, 4, 20], [15, 19, 17, 20]],
+    'sleeveL': {'short': [3, 21, 5, 22], 'long': [3, 21, 5, 24], 'torn': [3, 21, 5, 21]},
+    'sleeveR': {'short': [13, 21, 17, 22], 'long': [13, 21, 17, 24]},
+    'pants': [[3, 29, 15, 35]], 'shorts': [[3, 29, 15, 32]],
+    'shoeL': [2, 36, 8, 39], 'shoeR': [10, 36, 16, 39], 'flats': [[2, 38, 8, 39], [10, 38, 16, 39]],
+    'collar': [[7, 17, 7, 17], [15, 17, 15, 17], [8, 18, 14, 18]], 'hem': [6, 28, 12, 28], 'frayedXs': [6, 8, 10, 12],
+    'chest': [7, 22], 'number': [8, 23], 'tie': [9, 19], 'belt': [9, 28], 'stains': [6, 21], 'gash': [15, 24],
+    'skirt': {'x': 3, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('crawl', 'SW', CRAWL_SW, ('SW', 2, 6, lambda k: 0), {
     'torso': [5, 21, 15, 28], 'neck': [[7, 20, 13, 22]], 'shoulders': [],
@@ -703,37 +692,38 @@ add('crawl', 'SW', CRAWL_SW, ('SW', 2, 6, lambda k: 0), {
 })
 add('heavy', 'W', HEAVY_W, ('W', 3, 0, lambda k: 0), {
     # the torso box spans chest front and back; the arm hanging over the flank is excluded through `neck`
-    'torso': [3, 16, 15, 33], 'neck': [[5, 16, 10, 17], [5, 18, 10, 33]], 'shoulders': [[5, 16, 10, 17]],
-    'sleeveL': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 27], 'torn': [5, 18, 10, 19]},
-    'sleeveR': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 27]},
-    'pants': [[5, 34, 16, 40]], 'shorts': [[5, 34, 16, 37]],
+    'torso': [3, 16, 15, 30], 'neck': [[5, 16, 10, 17], [5, 18, 10, 30]], 'shoulders': [[5, 16, 10, 17]],
+    'sleeveL': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 25], 'torn': [5, 18, 10, 19]},
+    'sleeveR': {'short': [5, 18, 10, 22], 'long': [5, 18, 10, 25]},
+    'pants': [[5, 31, 16, 40]], 'shorts': [[5, 31, 16, 35]],
     'shoeL': [4, 41, 10, 45], 'shoeR': [11, 41, 17, 45], 'flats': [[4, 44, 10, 45], [11, 44, 17, 45]],
-    'collar': [[8, 16, 14, 16]], 'hem': [11, 33, 15, 33], 'frayedXs': [11, 13, 15],
+    'collar': [[8, 16, 14, 16]], 'hem': [11, 30, 15, 30], 'frayedXs': [11, 13, 15],
     'chest': [12, 21], 'gash': [6, 24],
-    'skirt': {'x': 5, 'y': 34, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
+    'skirt': {'x': 5, 'y': 31, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
 })
 add('heavy', 'SW', HEAVY_SW, ('SW', 3, 0, lambda k: 0), {
-    'torso': [6, 15, 16, 33], 'neck': [[8, 15, 14, 18], [6, 15, 6, 18], [16, 15, 16, 18]],
+    'torso': [6, 15, 16, 30], 'neck': [[8, 15, 14, 18], [6, 15, 6, 18], [16, 15, 16, 18]],
     'shoulders': [[6, 17, 6, 17], [16, 16, 17, 17], [3, 18, 6, 19], [16, 18, 20, 19]],
-    'sleeveL': {'short': [3, 20, 5, 23], 'long': [3, 20, 5, 27], 'torn': [3, 20, 5, 21]},
-    'sleeveR': {'short': [17, 20, 22, 23], 'long': [17, 20, 22, 27]},
-    'pants': [[0, 34, 22, 40]], 'shorts': [[0, 34, 22, 38]],
+    'sleeveL': {'short': [3, 20, 5, 23], 'long': [3, 20, 5, 25], 'torn': [3, 20, 5, 21]},
+    'sleeveR': {'short': [17, 20, 22, 23], 'long': [17, 20, 22, 25]},
+    'pants': [[0, 31, 22, 40]], 'shorts': [[0, 31, 22, 35]],
     'shoeL': [4, 41, 10, 44], 'shoeR': [12, 41, 19, 44], 'flats': [[4, 43, 10, 44], [12, 43, 19, 44]],
-    'collar': [[8, 18, 14, 18]], 'hem': [7, 33, 15, 33], 'frayedXs': [7, 9, 11, 13, 15],
-    'chest': [8, 22], 'number': [10, 22], 'tie': [11, 19], 'belt': [11, 33], 'stains': [8, 24], 'gash': [20, 24],
-    'skirt': {'x': 3, 'y': 34, 'rows': ['.o&kkkkkkkkkkkkkKo.', '.o&kkkkkkkkkkkkkKo.', 'o&kkkkkkkkkkkkkkkKo', 'o&kkkkkkkkkkkkkkkKo', 'oo.ooo.ooooo.ooo.oo']},
+    'collar': [[8, 18, 14, 18]], 'hem': [7, 30, 15, 30], 'frayedXs': [7, 9, 11, 13, 15],
+    'chest': [8, 22], 'number': [10, 22], 'tie': [11, 19], 'belt': [11, 30], 'stains': [8, 24], 'gash': [20, 24],
+    'skirt': {'x': 3, 'y': 31, 'rows': ['.o&kkkkkkkkkkkkkKo.', '.o&kkkkkkkkkkkkkKo.', 'o&kkkkkkkkkkkkkkkKo', 'o&kkkkkkkkkkkkkkkKo', 'oo.ooo.ooooo.ooo.oo']},
 })
 HUNCH_N_REGIONS = {
-    'torso': [4, 13, 14, 27], 'neck': [],
-    'shoulders': [[0, 14, 2, 15], [0, 16, 4, 16], [0, 17, 5, 17], [0, 18, 6, 18], [16, 14, 18, 15], [14, 16, 18, 16], [13, 17, 18, 17], [12, 18, 18, 18]],
-    'sleeveL': {'short': [0, 19, 4, 22], 'long': [0, 19, 4, 26], 'torn': [0, 19, 4, 20]},
-    'sleeveR': {'short': [14, 19, 18, 22], 'long': [14, 19, 18, 26]},
-    'pants': [[4, 28, 14, 36]], 'shorts': [[4, 28, 14, 31]],
-    'shoeL': [1, 37, 8, 39], 'shoeR': [10, 37, 17, 39], 'flats': [[1, 38, 8, 39], [10, 38, 17, 39]],
-    'collar': [[7, 12, 11, 12]], 'hem': [5, 27, 13, 27], 'frayedXs': [5, 7, 9, 11, 13],
-    'stains': [7, 21], 'gash': [16, 23],
+    'torso': [5, 13, 13, 27], 'neck': [],
+    'shoulders': [[1, 14, 3, 15], [1, 16, 5, 16], [1, 17, 6, 17], [1, 18, 7, 18], [15, 14, 17, 15], [13, 16, 17, 16], [12, 17, 17, 17], [11, 18, 17, 18]],
+    'sleeveL': {'short': [1, 19, 5, 22], 'long': [1, 19, 5, 26], 'torn': [1, 19, 5, 20]},
+    'sleeveR': {'short': [13, 19, 17, 22], 'long': [13, 19, 17, 26]},
+    'pants': [[4, 28, 14, 35]], 'shorts': [[4, 28, 14, 31]],
+    'shoeL': [2, 36, 8, 39], 'shoeR': [10, 36, 16, 39], 'flats': [[2, 38, 8, 39], [10, 38, 16, 39]],
+    'collar': [[7, 12, 11, 12]], 'hem': [6, 27, 12, 27], 'frayedXs': [6, 8, 10, 12],
+    'stains': [7, 21], 'gash': [15, 23],
     'skirt': {'x': 3, 'y': 28, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', '.o.ooo.ooo.o.']},
 }
+
 add('hunch', 'N', HUNCH_N, ('N', 1, 4, lambda k: 0), HUNCH_N_REGIONS, under=True)
 add('hunch', 'NW', HUNCH_N, ('NW', 1, 4, lambda k: 0), HUNCH_N_REGIONS, under=True)
 add('crawl', 'W', CRAWL_W, ('W', 0, 18, lambda k: 0), {
@@ -853,11 +843,14 @@ def replace_span(rows, y, x0, text):
     g = list(rows); r = list(g[y]); r[x0:x0 + len(text)] = list(text); g[y] = ''.join(r); return g
 # SW: face turned to the far (left) side
 BRUTE_SW = list(BRUTE_S)
-BRUTE_SW = replace_span(BRUTE_SW, 12, 6, 'oooosssssssoooSSSSSso')
-BRUTE_SW = replace_span(BRUTE_SW, 13, 6, 'oxeessssssseexoSSSSSo')
-BRUTE_SW = replace_span(BRUTE_SW, 14, 6, 'oxeessssssseexoSSSSSo')
-BRUTE_SW = replace_span(BRUTE_SW, 15, 7, 'oxeessssssseexoSSSo')
-BRUTE_SW = replace_span(BRUTE_SW, 16, 8, 'oxee$$$$$$$eexSSo')
+# (the face rows of the giant, drawn like the base SW head: far brow and eye against the far outline,
+#  near eye slid a column in, the near cheek in shadow; the giant sits four columns into the brute canvas)
+BRUTE_SW[12] = '....' + '..ooosssssssssooSssSSso..' + '..'
+BRUTE_SW[13] = '....' + '..oxesssssssssexossSSso..' + '..'
+BRUTE_SW[14] = '....' + '..oxesssssssssexossSSso..' + '..'
+BRUTE_SW[15] = '....' + '...oxessssssssexosSSso...' + '..'
+BRUTE_SW[16] = '....' + '....oss$$$$sssssSSSso....' + '..'
+assert all(len(BRUTE_SW[y]) == 31 for y in range(12, 17)), [len(BRUTE_SW[y]) for y in range(12, 17)]
 # the claw arm two columns behind the torso edge (rows 28-46 hold it in columns 0-8; the torso keeps columns 9-10)
 for y in range(28, 45):
     r = BRUTE_SW[y]
@@ -895,11 +888,11 @@ BRUTE_W = body(22, 61, 0, [
 '.osss$$$$$$$ssssSSSSo.',
 '.ossss$$$$$sssssSSSSo.',
 '.ossssssssssssssSSSSo.',
-'.osssssoooosSsSSSSSSo.',
-'.ossssseexoSssSSSSSSo.',
-'.ossssseexosssSSSSSSo.',
-'.ossssseexosssSSSSSSo.',
-'o$$ssssoooossssSSSSSo.',
+'.osssssoosssSsSSSSSSo.',
+'.ossssssexoSssSSSSSSo.',
+'.ossssssexosssSSSSSSo.',
+'.ossssssexosssSSSSSSo.',
+'o$$ssssssssssssSSSSSo.',
 'o$$$sssssssssssSSSSo..',
 '.o$$$ssssssssssSSSo...',
 '..o$$$sssssssssSSo....',

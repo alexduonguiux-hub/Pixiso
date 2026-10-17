@@ -1,10 +1,11 @@
 /**
- * Zombie stance, front view: a hand-drawn body (19×40) with the head of the
- * base figure drooped onto the chest and tilted. The raised left shoulder
- * starts two rows above the dropped right one, the right arm hangs two rows
- * lower than the left, both hands are open with spread fingers instead of
- * fists, the legs are shorter (knees bent) and the right foot is turned out
- * as if dragged. Same vocabulary as hero64.ts: 1-px outline, front light.
+ * Zombie stance, front view: the base body (19×40 canvas) with the head of
+ * the base figure drooped onto the chest and tilted. The torso, arms and
+ * legs are the base template cell for cell (torso seven cells wide, legs
+ * eleven rows from the crotch); the pose is in what moves: the left shoulder
+ * rises two rows into a hump beside the jaw, the right arm hangs two rows
+ * lower and its fist falls in front of the hip, the right foot is turned out
+ * (a column longer). Same vocabulary as hero64.ts: 1-px outline, front light.
  */
 import { blank } from './draw.js';
 import { sprite, type Sprite } from './format.js';
@@ -31,41 +32,43 @@ export const ZOMBIE_BODY = sprite`
   ...................
   ...ooooo...........
   ..osssss...........
-  .osssssss.....so...
-  .oSssssssSSsSSsso..
-  .osso$$$sSsssssso..
-  o$sSo$$$s$$$sssSSo.
-  o$sSo$$$s$$$ssoSs$o
-  o$sSoSSsssSSssoSs$o
-  o$sSosssssssssoSs$o
-  o$soos$$$$$sssoSs$o
-  o$sooss$$$sssSoSsso
-  osssos$$$$$ssSoosso
-  osSsos$$$$$ssSoosso
-  ososossSSsSSssossso
-  osososssssssssosSso
-  osososssssssssosSso
-  ooooosssssssssososo
-  ....osssooosssososo
-  ....oSsso.osssooooo
-  ....o$sSo.oSs$o....
-  ....o$sSo..oSs$o...
-  ...osssso..osssso..
-  ...osssso..osssso..
-  ...oooSso..osSoooo.
-  ..o$$$sso..ossss$$o
-  ..ooooooo..oooooooo
+  .osssssss....so....
+  .oSsssssSSsSSso....
+  .osso$$$sSsssso....
+  o$sSo$$$s$$$sso....
+  o$sSo$$$s$$$SsSo...
+  o$sooSSsssSSosso...
+  o$sooosssssssosso..
+  osssos$$$$$soSs$o..
+  osososs$$$ssoSs$o..
+  osooos$$$$$soos$o..
+  .osooss$$$ssoos$o..
+  ..ooosssssssossso..
+  ....osSSsSSsososo..
+  ...oossooossoooso..
+  ...oSsso.ossoosso..
+  ...o$sSo.oSsoooo...
+  ...o$$So.oS$$o.....
+  ...o$sSo.oSs$o.....
+  ..osssso.osssso....
+  ..osssso.osssso....
+  ..oooSso.osSooooo..
+  .o$$$sso.osss$$$o..
+  .ossssso.osssssso..
+  .ooooooo.oooooooo..
 `;
 
 /** Head top row on the zombie canvas. */
 export const ZOMBIE_HEAD_TOP = 2;
 /**
- * Column shift of each head row: the tilt (top rows +1, middle +2, chin +3).
- * Steps sit on rows 5 and 9, where both sides of the base skull run vertical,
- * so the outline stays 8-connected after the shear.
+ * Column shift of each head row: the tilt (top rows 0, middle +1, chin +2),
+ * which lands the chin over the base torso's right edge, where the dropped
+ * shoulder slopes away under it. Steps sit on rows 5 and 9, where both sides
+ * of the base skull run vertical, so the outline stays 8-connected after the
+ * shear.
  */
 export function zombieHeadShift(headRow: number): number {
-  return headRow < 5 ? 1 : headRow < 9 ? 2 : 3;
+  return headRow < 5 ? 0 : headRow < 9 ? 1 : 2;
 }
 
 /** The base head (with its chin line only on the last row) drooped and tilted onto the body. */
