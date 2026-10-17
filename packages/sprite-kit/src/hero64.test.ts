@@ -14,7 +14,10 @@ import {
   heroStand,
   heroViewS,
 } from './hero64.js';
+import { BASE_LOOKS, castInView } from './cast64.js';
 import { buildForm, FORMS } from './heroforms.js';
+import { dress } from './outfit64.js';
+import { STAND_VIEWS } from './views64.js';
 import { buildPalette, paint } from './paint.js';
 
 describe('hero 64 mannequin', () => {
@@ -69,6 +72,30 @@ describe('hero 64 mannequin', () => {
       const rows = toAscii(s);
       expect(rows[rows.length - 1]!.replace(/\./g, '')).toMatch(/^o+$/);
       expect(imageHash(paint(s, palette))).toBe(imageHash(paint(buildForm(form), palette)));
+    }
+  });
+
+  it('every base character dresses in every view without stray cells', () => {
+    for (const view of HERO_VIEWS) {
+      const outfits = castInView(view);
+      expect(outfits).toHaveLength(BASE_LOOKS.length);
+      for (const o of outfits) {
+        const figure = STAND_VIEWS[view].form.figure!;
+        const s = dress(figure, o);
+        expect(s.w).toBe(figure.w);
+        expect(s.h).toBe(figure.h + (o.headroom ?? 0));
+        const rows = toAscii(s);
+        // No floating cell: every drawn cell touches another drawn cell.
+        for (let y = 0; y < s.h; y++)
+          for (let x = 0; x < s.w; x++) {
+            if (rows[y]![x] === '.') continue;
+            let n = 0;
+            for (let dy = -1; dy <= 1; dy++)
+              for (let dx = -1; dx <= 1; dx++)
+                if ((dx || dy) && (rows[y + dy]?.[x + dx] ?? '.') !== '.') n++;
+            expect(n, `${o.id}@${view} (${x},${y})`).toBeGreaterThan(0);
+          }
+      }
     }
   });
 });

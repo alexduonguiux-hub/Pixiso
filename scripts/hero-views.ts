@@ -2,7 +2,8 @@
  * Eight-direction sheet of the standing base figure: one row per character
  * (the bare mannequin first, then BASE_LOOKS), columns S, SW, W, NW, N, NE,
  * E, SE. S/SW/W/NW/N are drawn; NE/E/SE mirror NW/W/SW (plain flip, D-042).
- * SCALE (default 4), BG=r,g,b, ONLY=id,id to pick characters.
+ * SCALE (default 4), BG=r,g,b, ONLY=id,id to pick characters, DUMP=path to
+ * write the standing figures as ASCII JSON for the item generator.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,9 +16,11 @@ import {
   dress,
   flipX,
   HERO_CANVAS,
+  HERO_VIEWS,
   heroStand,
   paint,
   STAND_VIEWS,
+  toAscii,
   wearView,
   type HeroView,
   type MaterialColors,
@@ -29,6 +32,14 @@ fs.mkdirSync(OUT, { recursive: true });
 const SCALE = Number(process.env.SCALE ?? 4);
 const BG = (process.env.BG ?? '110,106,100').split(',').map(Number) as [number, number, number];
 const ONLY = process.env.ONLY?.split(',').filter(Boolean);
+// DUMP=path writes the five standing figures as ASCII JSON (input of scripts/research/gen_view_items.py).
+if (process.env.DUMP) {
+  const out: Record<string, string[]> = {};
+  for (const v of HERO_VIEWS) out[v] = toAscii(STAND_VIEWS[v].form.figure!);
+  fs.mkdirSync(path.dirname(process.env.DUMP), { recursive: true });
+  fs.writeFileSync(process.env.DUMP, JSON.stringify(out));
+  console.log(`-> ${process.env.DUMP}`);
+}
 export const DIRECTIONS = ['S', 'SW', 'W', 'NW', 'N', 'NE', 'E', 'SE'] as const;
 export type Direction = (typeof DIRECTIONS)[number];
 const SOURCE: Record<Direction, { view: HeroView; mirror: boolean }> = {

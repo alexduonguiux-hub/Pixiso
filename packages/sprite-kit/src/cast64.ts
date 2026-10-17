@@ -9,7 +9,7 @@
  * sprites in broad strokes (colours and silhouettes), redrawn at this scale.
  */
 import type { Rgb8 } from '@pixiso/pixel-core';
-import { parseSprite } from './format.js';
+import { flipX, parseSprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
 import { FORM_FAT, FORM_HEAVY } from './heroforms.js';
 import { FORM_BRUTE } from './hero64.mutants.js';
@@ -29,6 +29,27 @@ import {
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
 import { STAND_VIEWS } from './views64.js';
+import {
+  BEARD_VIEWS,
+  BERET_W,
+  BUZZ_VIEWS,
+  COAT_TAILS_W,
+  DRESS_STAINS_W,
+  GLASSES_VIEWS,
+  HAIR_BOB_VIEWS,
+  HAIR_CURLY_VIEWS,
+  HAIR_PONYTAIL_VIEWS,
+  HAIR_SPIKY_VIEWS,
+  HAIR_SWEPT_VIEWS,
+  HAIR_WILD_VIEWS,
+  HELMET_W,
+  MEDIC_BAG_N,
+  MEDIC_BAG_W,
+  MIMIC_FACE_VIEWS,
+  PEAKED_CAP_N,
+  PEAKED_CAP_W,
+  RANGER_HAT_W,
+} from './views64.items.js';
 
 /** Overlay from ASCII rows at a figure position. */
 function ov(x: number, y: number, rows: string[]): Overlay {
@@ -167,7 +188,6 @@ const BUZZ: Remap = { box: [0, 0, 16, 7], to: 'hair', space: 'head' };
 
 /** Round glasses: frame joins the brow line, bridge between the eyes, rims under them. */
 const GLASSES = hov(4, 8, ['...o.o...', '...ooo...', '...o.o...', 'o..o.o..o', 'oooo.oooo']);
-const GLASSES_V: ViewItem = { S: { overlays: [GLASSES] } };
 
 /** Headband across the forehead (accent material). */
 const HEADBAND = hov(2, 6, ['o*aaaaaaaaaAo', 'oAaaaaaaaaAAo']);
@@ -268,11 +288,68 @@ const ZOMBIE_CHEEK = hov(11, 5, ['d', 'd']);
 /* Base figure (17×40) regions in figure space.                        */
 /* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------ */
+/* Items drawn per view (views64.items.ts holds the SW/W/NW/N rows).    */
+/* ------------------------------------------------------------------ */
+
+const same = (o: Overlay): ViewLayer => ({ overlays: [o] });
+const HAIR_SPIKY_V: ViewItem = { S: same(HAIR_SPIKY), ...HAIR_SPIKY_VIEWS };
+const HAIR_CURLY_V: ViewItem = { S: same(HAIR_CURLY), ...HAIR_CURLY_VIEWS };
+const HAIR_SWEPT_V: ViewItem = { S: same(HAIR_SWEPT), ...HAIR_SWEPT_VIEWS };
+const HAIR_BOB_V: ViewItem = { S: same(HAIR_BOB), ...HAIR_BOB_VIEWS };
+const HAIR_PONYTAIL_V: ViewItem = { S: { overlays: HAIR_PONYTAIL }, ...HAIR_PONYTAIL_VIEWS };
+const BUZZ_V: ViewItem = { S: { remaps: [BUZZ] }, ...BUZZ_VIEWS };
+const GLASSES_V: ViewItem = { S: same(GLASSES), ...GLASSES_VIEWS };
+const BEARD_V: ViewItem = { S: same(BEARD), ...BEARD_VIEWS };
+/** Helmets and the ranger hat look the same from the back; the beret drapes to the other side. */
+const HELMET_V: ViewItem = {
+  S: same(HELMET),
+  SW: same(HELMET),
+  N: same(HELMET),
+  NW: same(HELMET),
+  W: HELMET_W,
+};
+const BERET_BACK: Overlay = { ...BERET, sprite: flipX(BERET.sprite) };
+const BERET_V: ViewItem = {
+  S: same(BERET),
+  SW: same(BERET),
+  N: same(BERET_BACK),
+  NW: same(BERET_BACK),
+  W: BERET_W,
+};
+const PEAKED_CAP_V: ViewItem = {
+  S: same(PEAKED_CAP),
+  SW: same(PEAKED_CAP),
+  N: PEAKED_CAP_N,
+  NW: PEAKED_CAP_N,
+  W: PEAKED_CAP_W,
+};
+const RANGER_S: ViewLayer = {
+  remaps: [RANGER_HAT.remap],
+  lines: RANGER_HAT.seams,
+  overlays: [RANGER_HAT.overlay],
+};
+const RANGER_HAT_V: ViewItem = {
+  S: RANGER_S,
+  SW: RANGER_S,
+  N: RANGER_S,
+  NW: RANGER_S,
+  W: RANGER_HAT_W,
+};
+
 /** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
 const MEDIC_BAG: Overlay[] = [
   ov(5, 17, ['A......', '.A.....', '..A....', '...A...', '....A..', '.....A.', '......A']),
   ov(12, 23, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
 ];
+
+const MEDIC_BAG_V: ViewItem = {
+  S: { overlays: MEDIC_BAG },
+  SW: { overlays: MEDIC_BAG },
+  W: MEDIC_BAG_W,
+  N: MEDIC_BAG_N,
+  NW: MEDIC_BAG_N,
+};
 
 /** Pustules on a bloated belly (fat form coordinates). */
 const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.']);
@@ -282,7 +359,7 @@ const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', 
 /* ------------------------------------------------------------------ */
 
 const DUONG_LOOK: Look = {
-  hair: [HAIR_SPIKY],
+  hair: HAIR_SPIKY_V,
   headroom: 2,
   top: 'tee',
   bottoms: 'pants',
@@ -327,13 +404,13 @@ export const HUNG: Outfit = {
 };
 
 const NY_LOOK: Look = {
-  hair: [HAIR_CURLY],
+  hair: HAIR_CURLY_V,
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: [...MEDIC_BAG],
+  extras: MEDIC_BAG_V,
   colors: {
     skin: [250, 214, 180],
     hair: [160, 56, 40],
@@ -348,14 +425,14 @@ const NY_LOOK: Look = {
 export const NY = wear('ny', 'Ny', POSE_STAND, NY_LOOK);
 
 const SON_LOOK: Look = {
-  hair: [HAIR_SWEPT],
+  hair: HAIR_SWEPT_V,
   glasses: true,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: { S: { lines: [seam([8, 19, 8, 27])] } }, // jacket zip
+  extras: { S: { lines: [seam([8, 19, 8, 27])] }, SW: { lines: [seam([7, 19, 7, 27])] } }, // jacket zip
   colors: {
     skin: [240, 200, 165],
     hair: [34, 32, 40],
@@ -370,15 +447,13 @@ export const SON = wear('son', 'Sơn', POSE_STAND, SON_LOOK);
 
 /** Ông Tư, the old forest ranger: hat, full grey beard, khaki shirt with long sleeves, dark trousers, boots. */
 const ONG_TU_LOOK: Look = {
-  hat: {
-    S: { remaps: [RANGER_HAT.remap], lines: RANGER_HAT.seams, overlays: [RANGER_HAT.overlay] },
-  },
+  hat: RANGER_HAT_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: [BEARD],
+  extras: BEARD_V,
   colors: {
     skin: [226, 182, 144],
     hair: [104, 100, 96], // dark grey beard
@@ -397,7 +472,7 @@ const COAT_TAILS = ov(2, 29, ['o^ccccoccccCo', '.o^cccocccCo.', '.o^cccocccCo.',
 
 /** Bác sĩ Lan, the doctor: auburn bob, round glasses, white coat open at the front over blue trousers, dark shoes. */
 const BAC_SI_LAN_LOOK: Look = {
-  hair: [HAIR_BOB],
+  hair: HAIR_BOB_V,
   glasses: true,
   top: 'long',
   bottoms: 'pants',
@@ -405,7 +480,13 @@ const BAC_SI_LAN_LOOK: Look = {
   details: [],
   face: 'plain',
   hem: false,
-  extras: { S: { overlays: [COAT_TAILS], lines: [seam([8, 19, 8, 28])] } }, // coat opening
+  extras: {
+    S: { overlays: [COAT_TAILS], lines: [seam([8, 19, 8, 28])] }, // coat opening
+    SW: { overlays: [COAT_TAILS], lines: [seam([7, 19, 7, 28])] },
+    W: COAT_TAILS_W,
+    N: { overlays: [COAT_TAILS] }, // back vent
+    NW: { overlays: [COAT_TAILS] },
+  },
   colors: {
     skin: [240, 206, 176],
     hair: [118, 42, 40],
@@ -1008,14 +1089,22 @@ const DRESS_STAINS = ov(4, 30, ['....D....', '.........', '.D.......', '........
  * slip dress to the shins with a torn hem, bare feet, shoulder-length black
  * hair, red points in sunken sockets and a smile too wide.
  */
+const HAIR_WILD_V: ViewItem = { S: same(HAIR_WILD), ...HAIR_WILD_VIEWS };
+const MIMIC_V: ViewItem = {
+  S: { overlays: [SUNKEN_EYES, WIDE_SMILE, DRESS_STAINS] },
+  SW: { overlays: [...(MIMIC_FACE_VIEWS.SW?.overlays ?? []), DRESS_STAINS] },
+  W: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...(DRESS_STAINS_W.overlays ?? [])] },
+  N: { overlays: [DRESS_STAINS] },
+  NW: { overlays: [DRESS_STAINS] },
+};
 const KE_BAT_CHUOC_LOOK: Look = {
-  hair: [HAIR_WILD],
+  hair: HAIR_WILD_V,
   top: 'tank',
   bottoms: 'dress',
   shoes: 'none',
   details: [],
   face: 'plain',
-  extras: [SUNKEN_EYES, WIDE_SMILE, DRESS_STAINS],
+  extras: MIMIC_V,
   colors: {
     skin: [184, 184, 164],
     hair: [38, 34, 36],
@@ -1045,7 +1134,7 @@ export const BIEN_THE: Outfit = { ...ZOMBIE_CIV_M, id: 'bien_the', label: 'Biế
 
 /** Rifleman: helmet, camouflage jacket, belt. */
 const LINH_NON_SAT_LOOK: Look = {
-  hat: HELMET,
+  hat: HELMET_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -1057,7 +1146,7 @@ export const LINH_NON_SAT = wear('linh_non_sat', 'Lính nón sắt', POSE_STAND,
 
 /** Officer: beret, plain jacket, belt, insignia on the chest. */
 const LINH_MU_NOI_LOOK: Look = {
-  hat: BERET,
+  hat: BERET_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -1069,7 +1158,7 @@ export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, LI
 
 /** Off duty: buzz cut, olive tee, dog tag. */
 const LINH_DAU_DINH_LOOK: Look = {
-  hair: BUZZ,
+  hair: BUZZ_V,
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
@@ -1088,8 +1177,8 @@ export const LINH_DAU_DINH = wear('linh_dau_dinh', 'Lính đầu đinh', POSE_ST
 
 /** Woman soldier: patrol cap over a ponytail, camouflage jacket, belt. */
 const LINH_NU_LOOK: Look = {
-  hair: HAIR_PONYTAIL,
-  hat: PEAKED_CAP,
+  hair: HAIR_PONYTAIL_V,
+  hat: PEAKED_CAP_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -1107,12 +1196,12 @@ export const LINH_NU = wear('linh_nu', 'Lính nữ', POSE_STAND, LINH_NU_LOOK);
 
 /** Medic soldier: helmet, plain jacket, red-cross bag on the hip. */
 const LINH_QUAN_Y_LOOK: Look = {
-  hat: HELMET,
+  hat: HELMET_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
   details: ['belt'],
-  extras: [...MEDIC_BAG],
+  extras: MEDIC_BAG_V,
   face: 'plain',
   colors: {
     skin: [232, 192, 156],
