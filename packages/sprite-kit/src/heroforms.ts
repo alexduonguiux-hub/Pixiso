@@ -110,16 +110,17 @@ export const FORM_BASE: FormSpec = { id: 'base', label: 'Thường' };
 
 /**
  * Fat build: same height, round face, chest and belly four to six columns
- * wider, hips and thighs to match, feet one column wider on each side.
+ * wider, hips and thighs to match, feet one column wider on each side. Each
+ * band widens by two more than the one above so the outline steps one column
+ * per row as the base does (a jump of two leaves skin cells outside it).
  */
 export const FORM_FAT: FormSpec = {
   id: 'fat',
   label: 'Mập',
-  headMap: (x, y) => (y === 0 ? [x + 3, y] : [x < 8 ? x + 2 : x > 8 ? x + 4 : x + 3, y]),
+  headMap: (x, y) => [x < 8 ? x + 2 : x > 8 ? x + 4 : x + 3, y],
   bands: [
-    { rows: [1, 14], center: 2 }, // round face, wider chin line
-    { rows: [15, 20], center: 4 }, // neck well and shoulders
-    { rows: [21, 23], center: 4 }, // chest
+    { rows: [0, 16], center: 2 }, // round face, wider chin line, neck well
+    { rows: [17, 23], center: 4 }, // shoulders and chest
     { rows: [24, 28], center: 6 }, // belly
     { rows: [29, 29], pairs: [[5, 3]] }, // hips: the skin beside the crotch, not the crotch line
     { rows: [30, 35], pairs: [[5, 2]] }, // thighs and calves

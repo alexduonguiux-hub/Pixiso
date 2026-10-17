@@ -36,7 +36,7 @@ export function poseInView(pose: ZombiePose, view: HeroView): ZombiePose | undef
       id,
       label: `${pose.form.label} (${view})`,
       figure,
-      headMap: (x, y) => [x + d.headX + (d.shift[y] ?? 0), y + d.headY],
+      headMap: (x, y) => [(d.headCols?.[x] ?? x + d.headX) + (d.shift[y] ?? 0), y + d.headY],
       ...(front ? { front } : {}),
     },
     w: figure.w,

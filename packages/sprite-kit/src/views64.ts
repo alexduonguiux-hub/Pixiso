@@ -8,7 +8,7 @@
 import { heroStand, type HeroView } from './hero64.js';
 import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 import { POSE_STAND, type ZombiePose } from './hero64.poses.js';
-import { FORM_HEAVY, type FormSpec } from './heroforms.js';
+import { buildForm, FORM_FAT, FORM_HEAVY, type FormSpec } from './heroforms.js';
 import type { Sprite } from './format.js';
 
 const standForm = (id: string, label: string, figure: Sprite): FormSpec => ({
@@ -167,6 +167,62 @@ export const STAND_HEAVY: ZombiePose = {
   skirt: {
     x: 2,
     y: 34,
+    rows: [
+      '.o&kkkkkkkkkkkkkKo.',
+      '.o&kkkkkkkkkkkkkKo.',
+      'o&kkkkkkkkkkkkkkkKo',
+      'o&kkkkkkkkkkkkkkkKo',
+      'oo.ooo.ooooo.ooo.oo',
+    ],
+  },
+};
+
+/**
+ * The fat build standing (23×40, FORM_FAT's band expansion of the base) as a
+ * pose: torso columns 5–17, belly six columns wider than the base, thighs and
+ * feet to match. Its other views are the same bands on that view's base
+ * figure (hero64.poses.views.ts); the head is drawn wider, so items in head
+ * space map through `headCols` there and `FORM_FAT.headMap` here.
+ */
+export const STAND_FAT: ZombiePose = {
+  id: 'fat',
+  form: { ...FORM_FAT, figure: buildForm(FORM_FAT) },
+  w: 23,
+  torso: [5, 15, 17, 28],
+  neck: [
+    [8, 15, 14, 16],
+    [9, 17, 13, 17],
+  ],
+  shoulders: [
+    [2, 15, 4, 18],
+    [18, 15, 20, 18],
+  ],
+  sleeveL: { short: [0, 18, 5, 22], long: [0, 18, 5, 24], torn: [0, 18, 5, 20] },
+  sleeveR: { short: [17, 18, 22, 22], long: [17, 18, 22, 24] },
+  pants: [[0, 29, 22, 35]],
+  shorts: [[0, 29, 22, 32]],
+  shoeL: [2, 36, 10, 39],
+  shoeR: [12, 36, 20, 39],
+  flats: [
+    [2, 38, 10, 39],
+    [12, 38, 20, 39],
+  ],
+  collar: [
+    [8, 17, 8, 17],
+    [14, 17, 14, 17],
+    [9, 18, 13, 18],
+  ],
+  hem: [6, 28, 16, 28],
+  frayedXs: [6, 8, 10, 12, 14, 16],
+  chest: [7, 20],
+  number: [10, 21],
+  tie: [11, 19],
+  belt: [11, 28],
+  stains: [8, 22],
+  gash: [2, 23],
+  skirt: {
+    x: 2,
+    y: 29,
     rows: [
       '.o&kkkkkkkkkkkkkKo.',
       '.o&kkkkkkkkkkkkkKo.',

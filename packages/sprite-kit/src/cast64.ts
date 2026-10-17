@@ -11,7 +11,6 @@
 import type { Rgb8 } from '@pixiso/pixel-core';
 import { flipX, parseSprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
-import { FORM_FAT } from './heroforms.js';
 import { FORM_BRUTE } from './hero64.mutants.js';
 import {
   POSE_CRAWL,
@@ -29,7 +28,7 @@ import {
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
-import { STAND_HEAVY, STAND_VIEWS } from './views64.js';
+import { STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
 import {
   BEARD_VIEWS,
   BERET_W,
@@ -512,26 +511,6 @@ const BAC_SI_LAN_LOOK: Look = {
   },
 };
 export const BAC_SI_LAN = wear('bac_si_lan', 'Bác sĩ Lan', POSE_STAND, BAC_SI_LAN_LOOK);
-
-/** Kẻ Phun, the bloated spore spitter: fat form, bare swollen torso with pustules, torn trousers. */
-export const KE_PHUN: Outfit = {
-  id: 'ke_phun',
-  label: 'Kẻ Phun',
-  form: FORM_FAT,
-  remaps: [
-    { box: [0, 29, 22, 35], to: 'pants' },
-    { box: [0, 36, 22, 39], to: 'boots' },
-  ],
-  overlays: [PUSTULES],
-  colors: {
-    skin: [150, 172, 112],
-    pants: [66, 58, 54],
-    boots: [60, 52, 44],
-    accent: [230, 200, 80],
-    eye: [210, 170, 50],
-    white: [200, 190, 150],
-  },
-};
 
 /* ------------------------------------------------------------------ */
 /* Zombies: one pose each, clothes described once and laid on the     */
@@ -1155,6 +1134,36 @@ const SHELL_V: ViewItem = {
   NW: { overlays: [ov(3, 4, SHELL_BACK)] },
   N: { overlays: [ov(0, 4, SHELL_BACK)] },
 };
+
+/** Pustules on the swollen torso per view (figure space of the fat build). */
+const PUSTULES_V: ViewItem = {
+  S: same(PUSTULES),
+  SW: same(ov(8, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.'])),
+  W: {
+    overlays: [ov(9, 22, ['.a...', '.....', '...*.', 'a....', '.....', '..a..']), ov(1, 25, ['a'])],
+  },
+  NW: same(ov(7, 22, ['..a......', '.......*.', '.........', '...a.....', '......a..'])),
+  N: same(ov(7, 22, ['..a......', '.......*.', '.........', '...a.....', '......a..'])),
+};
+
+/** Kẻ Phun, the bloated spore spitter: fat build, bare swollen torso with pustules, torn trousers. */
+const KE_PHUN_LOOK: Look = {
+  top: 'none',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: [],
+  face: 'plain',
+  extras: PUSTULES_V,
+  colors: {
+    skin: [150, 172, 112],
+    pants: [66, 58, 54],
+    boots: [60, 52, 44],
+    accent: [230, 200, 80],
+    eye: [210, 170, 50],
+    white: [200, 190, 150],
+  },
+};
+export const KE_PHUN = wearPosed('ke_phun', 'Kẻ Phun', STAND_FAT, KE_PHUN_LOOK);
 
 /** Hùng: heavy build, headband, grey tank top, khaki shorts to the knee, boots; shaven head. */
 const HUNG_LOOK: Look = {

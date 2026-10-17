@@ -536,7 +536,7 @@ POSE_S = FIG['poses']               # id -> {body, hx, hy, shift, regions}: the 
 MIRRORED = FIG.get('mirrored', [])  # poses that also exist flipped (`*_m`)
 LABELS = {'droop': 'Zombie gục đầu', 'reach': 'Zombie vươn tay', 'drag': 'Zombie lết chân',
           'hunch': 'Zombie khom lưng', 'twist': 'Zombie ngoẹo cổ', 'crawl': 'Dáng bò rình',
-          'heavy': 'To con'}
+          'heavy': 'To con', 'fat': 'Mập'}
 HEAD_W = 17
 
 def flipx(rows): return [r[::-1] for r in rows]
@@ -580,14 +580,22 @@ def back_regions(r):
     return out
 
 POSES = {}
-def add(pose, view, rows, head, regions, under=False, **opts):
-    hview, hx, hy, shift = head
-    fig = stamp_head(rows, hview, hx, hy, shift, under=under, **opts)
+def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
+    """A view of a pose: `rows` is the body and `head` = (view, x, y, shift) places the view's base
+    head on it; with `head=None` the rows are the whole figure (its head drawn in) and `headcols`
+    maps each head-grid column to a figure column for the items drawn in head space."""
+    if head is None:
+        hview, hx, hy, shift = view, 0, 0, (lambda k: 0)
+        fig = rows
+    else:
+        hview, hx, hy, shift = head
+        fig = stamp_head(rows, hview, hx, hy, shift, under=under, **opts)
     table = [shift(k) for k in range(HEAD_W)]
     base = pose[:-2] if pose.endswith('_m') else pose
     label = LABELS[base] + (' lật' if pose.endswith('_m') else '') + f' ({view})'
     POSES.setdefault(pose, {})[view] = {'rows': fig, 'body': rows, 'headView': hview, 'headX': hx, 'headY': hy,
-                                        'shift': table, 'regions': regions, 'label': label, 'headUnder': under}
+                                        'shift': table, 'regions': regions, 'label': label, 'headUnder': under,
+                                        'headCols': headcols}
 
 # ------------------------------------------------------------------ hand-drawn views
 add('droop', 'W', DROOP_W, ('W', 0, 2, lambda k: 0), regions_w(2, 3, hem=[11, 28, 13, 28]))
@@ -713,6 +721,97 @@ add('crawl', 'W', CRAWL_W, ('W', 0, 18, lambda k: 0), {
 }, full_chin=True)
 
 
+# ------------------------------------------------------------------ fat build (Kẻ Phun): the base figure widened
+# S is FORM_FAT's band expansion (heroforms.ts); SW, N and NW apply the same
+# bands to that view's base figure (same height, same columns to widen, rows
+# centred as buildForm does). W is widened by hand: the head two columns
+# deeper, the back two columns further, the belly bulging in front of the arm.
+FAT_BANDS = [((0, 16), {'center': 2}), ((17, 23), {'center': 4}), ((24, 28), {'center': 6}),
+             ((29, 29), {'pairs': [(5, 3)]}), ((30, 35), {'pairs': [(5, 2)]}), ((36, 39), {'pairs': [(4, 1), (5, 1)]})]
+def widen_sym(rows, bands, center=8):
+    out = []
+    for y, r in enumerate(rows):
+        rep = [1] * len(r)
+        for (y0, y1), b in bands:
+            if y0 <= y <= y1:
+                rep[center] += b.get('center', 0)
+                for x, extra in b.get('pairs', []):   # a column and its mirror about the centre
+                    rep[x] += extra; rep[2 * center - x] += extra
+        out.append(''.join(c * rep[x] for x, c in enumerate(r)))
+    W = max(len(r) for r in out)
+    res = []
+    for r in out:
+        pad = W - len(r); assert pad % 2 == 0, (r, pad)
+        res.append('.' * (pad // 2) + r + '.' * (pad // 2))
+    return res
+assert widen_sym(FIG['S'], FAT_BANDS) == FIG['fat_S'], 'fat S rebuilt differently from buildForm(FORM_FAT)'
+# head-grid column -> figure column for the symmetric fat views (the centre column is tripled)
+FAT_HEADCOLS = [x + 2 if x < 8 else 11 if x == 8 else x + 4 for x in range(HEAD_W)]
+def dup_cols(rows, dups, width):
+    out = []
+    for r in rows:
+        t = ''.join(c * (1 + dups.get(x, 0)) for x, c in enumerate(r))
+        out.append(t + '.' * (width - len(t)))
+    return out
+FAT_W = dup_cols(FIG['W'][:15], {7: 1, 10: 1}, 18) + [
+'....ossssssssso...',
+'....o$SSssss$$$o..',
+'....osSssssSss$o..',
+'...osss$sossssso..',
+'...o$s$$sossssso..',
+'...o$s$$$oSsss$o..',
+'...oSsSSSoosss$o..',
+'...ossssSoSsss$o..',
+'..oo$$$ssossss$o..',
+'.oso$$ssossss$so..',
+'o$so$$$sooSsssSo..',
+'o$so$$soSsssssSo..',
+'o$sosssoSsssssso..',
+'.osoSSssoSssssSo..',
+'..ooSSossssoooo...',
+'...oSSSo$sssso....',
+'...oSSSSosssso....',
+'....oSSSoS$ssSo...',
+'....oSSSoo$sSSo...',
+'....oSSSSos$sso...',
+'....oSSSSoS$ssso..',
+'...ooooSSoSsssso..',
+'..oSSSSSoooSSSso..',
+'..ooSSSSosssssso..',
+'..ooooooo$ssss$o..',
+'........oooooooo..',
+]
+FAT_W_HEADCOLS = [x if x <= 7 else x + 1 if x <= 10 else x + 2 for x in range(HEAD_W)]
+FAT_SW = widen_sym(FIG['SW'], FAT_BANDS)
+FAT_N = widen_sym(FIG['N'], FAT_BANDS)
+FAT_NW = widen_sym(FIG['NW'], FAT_BANDS)
+def fat_regions(**over):
+    r = {
+        'torso': [5, 15, 17, 28], 'neck': [[8, 15, 14, 16], [9, 17, 13, 17]], 'shoulders': [[2, 15, 4, 18], [18, 15, 20, 18]],
+        'sleeveL': {'short': [0, 18, 5, 22], 'long': [0, 18, 5, 24], 'torn': [0, 18, 5, 20]},
+        'sleeveR': {'short': [17, 18, 22, 22], 'long': [17, 18, 22, 24]},
+        'pants': [[0, 29, 22, 35]], 'shorts': [[0, 29, 22, 32]],
+        'shoeL': [2, 36, 10, 39], 'shoeR': [12, 36, 20, 39], 'flats': [[2, 38, 10, 39], [12, 38, 20, 39]],
+        'collar': [[8, 17, 8, 17], [14, 17, 14, 17], [9, 18, 13, 18]], 'hem': [6, 28, 16, 28], 'frayedXs': [6, 8, 10, 12, 14, 16],
+        'chest': [7, 20], 'number': [10, 21], 'tie': [11, 19], 'belt': [11, 28], 'stains': [8, 22], 'gash': [2, 23],
+        'skirt': {'x': 2, 'y': 29, 'rows': ['.o&kkkkkkkkkkkkkKo.', '.o&kkkkkkkkkkkkkKo.', 'o&kkkkkkkkkkkkkkkKo', 'o&kkkkkkkkkkkkkkkKo', 'oo.ooo.ooooo.ooo.oo']},
+    }
+    r.update(over)
+    return r
+add('fat', 'SW', FAT_SW, None, fat_regions(shoulders=[[3, 15, 4, 18], [18, 15, 20, 18]], sleeveL={'short': [1, 18, 5, 22], 'long': [1, 18, 5, 24], 'torn': [1, 18, 5, 20]}), headcols=FAT_HEADCOLS)
+add('fat', 'N', FAT_N, None, back_regions(fat_regions(stains=[8, 21])), headcols=FAT_HEADCOLS)
+add('fat', 'NW', FAT_NW, None, back_regions(fat_regions(stains=[8, 21], shoulders=[[2, 15, 4, 18], [18, 15, 19, 18]], sleeveR={'short': [17, 18, 21, 22], 'long': [17, 18, 21, 24]})), headcols=FAT_HEADCOLS)
+add('fat', 'W', FAT_W, None, {
+    'torso': [9, 16, 15, 29], 'neck': [[9, 16, 9, 17]], 'shoulders': [[5, 16, 8, 17]],
+    'sleeveL': {'short': [3, 18, 8, 22], 'long': [3, 18, 8, 25], 'torn': [3, 18, 8, 19]},
+    'sleeveR': {'short': [3, 18, 8, 22], 'long': [3, 18, 8, 25]},
+    'pants': [[0, 29, 15, 35]], 'shorts': [[0, 29, 15, 32]],
+    'shoeL': [2, 36, 8, 40], 'shoeR': [9, 36, 15, 40], 'flats': [[2, 39, 8, 40], [9, 39, 15, 40]],
+    'collar': [[6, 16, 12, 16]], 'hem': [10, 28, 14, 28], 'frayedXs': [10, 12, 14],
+    'chest': [11, 20], 'gash': [5, 23],
+    'skirt': {'x': 3, 'y': 29, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
+}, headcols=FAT_W_HEADCOLS)
+
 # ------------------------------------------------------------------ derived views
 # Cells of an S body that the view's head (a different footprint) leaves open next to where the S head was.
 PATCHES = {
@@ -810,6 +909,8 @@ export interface PoseViewData {
   body: string[];
   /** The head sits behind the body (a hump hides the nape): body cells stay in front of head items. */
   headUnder?: boolean;
+  /** Figure column of each head-grid column when the head is drawn wider than the base head (17 entries). */
+  headCols?: number[];
   /** Which view's base head is stamped (W uses the SW head for the twisted neck). */
   headView: HeroView;
   headX: number;
@@ -826,6 +927,7 @@ for pose, views in POSES.items():
     out.append(f"  {pose}: {{\n")
     for view, d in views.items():
         under = ', headUnder: true' if d['headUnder'] else ''
+        if d.get('headCols'): under += f", headCols: {ts(d['headCols'])}"
         out.append(f"    {view}: {{ rows: {ts(d['rows'])}, body: {ts(d['body'])}{under}, headView: '{d['headView']}', headX: {d['headX']}, headY: {d['headY']}, shift: {ts(d['shift'])}, regions: {ts(d['regions'])}, label: {ts(d['label'])} }},\n")
     out.append("  },\n")
 out.append("};\n")
