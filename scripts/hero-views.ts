@@ -22,6 +22,7 @@ import {
   STAND_VIEWS,
   toAscii,
   wearView,
+  type DressedSprite,
   type HeroView,
   type MaterialColors,
 } from '@pixiso/sprite-kit';
@@ -59,25 +60,17 @@ const MANNEQUIN: MaterialColors = {
 };
 const rows: {
   id: string;
-  cell: (view: HeroView) => {
-    sprite: ReturnType<typeof dress>;
-    colors: MaterialColors;
-    headroom: number;
-  };
+  cell: (view: HeroView) => { sprite: DressedSprite; colors: MaterialColors };
 }[] = [
   {
     id: 'mannequin',
-    cell: (view) => ({ sprite: heroStand(view).sprite, colors: MANNEQUIN, headroom: 0 }),
+    cell: (view) => ({ sprite: { ...heroStand(view).sprite, ox: 0, oy: 0 }, colors: MANNEQUIN }),
   },
   ...BASE_LOOKS.filter((c) => !ONLY || ONLY.includes(c.id)).map((c) => ({
     id: c.id,
     cell: (view: HeroView) => {
       const outfit = wearView(c.id, c.label, c.look, view);
-      return {
-        sprite: dress(STAND_VIEWS[view].form.figure!, outfit),
-        colors: outfit.colors,
-        headroom: outfit.headroom ?? 0,
-      };
+      return { sprite: dress(STAND_VIEWS[view].form.figure!, outfit), colors: outfit.colors };
     },
   })),
 ];
@@ -91,10 +84,10 @@ for (let i = 0; i < sheet.data.length; i += 4) sheet.data.set([...BG, 255], i);
 rows.forEach((row, r) => {
   DIRECTIONS.forEach((dir, c) => {
     const { view, mirror } = SOURCE[dir];
-    const { sprite, colors, headroom } = row.cell(view);
+    const { sprite, colors } = row.cell(view);
     const at = heroStand(view);
     let cell = compose(
-      [{ id: 'body', sprite, x: at.x, y: at.y - headroom, z: 0 }],
+      [{ id: 'body', sprite, x: at.x - sprite.ox, y: at.y - sprite.oy, z: 0 }],
       HERO_CANVAS,
       HERO_CANVAS,
     );

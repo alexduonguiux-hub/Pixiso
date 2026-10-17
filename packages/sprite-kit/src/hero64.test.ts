@@ -82,8 +82,8 @@ describe('hero 64 mannequin', () => {
       for (const o of outfits) {
         const figure = STAND_VIEWS[view].form.figure!;
         const s = dress(figure, o);
-        expect(s.w).toBe(figure.w);
-        expect(s.h).toBe(figure.h + (o.headroom ?? 0));
+        expect(s.w - s.ox).toBeGreaterThanOrEqual(figure.w);
+        expect(s.h - s.oy).toBeGreaterThanOrEqual(figure.h);
         const rows = toAscii(s);
         // No floating cell: every drawn cell touches another drawn cell.
         for (let y = 0; y < s.h; y++)

@@ -27,12 +27,15 @@ CROWN_SWEPT = ['......ooooo......','....oo#hhhhoo....','...o##hhhhhhho...','..o#
 CROWN_PONY = ['......ooooo......','....oo#hhhhoo....','...o##hhhhhhho...','...o#hhhhhhhho...','..o#hhhhhhhhhho..',
               '..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oHhhhhhhhhhHo..']  # rows 0-7
 
+CROWN_BACK = CROWN[:7] + ['.ohhhhhhhhhhhhho.']
+CROWN_SPIKY_BACK = CROWN_SPIKY[:8] + ['..ohhhhhhhhhhho..', '..oHhhhhhhhhhHo..']
+CROWN_SWEPT_BACK = CROWN_SWEPT[:7] + ['.ohhhhhhhhhhhhho.', '.oHhhhhhhhhhhhHo.']
 NAPE_SHORT = ['.ohhhhhhhhhhhhho.','...oHhhhhhhhHo...','...oHhhhhhhhHo...','...oHHhhhhhHHo...','....oHHHHHHHo....','.....ooooooo.....']  # rows 8-13
 
 HAIR = {}
 HAIR['SPIKY'] = {
   'SW': O(0,-2, CROWN_SPIKY + ['.....HHH..HHHhH..']),
-  'N':  O(0,-2, CROWN_SPIKY + NAPE_SHORT),
+  'N':  O(0,-2, CROWN_SPIKY_BACK + NAPE_SHORT),
   'W':  O(0,-2, ['....o..o..o...','...o#oo#oo#o..','..o#ho#ho#hho.','.o##hhhhhhhho.','o##hhhhhhhhhHo','o#hhhhhhhhhhHo',
                  'o#hhhhhhhhhhHo','ohhhhhhhhhhhHo','oHhH.....hhHo.','.ohH......hHo.','..........HHo.','.........HHo..',
                  '........HHHo..','.........o....']),
@@ -40,25 +43,26 @@ HAIR['SPIKY'] = {
 HAIR['CURLY'] = {
   'SW': O(0,0, CROWN_CURLY + ['.oh..HHH..HHhhho.','ohh..........hhho','.oh..........hhho','ohH..........hHho','.oH..........HHo.','..o..........oo..']),
   'N':  O(0,0, CROWN_CURLY + ['.ohhHHhhHHhhhhho.','ohhhhhhhhhhhhhhho','.ohhHHhhhhHHhhho.','ohHhhhhhhhhhhhHho','.oHHhhhhhhhhhHHo.','..ooHHHHHHHHHoo..','....ooooooooo....']),
-  'W':  O(0,0, ['...oooooooo...','..o#hhhhhhhoo.','.o#hhHHhhhhhho','o#hhhhhhhhHHho','o#hHHhhhhhhhho','.o#hhhhhHHhhho','o#hhhhhhhhhhHo',
-                'oHhh..hhhhhHho','.ohH..hhhhhHho','.oh...hhhhHhho','..o...ohhhHhho','.......oHhHho.','........oHHo..','.........oo...']),
+  # Side: a round puff two columns past the skull at the back, curving under to the nape (the canvas grows for column 14).
+  'W':  O(0,0, ['...oooooooo....','..o#hhhhhhhoo..','.o#hhHHhhhhhho.','o#hhhhhhhhHHhho','o#hHHhhhhhhhhho','.o#hhhhhHHhhhho','o#hhhhhhhhhhhHo',
+                'oHhh..hhhhhhHho','.ohH..hhhhhHhho','.oh...hhhhHhhho','..o...ohhhHHhho','......oHhhHHho.','.......oHhHHo..','........oHHo...','.........oo....']),
 }
 HAIR['SWEPT'] = {
   'SW': O(0,0, CROWN_SWEPT + ['.oh..........hHo.','.oh..........hHo.','..o..........oo..']),
-  'N':  O(0,0, CROWN_SWEPT + ['.ohHhhhhhhhhhHho.','.ohHhhhhhhhhhHho.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
+  'N':  O(0,0, CROWN_SWEPT_BACK + ['.ohHhhhhhhhhhHho.','.ohHhhhhhhhhhHho.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
   'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhHo','o#hhhhhhhhhhHo','ohhhhhhhhhhhHo',
                 'oHhhhhhHhhhHo.','.oHH......HHo.','..........HHo.','.........HHo..','........HHHo..','.........o....']),
 }
 HAIR['BOB'] = {
   'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oH..........hHo.','..oH.........oHo.','...o.........oo..']),
-  'N':  O(0,0, CROWN + ['.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.oHhhhhhhhhhhhHo.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
+  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.oHhhhhhhhhhhhHo.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
   'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhHo','o#hhhhhhhhhhHo','ohhhhhhhhhhhHo',
-                'oHhH..hhhhhHho','.ohH..ohhhhHho','.oh...ohhhhHho','..o...ohhhHhho','......oHhhHho.','.......oHHHo..','........oooo..']),
+                'oHhH..hhhhhHho','.ohH..ohhhhHho','.oh...ohhhhHho','..o...ohhhHhho','......oHhhHhho','.......oHHHHHo','........oooooo']),
 }
 HAIR['WILD'] = {
   'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','ohh..........hhho','.oh..........hhho','.oh..........hhho','.oH.........oHhho',
                         'ohH..........Hhho','.oH..........HHo.','.oHo.........oHo.','..o...........o..']),
-  'N':  O(0,0, CROWN + ['.ohhhhhhhhhhhhho.','.ohhHHhhhhhhhhho.','ohhhhhhhhHHhhhho.','.ohhhhHHhhhhhhhho','.ohhhhhhhhhHHhho.','.ohHhhhhhhhhhhHo.',
+  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.','.ohhHHhhhhhhhhho.','ohhhhhhhhHHhhhho.','.ohhhhHHhhhhhhhho','.ohhhhhhhhhHHhho.','.ohHhhhhhhhhhhHo.',
                         'ohhHhhhhhhhhhHhho','.oHHhhhhhhhhhHHo.','.oHoHHHHHHHHHoHo.','..ooooooooooooo..']),
   'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhHo','o#hhhhhhhhhhHo','ohhhhhhhhhhhHo',
                 'oHhH..hhhhhHho','.ohH..ohhhhHho','.ohH..ohhhhHho','.oH...ohhhHhho','..o...oHhhHhho','......oHhhHHo.','.......oHhHHo.',

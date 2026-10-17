@@ -79,7 +79,7 @@ const HAIR_SHORT = hov(0, 0, [
   '..HhH..HHH..HhH..',
 ]);
 
-/** Spiky hair: three points rising two rows above the skull (the outfit needs `headroom: 2`), a fuller mass, tips over the brow. */
+/** Spiky hair: three points rising two rows above the skull (dress() grows the canvas), a fuller mass, tips over the brow. */
 const HAIR_SPIKY = hov(0, -2, [
   '.....o...o...o...',
   '....o#o.o#o.o#o..',
@@ -360,7 +360,6 @@ const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', 
 
 const DUONG_LOOK: Look = {
   hair: HAIR_SPIKY_V,
-  headroom: 2,
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
@@ -548,8 +547,6 @@ export interface Look {
   face?: 'zombie' | 'plain';
   /** False drops the hem line at the waist (a coat that carries on below it). */
   hem?: boolean;
-  /** Rows added above the figure for hair that rises past the skull. */
-  headroom?: number;
   colors: MaterialColors;
 }
 
@@ -707,7 +704,6 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     lines,
     overlays,
     colors: look.colors,
-    ...(look.headroom ? { headroom: look.headroom } : {}),
   };
 }
 

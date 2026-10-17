@@ -55,7 +55,7 @@ function check(outfit: Outfit): void {
   const hat = outfit.overlays?.find((o) => o.rigid && o.space === 'head');
   if (hat && outfit.form?.headMap) {
     const [, hatBottom] = outfit.form.headMap(0, 8);
-    const top = outfit.headroom ?? 0;
+    const top = s.oy;
     const skin = MATERIALS.indexOf('skin');
     const peeking: string[] = [];
     for (let y = 0; y < hatBottom + top; y++)

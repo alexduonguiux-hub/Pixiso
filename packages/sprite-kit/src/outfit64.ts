@@ -63,8 +63,12 @@ export interface Outfit {
   lines?: readonly Seam[];
   overlays?: readonly Overlay[];
   colors: MaterialColors;
-  /** Rows added above the figure (hair rising past the skull); the result is taller by this much. */
-  headroom?: number;
+}
+
+/** A dressed figure: the canvas grew by `ox` columns on the left and `oy` rows on the top when overlays reached past the figure. */
+export interface DressedSprite extends Sprite {
+  ox: number;
+  oy: number;
 }
 
 /** What one item adds in one view: drawings, material changes, seam lines. */
@@ -85,23 +89,56 @@ const HEAD_EYE_ROW = 10;
 const IDENTITY: HeadMap = (x, y) => [x, y];
 
 /**
- * Applies remaps, seams and overlays to a figure; returns a new sprite of the
- * same width, `outfit.headroom` rows taller (the figure sits at the bottom).
+ * Applies remaps, seams and overlays to a figure. The result is at least the
+ * figure's size; when an overlay reaches past it (hair above the skull, a hat
+ * wider than a side view) the canvas grows to hold every drawn cell, and
+ * `ox`/`oy` say by how much the figure moved right and down.
  */
-export function dress(figure: Sprite, outfit: Outfit): Sprite {
-  const top = outfit.headroom ?? 0;
-  const out = blank(figure.w, figure.h + top);
-  for (let y = 0; y < figure.h; y++)
-    out.cells.set(figure.cells.subarray(y * figure.w, (y + 1) * figure.w), (y + top) * figure.w);
+export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
   const headMap = outfit.form?.headMap ?? IDENTITY;
-  const lower =
+  const rigidMap = (o: Overlay, map: HeadMap): HeadMap => {
+    if (!o.rigid) return map;
+    const ax = o.x;
+    const ay = o.y + o.sprite.h - 1;
+    const dx = map(ax, HEAD_EYE_ROW)[0] - ax;
+    const dy = map(ax, ay)[1] - ay;
+    return (x, y) => [x + dx, y + dy];
+  };
+  // Bounds of every drawn overlay cell, in figure coordinates.
+  let minX = 0;
+  let minY = 0;
+  let maxX = figure.w - 1;
+  let maxY = figure.h - 1;
+  for (const ov of outfit.overlays ?? []) {
+    const map = rigidMap(ov, ov.space === 'head' ? headMap : IDENTITY);
+    for (let y = 0; y < ov.sprite.h; y++)
+      for (let x = 0; x < ov.sprite.w; x++) {
+        if (ov.sprite.cells[y * ov.sprite.w + x] === EMPTY) continue;
+        const [fx, fy] = map(ov.x + x, ov.y + y);
+        minX = Math.min(minX, fx);
+        minY = Math.min(minY, fy);
+        maxX = Math.max(maxX, fx);
+        maxY = Math.max(maxY, fy);
+      }
+  }
+  const left = -minX;
+  const top = -minY;
+  const out: DressedSprite = {
+    ...blank(maxX - minX + 1, maxY - minY + 1),
+    ox: left,
+    oy: top,
+  };
+  for (let y = 0; y < figure.h; y++)
+    for (let x = 0; x < figure.w; x++)
+      out.cells[(y + top) * out.w + x + left] = figure.cells[y * figure.w + x]!;
+  const shift =
     (m: HeadMap): HeadMap =>
     (x, y) => {
       const [fx, fy] = m(x, y);
-      return [fx, fy + top];
+      return [fx + left, fy + top];
     };
   const mapper = (space: Space | undefined): HeadMap =>
-    lower(space === 'head' ? headMap : IDENTITY);
+    shift(space === 'head' ? headMap : IDENTITY);
   const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
     x >= x0 && x <= x1 && y >= y0 && y <= y1;
   const put = (x: number, y: number, v: number) => {
@@ -134,14 +171,7 @@ export function dress(figure: Sprite, outfit: Outfit): Sprite {
       }
   }
   for (const o of outfit.overlays ?? []) {
-    let map = mapper(o.space);
-    if (o.rigid) {
-      const ax = o.x;
-      const ay = o.y + o.sprite.h - 1;
-      const dx = map(ax, HEAD_EYE_ROW)[0] - ax;
-      const dy = map(ax, ay)[1] - ay;
-      map = (x, y) => [x + dx, y + dy];
-    }
+    const map = shift(rigidMap(o, o.space === 'head' ? headMap : IDENTITY));
     for (let y = 0; y < o.sprite.h; y++)
       for (let x = 0; x < o.sprite.w; x++) {
         const v = o.sprite.cells[y * o.sprite.w + x]!;
