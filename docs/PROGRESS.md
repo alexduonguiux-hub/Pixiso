@@ -192,5 +192,9 @@ Not started.
 - `heroforms.ts`: thể hình mập, to con bằng nhân hàng/cột; khổng lồ ×1,5 (25×60) và ×2 (33×80) vẽ tay trong `hero64.giant.ts` (không scale).
 - Script xem: `scripts/hero-copy.ts` (S ×6 hai bảng màu), `scripts/hero-frames.ts` (12 khung ×4), `scripts/hero-forms.ts` (dàn thể hình ×4); ảnh so với mẫu trong `test-output/variants/`.
 - `hero64.zombie.ts`: dáng zombie riêng (19×40): đầu gục xuống ngực và nghiêng, vai trái nhô, vai phải trễ, tay thõng xòe ngón, chân phải xoay ngang; dùng làm `FORM_ZOMBIE` cho Biến Thể.
+- `hero64.heavy.ts`: thân to con vẽ tay (23×45), khuôn ngực sát ức, cơ bụng; thay bản nhân cột.
+- `hero64.poses.ts`: 5 dáng zombie vẽ tay (gục đầu, vươn tay, lết chân, khom lưng, ngoẹo cổ) + dáng bò rình + 3 bản lật; mỗi dáng khai báo vùng áo quần, zombie mô tả bằng "look" (tóc/nón, áo, quần, giày, chi tiết) rồi tự mặc lên dáng. 8 zombie: dân thường nam/nữ, công nhân, cảnh sát, lính, VĐV nam/nữ, văn phòng. Nón/mũ là lớp cứng (`rigid`) rộng hơn hộp sọ; bước nghiêng đầu chỉ đặt ở hàng 3, 5, 6, 7, 9 của sọ.
+- Đột biến (`MUTANTS`): Kẻ Thính (tai to, mắt khâu), Kẻ Bám Trần (dáng bò rình, tay dài tới đất có vuốt), Kẻ Mang Vỏ (thân to con + mai giáp sau lưng vẽ `under` + tấm giáp vai), Đột Biến (`hero64.mutants.ts`: khổng lồ ×1,5 với tay trái biến dị có vuốt, gai xương, mắt lồi, hàm răng).
+- `scripts/hero-qa.ts`: kiểm tra tự động trước khi gửi ảnh (viền lẻ, pixel trôi nổi, da lộ trên mũ, bước nghiêng đầu làm đứt viền sọ). `scripts/hero-cast.ts` nhận `SET=cast|zombies|mutants|all`.
 - `outfit64.ts` + `cast64.ts`: mặc đồ bằng đổi vật liệu theo vùng + lớp vẽ thêm (tóc, nón, kính, túi); dàn Vùng Xanh: Dương, Hùng (to con), Ny, Sơn, Ông Tư, Biến Thể, Kẻ Phun (mập). Script `scripts/hero-cast.ts`.
 - Chưa làm: SW/NW, tách bộ phận cho N/W, mặc đồ cho khung N/W và khung đi, nhân vật Vùng Xanh còn lại, đưa thân hero vào registry/catalog.
