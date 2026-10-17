@@ -144,47 +144,60 @@ const RANGER_HAT = {
   overlay: hov(0, 7, ['oLlllllllllllllLo', '.ooooooooooooooo.']),
 };
 
-/** Hard hat: a dome two columns wider than the skull and a brim, rigid so a tilted head does not shear it. */
+/*
+ * Hats are rigid head-space overlays (they take the translation of their
+ * bottom row instead of the head's shear) drawn two columns wider than the
+ * skull on each side, so a tilted head neither bends them nor shows skin
+ * around them. They start one column left of the head grid (x = -1).
+ */
+
+/** Hard hat: rounded dome one column wider than the skull, a centre ridge, a thin brim all round. */
 const HARD_HAT: Overlay = {
-  ...hov(0, 0, [
-    '....ooooooooo....',
-    '...o*aaaaaaaAo...',
-    '..o*aaaaaaaaaAo..',
-    '.o*aaaaaaaaaaaAo.',
-    '.oaaaaaaaaaaaaAo.',
-    'o*aaaaaaaaaaaaAAo',
-    'oAAAAAAAAAAAAAAAo',
-    '.ooooooooooooooo.',
+  ...hov(-1, 0, [
+    '......ooooooo......',
+    '.....o*aa*aaAo.....',
+    '....o*aaa*aaaAo....',
+    '...o*aaaa*aaaaAo...',
+    '...oaaaaa*aaaaAo...',
+    '...oaaaaaaaaaaAo...',
+    '..o*aaaaaaaaaaAAo..',
+    '..ooooooooooooooo..',
   ]),
   rigid: true,
 };
 
-/** Peaked cap: crown in cloth2 with a dark band, visor across the brow. */
+/** Peaked cap: wide flat crown in cloth2, dark band, visor across the brow. */
 const PEAKED_CAP: Overlay = {
-  ...hov(0, 0, [
-    '....ooooooooo....',
-    '...o&kkkkkkkKo...',
-    '..o&kkkkkkkkkKo..',
-    '.o&kkkkkkkkkkkKo.',
-    '.oKKKKKKKKKKKKKo.',
-    '.okkkkkkkkkkkkko.',
-    'oKKKKKKKKKKKKKKKo',
-    '.ooooooooooooooo.',
+  ...hov(-1, 0, [
+    '....ooooooooooo....',
+    '...o&kkkkkkkkkKo...',
+    '..o&kkkkkkkkkkkKo..',
+    '..o&kkkkkkkkkkkKo..',
+    '..oKKKKKKKKKKKKKo..',
+    '...okkkkkkkkkkko...',
+    '.oKKKKKKKKKKKKKKKo.',
+    '..ooooooooooooooo..',
   ]),
   rigid: true,
 };
 
-/** Round helmet in cloth with a rim over the brow. */
+/** Combat helmet: wide dome that comes down over the ears, front rim over the brow, chin strap. */
 const HELMET: Overlay = {
-  ...hov(0, 0, [
-    '.....ooooooo.....',
-    '...oo^ccccc^oo...',
-    '..o^ccccccccc^o..',
-    '.o^cccccccccccCo.',
-    '.occcccccccccCCo.',
-    'occcccccccccccCCo',
-    'oCccccccccccccCCo',
-    '.ooooooooooooooo.',
+  ...hov(-1, 0, [
+    '......ooooooo......',
+    '....oo^ccccc^oo....',
+    '...o^ccccccccc^o...',
+    '..o^cccccccccccCo..',
+    '.o^ccccccccccccCCo.',
+    '.occcccccccccccCCo.',
+    'occcccccccccccccCCo',
+    'oCccoooooooooooocCo',
+    'oCcco.........occCo',
+    'oCcco.........occCo',
+    'ooooo.........ooooo',
+    '.....L.......L.....',
+    '......L.....L......',
+    '.......L...L.......',
   ]),
   rigid: true,
 };

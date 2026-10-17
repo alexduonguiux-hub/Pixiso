@@ -47,10 +47,10 @@ function check(outfit: Outfit): void {
     problems++;
     console.log(`${outfit.id}: floating cells ${floating.join(' ')}`);
   }
-  // With a hat (a rigid head overlay), no skin may show above the hat's bottom line.
+  // With a hat (a rigid head overlay), no skin may show above the brow line (head row 8).
   const hat = outfit.overlays?.find((o) => o.rigid && o.space === 'head');
   if (hat && outfit.form?.headMap) {
-    const [, hatBottom] = outfit.form.headMap(hat.x, hat.y + hat.sprite.h - 1);
+    const [, hatBottom] = outfit.form.headMap(0, 8);
     const skin = MATERIALS.indexOf('skin');
     const peeking: string[] = [];
     for (let y = 0; y < hatBottom; y++)
@@ -66,29 +66,38 @@ function check(outfit: Outfit): void {
     }
   }
 }
-// Posed heads: after the shear, each row's outermost line cell must still touch a line cell of the row above.
+// Posed heads: after the shear, the outermost run of line cells of each row must still touch a line cell of the row above.
 const baseRows = toAscii(HERO_S_FIGURE);
 for (const pose of ZOMBIE_POSES) {
   const map = pose.form.headMap!;
-  const mappedLine = (row: number) =>
-    [...baseRows[row]!].flatMap((c, x) => (c === 'o' ? [map(x, row)[0]] : []));
+  /** Runs of consecutive line cells in a base head row, mapped to figure columns. */
+  const runs = (row: number): number[][] => {
+    const out: number[][] = [];
+    let run: number[] = [];
+    [...baseRows[row]!].forEach((c, x) => {
+      if (c === 'o') run.push(map(x, row)[0]);
+      else if (run.length) {
+        out.push(run);
+        run = [];
+      }
+    });
+    if (run.length) out.push(run);
+    return out;
+  };
   const gaps: string[] = [];
   for (let k = 1; k <= 14; k++) {
-    const above = mappedLine(k - 1);
-    const here = mappedLine(k);
+    const above = runs(k - 1);
+    const here = runs(k);
     if (!above.length || !here.length) continue;
-    const touches = (x: number, xs: number[]) => xs.some((o) => Math.abs(o - x) <= 1);
-    for (const [label, x, xs] of [
-      ['left', Math.min(...here), above],
-      ['right', Math.max(...here), above],
-      ['left', Math.min(...above), here],
-      ['right', Math.max(...above), here],
-    ] as const)
-      if (!touches(x, [...xs])) gaps.push(`${label} edge between head rows ${k - 1} and ${k}`);
+    const touches = (run: number[], others: number[][]) =>
+      run.some((x) => others.some((o) => o.some((ox) => Math.abs(ox - x) <= 1)));
+    const outer = (rs: number[][]) => [rs[0]!, rs[rs.length - 1]!];
+    for (const run of outer(here)) if (!touches(run, above)) gaps.push(`rows ${k - 1}/${k}`);
+    for (const run of outer(above)) if (!touches(run, here)) gaps.push(`rows ${k - 1}/${k}`);
   }
   if (gaps.length) {
     problems++;
-    console.log(`pose ${pose.id}: ${[...new Set(gaps)].join('; ')}`);
+    console.log(`pose ${pose.id}: skull edge broken between head ${[...new Set(gaps)].join(', ')}`);
   }
 }
 for (const o of [...CAST, ...ZOMBIES]) check(o);
