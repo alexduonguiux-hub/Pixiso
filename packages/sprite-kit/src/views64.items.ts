@@ -153,9 +153,9 @@ export const HAIR_CURLY_VIEWS: Views = {
         '.o#hhhhhHHhhhho',
         'o#hhhhhhhhhhhHo',
         'oHhh..hhhhhhHho',
-        '.ohH..hhhhhHhho',
-        '.oh...hhhhHhhho',
-        '..o...ohhhHHhho',
+        '.ohH..ohhhhHhho',
+        '......ohhhHhhho',
+        '......ohhhHHhho',
         '......oHhhHHho.',
         '.......oHhHHo..',
         '........oHHo...',
@@ -236,7 +236,7 @@ export const HAIR_SWEPT_VIEWS: Views = {
         'o#hhhhhhhhhhHo',
         'ohhhhhhhhhhhHo',
         'oHhhhhhHhhhHo.',
-        '.oHH......HHo.',
+        '..........HHo.',
         '..........HHo.',
         '.........HHo..',
         '........HHHo..',
@@ -319,9 +319,9 @@ export const HAIR_BOB_VIEWS: Views = {
         'o#hhhhhhhhhhHo',
         'ohhhhhhhhhhhHo',
         'oHhH..hhhhhHho',
-        '.ohH..ohhhhHho',
-        '.oh...ohhhhHho',
-        '..o...ohhhHhho',
+        '......ohhhhHho',
+        '......ohhhhHho',
+        '......ohhhHhho',
         '......oHhhHhho',
         '.......oHHHHHo',
         '........oooooo',
@@ -623,7 +623,11 @@ export const RANGER_HAT_W: ViewLayer = {
 };
 
 export const GLASSES_VIEWS: Views = {
-  SW: { overlays: [hov(2, 8, ['...o.o...', '...ooo...', '...o.o...', 'o..o.o..o', 'oooo.oooo'])] },
+  SW: {
+    overlays: [
+      hov(2, 8, ['...o.o.....', '...ooo.....', '...o.o.....', 'o..o.o..ooo', 'oooo.oooo..']),
+    ],
+  },
   W: { overlays: [hov(3, 7, ['ooo...', 'o..ooo', 'o..o..', 'o..o..', 'oooo..'])] },
 };
 

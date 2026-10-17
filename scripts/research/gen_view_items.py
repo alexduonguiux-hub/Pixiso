@@ -45,19 +45,19 @@ HAIR['CURLY'] = {
   'N':  O(0,0, CROWN_CURLY + ['.ohhHHhhHHhhhhho.','ohhhhhhhhhhhhhhho','.ohhHHhhhhHHhhho.','ohHhhhhhhhhhhhHho','.oHHhhhhhhhhhHHo.','..ooHHHHHHHHHoo..','....ooooooooo....']),
   # Side: a round puff two columns past the skull at the back, curving under to the nape (the canvas grows for column 14).
   'W':  O(0,0, ['...oooooooo....','..o#hhhhhhhoo..','.o#hhHHhhhhhho.','o#hhhhhhhhHHhho','o#hHHhhhhhhhhho','.o#hhhhhHHhhhho','o#hhhhhhhhhhhHo',
-                'oHhh..hhhhhhHho','.ohH..hhhhhHhho','.oh...hhhhHhhho','..o...ohhhHHhho','......oHhhHHho.','.......oHhHHo..','........oHHo...','.........oo....']),
+                'oHhh..hhhhhhHho','.ohH..ohhhhHhho','......ohhhHhhho','......ohhhHHhho','......oHhhHHho.','.......oHhHHo..','........oHHo...','.........oo....']),
 }
 HAIR['SWEPT'] = {
   'SW': O(0,0, CROWN_SWEPT + ['.oh..........hHo.','.oh..........hHo.','..o..........oo..']),
   'N':  O(0,0, CROWN_SWEPT_BACK + ['.ohHhhhhhhhhhHho.','.ohHhhhhhhhhhHho.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
   'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhHo','o#hhhhhhhhhhHo','ohhhhhhhhhhhHo',
-                'oHhhhhhHhhhHo.','.oHH......HHo.','..........HHo.','.........HHo..','........HHHo..','.........o....']),
+                'oHhhhhhHhhhHo.','..........HHo.','..........HHo.','.........HHo..','........HHHo..','.........o....']),
 }
 HAIR['BOB'] = {
   'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oH..........hHo.','..oH.........oHo.','...o.........oo..']),
   'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.oHhhhhhhhhhhhHo.','..oHHhhhhhhhHHo..','...ooHHHHHHHoo...','.....ooooooo.....']),
   'W':  O(0,0, ['...oooooooo...','..o#hhhhhhho..','.o#hhhhhhhhho.','.o#hhhhhhhhho.','o#hhhhhhhhhhHo','o#hhhhhhhhhhHo','ohhhhhhhhhhhHo',
-                'oHhH..hhhhhHho','.ohH..ohhhhHho','.oh...ohhhhHho','..o...ohhhHhho','......oHhhHhho','.......oHHHHHo','........oooooo']),
+                'oHhH..hhhhhHho','......ohhhhHho','......ohhhhHho','......ohhhHhho','......oHhhHhho','.......oHHHHHo','........oooooo']),
 }
 HAIR['WILD'] = {
   'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','ohh..........hhho','.oh..........hhho','.oh..........hhho','.oH.........oHhho',
@@ -96,7 +96,7 @@ RANGER_W_REMAP = R([0,0,13,6],'leather'); RANGER_W_SEAM = L([1,6,11,6])
 
 # ---------------------------------------------------------------- faces
 FACE = {
- 'GLASSES_SW': O(2,8, ['...o.o...','...ooo...','...o.o...','o..o.o..o','oooo.oooo']),
+ 'GLASSES_SW': O(2,8, ['...o.o.....','...ooo.....','...o.o.....','o..o.o..ooo','oooo.oooo..']),
  'GLASSES_W':  O(3,7, ['ooo...','o..ooo','o..o..','o..o..','oooo..']),
  'BEARD_SW':   O(2,12, ['.o#hhhhhHo.','o#oooooooHo','o#hhhhhhhHo','oHhhhhhhHHo','.ooooooooo.']),
  'BEARD_W':    O(0,12, ['.o#hhho..','o#hhhhho.','o#hhhhHo.','.oHhhHHo.','..ooooo..']),
