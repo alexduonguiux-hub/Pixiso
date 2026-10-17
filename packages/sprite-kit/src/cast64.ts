@@ -11,7 +11,7 @@
 import type { Rgb8 } from '@pixiso/pixel-core';
 import { flipX, parseSprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
-import { FORM_FAT, FORM_HEAVY } from './heroforms.js';
+import { FORM_FAT } from './heroforms.js';
 import { FORM_BRUTE } from './hero64.mutants.js';
 import {
   POSE_CRAWL,
@@ -29,7 +29,7 @@ import {
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
-import { STAND_VIEWS } from './views64.js';
+import { STAND_HEAVY, STAND_VIEWS } from './views64.js';
 import {
   BEARD_VIEWS,
   BERET_W,
@@ -416,31 +416,6 @@ const DUONG_LOOK: Look = {
   },
 };
 export const DUONG = wear('duong', 'Dương', POSE_STAND, DUONG_LOOK);
-
-/** Heavy form (23×45): torso interior columns 6–16 on rows 19–33, hips row 34, legs 35–44. */
-export const HUNG: Outfit = {
-  id: 'hung',
-  label: 'Hùng',
-  form: FORM_HEAVY,
-  remaps: [
-    { box: [7, 15, 7, 18], to: 'cloth' }, // tank-top straps over the shoulders
-    { box: [15, 15, 15, 18], to: 'cloth' },
-    { box: [6, 19, 16, 33], to: 'cloth' },
-    { box: [0, 34, 22, 38], to: 'pants' }, // shorts to the knee
-    { box: [0, 41, 22, 44], to: 'boots' },
-  ],
-  lines: [seam([7, 33, 15, 33])],
-  overlays: [HEADBAND],
-  colors: {
-    skin: [196, 140, 96],
-    cloth: [150, 150, 150],
-    pants: [156, 118, 70],
-    boots: [70, 60, 54],
-    accent: [72, 170, 96],
-    eye: [60, 50, 40],
-    white: [212, 230, 238],
-  },
-};
 
 const NY_LOOK: Look = {
   hair: HAIR_CURLY_V,
@@ -1101,13 +1076,113 @@ export const KE_BAM_TRAN = wearPosed('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRA
   },
 });
 
-/** Kẻ Mang Vỏ: heavy build with a chitin carapace behind and plates over the shoulders. */
-export const KE_MANG_VO: Outfit = {
-  id: 'ke_mang_vo',
-  label: 'Kẻ Mang Vỏ',
-  form: FORM_HEAVY,
-  remaps: [{ box: [0, 34, 22, 38], to: 'pants' }],
-  overlays: [SHELL_HUMP, ...SHELL_PLATES, ZOMBIE_FACE, ZOMBIE_CHEEK],
+/**
+ * The carapace in the other views. Its top sits at row 4 (hidden behind the
+ * head in S, so S does not fix it). From behind it covers the back and the
+ * upper arms and hides all of the head but the crown; from the side it is the
+ * dome behind the back (stamped under the body); the three-quarter views
+ * shift the back drawing towards the near side.
+ */
+const SHELL_BACK = [
+  '........ooooooo........',
+  '......oo|lllll|oo......',
+  '.....o|lllllllll|o.....',
+  '....ooooooooooooooo....',
+  '...o|lllllllllllllLo...',
+  '..o|lllllllllllllllLo..',
+  '.o|lllllllllllllllllLo.',
+  'o|lllllllllllllllllllLo',
+  'ooooooooooooooooooooooo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'ooooooooooooooooooooooo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  'ooooooooooooooooooooooo',
+  'o|lllllllllllllllllllLo',
+  'o|lllllllllllllllllllLo',
+  '.o|lllllllllllllllllLo.',
+  '.o|lllllllllllllllllLo.',
+  '..ooooooooooooooooooo..',
+  '..o|lllllllllllllllLo..',
+  '...o|lllllllllllllLo...',
+  '....oLLLLLLLLLLLLLo....',
+  '.....ooooooooooooo.....',
+];
+const SHELL_SIDE = [
+  '..ooooooo.....',
+  '.o||lllllLo...',
+  'o|||llllllLo..',
+  'oooooooooooo..',
+  'o||lllllllLLo.',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'oooooooooooooo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'oooooooooooooo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'oooooooooooooo',
+  'o|lllllllllLLo',
+  'o|lllllllllLLo',
+  'o|llllllllLLo.',
+  'o|lllllllLLo..',
+  'oooooooooooo..',
+  'o|llllllLLo...',
+  'o|lllllLLo....',
+  'oLLLLLLLo.....',
+  'oooooooo......',
+];
+const PLATE_L = ['oooooo', 'o|llLo', 'ollllo', 'oLlLLo', 'oooooo'];
+const PLATE_R = ['oooooo', 'oLll|o', 'ollllo', 'oLLlLo', 'oooooo'];
+/** Carapace and shoulder plates per view. */
+const SHELL_V: ViewItem = {
+  S: { overlays: [SHELL_HUMP, ...SHELL_PLATES] },
+  SW: {
+    overlays: [{ ...ov(3, 4, SHELL_BACK), under: true }, ov(2, 16, PLATE_L), ov(17, 16, PLATE_R)],
+  },
+  W: { overlays: [{ ...ov(12, 4, SHELL_SIDE), under: true }, ov(5, 15, PLATE_L)] },
+  NW: { overlays: [ov(3, 4, SHELL_BACK)] },
+  N: { overlays: [ov(0, 4, SHELL_BACK)] },
+};
+
+/** Hùng: heavy build, headband, grey tank top, khaki shorts to the knee, boots; shaven head. */
+const HUNG_LOOK: Look = {
+  hair: HEADBAND_V,
+  top: 'tank',
+  bottoms: 'shorts',
+  shoes: 'both',
+  details: [],
+  face: 'plain',
+  colors: {
+    skin: [196, 140, 96],
+    cloth: [150, 150, 150],
+    pants: [156, 118, 70],
+    boots: [70, 60, 54],
+    accent: [72, 170, 96],
+    eye: [60, 50, 40],
+    white: [212, 230, 238],
+  },
+};
+export const HUNG = wearPosed('hung', 'Hùng', STAND_HEAVY, HUNG_LOOK);
+
+/** Kẻ Mang Vỏ: heavy build with a chitin carapace behind and plates over the shoulders, bare torso, torn shorts. */
+const KE_MANG_VO_LOOK: Look = {
+  top: 'none',
+  bottoms: 'shorts',
+  shoes: 'none',
+  details: [],
+  extras: SHELL_V,
   colors: {
     skin: [160, 152, 132],
     leather: [92, 72, 58],
@@ -1117,6 +1192,7 @@ export const KE_MANG_VO: Outfit = {
     ...BLOOD,
   },
 };
+export const KE_MANG_VO = wearPosed('ke_mang_vo', 'Kẻ Mang Vỏ', STAND_HEAVY, KE_MANG_VO_LOOK);
 
 /** Đột Biến: the ×1.5 giant with a mutated claw arm, bone spikes, a bulging eye and a maw. */
 export const DOT_BIEN: Outfit = {

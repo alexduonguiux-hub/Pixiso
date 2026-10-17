@@ -405,6 +405,81 @@ CRAWL_SW = body(21, 40, 20, [
 '.ososo$sso.oss$oososo',
 '.ooooooooo.oooooooooo',
 ])
+# ------------------------------------------------------------------ heavy build (23×45 in S; W 18×46 with the soles a row lower)
+# Side view of the heavy build: the base W figure widened by hand (torso two
+# columns deeper, arm and legs a column thicker, five more torso rows), the W
+# head two columns in from the left edge; the neck fills the jaw row under it.
+HEAVY_W = body(18, 46, 14, [
+'.........SSsSo....',
+'......ossssssso...',
+'.....o$SSssss$$o..',
+'....osSssssssSs$o.',
+'...ossss$sosssssso',
+'...o$ss$$sosssssso',
+'...o$ss$$$oSsss$o.',
+'...oSssSSSoosss$o.',
+'...osssssSoSsss$o.',
+'...o$$$sssossss$o.',
+'...osssssSoSsss$o.',
+'...o$$$sssossss$o.',
+'...ossssssoSsss$o.',
+'...o$$$sssossss$o.',
+'...osssssSossss$o.',
+'...o$$sssossss$so.',
+'...o$$$ssooSsssSo.',
+'...o$$ssoSsssssSo.',
+'...ossssoSssssSo..',
+'...oSSsssoSsssSo..',
+'...oSSsosssoooo...',
+'...oSSSo$sssso....',
+'...oSSSSosssso....',
+'....oSSSoS$ssSo...',
+'....oSSSoo$sSSo...',
+'....oSSSSos$sso...',
+'....oSSSSoS$ssso..',
+'...ooooSSoSsssso..',
+'..oSSSSSoooSSSso..',
+'..ooSSSSosssssso..',
+'..ooooooo$ssss$o..',
+'........oooooooo..',
+])
+# Three-quarter front of the heavy build: the far arm behind the torso with one
+# skin column showing, the raised far shoulder pulled in, the near flank in
+# shadow, the far leg a column narrower, the far foot a cell shorter and the near
+# foot facing the viewer; the SW head where the S head sits.
+HEAVY_SW = body(23, 45, 14, [
+'.......os.....so.......',
+'.......osssssssso......',
+'......ossSSsSSssSo.....',
+'.....oss$$SsS$$ssSo....',
+'....os$$$sssss$$$sSoo..',
+'...oso$$$sssss$$Sossso.',
+'...o$o$$$sssss$$SoSss$o',
+'...o$os$$$sss$$$SoSss$o',
+'...o$os$$$sSs$$$SoSss$o',
+'...o$os$$$sSs$$$SoSss$o',
+'...o$osSSSsSsSSSSoSss$o',
+'...o$osssssSssssSooss$o',
+'...o$ossSSsSsSSsSooss$o',
+'...o$osssssSssssSooss$o',
+'...osossSSsSsSSsSosssso',
+'...osossssssssssSossoso',
+'...osossssssssssSossoso',
+'...osossssssssssSossoso',
+'...ososssSSsSSssSooooso',
+'...osossssssssssSoosso.',
+'...oooossooooosssooooo.',
+'......oSsso.osssSo.....',
+'......o$sSo.oSss$o.....',
+'......o$sSo.oSss$o.....',
+'......o$sSo.oSss$o.....',
+'.....osssso.ossssso....',
+'.....osssso.ossssso....',
+'.....ooSsso.osSoooo....',
+'....o$$ssso.o$$ssSSo...',
+'....ossssso.osssssso...',
+'....ooooooo.oooooooo...',
+])
 # Hunched back seen from behind: the hump rises between the raised shoulders and
 # hides the nape; the head sits behind it (stamped under), only the crown and the
 # ears show. Flat back shading as the derived N views, light on the left.
@@ -460,7 +535,8 @@ def regions_w(dx, legs_dx=None, **over):
 POSE_S = FIG['poses']               # id -> {body, hx, hy, shift, regions}: the S body and where its head grid sits
 MIRRORED = FIG.get('mirrored', [])  # poses that also exist flipped (`*_m`)
 LABELS = {'droop': 'Zombie gục đầu', 'reach': 'Zombie vươn tay', 'drag': 'Zombie lết chân',
-          'hunch': 'Zombie khom lưng', 'twist': 'Zombie ngoẹo cổ', 'crawl': 'Dáng bò rình'}
+          'hunch': 'Zombie khom lưng', 'twist': 'Zombie ngoẹo cổ', 'crawl': 'Dáng bò rình',
+          'heavy': 'To con'}
 HEAD_W = 17
 
 def flipx(rows): return [r[::-1] for r in rows]
@@ -590,6 +666,27 @@ add('crawl', 'SW', CRAWL_SW, ('SW', 2, 6, lambda k: 0), {
     'collar': [[7, 22, 7, 22], [13, 22, 13, 22], [8, 23, 12, 23]], 'hem': [6, 27, 14, 27], 'frayedXs': [6, 8, 10, 12, 14],
     'chest': [7, 25], 'number': [8, 25], 'tie': [10, 24], 'belt': [10, 27], 'stains': [6, 24], 'gash': [2, 29],
     'skirt': {'x': 4, 'y': 28, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
+})
+add('heavy', 'W', HEAVY_W, ('W', 2, 0, lambda k: 0), {
+    'torso': [10, 16, 15, 34], 'neck': [[10, 16, 10, 17]], 'shoulders': [[6, 16, 9, 17]],
+    'sleeveL': {'short': [3, 18, 9, 22], 'long': [3, 18, 9, 27], 'torn': [3, 18, 9, 19]},
+    'sleeveR': {'short': [3, 18, 9, 22], 'long': [3, 18, 9, 27]},
+    'pants': [[3, 34, 15, 40]], 'shorts': [[3, 34, 15, 37]],
+    'shoeL': [2, 41, 8, 45], 'shoeR': [9, 41, 15, 45], 'flats': [[2, 44, 8, 45], [9, 44, 15, 45]],
+    'collar': [[7, 16, 13, 16]], 'hem': [10, 33, 14, 33], 'frayedXs': [11, 13],
+    'chest': [12, 21], 'gash': [5, 24],
+    'skirt': {'x': 3, 'y': 34, 'rows': ['o&kkkkkkkKo..', 'o&kkkkkkkkKo.', 'o&kkkkkkkkKo.', 'o&kkkkkkkkkKo', 'ooooooooooooo']},
+})
+add('heavy', 'SW', HEAVY_SW, ('SW', 3, 0, lambda k: 0), {
+    'torso': [6, 15, 16, 33], 'neck': [[8, 15, 14, 18], [6, 15, 6, 18], [16, 15, 16, 18]],
+    'shoulders': [[6, 17, 6, 17], [16, 16, 17, 17], [3, 18, 6, 19], [16, 18, 20, 19]],
+    'sleeveL': {'short': [3, 20, 5, 23], 'long': [3, 20, 5, 27], 'torn': [3, 20, 5, 21]},
+    'sleeveR': {'short': [17, 20, 22, 23], 'long': [17, 20, 22, 27]},
+    'pants': [[0, 34, 22, 40]], 'shorts': [[0, 34, 22, 38]],
+    'shoeL': [4, 41, 10, 44], 'shoeR': [12, 41, 19, 44], 'flats': [[4, 43, 10, 44], [12, 43, 19, 44]],
+    'collar': [[8, 18, 14, 18]], 'hem': [7, 33, 15, 33], 'frayedXs': [7, 9, 11, 13, 15],
+    'chest': [8, 22], 'number': [10, 22], 'tie': [11, 19], 'belt': [11, 33], 'stains': [8, 24], 'gash': [20, 24],
+    'skirt': {'x': 3, 'y': 34, 'rows': ['.o&kkkkkkkkkkkkkKo.', '.o&kkkkkkkkkkkkkKo.', 'o&kkkkkkkkkkkkkkkKo', 'o&kkkkkkkkkkkkkkkKo', 'oo.ooo.ooooo.ooo.oo']},
 })
 HUNCH_N_REGIONS = {
     'torso': [4, 13, 14, 27], 'neck': [],

@@ -8,7 +8,7 @@
 import { heroStand, type HeroView } from './hero64.js';
 import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 import { POSE_STAND, type ZombiePose } from './hero64.poses.js';
-import type { FormSpec } from './heroforms.js';
+import { FORM_HEAVY, type FormSpec } from './heroforms.js';
 import type { Sprite } from './format.js';
 
 const standForm = (id: string, label: string, figure: Sprite): FormSpec => ({
@@ -120,6 +120,61 @@ export const STAND_NW: ZombiePose = {
   ],
   sleeveR: { short: [12, 18, 15, 22], long: [12, 18, 15, 24] },
   pants: [[0, 29, 15, 34]],
+};
+
+/**
+ * The heavy build standing (23×45, hero64.heavy.ts) as a pose: torso columns
+ * 6–16 from the trapezius row 15 to the hem row 33, a neck well between the
+ * tank-top straps (columns 7 and 15), arms five columns thick down to row 34,
+ * hips on row 34, legs 35–40, boots 41–44. Its other views come from
+ * hero64.poses.views.ts like a zombie pose's.
+ */
+export const STAND_HEAVY: ZombiePose = {
+  id: 'heavy',
+  form: FORM_HEAVY,
+  w: 23,
+  torso: [6, 15, 16, 33],
+  neck: [
+    [8, 15, 14, 18],
+    [6, 15, 6, 18],
+    [16, 15, 16, 18],
+  ],
+  shoulders: [
+    [5, 16, 6, 17],
+    [16, 16, 17, 17],
+    [2, 18, 6, 19],
+    [16, 18, 20, 19],
+  ],
+  sleeveL: { short: [0, 20, 5, 23], long: [0, 20, 5, 27], torn: [0, 20, 5, 21] },
+  sleeveR: { short: [17, 20, 22, 23], long: [17, 20, 22, 27] },
+  pants: [[0, 34, 22, 40]],
+  shorts: [[0, 34, 22, 38]],
+  shoeL: [3, 41, 10, 44],
+  shoeR: [12, 41, 19, 44],
+  flats: [
+    [3, 43, 10, 44],
+    [12, 43, 19, 44],
+  ],
+  collar: [[8, 18, 14, 18]],
+  hem: [7, 33, 15, 33],
+  frayedXs: [7, 9, 11, 13, 15],
+  chest: [8, 22],
+  number: [10, 22],
+  tie: [11, 19],
+  belt: [11, 33],
+  stains: [8, 24],
+  gash: [2, 24],
+  skirt: {
+    x: 2,
+    y: 34,
+    rows: [
+      '.o&kkkkkkkkkkkkkKo.',
+      '.o&kkkkkkkkkkkkkKo.',
+      'o&kkkkkkkkkkkkkkkKo',
+      'o&kkkkkkkkkkkkkkkKo',
+      'oo.ooo.ooooo.ooo.oo',
+    ],
+  },
 };
 
 export const STAND_VIEWS: Record<HeroView, ZombiePose> = {

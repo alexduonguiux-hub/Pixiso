@@ -13,8 +13,9 @@ import { cut, HERO_S_FIGURE } from './hero64.js';
 export const HEAVY_FIGURE_W = 23;
 export const HEAVY_FIGURE_H = 45;
 
-/** Everything below the head; rows 0–13 are left for the head stamp, row 14 holds the trapezius tops beside the chin line. */
-const HEAVY_BODY = sprite`
+/** Everything below the head; rows 0–13 are left for the head stamp, row 14 holds the trapezius tops beside the chin line. The base head grid sits at column `HEAVY_HEAD_X`. */
+export const HEAVY_HEAD_X = 3;
+export const HEAVY_BODY = sprite`
   .......................
   .......................
   .......................

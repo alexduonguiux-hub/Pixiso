@@ -15,12 +15,15 @@ import {
   compose,
   dress,
   flipX,
+  HEAVY_BODY,
+  HEAVY_HEAD_X,
   HERO_CANVAS,
   HERO_VIEWS,
   heroStand,
   paint,
   POSE_BODIES,
   POSE_CRAWL,
+  STAND_HEAVY,
   STAND_VIEWS,
   toAscii,
   wearView,
@@ -49,8 +52,9 @@ if (process.env.DUMP) {
   const bodies = {
     droop: { body: ZOMBIE_BODY, headX: 0, headTop: ZOMBIE_HEAD_TOP, shift: zombieHeadShift },
     ...POSE_BODIES,
+    heavy: { body: HEAVY_BODY, headX: HEAVY_HEAD_X, headTop: 0, shift: () => 0 },
   };
-  const allPoses = [...ZOMBIE_POSES, POSE_CRAWL];
+  const allPoses = [...ZOMBIE_POSES, POSE_CRAWL, STAND_HEAVY];
   out['poses'] = Object.fromEntries(
     Object.entries(bodies).map(([k, b]) => {
       const { id: _id, form: _form, w: _w, ...regions } = allPoses.find((q) => q.id === k)!;
