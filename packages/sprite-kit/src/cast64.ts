@@ -91,6 +91,24 @@ const HAIR_BOB = hov(0, 0, [
   '...o.........o...',
 ]);
 
+/** Curly hair: a bumpy silhouette wider than the skull, two-cell curl marks, fringe over the brow, ends at the jaw. */
+const HAIR_CURLY = hov(0, 0, [
+  '.....ooooooo.....',
+  '...oo#hhhhhhoo...',
+  '..o#hhHHhhHHhho..',
+  '.o##hhhhhhhhhhho.',
+  'o#hHHhhhHHhhhHHho',
+  'o#hhhhhhhhhhhhhho',
+  '.o#hhHHhhHHhhhho.',
+  'o#hhhhhHHhhHHhhho',
+  '.ohhH..HHH..Hhho.',
+  'ohhH.........Hhho',
+  '.ohh.........hho.',
+  'ohHh.........hHho',
+  '.oHH.........HHo.',
+  '..oo.........oo..',
+]);
+
 /** Long hair to the shoulders. */
 const HAIR_LONG = hov(0, 0, [
   '......ooooo......',
@@ -186,6 +204,22 @@ const PEAKED_CAP: Overlay = {
     '...okkkkkkkkkkko...',
     '.oKKKKKKKKKKKKKKKo.',
     '..ooooooooooooooo..',
+  ]),
+  rigid: true,
+};
+
+/** Beret (cloth2): puffed crown rising at the left and draped down to the right over the band, rim on the brow. */
+const BERET: Overlay = {
+  ...hov(-1, 0, [
+    '.....ooooooo.......',
+    '...oo&kkkkkkkoo....',
+    '..o&kkkkkkkkkkoo...',
+    '.o&kkkkkkkkkkkkkoo.',
+    '.o&kkkkkkkkkkkkkkKo',
+    '.oKkkkkkkkkkkkkkkKo',
+    '.ooKKKKKKKKKKKKKooo',
+    '..oKKKKKKKKKKKKKo..',
+    '.ooooooooooooooooo.',
   ]),
   rigid: true,
 };
@@ -300,7 +334,7 @@ export const NY: Outfit = {
   label: 'Ny',
   remaps: TEE,
   lines: [...COLLAR, HEM],
-  overlays: [HAIR_BOB, ...MEDIC_BAG],
+  overlays: [HAIR_CURLY, ...MEDIC_BAG],
   colors: {
     skin: [250, 214, 180],
     hair: [160, 56, 40],
@@ -417,6 +451,14 @@ interface Look {
 }
 
 const ZOMBIE_EYES: MaterialColors = { eye: [180, 50, 40], white: [206, 196, 160] };
+/** One army palette for every soldier, infected or not: olive uniform, darker green caps (cloth2), dark boots, dull metal. */
+const ARMY: MaterialColors = {
+  cloth: [106, 112, 72],
+  pants: [92, 96, 64],
+  cloth2: [78, 86, 56],
+  boots: [58, 50, 40],
+  metal: [204, 204, 194],
+};
 const BLOOD: MaterialColors = { wood: [120, 30, 30] };
 const SKIN_M: Rgb8 = [172, 182, 142];
 const SKIN_F: Rgb8 = [178, 188, 152];
@@ -433,7 +475,8 @@ function camo(box: Box, glyph: string): Overlay {
   return ov(x0, y0, rows);
 }
 
-function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit {
+/** Builds an outfit from a look laid on a pose's regions (zombies, mutants, soldiers alike). */
+function wear(id: string, label: string, pose: ZombiePose, look: Look): Outfit {
   const remaps: Remap[] = [];
   const lines: Seam[] = [];
   const overlays: Overlay[] = [];
@@ -540,7 +583,7 @@ function zombie(id: string, label: string, pose: ZombiePose, look: Look): Outfit
 }
 
 /** Civilian man: drooped stance, torn tee, jeans, one shoe lost, messy short hair. */
-export const ZOMBIE_CIV_M = zombie('zombie_civ_m', 'Zombie dân thường (nam)', POSE_DROOP, {
+export const ZOMBIE_CIV_M = wear('zombie_civ_m', 'Zombie dân thường (nam)', POSE_DROOP, {
   hair: [HAIR_SHORT],
   top: 'torn',
   bottoms: 'pants',
@@ -558,7 +601,7 @@ export const ZOMBIE_CIV_M = zombie('zombie_civ_m', 'Zombie dân thường (nam)'
 });
 
 /** Civilian woman: twisted neck, long hair, blouse, torn skirt, flats. */
-export const ZOMBIE_CIV_F = zombie('zombie_civ_f', 'Zombie dân thường (nữ)', POSE_TWIST, {
+export const ZOMBIE_CIV_F = wear('zombie_civ_f', 'Zombie dân thường (nữ)', POSE_TWIST, {
   hair: [HAIR_LONG],
   top: 'tee',
   bottoms: 'skirt',
@@ -576,7 +619,7 @@ export const ZOMBIE_CIV_F = zombie('zombie_civ_f', 'Zombie dân thường (nữ)
 });
 
 /** Construction worker: reaching, hard hat, hi-vis shirt, jeans, boots. */
-export const ZOMBIE_WORKER = zombie('zombie_worker', 'Zombie công nhân', POSE_REACH, {
+export const ZOMBIE_WORKER = wear('zombie_worker', 'Zombie công nhân', POSE_REACH, {
   hat: HARD_HAT,
   top: 'tee',
   bottoms: 'pants',
@@ -595,7 +638,7 @@ export const ZOMBIE_WORKER = zombie('zombie_worker', 'Zombie công nhân', POSE_
 });
 
 /** Police officer: dragging a leg, peaked cap, green uniform, badge, belt, black shoes. */
-export const ZOMBIE_POLICE = zombie('zombie_police', 'Zombie cảnh sát', POSE_DRAG, {
+export const ZOMBIE_POLICE = wear('zombie_police', 'Zombie cảnh sát', POSE_DRAG, {
   hat: PEAKED_CAP,
   top: 'long',
   bottoms: 'pants',
@@ -614,7 +657,7 @@ export const ZOMBIE_POLICE = zombie('zombie_police', 'Zombie cảnh sát', POSE_
 });
 
 /** Soldier: hunched, helmet, camouflage fatigues, boots. */
-export const ZOMBIE_SOLDIER = zombie('zombie_soldier', 'Zombie quân đội', POSE_HUNCH, {
+export const ZOMBIE_SOLDIER = wear('zombie_soldier', 'Zombie quân đội', POSE_HUNCH, {
   hat: HELMET,
   top: 'long',
   bottoms: 'pants',
@@ -622,9 +665,7 @@ export const ZOMBIE_SOLDIER = zombie('zombie_soldier', 'Zombie quân đội', PO
   details: ['camo', 'stains'],
   colors: {
     skin: SKIN_M,
-    cloth: [112, 120, 78],
-    pants: [98, 106, 72],
-    boots: [50, 42, 34],
+    ...ARMY,
     ...BLOOD,
     ...ZOMBIE_EYES,
   },
@@ -632,30 +673,27 @@ export const ZOMBIE_SOLDIER = zombie('zombie_soldier', 'Zombie quân đội', PO
 
 /** Sores on both bare forearms (drag pose). */
 const SORES: Overlay[] = [ov(1, 24, ['D.', '..', '.D', 'D.']), ov(13, 25, ['..D', '...', '.D.'])];
-/** Dog tag on the sternum (drag pose). */
-const DOG_TAG = ov(8, 21, ['w', 'm']);
+/** Dog tag on the sternum, two cells above the pose's chest anchor column +2. */
+const dogTag = (pose: ZombiePose): Overlay => ov(pose.chest[0] + 2, pose.chest[1] - 1, ['w', 'm']);
 
 /** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */
-export const LINH_NHIEM = zombie('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
+export const LINH_NHIEM = wear('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
   hat: HELMET,
   top: 'torn',
   bottoms: 'pants',
   shoes: 'both',
   details: ['stains'],
-  extras: [...SORES, DOG_TAG],
+  extras: [...SORES, dogTag(POSE_DRAG)],
   colors: {
     skin: [184, 186, 156],
-    cloth: [104, 110, 70],
-    pants: [90, 94, 64],
-    boots: [146, 130, 102],
-    metal: [204, 204, 194],
+    ...ARMY,
     ...BLOOD,
     ...ZOMBIE_EYES,
   },
 });
 
 /** Athlete (man): drooped stance mirrored, sweatband, sleeveless jersey with a number, shorts, sneakers. */
-export const ZOMBIE_ATHLETE_M = zombie(
+export const ZOMBIE_ATHLETE_M = wear(
   'zombie_athlete_m',
   'Zombie vận động viên (nam)',
   POSE_DROOP_M,
@@ -680,30 +718,25 @@ export const ZOMBIE_ATHLETE_M = zombie(
 );
 
 /** Athlete (woman): dragging mirrored, ponytail, sports top, shorts, sneakers. */
-export const ZOMBIE_ATHLETE_F = zombie(
-  'zombie_athlete_f',
-  'Zombie vận động viên (nữ)',
-  POSE_DRAG_M,
-  {
-    hair: HAIR_PONYTAIL,
-    top: 'crop',
-    bottoms: 'shorts',
-    shoes: 'both',
-    details: ['gash'],
-    colors: {
-      skin: SKIN_F,
-      hair: [120, 70, 40],
-      cloth: [222, 60, 96],
-      pants: [40, 40, 52],
-      boots: [240, 240, 240],
-      ...BLOOD,
-      ...ZOMBIE_EYES,
-    },
+export const ZOMBIE_ATHLETE_F = wear('zombie_athlete_f', 'Zombie vận động viên (nữ)', POSE_DRAG_M, {
+  hair: HAIR_PONYTAIL,
+  top: 'crop',
+  bottoms: 'shorts',
+  shoes: 'both',
+  details: ['gash'],
+  colors: {
+    skin: SKIN_F,
+    hair: [120, 70, 40],
+    cloth: [222, 60, 96],
+    pants: [40, 40, 52],
+    boots: [240, 240, 240],
+    ...BLOOD,
+    ...ZOMBIE_EYES,
   },
-);
+});
 
 /** Office worker: twisted neck mirrored, white shirt, tie, glasses, dark trousers, black shoes. */
-export const ZOMBIE_OFFICE = zombie('zombie_office', 'Zombie nhân viên văn phòng', POSE_TWIST_M, {
+export const ZOMBIE_OFFICE = wear('zombie_office', 'Zombie nhân viên văn phòng', POSE_TWIST_M, {
   hair: BUZZ,
   glasses: true,
   top: 'long',
@@ -812,7 +845,7 @@ const BRUTE_BOILS = ov(12, 33, [
 ]);
 
 /** Kẻ Thính: blind, hears everything. Upright, feeling forward; pale, huge ears, eyes sewn shut, rags. */
-export const KE_THINH = zombie('ke_thinh', 'Kẻ Thính', POSE_REACH, {
+export const KE_THINH = wear('ke_thinh', 'Kẻ Thính', POSE_REACH, {
   top: 'torn',
   bottoms: 'shorts',
   shoes: 'none',
@@ -828,7 +861,7 @@ export const KE_THINH = zombie('ke_thinh', 'Kẻ Thính', POSE_REACH, {
 });
 
 /** Kẻ Bám Trần: the ceiling crawler on the ground, crouched with long clawed arms, yellow eyes. */
-export const KE_BAM_TRAN = zombie('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
+export const KE_BAM_TRAN = wear('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
   top: 'torn',
   bottoms: 'shorts',
   shoes: 'none',
@@ -914,7 +947,7 @@ const DRESS_STAINS = ov(4, 30, ['....D....', '.........', '.D.......', '........
  * slip dress to the shins with a torn hem, bare feet, shoulder-length black
  * hair, red points in sunken sockets and a smile too wide.
  */
-export const KE_BAT_CHUOC = zombie('ke_bat_chuoc', 'Kẻ Bắt Chước', POSE_STAND, {
+export const KE_BAT_CHUOC = wear('ke_bat_chuoc', 'Kẻ Bắt Chước', POSE_STAND, {
   hair: [HAIR_WILD],
   top: 'tank',
   bottoms: 'dress',
@@ -943,6 +976,94 @@ export const MUTANTS: readonly Outfit[] = [
 
 /** The common infected of the game is the civilian man. */
 export const BIEN_THE: Outfit = { ...ZOMBIE_CIV_M, id: 'bien_the', label: 'Biến Thể' };
+
+/* ------------------------------------------------------------------ */
+/* Uninfected soldiers: the same army palette on the standing figure.  */
+/* ------------------------------------------------------------------ */
+
+/** Rifleman: helmet, camouflage jacket, belt. */
+export const LINH_NON_SAT = wear('linh_non_sat', 'Lính nón sắt', POSE_STAND, {
+  hat: HELMET,
+  top: 'long',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['camo', 'belt'],
+  face: 'plain',
+  colors: { skin: [226, 186, 150], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
+});
+
+/** Officer: beret, plain jacket, belt, insignia on the chest. */
+export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, {
+  hat: BERET,
+  top: 'long',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['belt', 'badge'],
+  face: 'plain',
+  colors: { skin: [214, 170, 132], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
+});
+
+/** Off duty: buzz cut, olive tee, dog tag. */
+export const LINH_DAU_DINH = wear('linh_dau_dinh', 'Lính đầu đinh', POSE_STAND, {
+  hair: BUZZ,
+  top: 'tee',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['belt'],
+  extras: [dogTag(POSE_STAND)],
+  face: 'plain',
+  colors: {
+    skin: [196, 150, 112],
+    hair: [50, 40, 36],
+    eye: [60, 50, 40],
+    white: [212, 230, 238],
+    ...ARMY,
+  },
+});
+
+/** Woman soldier: patrol cap over a ponytail, camouflage jacket, belt. */
+export const LINH_NU = wear('linh_nu', 'Lính nữ', POSE_STAND, {
+  hair: HAIR_PONYTAIL,
+  hat: PEAKED_CAP,
+  top: 'long',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['camo', 'belt'],
+  face: 'plain',
+  colors: {
+    skin: [240, 200, 165],
+    hair: [70, 48, 36],
+    eye: [60, 50, 40],
+    white: [212, 230, 238],
+    ...ARMY,
+  },
+});
+
+/** Medic soldier: helmet, plain jacket, red-cross bag on the hip. */
+export const LINH_QUAN_Y = wear('linh_quan_y', 'Lính quân y', POSE_STAND, {
+  hat: HELMET,
+  top: 'long',
+  bottoms: 'pants',
+  shoes: 'both',
+  details: ['belt'],
+  extras: [...MEDIC_BAG],
+  face: 'plain',
+  colors: {
+    skin: [232, 192, 156],
+    eye: [60, 50, 40],
+    white: [240, 245, 245],
+    accent: [200, 40, 50],
+    ...ARMY,
+  },
+});
+
+export const SOLDIERS: readonly Outfit[] = [
+  LINH_NON_SAT,
+  LINH_MU_NOI,
+  LINH_DAU_DINH,
+  LINH_NU,
+  LINH_QUAN_Y,
+];
 
 export const CAST: readonly Outfit[] = [
   DUONG,

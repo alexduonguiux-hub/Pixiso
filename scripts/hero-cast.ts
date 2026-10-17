@@ -1,7 +1,8 @@
 /**
  * Line-up of outfits on the hero mannequin (front view), ×SCALE.
  * SET=cast (default) renders the Vùng Xanh cast, SET=zombies the zombie
- * variants, SET=mutants the mutants, SET=all everything in one row.
+ * variants, SET=mutants the mutants, SET=soldiers the uninfected soldiers,
+ * SET=all everything in one row.
  * BG=r,g,b sets the background (default a mid grey).
  */
 import fs from 'node:fs';
@@ -16,6 +17,7 @@ import {
   FORM_BASE,
   paint,
   MUTANTS,
+  SOLDIERS,
   ZOMBIES,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
@@ -31,9 +33,11 @@ const outfits =
     ? ZOMBIES
     : SET === 'mutants'
       ? MUTANTS
-      : SET === 'all'
-        ? [...CAST, ...ZOMBIES, ...MUTANTS]
-        : CAST;
+      : SET === 'soldiers'
+        ? SOLDIERS
+        : SET === 'all'
+          ? [...CAST, ...SOLDIERS, ...ZOMBIES, ...MUTANTS]
+          : CAST;
 const figures = outfits.map((outfit) => {
   const figure = dress(buildForm(outfit.form ?? FORM_BASE), outfit);
   const palette = buildPalette(outfit.colors, HERO_RAMP_OPTIONS);

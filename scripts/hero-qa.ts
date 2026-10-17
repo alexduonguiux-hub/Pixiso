@@ -7,6 +7,7 @@ import {
   HERO_S_FIGURE,
   MATERIALS,
   MUTANTS,
+  SOLDIERS,
   toAscii,
   ZOMBIES,
   type Outfit,
@@ -101,6 +102,6 @@ for (const pose of ZOMBIE_POSES) {
     console.log(`pose ${pose.id}: skull edge broken between head ${[...new Set(gaps)].join(', ')}`);
   }
 }
-for (const o of [...CAST, ...ZOMBIES, ...MUTANTS]) check(o);
+for (const o of [...CAST, ...SOLDIERS, ...ZOMBIES, ...MUTANTS]) check(o);
 console.log(problems ? `${problems} problem(s)` : 'QA clean');
 process.exitCode = problems ? 1 : 0;
