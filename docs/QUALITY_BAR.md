@@ -209,3 +209,54 @@ bộ góc cho zombie) chưa — ở 1× là silhouette màu phẳng với hai ch
 luật" chứ chưa phải "vẽ tay"._
 
 Xử lý sau biên bản (theo thứ tự B8 → B4 → B1 → B2 → B5 → B3): **B8 xong**, **B4 phần lớn** (D-073: ô lẻ theo đúng thước của giám khảo 664 → 357, đạt 73 → 76/130; phần còn lại gộp vào B1/B2/B5), **B1 xong** (D-074: tóc chải thành ba mảng chéo có đường lọn ngay khi mặc, đạt 77/130, ô lẻ 338), **B2 xong** (D-075: thắt lưng, cổ tay, băng gối, mảng sáng áo một khối, gấu, cổ chữ V, thân trần vẽ lại; đạt 80/130), **B5 xong** (D-076: mắt W một ô trắng, xương mày zombie ở thái dương, Đột Biến hai mắt cùng mô-đun; đạt 82/130, ô lẻ 332), **B3 xong** (D-077: chân xa lùi một hàng ở mọi thân 3/4, dáng vươn tay một tư thế; đạt 83/130). Còn B6, B7, B9. Thước `scripts/research/lone_pixels.py` giữ lại để số này không tăng.
+
+## 9. Biên bản chấm độc lập vòng 4 (18/10/2026, sau D-073…D-077)
+
+Cùng cách làm vòng 3 (agent riêng, chỉ nhận đề bài + ảnh: crop nhân vật mẫu, hai bảng 8 hướng ×1/×6 và
+27 dải hàng ×12; cấm đọc DECISIONS/PROGRESS/§5–§8, cấm sửa repo). Giám khảo này đổ ASCII toàn bộ ô,
+đo bề rộng từng hàng S so với SW, quét ô đơn 8-lân-cận, đo ΔL\* từng ramp áo, tỉ lệ và trọng tâm mảng
+sáng/tối từng chất liệu. Da được miễn mục 4 (mẫu cũng dùng bậc sáng da +8); mục 2 không xét người đội
+mũ kín; mục 1 không xét Kẻ Thính. Đề bài và toàn văn: `docs/reviews/2026-10-18-round4*.md`.
+
+Kết quả: dàn chính **5/10**, lính **5/10**, zombie **4/10**, thể hình lớn **4/9** (vòng 3: 4 · 4 · 1 · 2) —
+cả bốn chưa đạt.
+
+| Mục                 | Dàn chính | Lính  | Zombie | Thể hình lớn | Bằng chứng chính giám khảo nêu                                                                                                        |
+| ------------------- | --------- | ----- | ------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 Mắt               | không     | không | đạt    | không        | Kẻ Bắt Chước mắt 1 ô đỏ trong hốc 2×3; lính đội mũ không miệng, không mày dưới vành; Đột Biến khối 2×2 một tông, không trắng          |
+| 2 Tóc               | đạt       | không | đạt    | —            | Lính nữ tóc một tông hai dải + đuôi 2 ô; đầu đinh chân tóc 4 ô đơn; dàn chính và zombie 5 tông, lọn rõ, mái chạm mày                  |
+| 3 Áo                | đạt       | đạt   | đạt    | đạt          | cổ V, nút, thắt lưng + khoá, dây chéo, ly váy, dải phản quang, băng gối — nhiều hơn mẫu; Kẻ Bám Trần yếu nhất (chỉ cổ hở)             |
+| 4 Bậc tông          | không     | đạt   | không  | không        | áo Lan sáng +8 L, Kẻ Bắt Chước +11; áo văn phòng +4; cảnh sát sáng 7 %, công nhân 27 %; quần Đột Biến không có sáng, tối là cột 1 ô   |
+| 5 Góc 45°           | không     | không | không  | không        | SW của 27/27: vai 15→14, lõi thân 7→7 (chỉ hàng tay 17→15); zombie quân đội SW là bản sao S kể cả mắt xa 2 ô; Đột Biến SW hai mắt y S |
+| 6 Góc ngang         | đạt       | đạt   | không  | không        | zombie văn phòng W mép mặt thẳng, không mũi, hai mắt đỏ; Đột Biến W không bướu mũi, tay không vạch ngón; ô mũi giày (33,60) khác đế   |
+| 7 Góc sau           | đạt       | đạt   | đạt    | đạt          | gáy tối, cổ áo dải tối, tóc sau ≥4 tông; ghi chú: 4 zombie có ô lục đơn thủng ở cổ sau, cảnh sát N dải cổ chỉ nửa trái                |
+| 8 Chấm lẻ           | không     | không | không  | không        | chấm sáng vai X·X (27,37)(29,37) ở mọi áo; rằn ri lính là ô đơn; ô dùng một lần Kẻ Phun W (24,45), Kẻ Thính W (35,29); quai Sơn rời   |
+| 9 Nhất quán 8 hướng | không     | không | không  | đạt          | dây chéo Ny chỉ có S/SW; gậy Sơn mất ở NW/N; nòng súng nón sắt mất trên vai ở NW/N; công nhân 1 dải phản quang ở S, 2 ở N/W           |
+| 10 Nhận ra ở 1×     | đạt       | đạt   | không  | đạt          | cảnh sát zombie đọc như lính đội mũ; zombie quân đội ~ Lính Nhiễm; 24/27 còn lại nhận ra ngay                                         |
+
+Lỗi xếp hạng (đơn thuốc ở mức ô trong toàn văn): **B1** góc 45° chưa xoay (bỏ một cột thân, hạ vai xa
+một hàng → vai 15→13, thân 17→15 mọi hàng; zombie quân đội SW vẽ lại; Đột Biến SW mắt xa một cột);
+**B2** chấm lẻ hệ thống (gộp hai chấm vai thành vạch 3 ô, rằn ri thành vệt 2–4 ô bám khối bóng, bịt ô
+lục cổ sau zombie, xoá ô màu dùng một lần, nối quai Sơn/túi Ny); **B3** phụ kiện biến mất giữa các
+hướng (dây Ny ở W/NW/N, gậy Sơn ở NW/N, nòng súng nón sắt ở NW/N, dải phản quang công nhân thống nhất
+y=43/47); **B4** mắt Kẻ Bắt Chước và Đột Biến theo công thức cột 3 ô + trắng; **B5** miệng 2 ô + mày
+cho lính đội mũ; **B6** bậc sáng áo trắng/áo tối (hạ gốc áo Lan, văn phòng, Kẻ Bắt Chước; mảng sáng
+quần Đột Biến ≈ 10 %, tối thành khối 2 ô; cảnh sát/công nhân/Kẻ Phun/mai chỉnh tỉ lệ); **B7** mặt W
+zombie văn phòng và Đột Biến; **B8** tóc lính nữ/đầu đinh thành lọn; **B9** nhận diện cảnh sát và
+quân đội zombie ở 1×; **B10** lỗi nhỏ (ô mũi giày W, dải cổ cảnh sát N, vành mũ lính nữ W, gấu quần
+Lan, gấu áo Kẻ Bám Trần).
+
+Đã ngang hoặc hơn mẫu: công thức mắt người và zombie kể cả W/SW (mẫu không có các góc này), mặt (mày,
+thái dương, cằm, mũi W, miệng zombie), tóc 5 tông có lọn, da L86/+8/−22, cấu trúc trang phục nhiều
+hơn mẫu, 20/24 chất liệu sáng +18…+20 L và tối −27…−30 với trọng tâm sáng lệch trên–trái, kỹ thuật
+sạch, 24/27 silhouette nhận ra ở 1×. Kết luận của giám khảo: _ở 1× đọc như bộ sprite thương mại hoàn
+chỉnh; ở ×6 nền tảng đã ngang mẫu, nhiều chỗ nhiều chi tiết hơn; lỗi còn lại là lỗi hoàn thiện (dọn ô
+đơn, đồng bộ phụ kiện, xoay thật ở 45°, chỉnh 2–4 giá trị L) chứ không phải lỗi nền; sửa B1–B4 sẽ kéo
+cả bốn nhóm lên 7–8/10._
+
+Ghi chú của người vẽ (không phải của giám khảo), đã soi lại trên ma trận ô: mục 5 vòng này đo vai và
+lõi thân chứ không đo bề rộng toàn hình như vòng 3, nên D-072/D-077 (hẹp 2 ô ở hàng tay, chân xa lùi)
+được ghi nhận nhưng không đủ; hai chấm vai (27,37)(29,37) đúng là ô tông sáng nhất của vải (`V`) đặt rời
+ở hàng vai trên mọi áo, cần tìm nguồn trong `tailor64`; mũ sắt và đầu của zombie quân đội ở SW giống hệt
+S (dáng gục đầu chưa có góc 3/4); hai mắt Đột Biến ở SW vẫn là mô-đun đầy đủ (D-076 chỉ thu mắt xa cho
+Kẻ Phun). Chưa sửa gì sau biên bản; chờ chốt thứ tự.
