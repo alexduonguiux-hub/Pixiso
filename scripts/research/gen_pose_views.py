@@ -512,7 +512,7 @@ HUNCH_N = body(19, 40, 12, [
 '.o$soSsso.ossSos$o.',
 '.o$soSsso.ossSos$o.',
 '.ossoSsso.ossSosso.',
-'.osso$sSo.oSs$osso.',
+'.osSo$sSo.oSs$oSso.',
 '.osSo$sSo.oSs$oSso.',
 '.ososssso.ossssoso.',
 '.ososssso.ossssoso.',
@@ -793,7 +793,8 @@ add('heavy', 'SW', HEAVY_SW, ('SW', 3, 0, lambda k: 0), {
 })
 HUNCH_N_REGIONS = {
     'torso': [5, 13, 13, 27], 'neck': [],
-    'shoulders': [[1, 14, 3, 15], [1, 16, 5, 16], [1, 17, 6, 17], [1, 18, 7, 18], [15, 14, 17, 15], [13, 16, 17, 16], [12, 17, 17, 17], [11, 18, 17, 18]],
+    # the shoulder caps reach the torso box on row 15 too (a bare skin cell showed between cap and back)
+    'shoulders': [[1, 14, 3, 15], [4, 15, 4, 15], [1, 16, 5, 16], [1, 17, 6, 17], [1, 18, 7, 18], [15, 14, 17, 15], [14, 15, 14, 15], [13, 16, 17, 16], [12, 17, 17, 17], [11, 18, 17, 18]],
     'sleeveL': {'short': [1, 19, 5, 22], 'long': [1, 19, 5, 26], 'torn': [1, 19, 5, 20]},
     'sleeveR': {'short': [13, 19, 17, 22], 'long': [13, 19, 17, 26]},
     'pants': [[4, 28, 14, 35]], 'shorts': [[4, 28, 14, 31]],

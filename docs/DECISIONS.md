@@ -654,3 +654,22 @@ L 0,17 sát viền L 0,12 đọc thành viền dày.
 **Số đo.** Đạt 84/130, không sprite nào đổi trạng thái so với HEAD, đầu đinh đạt cả năm góc; ô lẻ 287 /
 `strict` 1663 — đúng bằng HEAD đo lại trong cùng phiên (D-084 ghi 286 / 1646 là số đo trước lần sửa cuối của
 B7); lint 80; QA sạch; `problems: 0`; 113 test.
+
+### D-086 Nhận diện ở 1× trong nhóm lục (B9 của giám khảo vòng 4)
+
+**Zombie cảnh sát.** Mũ kê-pi có **dải băng đỏ** (200,40,50) quanh mũ ở cả năm góc: `POLICE_CAP_V` suy từ
+`PEAKED_CAP_V` bằng `banded()` — hàng băng (hàng 5 của mọi bản vẽ mũ) đổi vật liệu vải 2 sang điểm nhấn, hai ô
+sáng bên trái, ba ô tối bên phải như chính tông của hàng đó. Lính nữ vẫn đội mũ trơn (dải đỏ là của cảnh sát);
+màu nhấn khai trong `colors` của riêng zombie cảnh sát. Đây là màu đỏ duy nhất của nhóm lục nên đọc được ở 1×.
+
+**Zombie quân đội so với Lính Nhiễm.** Da cẳng tay đổi từ xám trung tính (146,150,148) sang da xám-lục của các
+zombie (`SKIN_M` 172,182,142) — xám trung tính đọc như găng; thêm chi tiết **`rip`**: lỗ áo rách ở bụng lộ bốn
+ô da (hai cặp so le, ô đơn nào cũng có bạn), đặt theo neo ngực của dáng (`chest` + (2, 3)) ở S và SW, so le
+ngược chiều ở SW để các ô bóng nếp gấp cạnh lỗ vẫn đi đôi trên thân hẹp hơn. Giám khảo còn gợi ý bỏ mũ sắt;
+không làm vì mũ sắt là dấu hiệu "lính" của cả hai và góc SW của mũ vừa làm ở D-083.
+
+**Dọn theo.** Thân gù góc N/NW: vai áo phủ nốt ô da hở ở hàng 15 hai bên (hộp vai thêm `[4,15,4,15]` và
+`[14,15,14,15]`), bóng nắm tay là cột hai ô (hàng 32–33) thay vì một ô — hai chỗ này lộ ra khi da sáng hơn.
+
+**Số đo.** Đạt 84 → 85/130 (zombie quân đội@NW đạt nhờ bóng da 13,9 %; không sprite nào rớt); ô lẻ 287 giữ,
+`strict` 1663 → 1655; lint 80; QA sạch; `problems: 0`; 113 test.

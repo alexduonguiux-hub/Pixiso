@@ -9,7 +9,7 @@
  * sprites in broad strokes (colours and silhouettes), redrawn at this scale.
  */
 import type { Rgb8 } from '@pixiso/pixel-core';
-import { flipX, parseSprite } from './format.js';
+import { flipX, LEGEND, MATERIALS, packCell, parseSprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
 import {
   POSE_CRAWL,
@@ -398,6 +398,34 @@ const PEAKED_CAP_V: ViewItem = {
   NW: PEAKED_CAP_N,
   W: PEAKED_CAP_W,
 };
+/**
+ * The police cap: the peaked cap with its band (row 5 of every view's drawing)
+ * in the accent colour, two light cells at the left and three shadow at the
+ * right like the band's own tones; the one red in the green group, so the
+ * officer reads at 1x (fourth review).
+ */
+const BAND_ROW = 5;
+const CLOTH2 = MATERIALS.indexOf('cloth2');
+function banded(o: Overlay): Overlay {
+  const { w } = o.sprite;
+  const cells = Int16Array.from(o.sprite.cells);
+  const xs: number[] = [];
+  for (let x = 0; x < w; x++) {
+    const v = cells[BAND_ROW * w + x]!;
+    if (v >= 0 && v >> 3 === CLOTH2) xs.push(x);
+  }
+  xs.forEach((x, i) => {
+    const glyph = i < 2 ? '*' : i >= xs.length - 3 ? 'A' : 'a';
+    cells[BAND_ROW * w + x] = packCell(LEGEND[glyph]!);
+  });
+  return { ...o, sprite: { ...o.sprite, cells } };
+}
+const POLICE_CAP_V = Object.fromEntries(
+  Object.entries(PEAKED_CAP_V).map(([view, l]) => [
+    view,
+    { ...l, overlays: (l.overlays ?? []).map(banded) },
+  ]),
+) as ViewItem;
 const RANGER_S: ViewLayer = {
   remaps: [RANGER_HAT.remap],
   lines: RANGER_HAT.seams,
@@ -815,7 +843,8 @@ type Detail =
   | 'camo'
   | 'scalp'
   | 'cuffs' // a uniform's cuffs in its second cloth
-  | 'kneepads'; // two light cells on each knee;
+  | 'kneepads' // two light cells on each knee
+  | 'rip'; // a tear at the belly baring four skin cells, front views
 
 function isViewItem(x: object): x is ViewItem {
   return 'S' in x;
@@ -1064,6 +1093,11 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       overlays.push(ov(tx0 + 1, hemY - 3, [stripe]), ov(tx0 + 1, hemY - 1, [stripe]));
     }
     if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
+    // A tear below the chest anchor baring the skin: two offset pairs read as a jagged hole (the garment's
+    // own fold shadows frame it), only where the belly faces the viewer.
+    if (d === 'rip' && chest && (view === 'S' || view === 'SW'))
+      // staggered the way that leaves the fold shadows beside it in pairs (the turned torso is narrower)
+      overlays.push(ov(chest[0] + 2, chest[1] + 3, view === 'S' ? ['ss.', '.ss'] : ['.ss', 'ss.']));
     if (d === 'belt' && pose.belt) {
       // The belt is the hem row itself in leather, with a two-cell buckle on the front views.
       const [hx0, hy, hx1] = pose.hem;
@@ -1177,7 +1211,7 @@ export const ZOMBIE_WORKER = wearPosed('zombie_worker', 'Zombie công nhân', PO
 
 /** Police officer: dragging a leg, peaked cap, green uniform, badge, belt, black shoes. */
 export const ZOMBIE_POLICE = wearPosed('zombie_police', 'Zombie cảnh sát', POSE_DROOP_M, {
-  hat: PEAKED_CAP_V,
+  hat: POLICE_CAP_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
@@ -1185,6 +1219,7 @@ export const ZOMBIE_POLICE = wearPosed('zombie_police', 'Zombie cảnh sát', PO
   extras: POLICE_GEAR_V,
   colors: {
     skin: SKIN_M,
+    accent: [200, 40, 50], // the cap band: the one red in the green group, legible at 1x (fourth review)
     cloth2: [40, 76, 50],
     cloth: [98, 128, 80],
     pants: [52, 72, 50],
@@ -1201,9 +1236,9 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['camo', 'stains', 'belt', 'cuffs', 'kneepads'],
+  details: ['camo', 'stains', 'belt', 'cuffs', 'kneepads', 'rip'],
   colors: {
-    skin: [146, 150, 148], // neutral grey dead skin, duller than SKIN_M: the torn sleeves bare both forearms
+    skin: SKIN_M, // the zombies' grey-green on the bare forearms, not the live soldiers' skin (fourth review)
     ...ARMY,
     eye: [150, 80, 40],
     ...BLOOD,
