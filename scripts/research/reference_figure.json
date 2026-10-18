@@ -6,8 +6,8 @@
   "materials": 4,
   "lineDens": 6.9,
   "lines": 6,
-  "flatMax": 5.3,
-  "bigFlats": 8,
+  "flatMax": 3.6,
+  "bigFlats": 5,
   "orphan": 31.49,
   "skin": {
     "tones": 6,
@@ -59,5 +59,12 @@
       "light": [-0.7, -23.7]
     }
   },
-  "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. Tone shares are relative to the most used tone of each family; outline and interior line pixels are not material tones. The sheet itself is not committed (copyright unclear)."
+  "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. Tone shares are relative to the most used tone of each family; outline and interior line pixels are not material tones. The sheet itself is not committed (copyright unclear).",
+  "flatBy": {
+    "skinBare": 26.1,
+    "skin": 14.3,
+    "hair": 10.6,
+    "garment": 17.4,
+    "pants": 5.2
+  }
 }

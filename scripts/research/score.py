@@ -114,6 +114,18 @@ def object_mask(img):
                 bg[ny, nx] = True; stack.append((ny, nx))
     return rgb, ~bg
 
+def base_tone(tones, count, lightness, total):
+    """The tone the others are judged against: the most used one, unless the two most used both cover at least
+    a quarter of the material (a body colour with a shadow mass, or with a broad light). Then the base is the
+    one nearer the median lightness of the tones present (ties: the lighter), so a shadow mass crossing 50 %
+    or a broad highlight never flips the measure."""
+    top = sorted(tones, key=lambda t: -count(t))[:2]
+    if len(top) == 2 and count(top[1]) >= 0.25 * total:
+        ls = sorted(lightness(t) for t in tones)
+        med = ls[len(ls) // 2] if len(ls) % 2 else 0.5 * (ls[len(ls) // 2 - 1] + ls[len(ls) // 2])
+        return min(top, key=lambda t: (abs(lightness(t) - med), -lightness(t)))
+    return top[0]
+
 def measure(img, rows=None):
     rgb, obj = object_mask(img)
     ys, xs = np.nonzero(obj)
@@ -134,10 +146,12 @@ def measure(img, rows=None):
     line = dark & ~boundary & (nd >= 2)
     m['lineDens'] = round(100.0 * line.sum() / n, 1)
     m['lines'] = sum(1 for c in components(line, diag=True) if len(c) >= 2)
-    # flat regions
+    fill = obj & ~boundary & ~line
+    # flat regions: same-colour fill areas; the outline and the interior lines are drawing, not shading, and a
+    # dark-dressed figure's whole outline network would otherwise count as its biggest "flat" region
     flats = []
     for k in range(ncol):
-        for c in components(labels == k): flats.append(len(c))
+        for c in components((labels == k) & fill): flats.append(len(c))
     m['flatMax'] = round(100.0 * max(flats) / n, 1)
     m['bigFlats'] = sum(1 for f in flats if f >= 10)
     # orphans: object pixel with no same-label 4-neighbour
@@ -148,7 +162,6 @@ def measure(img, rows=None):
     # families: palette entries clustered by hue (a three-tone ramp drifts up to ~30 deg end to end), greys split dark/light
     Lr, Cr, hr = rep_lab[:, 0], np.hypot(rep_lab[:, 1], rep_lab[:, 2]), (np.degrees(np.arctan2(rep_lab[:, 2], rep_lab[:, 1])) + 360) % 360
     # material tones are the fill pixels: the silhouette outline and the interior lines are drawing, not shading
-    fill = obj & ~boundary & ~line
     cnt = np.bincount(labels[fill], minlength=ncol)
     groups = []   # {'kind': 'hue' | 'grey-dark' | 'grey-light', 'hue': float | None, 'entries': [palette indices]}
     for i in np.argsort(-cnt):
@@ -168,9 +181,12 @@ def measure(img, rows=None):
         if pxs < max(8, 0.02 * n): continue
         entries = sorted(entries, key=lambda e: Lr[e])
         info = {'px': pxs, 'tones': len(entries), 'kind': g['kind'], 'hue': None if g['hue'] is None else round(float(np.mean([hr[e] for e in entries])), 0)}
+        # largest same-colour fill region of this family, as a share of the family (a bare torso is one big
+        # region on the reference mannequin too; per-material shares compare like with like)
+        info['flat'] = round(100.0 * max(len(c) for e in entries for c in components((labels == e) & fill)) / pxs, 1)
         if len(entries) >= 2:
-            # highlight / shadow = everything clearly lighter / darker than the most used tone (the mid)
-            mode = max(entries, key=lambda e: cnt[e])
+            # highlight / shadow = everything clearly lighter / darker than the base tone (see base_tone)
+            mode = base_tone(entries, lambda e: cnt[e], lambda e: Lr[e], pxs)
             his = [e for e in entries if Lr[e] > Lr[mode] + 0.05]
             los = [e for e in entries if Lr[e] < Lr[mode] - 0.05]
             nh = int(sum(cnt[e] for e in his)); ns = int(sum(cnt[e] for e in los))
@@ -198,10 +214,11 @@ def measure(img, rows=None):
             cells = [(x, y, c) for y, r in enumerate(rows) for x, c in enumerate(r) if c in SH[mat]]
             if len(cells) < 8: return None
             tot = len(cells)
-            # as for the reference: highlight / shadow = lighter / darker than the most used tone
+            # as for the reference: highlight / shadow = lighter / darker than the base tone (see base_tone)
             rank = {deep: 0, sh: 1, mid: 2, hl: 3, bright: 4}
             from collections import Counter
-            mode = Counter(rank[c] for *_, c in cells).most_common(1)[0][0]
+            rc = Counter(rank[c] for *_, c in cells)
+            mode = base_tone(list(rc), lambda r: rc[r], lambda r: r, tot)
             nh = sum(1 for *_, c in cells if rank[c] > mode); ns = sum(1 for *_, c in cells if rank[c] < mode)
             hl_set = {c for c in SH[mat] if rank[c] > mode}; sh_set = {c for c in SH[mat] if rank[c] < mode}
             tones = len({c for *_, c in cells})
@@ -212,6 +229,24 @@ def measure(img, rows=None):
                 info['light'] = [round(float(hx - sx), 1), round(float(hy - sy), 1)]
             return info
         m['skin'] = part('skin')
+        # largest same-shade 4-connected region per material, as a share of that material's cells
+        def flat_of(mat):
+            cells = {(x, y): c for y, r in enumerate(rows) for x, c in enumerate(r) if c in SH[mat]}
+            if len(cells) < 8: return None
+            seen = set(); best = 0
+            for p in cells:
+                if p in seen: continue
+                st = [p]; seen.add(p); n = 0
+                while st:
+                    x, y = st.pop(); n += 1
+                    for q in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                        if q in cells and q not in seen and cells[q] == cells[p]: seen.add(q); st.append(q)
+                best = max(best, n)
+            if best <= 8: return None   # a region this small is never "flat" (the reference's largest hair region is 12 px)
+            return round(100.0 * best / len(cells), 1)
+        m['flatBy'] = {mat: f for mat in SH if (f := flat_of(mat)) is not None}
+        ncell = sum(1 for r in rows for c in r if c != '.')
+        m['skinShare'] = round(100.0 * sum(1 for r in rows for c in r if c in SH['skin']) / max(1, ncell), 1)
         garments = [(mat, part(mat)) for mat in ('cloth', 'cloth2', 'pants', 'leather', 'boots')]
         garments = [(mat, g) for mat, g in garments if g]
         if garments:
@@ -229,9 +264,15 @@ THRESHOLDS = {
     'materials': ('min_ratio', 0.75),
     'lineDens': ('min_ratio', 0.6),
     'lines': ('min_ratio', 0.6),
-    'flatMax': ('max_ratio', 1.3),
     'lint': ('max_abs', 2),
 }
+# Largest same-colour fill region per material, as a share of that material, measured on the reference: the bald
+# mannequin's skin 26.1 % (a bare torso is one region there too), the dressed figure's face 14.3 %, its hair 10.6 %,
+# its jacket 17.4 % (its black trousers fragment to 5.2 % through their many near-black tones; the jacket is the
+# representative garment). A sprite whose skin is at least 40 % of its cells counts as bare. Gate: 1.3x.
+FLAT_REF = {'skinBare': 26.1, 'skin': 14.3, 'hair': 10.6, 'garment': 17.4}
+FLAT_TOL = 1.3
+GARMENTS = ('cloth', 'cloth2', 'pants', 'leather', 'boots')
 # Tone shares relative to the most used tone, measured on the reference (dressed figure: skin 17 / 25, jacket 38 / 19
 # because the jacket's base is its dark tone with lighter ribs; bald mannequin: skin 24 / 26). The bands admit both
 # schemes (a dark base with lights, a mid base with a shadow mass) and reject a flat garment through MIN_VARIATION.
@@ -247,6 +288,13 @@ def judge(m, ref):
         elif mode == 'min_ratio' and r is not None and v < tol * r: flags.append(f'{key} {v}<{round(tol * r, 1)}')
         elif mode == 'max_ratio' and r is not None and v > tol * r: flags.append(f'{key} {v}>{round(tol * r, 1)}')
         elif mode == 'max_plus' and r is not None and v > r + tol: flags.append(f'{key} {v}>{round(r + tol, 2)}')
+    fb = m.get('flatBy')
+    if fb:
+        bare = m.get('skinShare', 0) >= 40
+        for mat, v in fb.items():
+            key = ('skinBare' if bare else 'skin') if mat == 'skin' else 'hair' if mat == 'hair' else 'garment'
+            thr = round(FLAT_TOL * FLAT_REF[key], 1)
+            if v > thr: flags.append(f'flat {mat} {v}%>{thr}')
     for part in ('skin', 'cloth'):
         p = m.get(part)
         if not p: continue
@@ -302,6 +350,7 @@ def main():
         print('reference:', {k: ref[k] for k in ('w', 'h', 'px', 'colors', 'materials', 'lineDens', 'lines', 'flatMax', 'bigFlats', 'orphan')})
         print('  skin', ref.get('skin'), '\n  cloth', ref.get('cloth'))
         for f, info in sorted(ref['families'].items(), key=lambda kv: -kv[1]['px']): print('  family', f, info)
+        if '--ref-only' in args: return
     else:
         ref = json.load(open(ref_file))
     entries = json.load(open(os.path.join(SCORE, 'sprites.json')))
@@ -314,11 +363,13 @@ def main():
         results.append(m)
     cross = cross_checks(entries)
     # report
-    cols = ['sprite', 'colors', 'mat', 'lineDens', 'lines', 'flatMax', 'skin hl/sh', 'cloth hl/sh', 'orphan', 'lint', 'flags']
+    cols = ['sprite', 'colors', 'mat', 'lineDens', 'lines', 'flat (worst)', 'skin hl/sh', 'cloth hl/sh', 'orphan', 'lint', 'flags']
     lines = ['# Pixel quality score', '', f'{len(results)} sprites; reference: ' + (json.dumps({k: ref[k] for k in ("colors", "materials", "lineDens", "lines", "flatMax", "orphan")}) if ref else 'none'), '']
     fails = {}
     for m in results:
-        for f in m['flags']: fails[f.split(' ')[0] if not f.startswith(('skin', 'cloth')) else ' '.join(f.split(' ')[:2])] = fails.get(f.split(' ')[0] if not f.startswith(('skin', 'cloth')) else ' '.join(f.split(' ')[:2]), 0) + 1
+        for f in m['flags']:
+            k = ' '.join(f.split(' ')[:2]) if f.startswith(('skin', 'cloth', 'flat')) else f.split(' ')[0]
+            fails[k] = fails.get(k, 0) + 1
     lines.append('## Failures by metric (sprites failing / total)')
     for k, v in sorted(fails.items(), key=lambda kv: -kv[1]): lines.append(f'- {k}: {v} / {len(results)}')
     lines.append('')
@@ -326,7 +377,7 @@ def main():
     lines.append('| ' + ' | '.join(cols) + ' |'); lines.append('|' + '---|' * len(cols))
     def tone(p): return f"{p['hl']}/{p['sh']}" if p and p.get('hl') is not None else '-'
     for m in sorted(results, key=lambda m: (-len(m['flags']), m['id'], m['view'])):
-        lines.append('| ' + ' | '.join([f"{m['id']}@{m['view']}", str(m['colors']), str(m['materials']), str(m['lineDens']), str(m['lines']), str(m['flatMax']), tone(m.get('skin')), tone(m.get('cloth')), str(m['orphan']), str(m.get('lint', '-')), '; '.join(m['flags'])]) + ' |')
+        lines.append('| ' + ' | '.join([f"{m['id']}@{m['view']}", str(m['colors']), str(m['materials']), str(m['lineDens']), str(m['lines']), (lambda fb: max(fb.items(), key=lambda kv: kv[1])[0] + ' ' + str(max(fb.values())) if fb else '-')(m.get('flatBy')), tone(m.get('skin')), tone(m.get('cloth')), str(m['orphan']), str(m.get('lint', '-')), '; '.join(m['flags'])]) + ' |')
     lines.append('')
     lines.append('## Silhouettes that only differ by colour (S, 1 - IoU < 0.08)')
     for a, b, d in cross['distinct']: lines.append(f'- {a} ~ {b}: {d}')

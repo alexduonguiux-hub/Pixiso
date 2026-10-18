@@ -15,81 +15,72 @@ def L(box, head=True):
     return {'kind': 'seam', 'box': box, 'head': head}
 
 # ---------------------------------------------------------------- hair
-CROWN_SPIKY = ['.....o...o...o...','....o#o.o#o.o#o..','...o#Jho#hho#hHo.','..o##hhHhh#hhhHo.','.o##hhhHhh#hhhHo.','.o#hh#hhHhhhHhjo.','.o#hh#hhhHhhHhjo.','..o#hhhhHhhjhHo..','..ohhHhhhHhhjho..','..oHhHjhhHjhHjo..']
-CROWN = ['......ooooo......','....oo#J#hhoo....','...o##h#hhHhho...','..o##hhh#hhHhho..','..o#hh#hhhHhhHo..','.o#hhh#hhhHhhhHo.','.ohh#hhhhHhhhjHo.','.ohhhHhhHhhhHjjo.']  # rows 0-7 shared by bob/long/wild
-CROWN_CURLY = ['.....ooooooo.....','...oo#J#hh#hoo...','..o#hhHj#hhH#ho..','.o#hhhHj#hhHj#Ho.','o#hhHjhhhHjhhhHjo','o#hhhH#hhhH#hhhjo','.o#hhHj#hhHj#hHo.','o#hhhHjhhhHjhhHjo']
-CROWN_SWEPT = ['......ooooo......','....oo#J#hhoo....','...o##h#hhHhho...','..o##hhh#hhHhho..','..o#hh#hhh#hHjo..','.o#hhh#hhhHhhHjo.','.ohhh#hhhhHhhjHo.','.ohhhhhHhhHhhjjo.','.oHhHjhhHjhhHjHo.']  # rows 0-8
-CROWN_PONY = ['......ooooo......','....oo#J#hhoo....','...o##h#hhHhho...','...o#hhh#hhHho...','..o#hh#hhhHhhHo..','..ohh#hhhhHhhjo..','..ohhhhHhhHhhjo..','..oHhhHhhHhhjHo..']  # rows 0-7
-
-CROWN_BACK = CROWN[:7] + ['.ohhhhhhhhhhhhho.']
-CROWN_SPIKY_BACK = CROWN_SPIKY[:8] + ['..ohhhhhhhhhhho..', '..oHhhhhhhhhhHo..']
-CROWN_SWEPT_BACK = CROWN_SWEPT[:7] + ['.ohhhhhhhhhhhhho.', '.oHhhhhhhhhhhhHo.']
-NAPE_SHORT = ['.ohhhhhHhhhhhjHo.','...ohhhhHhhhjo...','...ohhhhhHhhjo...','...ohhhhhHhjHo...','....ohhhHHjjo....','.....ooooooo.....']  # rows 8-13
-
+# Literal per view; tones painted as continuous locks by scratch tool lock_paint.py (W=3, sweep 0.5): keep the
+# silhouettes, edit tones by repainting rather than by hand.
 HAIR = {}
 HAIR['SPIKY'] = {
-  'SW': O(0,-2, CROWN_SPIKY + ['.....HHj..HjHhH..']),
-  'N':  O(0,-2, CROWN_SPIKY_BACK + NAPE_SHORT),
-  'W':  O(0,-2, ['....o..o..o...','...o#oo#oo#o..','..o#Jo#hoHhho.','.o##hHhhHhhHo.','o##hh#hhHhhHjo','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH.....hHjo.','.ohH......Hjo.','..........Hjo.','.........hjo..','........hHjo..','.........o....']),
+  'SW': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o##ho#hhoHhho.','..ohhJJJJhHHhhHo.','.o#hh##hhjjjjhHo.','.o##hh##hHHhhjjo.','.o##hh##hHHhhHHo.','..o##hh##HhhHHo..','..o##hh##HhhHHo..','..oh##hh#hhHHHo..','.....HHj..HjHhH..']),
+  'N': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o##ho#hhoHhho.','..ohhJJJJhHHhhHo.','.o#hh##hhjjjjhHo.','.o##hh##hHHhhjjo.','.o##hh##hHHhhHHo.','..o##hh##HhhHHo..','..o##hh##HhhHHo..','..oh##hh#hhHHHo..','.ohh##hh#hhHHHHo.','...oh##hhhHHHo...','...oh##hhhHHHo...','...ohh##hHHHHo...','....oh##hHHHo....','.....ooooooo.....']),
+  'W': O(0,-2, ['....o..o..o...','...o#oohooho..','..oh#ohhohhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','ohh##hh##HhhHo','oHhH.....hHjo.','.ohH......Hjo.','..........hHo.','.........hHo..','........hhHo..','.........o....']),
+  'NW': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o##ho#hhoHhho.','..ohhJJJJhHHhhHo.','.o#hh##hhjjjjhHo.','.o##hh##hHHhhjjo.','.o##hh##hHHhhHHo.','..o##hh##HhhHHo..','..o##hh##HhhHHo..','..oh##hh#hhHHHo..','.ohh##hh#hhHHHHo.','...oh##hhhHHHo...','...oh##hhhHHHo...','...ohh##hHHHHo...','....oh##hHHHo....','.....ooooooo.....']),
 }
 HAIR['CURLY'] = {
-  'SW': O(0,0, CROWN_CURLY + ['.oh..HHH..HHhhho.','ohh..........hhho','.oh..........hhho','ohH..........hHho','.oH..........HHo.','..o..........oo..']),
-  'N':  O(0,0, CROWN_CURLY + ['.ohhHHhhHHhhhhho.','ohhhhhhhhhhhhhhho','.ohhHHhhhhHHhhho.','ohHhhhhhhhhhhhHho','.oHHhhhhhhhhhHHo.','..oohhhhhhhhHoo..','....ooooooooo....']),
-  # Side: a round puff two columns past the skull at the back, curving under to the nape (the canvas grows for column 14).
-  'W':  O(0,0, ['...oooooooo....','..o#Jhh#hhhoo..','.o#hhHj#hhH#ho.','o#hhhH#hhhHj#ho','o#hHj#hhHj#hhjo','.o#hhH#hhhHj#jo','o#hhHj#hhHj#hjo','oHhh..HhhhHjhjo','.ohH..oh#hhHjjo','......ohhHj#hjo','......oh#hhHjjo','......ohhHj#jo.','.......ohhHjo..','........ohjo...','.........oo....']),
+  'SW': O(0,0, ['.....ooooooo.....','...oo#J#hh#hoo...','..o#hhHj#hhH#ho..','.o#hhhHj#hhHj#Ho.','o#hhHjhhhHjhhhHjo','o#hhhH#hhhH#hhhjo','.o#hhHj#hhHj#hHo.','o#hhhHjhhhHjhhHjo','.oh..HHH..HHhhho.','ohh..........hhho','.oh..........hhho','ohH..........hHho','.oH..........HHo.','..o..........oo..']),
+  'N': O(0,0, ['.....ooooooo.....','...oo#J#hh#hoo...','..o#hhHj#hhH#ho..','.o#hhhHj#hhHj#Ho.','o#hhHjhhhHjhhhHjo','o#hhhH#hhhH#hhhjo','.o#hhHj#hhHj#hHo.','o#hhhHjhhhHjhhHjo','.ohhHj#hhHj#hhho.','o#hhhH#hhhHj#hhjo','.ohHj#hhHj#hhHjo.','o#hhhHj#hhHj#hhjo','.oHhhHj#hhHjhHjo.','..ooHhhHjhhjHoo..','....ooooooooo....']),
+  'W': O(0,0, ['...oooooooo....','..o#Jhh#hhhoo..','.o#hhHj#hhH#ho.','o#hhhH#hhhHj#ho','o#hHj#hhHj#hhjo','.o#hhH#hhhHj#jo','o#hhHj#hhHj#hjo','oHhh..HhhhHjhjo','.ohH..oh#hhHjjo','......ohhHj#hjo','......oh#hhHjjo','......ohhHj#jo.','.......ohhHjo..','........ohjo...','.........oo....']),
+  'NW': O(0,0, ['.....ooooooo.....','...oo#J#hh#hoo...','..o#hhHj#hhH#ho..','.o#hhhHj#hhHj#Ho.','o#hhHjhhhHjhhhHjo','o#hhhH#hhhH#hhhjo','.o#hhHj#hhHj#hHo.','o#hhhHjhhhHjhhHjo','.ohhHj#hhHj#hhho.','o#hhhH#hhhHj#hhjo','.ohHj#hhHj#hhHjo.','o#hhhHj#hhHj#hhjo','.oHhhHj#hhHjhHjo.','..ooHhhHjhhjHoo..','....ooooooooo....']),
 }
 HAIR['SWEPT'] = {
-  'SW': O(0,0, CROWN_SWEPT + ['.oh..........hHo.','.oh..........hHo.','..o..........oo..']),
-  'N':  O(0,0, CROWN_SWEPT_BACK + ['.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..oHhhhhhhhhhHo..','...oohhhhhhHoo...','.....ooooooo.....']),
-  'W':  O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhhHhhHhhhjo.','..........Hjo.','..........hjo.','.........hHo..','........hHjo..','.........o....']),
+  'SW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh..........hHo.','.oh..........hHo.','..o..........oo..']),
+  'N': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','..oh##hhhHHhhHo..','...oo#hhhHHhoo...','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','ohh##hh##Hhho.','..........hho.','..........hHo.','.........hho..','........hhHo..','.........o....']),
+  'NW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','..oh##hhhHHhhHo..','...oo#hhhHHhoo...','.....ooooooo.....']),
 }
 HAIR['BOB'] = {
-  'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oH..........hHo.','..oH.........oHo.','...o.........oo..']),
-  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.oHhhhhhhhhhhhHo.','..oHhhhhhhhhhHo..','...oohhhhhhHoo...','.....ooooooo.....']),
-  'W':  O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH..hhHhhHjo','......ohhHhhjo','......ohhHhHjo','......ohhHhHjo','......ohHhhHjo','.......oHHjHjo','........oooooo']),
+  'SW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oH..........hHo.','..oH.........oHo.','...o.........oo..']),
+  'N': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','.ohh##hhhHHhhHHo.','..oh##hhhHHhhHo..','...oo##hHHhhoo...','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','oHhH..hhHhhHjo','......o##HhhHo','......oh#hhHHo','......oh#hhHHo','......ohhhHHHo','.......ohhHHHo','........oooooo']),
+  'NW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','.ohh##hhhHHhhHHo.','..oh##hhhHHhhHo..','...oo##hHHhhoo...','.....ooooooo.....']),
 }
 HAIR['WILD'] = {
-  'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','ohh..........hhho','.oh..........hhho','.oh..........hhho','.oH.........oHhho',
-                        'ohH..........Hhho','.oH..........HHo.','.oHo.........oHo.','..o...........o..']),
-  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.','.ohhHHhhhhhhhhho.','ohhhhhhhhHHhhhho.','.ohhhhHHhhhhhhhho','.ohhhhhhhhhHHhho.','.ohHhhhhhhhhhhHo.',
-                        'ohhHhhhhhhhhhHhho','.oHHhhhhhhhhhHHo.','.oHohhhhhhhhHoHo.','..ooooooooooooo..']),
-  'W':  O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH..hhHhhHjo','.ohH..ohHhhhjo','.ohH..ohhHhhjo','.oH...ohhhHjjo','..o...ohhHhhjo','......ohHhhHjo','.......ohhHjjo','.......ohhhHjo','.......ohHjHjo','........ohjo..','.........oo...']),
+  'SW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.oh..HHH..HHhhho.','.oh..........hhho','ohh..........hhho','.oh..........hhho','.oh..........hhho','.oH.........oHhho','ohH..........Hhho','.oH..........HHo.','.oHo.........oHo.','..o...........o..']),
+  'N': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','ohh##hh#hhHHhhHo.','.ohh##hhhHHhhHHHo','.ohh##hhhHHhhHHo.','.o#hh##hHHhhHHHo.','o##hh##hHHhhHHHHo','.o##hh##HhhHHHHo.','.o#ohh##HhhHHoHo.','..ooooooooooooo..']),
+  'W': O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','oHhH..hhHhhHjo','.ohH..ohHhhhjo','.ohH..ohhHhhjo','.oH...ohhhHjjo','..o...ohhhHHho','......ohhhHHho','.......ohHHhho','.......ohHHhho','.......o#HhhHo','........oHho..','.........oo...']),
+  'NW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','ohh##hh#hhHHhhHo.','.ohh##hhhHHhhHHHo','.ohh##hhhHHhhHHo.','.o#hh##hHHhhHHHo.','o##hh##hHHhhHHHHo','.o##hh##HhhHHHHo.','.o#ohh##HhhHHoHo.','..ooooooooooooo..']),
 }
 HAIR['PONYTAIL'] = {
-  'SW': [O(0,0, CROWN_PONY + ['............HhH..']), O(13,10, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
-  'N':  [O(0,0, CROWN_PONY + ['..HhHhhhhhhhHhH..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhHo...','....ohhhhhHHo....']),
-         O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
-  'W':  [O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH.....hHjo.','.ohH......Hjo.']), O(10,8, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
+  'SW': [O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','............HHH..']), O(13,10, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
+  'N': [O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','..##hh##HhhHHHH..','...o#hh#hhHHHo...','...o#hh#hhHHHo...','...o##hhhHHHHo...','....o#hhhHHHo....']), O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
+  'W': [O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHHHo','oh##hh##hHHHHo','oHhH.....hHjo.','.ohH......Hjo.']), O(10,8, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
+  'NW': [O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','..##hh##HhhHHHo..','...o#hh#hhHHHo...','...o#hh#hhHHHo...','...o##hhhHHHo....','....o#hhhHHo.....']), O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
 }
-CROWN_SHORT = ['......ooooo......','....oo#J#hhoo....','...o##hHhh#hho...','...o#hhhHhhhHo...','..o#hh#hhHhhhHo..','..ohh#hhhHhhhjo..','..oHhhhHhhhjhHo..','..oHhHjhhHjhHjo..']
-CROWN_SHORT_BACK = CROWN_SHORT[:6] + ['..ohhhhhhhhhhho..','..oHhhhhhhhhhHo..']
 HAIR['SHORT'] = {
-  'SW': O(0,0, CROWN_SHORT + ['.....HHj..HjHhH..']),
-  'N':  O(0,0, CROWN_SHORT_BACK + NAPE_SHORT),
-  'W':  O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH.....hHjo.','.ohH......Hjo.','..........Hjo.','.........hjo..','........hHjo..','.........o....']),
+  'SW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','.....HHj..HjHhH..']),
+  'N': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','.o##hh##HhhHHHHo.','...o#hh#hhHHHo...','...o#hh#hhHHHo...','...o##hhhHHHHo...','....o#hhhHHHo....','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','oHhH.....hHjo.','.ohH......Hjo.','..........hHo.','.........hho..','........hhHo..','.........o....']),
+  'NW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','...oJJJJhHHhho...','..oh##hhjjjjhHo..','..ohh##hHHhhjjo..','..ohh##hHHhhHHo..','..o#hh##HhhHHHo..','.o##hh##HhhHHHHo.','...o#hh#hhHHHo...','...o#hh#hhHHHo...','...o##hhhHHHHo...','....o#hhhHHHo....','.....ooooooo.....']),
 }
 HAIR['LONG'] = {
-  'SW': O(0,0, CROWN + ['.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh.........ohhho','.oh..........hhho','.oH..........hHo.','..o..........oo..']),
-  'N':  O(0,0, CROWN_BACK + ['.ohhhhhhhhhhhhho.']*7 + ['.oHhhhhhhhhhhhHo.','..ooooooooooooo..']),
-  'W':  O(0,0, ['...oooooooo...','..o#Jh#hhhho..','.o##hhHhhHhho.','.o#hh#hhHhhHo.','o#hh#hhhHhhHjo','o#h#hhhHhhHhjo','ohh#hhhHhhHjjo','oHhH..hhHhhHjo','......ohhHhhjo','......ohhHhHjo','......ohhHhHjo','......ohhHhhjo','......ohHhhHjo','......ohhHhhjo','......ohhHhHjo','......oHHjHjjo','......oooooooo']),
+  'SW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.oh..HHH..HHhhho.','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh.........ohhho','.oh..........hhho','.oH..........hHo.','..o..........oo..']),
+  'N': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','.ohh##hhhHHhhHHo.','.ohh##hhhHHhhHHo.','.o#hh##hHHhhHHHo.','.o#hh##hHHhhHHHo.','.o##hh##HhhHHHHo.','..ooooooooooooo..']),
+  'W': O(0,0, ['...oooooooo...','..oh##hh#hho..','.ohh##hh#hhHo.','.o#hhJJJJhHHo.','o##hh##hhjjjjo','oh##hh##hHHhho','oh##hh##hHHhho','oHhH..hhHhhHjo','......o##HhhHo','......oh#hhHHo','......oh#hhHHo','......ohhhHHho','......ohhhHHho','......o#hHHhho','......o#hHHhho','......o##HhhHo','......oooooooo']),
+  'NW': O(0,0, ['......ooooo......','....ooh#hhHoo....','...o#hh#hhHHho...','..ohJJJJhHHhhHo..','..oh##hhjjjjhHo..','.o#hh##hHHhhjjjo.','.o#hh##hHHhhHHho.','.o##hh##HhhHHhho.','.o##hh##HhhHHhho.','.oh##hh#hhHHhhHo.','.oh##hh#hhHHhhHo.','.ohh##hhhHHhhHHo.','.ohh##hhhHHhhHHo.','.o#hh##hHHhhHHHo.','.o#hh##hHHhhHHHo.','.o##hh##HhhHHHHo.','..ooooooooooooo..']),
 }
-for k in HAIR: HAIR[k]['NW'] = HAIR[k]['N']
-HAIR['PONYTAIL']['NW'] = [O(0,0, CROWN_PONY + ['..HhHhhhhhhhhHo..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhHo....','....ohhhhHHo.....']), O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])]
 
 BUZZ = {'SW': R([0,0,16,7],'hair'), 'W': [R([0,0,13,7],'hair'), R([9,8,12,11],'hair')], 'N': R([0,0,16,13],'hair'), 'NW': R([0,0,16,13],'hair')}
 
 # ---------------------------------------------------------------- hats (W only here; SW/N/NW reuse or flip the S drawings)
 HATS = {
- 'HELMET_W': O(-2,0, ['.....ooooooo......','...oo^cccc^oo.....','..o^cccccccc^o....','.o^ccccccccccCo...','.occcccccccccCCo..',
-                      '.occcccccccccCCo..','.oCcccccccccccCo..','.oCCCCCCCCCCCCCo..','.ooooooooooooooo..'], rigid=True),
- 'BERET_W':  O(-2,0, ['...ooooooooo......','..o&kkkkkkkkoo....','.o&kkkkkkkkkkkoo..','.o&kkkkkkkkkkkkKo.','.oKkkkkkkkkkkkkKo.',
-                      '.oKKKKKKKKKKKKKKo.','.oKKKKKKKKKKKKKKo.','.oKKKKKKKKKKKKKKo.','.ooooooooooooooo..'], rigid=True),
- 'CAP_W':    O(-2,0, ['....ooooooooo.....','...o&kkkkkkkKo....','..o&kkkkkkkkkKo...','..o&kkkkkkkkkKo...','..oKKKKKKKKKKKo...',
-                      '..okkkkkkkkkkko...','..oKKKKKKKKKKKKo..','oooooooooooooooo..'], rigid=True),
- 'CAP_N':    O(-1,0, ['....ooooooooooo....','...o&kkkkkkkkkKo...','..o&kkkkkkkkkkkKo..','..o&kkkkkkkkkkkKo..','..oKKKKKKKKKKKKKo..',
-                      '...okkkkkkkkkkko...','..oKKKKKKKKKKKKKo..','..ooooooooooooooo..'], rigid=True),
- 'HARD_HAT_W': O(-2,0, ['.....ooooooo......','...oo*aaaaaoo.....','..o*aaaaaaaaao....','.o*aaaaaaaaaaAo...','.oaaaaaaaaaaaAAo..',
-                        '.oaaaaaaaaaaaAAo..','o*aaaaaaaaaaaaAAo.','ooooooooooooooooo.'], rigid=True),
+ 'HELMET_W': O(-2,0, ['.....ooooooo......','...ooV^^cccoo.....','..o^^^ccccccco....','.o^ccccccccccco...','.occccccccccCCCo..',
+                      '.occcccccCCCCCvo..','.occccCCCCCvvvvo..','.occcCCCCCCvvvvo..','.ooooooooooooooo..'], rigid=True),
+ 'BERET_W':  O(-2,0, ['...ooooooooo......','..oQQ&&&kkkkoo....','.o&&&kkkkkkkkkoo..','.okkkkkkkkkkkkKKo.','.okkkkkkkkKKKKKqo.',
+                      '.okkkKKKKKKKqqqqo.','.okkkKKKKKKKqqqqo.','.okkkKKKKKKKqqqqo.','.ooooooooooooooo..'], rigid=True),
+ 'CAP_W':    O(-2,0, ['....ooooooooo.....','...oQQ&&&kkkko....','..o&&kkkkkkkkko...','..okkkkkkkkkKKo...','..okkKKKKKqqqqo...',
+                      '..o&&&&&kkkkkko...','..okkKKKKKKqqqqo..','oooooooooooooooo..'], rigid=True),
+ 'CAP_N':    O(-1,0, ['....ooooooooooo....','...oQQ&&&&kkkkko...','..o&&&kkkkkkkkkko..','..okkkkkkkkkkKKKo..','..okkkKKKKKKqqqqo..',
+                      '...o&&&&&kkkkkko...','..okkkKKKKKKqqqqo..','..ooooooooooooooo..'], rigid=True),
+ 'HARD_HAT_W': O(-2,0, ['.....ooooooo......','...oo***aaaoo.....','..o***aaaaaaao....','.o*aaaaaaaaaaao...','.oaaaaaaaaaaAAAo..',
+                        '.oaaaaaaaAAAAAro..','o*aaaaAAAAAArrrro.','ooooooooooooooooo.'], rigid=True),
  'RANGER_W_BRIM': O(-2,6, ['.o.............oo.','oLlllllllllllllLo.','.ooooooooooooooo..'], rigid=True),
 }
 RANGER_W_REMAP = R([0,0,13,6],'leather'); RANGER_W_SEAM = L([1,6,11,6])
