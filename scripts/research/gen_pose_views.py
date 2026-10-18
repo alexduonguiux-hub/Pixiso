@@ -241,7 +241,7 @@ DROOP_SW = body(19, 40, 14, [
 '.oSsssssSSsSSso....',
 '.osso$$$sSsssso....',
 '.o$so$$s$$$Ssso....',
-'.o$so$$s$$$SSsSo...',
+'.o$so$ss$$$SSsSo...',
 '.o$soSSsSSsSosso...',
 '.o$sosssssssosso...',
 '.osso$$$$ssSoSs$o..',
@@ -614,12 +614,60 @@ def raise_far_foot(rows, regions):
     regs['shoeL'] = [x0, y0 - 1, x1, y1 - 1]
     if regs.get('flats'): regs['flats'][0] = [regs['flats'][0][0], regs['flats'][0][1] - 1, regs['flats'][0][2], regs['flats'][0][3] - 1]
     return [''.join(r) for r in out], regs
+TURN_TORSO = {'droop', 'reach', 'drag', 'hunch', 'twist'}  # the crawl's torso hides behind its arms and is a column narrower already
+def narrow_torso(rows, regions):
+    """The three-quarter turn, second part (fourth review): the torso core loses one base column on the far
+    side between its top row and the hem, so a seven-cell front reads six and the far shoulder a cell less;
+    everything further out (the far arm, its outlines) moves in by one, the light mass, the neck and the near
+    side stay. In the shoulder rows the far shoulder tip goes; below them a base cell next to another base
+    cell goes first, else a cell of a run of three or more, else the first base cell, else the first body cell
+    (never a neck cell: the fists of the reaching pose sit in the torso box as neck exceptions). The region
+    boxes on the far side follow the shift."""
+    tx0, ty0, tx1, ty1 = regions['torso']
+    hem_y = regions['hem'][1]
+    # the far shoulder box's last row is still a shoulder row; a pose without shoulder boxes (the crawl) has none
+    arm_top = regions['shoulders'][0][3] + 1 if regions['shoulders'] else ty0
+    inside = lambda x, y, b: b[0] <= x <= b[2] and b[1] <= y <= b[3]
+    out = [list(r) for r in rows]
+    deleted = {}
+    for y in range(ty0, hem_y + 1):
+        r = rows[y]
+        ok = lambda x: x < len(r) and r[x] not in '.o' and not any(inside(x, y, b) for b in regions['neck'])
+        xs = [x for x in range(tx0, tx1 + 1) if ok(x)]
+        if len(xs) < 4: continue  # a neck stub under a lowered head is not the torso
+        if y < arm_top:
+            cand = xs[0]
+        else:
+            run = lambda x: sum(1 for k in range(x - 2, x + 3) if 0 <= k < len(r) and r[k] == r[x] and abs(k - x) <= 2 and all(r[j] == r[x] for j in range(min(k, x), max(k, x) + 1)))
+            cand = (next((x for x in xs if r[x] == 's' and ((ok(x - 1) and r[x - 1] == 's') or (ok(x + 1) and r[x + 1] == 's'))), None)
+                    or next((x for x in xs if run(x) >= 3), None)
+                    or next((x for x in xs if r[x] == 's'), None)
+                    or xs[0])
+        deleted[y] = cand
+        out[y] = ['.'] + list(r[:cand]) + list(r[cand + 1:])
+    regs = copy.deepcopy(regions)
+    sh = lambda x, y: x + 1 if y in deleted and x <= deleted[y] else x
+    box = lambda b: [sh(b[0], b[1]), b[1], sh(b[2], b[1]), b[3]]
+    regs['torso'] = [tx0 + 1, ty0, tx1, ty1]
+    # the far shoulder and sleeve boxes lie beyond every deleted column: they move in by one whatever their top row
+    if regs['shoulders']: regs['shoulders'] = [[regs['shoulders'][0][0] + 1, regs['shoulders'][0][1], regs['shoulders'][0][2] + 1, regs['shoulders'][0][3]]] + regs['shoulders'][1:]
+    regs['sleeveL'] = {k: [b[0] + 1, b[1], b[2] + 1, b[3]] for k, b in regs['sleeveL'].items()}
+    regs['hem'] = box(regs['hem'])
+    regs['frayedXs'] = [sh(x, hem_y) for x in regs['frayedXs']]
+    regs['collar'] = [box(b) for b in regs['collar']]
+    regs['neck'] = [box(b) for b in regs['neck']]
+    for k in ('chest', 'number', 'tie', 'belt', 'stains', 'gash'):
+        if k in regs: regs[k] = [sh(regs[k][0], regs[k][1]), regs[k][1]]
+    return [''.join(r) for r in out], regs
+
 def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
     """A view of a pose: `rows` is the body and `head` = (view, x, y, shift) places the view's base
     head on it; with `head=None` the rows are the whole figure (its head drawn in) and `headcols`
     maps each head-grid column to a figure column for the items drawn in head space."""
     if view == 'SW' and pose in RAISE_FAR_FOOT and 'shoeL' in regions:
         rows, regions = raise_far_foot(rows, regions)
+    if view == 'SW' and pose in TURN_TORSO:
+        rows, regions = narrow_torso(rows, regions)
     if head is None:
         hview, hx, hy, shift = view, 0, 0, (lambda k: 0)
         fig = rows

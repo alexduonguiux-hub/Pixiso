@@ -31,6 +31,8 @@ export interface Garment {
   /** Pants: two light cells on each knee (a uniform's knee pads). */
   kneePads?: boolean;
   /** Torso: the back views keep only the shoulder block of the light (no tail down the chest). */
+  /** A three-quarter view: the torso core is a column narrower on the lit far side, so the terminator moves a column toward the near edge to keep the shadow share. */
+  turned?: boolean;
   light?: 'full' | 'block';
   /** Sleeve: columns let out past the arm's outline (a coat sleeve); the outline moves outward with it. */
   letOut?: number;
@@ -128,14 +130,15 @@ export function tailor(
   if (g.kind === 'torso') {
     // The shadow is a shape, not a column: narrow on the chest, wider over the ribs and the belly
     // (the terminator steps left as the torso turns away), then the two hem rows.
+    const turn = g.turned ? 1 : 0;
     const cut = (y: number) =>
       y < y0 + 2
         ? x1
         : y <= y0 + 5
-          ? x0 + Math.round(w * 0.75)
+          ? x0 + Math.round(w * 0.75) + turn
           : y <= y0 + 8
-            ? x0 + Math.round(w * 0.64)
-            : x0 + Math.round(w * 0.55);
+            ? x0 + Math.round(w * 0.64) + turn
+            : x0 + Math.round(w * 0.55) + turn;
     for (const c of cells) {
       if (c.x >= cut(c.y)) c.shade = SHADOW;
       if (c.y >= y1 - 1 && c.x >= x0 + Math.round(w * 0.4)) c.shade = SHADOW;

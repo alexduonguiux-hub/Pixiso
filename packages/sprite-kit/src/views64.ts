@@ -24,11 +24,20 @@ export const STAND_SW: ZombiePose = {
   ...POSE_STAND,
   id: 'stand_sw',
   form: standForm('stand_sw', 'Đứng (SW)', HERO_SW_FIGURE),
+  // The torso core is a column narrower on the far side (6 cells), so the far arm, shoulder and the
+  // anchors on that side sit a column in (D-083).
+  torso: [5, 15, 12, 28],
   shoulders: [
-    [2, 15, 3, 18],
+    [3, 15, 4, 18],
     [13, 15, 15, 18],
   ],
-  sleeveL: { short: [1, 18, 4, 22], long: [1, 18, 4, 24], torn: [1, 18, 4, 20] },
+  sleeveL: { short: [2, 18, 5, 22], long: [2, 18, 5, 24], torn: [2, 18, 5, 20] },
+  hem: [6, 28, 11, 28],
+  frayedXs: [6, 7, 9, 11],
+  chest: [7, 20],
+  number: [8, 21],
+  stains: [6, 21],
+  gash: [3, 23],
   // The far (left) foot sits one row higher: further back.
   shoeL: [1, 35, 7, 38],
   flats: [
@@ -121,11 +130,15 @@ export const STAND_NW: ZombiePose = {
   ...STAND_N,
   id: 'stand_nw',
   form: standForm('stand_nw', 'Đứng (NW)', HERO_NW_FIGURE),
+  // As SW seen from behind: the torso core a column narrower on the far (right) side (D-083).
+  torso: [4, 15, 11, 28],
   shoulders: [
     [1, 15, 3, 18],
-    [13, 15, 14, 18],
+    [12, 15, 13, 18],
   ],
-  sleeveR: { short: [12, 18, 15, 22], long: [12, 18, 15, 24] },
+  sleeveR: { short: [11, 18, 14, 22], long: [11, 18, 14, 24] },
+  hem: [5, 28, 10, 28],
+  frayedXs: [5, 7, 9, 10],
   pants: [[0, 29, 15, 34]],
   // The far (right) foot sits one row higher: further back.
   shoeR: [9, 35, 15, 38],

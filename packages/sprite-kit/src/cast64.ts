@@ -913,6 +913,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       pockets: look.details.includes('camo') && (view === 'S' || view === 'SW'),
 
       light: view === 'N' || view === 'NW' ? 'block' : 'full',
+      turned: view === 'SW' || view === 'NW',
     });
     return { box: [tx0, ty0, tx1, y1], except: [...pose.neck, ...except], to: 'cloth' };
   };

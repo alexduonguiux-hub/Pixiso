@@ -578,3 +578,37 @@ ngưỡng 5–45 %; đơn thuốc sửa từng ô đầu nếp của luật chun
 
 **Số đo.** Đạt 83 → 85/130 (được Đột Biến @SW/@W: sáng quần 2,6 → 10,5 %); ô lẻ 302 → 299; `strict`
 1686; QA sạch; lint 82; 113 test.
+
+### D-083 Góc 45° xoay thật: lõi thân 6 ô (B1 của giám khảo vòng 4)
+
+D-072/D-077 thu vai xa 2 cột, tay xa 1 cột, chân xa lùi, mắt xa 1 ô — nhưng **lõi thân vẫn 7 ô như S** và
+vai chỉ 15 → 14, nên giám khảo đo "SW/NW chỉ là S dịch tay". Theo đơn: lõi thân mất **một cột gốc phía xa**
+từ hàng đỉnh thân đến gấu (7 → 6), vai xa mất một ô (15 → 13), mọi thứ ngoài phía xa (tay xa, viền) dồn vào
+một cột; cổ, mảng sáng ngực, phía gần giữ nguyên. Hàng tay 17 → 15, hàng thân 17 → 14.
+
+**Luật `narrow_torso`** (`gen_pose_views.py`, áp cho dáng SW gục đầu, vươn tay, lết chân, khom, ngoẹo cổ;
+NW suy từ SW nên theo luôn): ở các hàng vai bỏ mũi vai xa (ô thân đầu tiên trong hộp thân); dưới vai bỏ một ô
+gốc `s` có ô gốc kề (giữ mảng sáng `$$` và mảng bóng nguyên khối), không có thì ô trong dải ≥ 3 cùng tông, rồi
+ô gốc bất kỳ, rồi ô thân đầu tiên; không bao giờ ô trong hộp cổ (nắm tay của dáng vươn tay nằm trong hộp thân
+như ngoại lệ cổ); hàng có dưới 4 ô ứng viên (cuống cổ dưới đầu hạ) để yên — xoá nó làm cằm hở da. Hộp vai xa
+và tay xa dời vào một cột vô điều kiện (hàng đỉnh hộp vai có thể không nằm trong các hàng đã thu — lỗi đầu
+làm zombie dân thường @NW lộ một cột da ở vai); hộp thân, gấu, cổ áo, mỏ neo (ngực, số, cà vạt, khoá, vết
+bẩn, vết chém) dời theo ô đã xoá của đúng hàng ấy. Thân bò (Kẻ Bám Trần) không áp: thân khuất sau tay và đã
+hẹp sẵn một cột. Thân mập suy từ khung SW nên hẹp theo; to con và khổng lồ giám khảo đã chấp nhận bề rộng.
+
+**Khung đứng** (`hero64.views.ts` `HERO_SW/NW_FIGURE` hàng 15–28) tính bằng cùng luật rồi ghi tay; vùng
+`STAND_SW/NW` (`views64.ts`) khai báo lại: thân [5,15,12,28] / [4,15,11,28], vai xa [3,15,4,18] /
+[12,15,13,18], tay xa [2,18,5,·] / [11,18,14,·], gấu [6,28,11,28] / [5,28,10,28]. Mảng sáng ngực SW so le
+(hàng thứ ba 1 ô) vì khối 2×3 vuông cạnh cột gốc cùng chiều cao là `banding` (khung và thân gục đầu).
+
+**Áo trên thân quay** (`Garment.turned`, bật cho SW/NW): thân mất một cột **phía sáng** nên tỉ lệ bóng áo
+vọt (Dương @SW 56,8 %, Sơn 58,1 %); đường ranh bóng của thân lùi một cột về phía gần → 50–54 %. Ba lô góc
+NW: thân ba lô hẹp một cột phía xa theo lưng (đang che bàn tay xa của Sơn).
+
+**Chưa làm theo đơn:** hạ vai xa một hàng (vai đã 13 ô nhờ bỏ mũi vai); mũ sắt zombie quân đội ở SW vẫn
+là vòm đối xứng như S (vòm tròn nhìn từ 45° không khác; ô nhạt cạnh mắt xa giám khảo nêu đã hết từ D-078).
+
+**Số đo.** Đạt 85 → 84/130 (mất Kẻ Thính @NW ở thước ảnh `lines`/`lineDens`: cột bóng 1 ô ôm viền phía xa
+từng được đếm là một nét; so với nền 83 vẫn +1); ô lẻ 299 → 288; `strict` 1651; lint cầm bút 82 → 80 (hết
+bậc 4-1-4 ở hông SW/NW của khung và dáng vươn tay, thêm một bậc ở cuống cổ dáng lết); lệch góc nhìn 0; QA
+sạch; `problems: 0`; 113 test.
