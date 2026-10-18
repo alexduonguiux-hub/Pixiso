@@ -1085,6 +1085,7 @@ export const BACKPACK_N: ViewLayer = {
       'oilllLLlLio',
       'ooooooooooo',
     ]),
+    ov(-3, 6, ['ooo', 'o%o', 'o%o', 'ooo']),
   ],
 };
 

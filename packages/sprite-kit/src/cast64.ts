@@ -611,6 +611,29 @@ const TUNIC_V: ViewItem = {
   NW: { overlays: [TUNIC, POUCH_BACK] },
 };
 
+/** The beret soldier's leather map case on the left hip, a column past the arm. */
+const MAP_CASE: Overlay = ov(-2, 23, ['oooo', 'oLlo', 'oLlo', 'olio', 'oooo']);
+const MAP_CASE_V: ViewItem = {
+  S: { overlays: [MAP_CASE] },
+  SW: { overlays: [MAP_CASE] },
+  W: { overlays: [ov(1, 23, ['oooo', 'oLlo', 'oLlo', 'olio', 'oooo'])] },
+  N: { overlays: [ov(15, 23, ['oooo', 'olLo', 'olLo', 'oilo', 'oooo'])] },
+  NW: { overlays: [ov(15, 23, ['oooo', 'olLo', 'olLo', 'oilo', 'oooo'])] },
+};
+
+/** The police zombie's duty belt on the mirrored droop pose: a baton beside the hanging hand, a holster on the far hip. */
+const BATON = ['oo', 'oD', 'oD', 'oD', 'oD', 'oo'];
+const BATON_R = ['oo', 'Do', 'Do', 'Do', 'Do', 'oo'];
+const HOLSTER = ['oo', 'Do', 'Do', 'Do', 'Do', 'Do', 'oo'];
+const HOLSTER_L = ['oo', 'oD', 'oD', 'oD', 'oD', 'oD', 'oo'];
+const POLICE_GEAR_V: ViewItem = {
+  S: { overlays: [ov(0, 26, BATON), ov(16, 27, HOLSTER)] },
+  SW: { overlays: [ov(-1, 26, BATON), ov(16, 27, HOLSTER)] },
+  W: { overlays: [ov(3, 26, BATON)] },
+  N: { overlays: [ov(17, 26, BATON_R), ov(1, 28, HOLSTER_L)] },
+  NW: { overlays: [ov(17, 26, BATON_R), ov(1, 28, HOLSTER_L)] },
+};
+
 /** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
 const MEDIC_BAG: Overlay[] = [
   ov(5, 17, ['A......', '.A.....', '..A....', '...A...', '....A..', '.....A.', '......A']),
@@ -1056,12 +1079,13 @@ export const ZOMBIE_WORKER = wearPosed('zombie_worker', 'Zombie công nhân', PO
 });
 
 /** Police officer: dragging a leg, peaked cap, green uniform, badge, belt, black shoes. */
-export const ZOMBIE_POLICE = wearPosed('zombie_police', 'Zombie cảnh sát', POSE_DRAG, {
+export const ZOMBIE_POLICE = wearPosed('zombie_police', 'Zombie cảnh sát', POSE_DROOP_M, {
   hat: PEAKED_CAP_V,
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
   details: ['badge', 'belt', 'stains'],
+  extras: POLICE_GEAR_V,
   colors: {
     skin: SKIN_M,
     cloth2: [40, 76, 50],
@@ -1650,6 +1674,7 @@ const LINH_MU_NOI_LOOK: Look = {
   shoes: 'both',
   details: ['belt', 'badge'],
   face: 'plain',
+  extras: MAP_CASE_V,
   colors: { skin: [214, 170, 132], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
 };
 export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, LINH_MU_NOI_LOOK);
