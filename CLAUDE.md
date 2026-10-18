@@ -35,6 +35,7 @@ Web app giúp người **không biết vẽ, không biết dựng 3D** tạo nh�
 | `pnpm sheets` | Render sheet ×8 vào `test-output/sheets/` để tự xem bằng mắt |
 | `pnpm qa:hero` | Kiểm tra hình nhân vật ở mọi góc (viền sọ, da hở trên mũ, lỗ kín) |
 | `pnpm qa:pixel` | Lint cầm bút pixel (viền đôi, bậc giật, dải thẳng hàng, sọc ôm viền) trên thân và mọi góc dáng |
+| `pnpm qa:score` | Chấm điểm mọi nhân vật ở 5 góc theo thước đo của ảnh mẫu (số tông, mảng phẳng, đường chi tiết, tỉ lệ sáng/tối, silhouette) → `test-output/score/report.md`; chuẩn trong `docs/QUALITY_BAR.md` |
 
 ## Nguyên tắc bất biến
 
@@ -68,7 +69,7 @@ Web app giúp người **không biết vẽ, không biết dựng 3D** tạo nh�
 - **Spec không nói rõ:**
   - chọn phương án đơn giản nhất, ghi vào `docs/DECISIONS.md` rồi làm tiếp;
   - chỉ hỏi người dùng khi quyết định không thể đảo ngược.
-- **Trước khi vẽ hay sửa bất kỳ ma trận pixel nào, đọc `.claude/skills/pixel-art/SKILL.md`** (quy tắc cầm bút, quy trình sinh và kiểm tra, lỗi đã bị bắt). Sau khi sửa: `pnpm qa:pixel` và `pnpm qa:hero` phải sạch hoặc không tệ hơn trước.
+- **Trước khi vẽ hay sửa bất kỳ ma trận pixel nào, đọc `.claude/skills/pixel-art/SKILL.md`** (quy tắc cầm bút, quy trình sinh và kiểm tra, lỗi đã bị bắt). Sau khi sửa: `pnpm qa:pixel` và `pnpm qa:hero` phải sạch hoặc không tệ hơn trước, và `pnpm qa:score` không được giảm số sprite đạt; nghiệm thu theo `docs/QUALITY_BAR.md`, không theo cảm tính.
 - **Tự kiểm tra bằng mắt.**
   - Sau mỗi thay đổi liên quan render hoặc template, chạy `pnpm sheets` (ảnh ×8 trong `test-output/sheets/`, đã gitignore).
   - Tự xem ảnh và đối chiếu 14 quy tắc trong `docs/PIXEL_STYLE_REFERENCE.md` §3 trước khi báo xong.

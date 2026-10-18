@@ -134,6 +134,10 @@ pnpm typecheck && pnpm test
 
 ## 7. Checklist trước khi gửi ảnh
 
+Nghiệm thu theo `docs/QUALITY_BAR.md`: chạy `pnpm qa:score` (số sprite đạt không được giảm,
+ghi trước/sau vào PROGRESS) và chấm 10 mục bằng mắt ở §3 của tài liệu đó, cạnh ảnh mẫu cùng
+tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
+
 - [ ] `problems: 0`; `qa:hero` sạch; số cảnh báo `qa:pixel` không tăng so với trước khi sửa.
 - [ ] Đổ đen ×1 đọc ra dáng và hướng; 8 hướng cùng chiều cao chân và cùng điểm neo.
 - [ ] Không sọc dọc theo chi, không dải xếp bằng nhau, không "đường mờ" song song viền.
