@@ -208,4 +208,4 @@ góc nhìn, viền, ánh sáng) đạt mức mẫu; lớp bề mặt (tóc, kế
 bộ góc cho zombie) chưa — ở 1× là silhouette màu phẳng với hai chấm xanh, ở ×6 là "lắp ghép theo
 luật" chứ chưa phải "vẽ tay"._
 
-Xử lý sau biên bản (theo thứ tự B8 → B4 → B1 → B2 → B5 → B3): **B8 xong**, **B4 phần lớn** (D-073: ô lẻ theo đúng thước của giám khảo 664 → 357, đạt 73 → 76/130; phần còn lại gộp vào B1/B2/B5), **B1 xong** (D-074: tóc chải thành ba mảng chéo có đường lọn ngay khi mặc, đạt 77/130, ô lẻ 338). Thước `scripts/research/lone_pixels.py` giữ lại để số này không tăng.
+Xử lý sau biên bản (theo thứ tự B8 → B4 → B1 → B2 → B5 → B3): **B8 xong**, **B4 phần lớn** (D-073: ô lẻ theo đúng thước của giám khảo 664 → 357, đạt 73 → 76/130; phần còn lại gộp vào B1/B2/B5), **B1 xong** (D-074: tóc chải thành ba mảng chéo có đường lọn ngay khi mặc, đạt 77/130, ô lẻ 338), **B2 xong** (D-075: thắt lưng, cổ tay, băng gối, mảng sáng áo một khối, gấu, cổ chữ V, thân trần vẽ lại; đạt 80/130). Thước `scripts/research/lone_pixels.py` giữ lại để số này không tăng.

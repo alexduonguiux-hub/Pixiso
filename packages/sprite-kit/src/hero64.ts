@@ -53,18 +53,18 @@ export const HERO_S_FIGURE = sprite`
   .....os$$$so.....
   ....osoooooso....
   ...ossssssssso...
-  ..osssSSsSSssso..
-  ..oss$$SsS$$sso..
-  .oSSs$$sss$$sSSo.
-  .osso$$$s$$$osso.
-  .osso$$$s$$$osso.
-  o$sSoSSsssSSoSs$o
-  o$sSosssssssoSs$o
-  o$soos$$$$$soos$o
-  o$sooss$$$ssoos$o
-  osssos$$$$$sossso
-  osososs$$$ssososo
-  osooosssssssoooso
+  ..os$$SSsSSssso..
+  ..os$$$SsSsssso..
+  .oSS$$$ssssssSSo.
+  .osso$$sssssosso.
+  .osso$$sssssosso.
+  o$sSo$$ssSSSoSs$o
+  o$sSossssSSSoSs$o
+  o$soossssSSSoos$o
+  o$soossssSSSoos$o
+  osssosssssssossso
+  osososssssSSososo
+  osooossssSSSoooso
   .osoosSSsSSsoosso
   ..ooossooossoooo.
   ...oSsso.ossSo...

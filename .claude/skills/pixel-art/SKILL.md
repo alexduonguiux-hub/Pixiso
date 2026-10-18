@@ -69,8 +69,9 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - **Chi (tay, chân):** 3–4 hàng trên cùng của bắp có 1–2 ô `$` phía trái, khuỷu/gối trơn tông
   gốc, cẳng tay một vệt sáng ngắn 2–3 ô, bóng `S` chỉ ở mép dưới–phải của cổ tay và nách.
   Không vệt sáng/bóng suốt chiều dài chi.
-- **Ngực/lưng:** sáng là mảng 2×2–3×2 ở ngực trái trên; lưng (góc N) san hết `$`/`S` trong
-  khung ngực về `s`, chỉ giữ cụm bóng dưới bả vai.
+- **Ngực/lưng:** thân trần: khối sáng 3×3 ở ngực trái với đuôi 2 cột, khối tối 3×4 ở sườn phải,
+  không dải sáng bụng, cổ giữ bóng dưới cằm (D-075); lưng (góc N) san hết `$`/`S` trong khung ngực
+  về `s`, chỉ giữ cụm bóng dưới bả vai.
 - **Đầu:** sáng ở trán trái, bóng dưới cằm và dưới mái tóc; đầu trọc dùng `BALD_V` để bỏ mảng
   bóng gáy của đầu gốc (nếu không người trọc nhìn như có tóc).
 - **Tóc:** chỉ vẽ silhouette một tông (`h` + viền); tông do `hair64.ts` (`combHair`) chải khi mặc:
@@ -80,7 +81,10 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - **Áo quần không thừa hưởng bóng của da.** Sau remap, `tailor64.ts` tô lại món theo hộp của nó:
   vải chủ yếu tông gốc và tối (áo mẫu 10 % sáng / 40 % tối), khối bóng có ranh bậc thang, sáng
   chỉ ở vai–ngực trái, nếp gấp ngắn, khuy/túi chỉ ở góc thấy mặt trước, tay xa tối toàn bộ. Khi
-  thêm kiểu áo mới, khai báo `Garment` trong `build()` thay vì vẽ bóng tay vào remap.
+  thêm kiểu áo mới, khai báo `Garment` trong `build()` thay vì vẽ bóng tay vào remap. Kết cấu là luật
+  (D-075): mảng sáng một khối chữ L ≈ 12 % món áo, nếp bắt sáng 3 ô, gấu sâu một hàng, thắt lưng là
+  hàng may đổi sang da giày + khoá 2 ô, cổ tay vải 2 bóng, băng gối 2 ô sáng, cổ thun chữ V; thân trần
+  vẫn có đường cạp quần.
 
 ## 4. Đầu và dáng
 

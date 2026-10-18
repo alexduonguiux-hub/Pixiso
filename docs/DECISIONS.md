@@ -385,3 +385,33 @@ không có ô góc: không ngăn được vùng 4-liên thông. Quét _vào_ ng�
 89 → 89; `lintAdded` rớt 19 → 17; banding trên tóc (lint chạy trên ma trận ô) 40 → 1; QA sạch; 113 test.
 `lineDens`/`lines` (đếm pixel tối mảnh trong ảnh) giảm trên 52 sprite vì tóc ít ô sâu hơn — thước này đo cả
 sợi tóc tối, giữ nguyên để so với mẫu cùng cách đo.
+
+### D-075 Áo quần có kết cấu: thắt lưng, cổ tay, băng gối, mảng sáng một khối, gấu (B2 của giám khảo vòng 3)
+
+**Luật mới trong `tailor64.ts` / `build()`.** (1) _Mảng sáng áo_: một khối chữ L ở vai–ngực trái (khối 3×3
+
+- đuôi 2 cột xuống ngực), ngân sách ≈ 12 % số ô món áo (6–16 ô), đổ khối trước rồi đuôi rồi hàng cuối của
+  khối; góc sau chỉ giữ khối vai (≤ 9 ô) vì đuôi dọc tạo dải bằng nhau với cột bên cạnh. (2) _Nếp ngực_ bắt
+  sáng 3 ô (2 ô thẳng hàng với đuôi sáng phía trên thành bậc thang), lùi còn 2 hoặc 0 khi hàng không đủ ô.
+  (3) _Gấu_: hàng cuối trên đường may là dải sâu suốt bề rộng (khi hàng ≥ 3 ô). (4) _Thắt lưng_ (`belt`):
+  chính hàng đường may đổi thành da giày (nâu sẫm của bảng `boots`, như màu giám khảo nêu) với khoá 2 ô sáng
+  ở mặt trước. (5) _Cổ tay_ (`cuffs`): hàng cuối tay dài là vải 2 bóng (xanh sẫm của mũ/rằn ri) thay cho tông
+  sâu của ống tay — tối hơn ống tay hơn một bậc, đúng "ngoài dải". (6) _Băng gối_ (`kneepads`): 2 ô sáng cạnh
+  mép sáng mỗi ống quần ở hàng gối, chỉ khi ống ≥ 3 ô. (7) _Cổ áo thun_: chữ V 3+1 ô vải sâu dưới đường cổ ở
+  S/SW. (8) _Thân trần_ vẫn kết thúc bằng đường cạp quần (seam suốt bề rộng thân). Lính (5), zombie quân đội,
+  Lính Nhiễm nhận `belt`+`cuffs`+`kneepads`. Vết bẩn dời sang phải một cột để không đè lên ô sáng của nếp.
+
+**Thân trần vẽ lại** (mannequin S + khung đi, SW, khổng lồ ×1,5): bỏ dải sáng bụng, thêm khối sáng 3×3 ở
+ngực trái (đuôi 2 cột 3 hàng) và khối tối 3×4 ở sườn phải, hai hàng dưới bụng tối bên phải; cổ giữ bóng
+dưới cằm (`SSsSS`, `SsS`); khổng lồ: khối sáng 4×4 ngực trái, khối tối 3 ô rộng dưới tay phải, hàng cuối
+của khối lùi một ô để không xếp dải bằng với hàng cơ bụng. Chỉ hiện trên người cởi trần (Kẻ Phun, Hùng,
+Kẻ Mang Vỏ, Đột Biến); người mặc áo được `tailor` tô đè. NW/N/W và các dáng zombie giữ thân cũ.
+
+**Đã thử và bỏ.** Cạp quần sâu cho mọi quần (Kẻ Phun quần tối 64 % > 55 %); đuôi sáng đầy đủ ở góc sau
+(banding cột); nếp bắt sáng 2 ô cùng đuôi sáng (bậc thang hàng); cổ tay vải 2 gốc và thắt lưng da sáng (thước
+`lines` đếm vạch tối: mất một vạch, zombie quân đội @W rớt — vẫn rớt với nâu sẫm vì cổ tay nhập với vạch khác,
+chấp nhận 1 sprite); vết bẩn hạ một hàng hay đảo thứ tự hàng (ô viền lẻ ở Kẻ Bám Trần/Kẻ Thính góc sau).
+
+**Số đo.** Đạt 77 → 80/130 (được: Kẻ Phun @S, Lính nón sắt @N/NW, thể thao @S/W; mất: zombie quân đội @W
+`lines`); ô lẻ 338 → 340 (2 ô da mép bụng Kẻ Phun cạnh cạp quần mới, hộp thân không phủ hết bụng béo); lint
+cầm bút 89 → 89; QA sạch; 113 test.

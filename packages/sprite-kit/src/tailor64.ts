@@ -26,6 +26,12 @@ export interface Garment {
   placket?: 'buttons' | 'none';
   /** Sleeve: dark band on the last row. */
   cuff?: boolean;
+  /** Sleeve: the cuff drawn in another material (a uniform's darker green) instead of the deep tone. */
+  cuffMaterial?: Material;
+  /** Pants: two light cells on each knee (a uniform's knee pads). */
+  kneePads?: boolean;
+  /** Torso: the back views keep only the shoulder block of the light (no tail down the chest). */
+  light?: 'full' | 'block';
   /** Sleeve: columns let out past the arm's outline (a coat sleeve); the outline moves outward with it. */
   letOut?: number;
   /** Torso: two breast-pocket dashes. */
@@ -134,23 +140,49 @@ export function tailor(
       if (c.x >= cut(c.y)) c.shade = SHADOW;
       if (c.y >= y1 - 1 && c.x >= x0 + Math.round(w * 0.4)) c.shade = SHADOW;
     }
-    // Light on the upper-left chest and shoulder, a bright rim on top of it.
-    for (let y = y0 + 2; y <= y0 + 4; y++) for (let x = x0; x <= x0 + 2; x++) set(x, y, LIGHT);
+    // Light on the upper-left chest: a 3x3 block on the shoulder with a two-column tail down the chest (the
+    // reference's light is a tenth of the garment, one mass, not a few cells on the shoulder), a bright rim
+    // on top of it.
+    // The mass is about an eleventh of the garment (6 to 16 cells), filled block first, then the tail, so a
+    // tank top gets a small block and a shirt the whole L.
+    // Filled block first, then the tail, then the block's last row, so a tight budget still reaches the tail
+    // (the crease under the block relies on it, see below); the back views keep the block alone.
+    const lightCells: [number, number][] = [];
+    const block = g.light === 'block';
+    for (let y = y0 + 2; y <= y0 + 4; y++)
+      for (let x = x0; x <= x0 + 2; x++) lightCells.push([x, y]);
+    if (!block) {
+      for (let y = y0 + 6; y <= y0 + 7; y++)
+        for (let x = x0; x <= x0 + 1; x++) lightCells.push([x, y]);
+      for (let x = x0; x <= x0 + 2; x++) lightCells.push([x, y0 + 5]);
+    }
+    const budget = Math.max(6, Math.min(block ? 9 : 16, Math.round(cells.length * 0.12)));
+    for (const [x, y] of lightCells.filter(([x, y]) => has(x, y)).slice(0, budget))
+      set(x, y, LIGHT);
     set(x0 + 1, y0 + 1, BRIGHT);
     set(x0 + 2, y0 + 1, BRIGHT);
-    // Deep shadow under the far arm and in the hem corner.
+    // Deep shadow under the far arm; the hem is a deep band across the last row above the seam.
     for (let y = y0 + 4; y <= y0 + 5; y++) set(rowMax.get(y) ?? x1, y, DEEP);
-    set(x1, y1 - 1, DEEP);
+    const hemRow = cells.filter((c) => c.y === y1 - 1);
+    if (hemRow.length >= 3) for (const c of hemRow) c.shade = DEEP;
     set(x1 - 1, y1, DEEP);
     // Creases that cross the whole lit side (under the chest, at the waist): a fold line is what breaks a
     // shirt front into the patches of the reference (no same-tone patch wider than ~20 cells), so each runs
     // from the lit edge to the terminator, catching light on its first cell and continuing deeper into the
     // shadow mass. One fold on the shadow side, and the far edge of the shadow mass turns deeper.
-    // A crease catches light on its first two cells (one cell alone reads as a stray dot), then shadows.
+    // A crease catches light on its first three cells (one alone reads as a stray dot; two line up with the
+    // light tail above it into a terrace), then shadows.
     const crease = (y: number) => {
       const c = cut(y);
       const lit = rowMin.get(y) ?? x0;
-      for (let x = x0; x < c; x++) set(x, y, x <= lit + 1 ? LIGHT : SHADOW);
+      // three lit cells when the row has them in a row, else two (a lone light cell reads as a stray dot)
+      const lead =
+        has(lit, y) && has(lit + 1, y) && has(lit + 2, y)
+          ? 2
+          : has(lit, y) && has(lit + 1, y)
+            ? 1
+            : -1;
+      for (let x = x0; x < c; x++) set(x, y, x <= lit + lead ? LIGHT : SHADOW);
       for (let x = c + 1; x < x1; x++) set(x, y, DEEP);
     };
     crease(y0 + 6);
@@ -193,6 +225,11 @@ export function tailor(
       if (g.cuff && c.y === y1) c.shade = DEEP;
     }
     if (lit) set(rowMin.get(y0) ?? x0, y0, BRIGHT);
+    // A uniform's cuff is its darker cloth, not a shade of the sleeve.
+    if (g.cuff && g.cuffMaterial) {
+      const cm = MATERIALS.indexOf(g.cuffMaterial);
+      for (const c of [...cells]) if (c.y === y1) setCell(c.x, c.y, cm * 8 + SHADOW);
+    }
     // A long sleeve folds at the elbow: a crease across the lit sleeve, a deeper one across the far sleeve.
     if (g.cuff && h >= 6) {
       const ey = y0 + Math.round(h * 0.55);
@@ -281,6 +318,9 @@ export function tailor(
       }
       if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow
       if (c.y === y0 && h >= 8) c.shade = DEEP; // waistband under the hem seam (long trousers only)
+      // Knee pads: the two cells of each leg beside its lit edge, a step lighter than the knee band.
+      if (g.kneePads && legW >= 3 && c.y === knee && c.x >= lo + 1 && c.x <= lo + 2)
+        c.shade = LIGHT;
     }
     // Light on the top of the near thigh.
     for (let y = y0 + (h >= 8 ? 1 : 0); y <= y0 + (h >= 8 ? 2 : 1); y++) {

@@ -39,23 +39,23 @@ export const HERO_GIANT15_S = sprite`
   ........oss$$ssSo........
   ......oosooooooosoo......
   .....ossssssssssssso.....
-  ....ossssSSsssSSsssso....
-  ...osss$$$ssSSs$$sssso...
-  ..oSss$$$$ssSSs$$$sssSo..
-  ..oSssSSSsssssssSSSsSSo..
-  .osssoss$$sssssssssossso.
-  .osssosss$ssssssssSossso.
-  .o$ssosSSsssssSSssSoss$o.
+  ....ossssssssssssssso....
+  ...osss$$$$sssssssssso...
+  ..oSsss$$$$ssssssssssSo..
+  ..oSsss$$$$sssssssssSSo..
+  .osssos$$$$ssssssssossso.
+  .osssossssssssssSSSossso.
+  .o$ssossSSssssSSSSSoss$o.
+  o$ssSossssssssssSSSoSss$o
   o$ssSosssssssssssSSoSss$o
-  o$ssSosssssssssssssoSss$o
-  o$sssosSSsssssSSsssosss$o
+  o$sssossSSssssSSsssosss$o
   ossssosssssssssssssosssso
-  osssooss$$$$$ssssssoossso
-  o$ssoos$$$$$$$sssssooss$o
-  o$ssoos$$$$$$$ssssSooss$o
-  ossssoss$$$$$$sssSSosssso
-  osossosss$$$$sssssSossoso
-  osossossss$$ssssSSsossoso
+  osssoosssssssssssssoossso
+  o$ssoosssssssssssssooss$o
+  o$ssoosssssssssssssooss$o
+  ossssosssssssssssssosssso
+  osossosssssssssssssossoso
+  osossosssssssssssssossoso
   osossosssssssssssssossoso
   osoooossSSsssssSSssooooso
   .ossoosssssssssssssoosso.

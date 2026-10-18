@@ -771,7 +771,18 @@ export const BAC_SI_LAN = wear('bac_si_lan', 'Bác sĩ Lan', POSE_STAND, BAC_SI_
 type Top = 'tee' | 'torn' | 'long' | 'tank' | 'crop' | 'none';
 type Bottoms = 'pants' | 'shorts' | 'skirt' | 'dress';
 type Footwear = 'both' | 'right' | 'flats' | 'none';
-type Detail = 'stains' | 'gash' | 'hivis' | 'badge' | 'belt' | 'tie' | 'number' | 'camo' | 'scalp';
+type Detail =
+  | 'stains'
+  | 'gash'
+  | 'hivis'
+  | 'badge'
+  | 'belt'
+  | 'tie'
+  | 'number'
+  | 'camo'
+  | 'scalp'
+  | 'cuffs' // a uniform's cuffs in its second cloth
+  | 'kneepads'; // two light cells on each knee;
 
 function isViewItem(x: object): x is ViewItem {
   return 'S' in x;
@@ -868,6 +879,8 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       // Buttons and pockets are on the front: the back views and the side view do not show them.
       placket: look.top === 'long' && (view === 'S' || view === 'SW') ? 'buttons' : 'none',
       pockets: look.details.includes('camo') && (view === 'S' || view === 'SW'),
+
+      light: view === 'N' || view === 'NW' ? 'block' : 'full',
     });
     return { box: [tx0, ty0, tx1, y1], except: [...pose.neck, ...except], to: 'cloth' };
   };
@@ -880,6 +893,10 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         box,
         material: 'cloth',
         cuff,
+        // A uniform's cuff is its second cloth (the darker green of the cap and the camo blotches).
+        ...(cuff && look.details.includes('cuffs') && look.colors.cloth2
+          ? { cuffMaterial: 'cloth2' as const }
+          : {}),
         // Shoulder caps are let out too, so the coat's shoulder slopes evenly into the wider sleeve.
         ...(look.sleeves === 'wide' ? { letOut: 1 } : {}),
       });
@@ -890,7 +907,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   // A dress is one piece, a coat carries on: no hem line at the waist.
   const waist = look.bottoms === 'dress' || look.hem === false ? [] : [seam(pose.hem)];
   switch (look.top) {
-    case 'tee':
+    case 'tee': {
       remaps.push(
         torso([]),
         ...caps,
@@ -898,7 +915,20 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         sleeve('R', pose.sleeveR.short),
       );
       lines.push(...collar, ...waist);
+      // The neckband: a V of deep cloth under the collar line, on the front views.
+      const seg = pose.collar[pose.collar.length - 1]!;
+      if (view === 'S' || view === 'SW') {
+        const cw = seg[2] - seg[0] + 1;
+        const half = Math.floor(cw / 2);
+        overlays.push(
+          ov(seg[0], seg[1] + 1, [
+            'v'.repeat(cw),
+            '.'.repeat(half) + 'v' + '.'.repeat(cw - half - 1),
+          ]),
+        );
+      }
       break;
+    }
     case 'torn': {
       const holes: Box[] = [pose.frayedXs[0]! + 1, pose.frayedXs[2] ?? pose.frayedXs[0]! + 1].map(
         (x) => [x, hemY - 1, x, hemY],
@@ -932,11 +962,14 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       break;
     }
     case 'none':
+      // A bare torso still ends on the trousers' waistband: the hem line stays.
+      if (look.bottoms === 'pants' || look.bottoms === 'shorts') lines.push(...waist);
       break;
   }
+  const kneePads = look.details.includes('kneepads');
   if (look.bottoms === 'pants') {
     remaps.push(...pose.pants.map((box): Remap => ({ box, to: 'pants' })));
-    garments.push({ kind: 'pants', box: pose.pants, material: 'pants' });
+    garments.push({ kind: 'pants', box: pose.pants, material: 'pants', kneePads });
   }
   if (look.bottoms === 'shorts') {
     remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants' })));
@@ -972,8 +1005,16 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   for (const d of look.details) {
     const chest = pose.chest;
     if (d === 'stains' && pose.stains)
+      // one column right of the anchor: the first stain pair stays off the chest crease's lit cells
       overlays.push(
-        ov(...pose.stains, ['.DD....', '..D....', '......D', 'DD....D', 'D......', '....DD.']),
+        ov(pose.stains[0] + 1, pose.stains[1], [
+          '.DD....',
+          '..D....',
+          '......D',
+          'DD....D',
+          'D......',
+          '....DD.',
+        ]),
       );
     if (d === 'gash' && pose.gash) overlays.push(ov(...pose.gash, ['d', 'd', 'd']));
     if (d === 'hivis') {
@@ -984,7 +1025,13 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       overlays.push(ov(tx0 + inset, cy + 2, [stripe]), ov(tx0 + inset, cy + 5, [stripe]));
     }
     if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
-    if (d === 'belt' && pose.belt) overlays.push(ov(...pose.belt, ['ww']));
+    if (d === 'belt' && pose.belt) {
+      // The belt is the hem row itself in leather, with a two-cell buckle on the front views.
+      const [hx0, hy, hx1] = pose.hem;
+      const strap = 'b'.repeat(hx1 - hx0 + 1); // the boots' dark brown, as the reference's belt
+      overlays.push(ov(hx0, hy, [strap]));
+      if (view === 'S' || view === 'SW') overlays.push(ov(pose.belt[0], hy, ['ww']));
+    }
     if (d === 'tie' && pose.tie)
       overlays.push(ov(...pose.tie, ['l', 'l', 'l', 'L', 'L', 'L', 'L']));
     if (d === 'number' && pose.number) overlays.push(ov(...pose.number, ['xxx', '..x', '..x']));
@@ -1115,7 +1162,7 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['camo', 'stains'],
+  details: ['camo', 'stains', 'belt', 'cuffs', 'kneepads'],
   colors: {
     skin: [146, 150, 148], // neutral grey dead skin, duller than SKIN_M: the torn sleeves bare both forearms
     ...ARMY,
@@ -1139,7 +1186,7 @@ export const LINH_NHIEM = wearPosed('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
   top: 'torn',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['stains'],
+  details: ['stains', 'belt', 'kneepads'],
   extras: [...SORES, dogTag(POSE_DRAG)],
   colors: {
     skin: [184, 186, 156],
@@ -1685,7 +1732,7 @@ const LINH_NON_SAT_LOOK: Look = {
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['camo', 'belt'],
+  details: ['camo', 'belt', 'cuffs', 'kneepads'],
   face: 'plain',
   extras: RIFLE_SLUNG_V,
   colors: { skin: [226, 186, 150], eye: [150, 80, 40], white: [212, 230, 238], ...ARMY },
@@ -1698,7 +1745,7 @@ const LINH_MU_NOI_LOOK: Look = {
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['belt', 'badge'],
+  details: ['belt', 'badge', 'cuffs', 'kneepads'],
   face: 'plain',
   extras: MAP_CASE_V,
   colors: { skin: [214, 170, 132], eye: [150, 80, 40], white: [212, 230, 238], ...ARMY },
@@ -1711,7 +1758,7 @@ const LINH_DAU_DINH_LOOK: Look = {
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['belt'],
+  details: ['belt', 'cuffs', 'kneepads'],
   extras: [{ S: { overlays: [dogTag(POSE_STAND)] } }, RIFLE_STAND_V],
   face: 'plain',
   colors: {
@@ -1731,7 +1778,7 @@ const LINH_NU_LOOK: Look = {
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['camo', 'belt'],
+  details: ['camo', 'belt', 'cuffs', 'kneepads'],
   face: 'plain',
   colors: {
     skin: [240, 200, 165],
@@ -1749,7 +1796,7 @@ const LINH_QUAN_Y_LOOK: Look = {
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['belt'],
+  details: ['belt', 'cuffs', 'kneepads'],
   extras: SATCHEL_V,
   face: 'plain',
   colors: {
