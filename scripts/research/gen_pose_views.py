@@ -5,7 +5,7 @@ packages/sprite-kit/src/hero64.poses.views.ts.
 
 Input: test-output/view_figures.json (DUMP=... pnpm exec tsx scripts/hero-views.ts).
 """
-import json, os, sys
+import copy, json, os, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FIG = json.load(open(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else os.path.join(ROOT, 'test-output', 'view_figures.json')))
 OUT = os.path.join(ROOT, 'packages', 'sprite-kit', 'src', 'hero64.poses.views.ts')
@@ -270,16 +270,16 @@ REACH_SW = body(21, 40, 14, [
 '.......os.....so.....',
 '.......osssssssso....',
 '......ossSSsSSsSso...',
-'.....oss$$SsS$$Sso...',
-'....oSSs$$sss$$sSSo..',
-'...ossso$$$s$$Sossso.',
-'..oososo$$$s$$Sososoo',
-'.osososo$$s$Sosososo.',
-'.osososossssSosososo.',
-'.ossssso$$$$Sossssso.',
-'.ossssso$$$$Sossssso.',
-'.oSSssso$$$$SoSSssso.',
-'.oooooooossssSooooooo',
+'......os$$SsS$$Sso...',
+'.....oSs$$sss$$sSSo..',
+'.....oso$$$s$$Sosso..',
+'.....oso$$$s$$Sosso..',
+'.....osso$$s$$ossso..',
+'.....osso$$s$$ossso..',
+'.....osSo$$s$$oSSso..',
+'.....oooo$$s$$ooooo..',
+'.......o$$$s$$So.....',
+'.......ossssssSo.....',
 '.......ossssssso.....',
 '.......osSSsSSso.....',
 '......oossooossoo....',
@@ -595,10 +595,31 @@ def back_regions(r):
     return out
 
 POSES = {}
+RAISE_FAR_FOOT = {'droop', 'reach', 'drag', 'hunch', 'twist', 'heavy', 'brute'}
+def raise_far_foot(rows, regions):
+    """The three-quarter turn (D-072): the far (left) foot stands one row back, so one row higher. The far
+    shoe's block (its columns read off the sole row, left of the gap between the feet) moves up a row over
+    the leg's last row; the shoe boxes follow."""
+    x0, y0, x1, y1 = regions['shoeL']
+    sole = rows[y1]
+    a = next(x for x, c in enumerate(sole) if c != '.')
+    b = a
+    while b + 1 < len(sole) and sole[b + 1] != '.': b += 1
+    out = [list(r) for r in rows]
+    for y in range(y0, y1 + 1):
+        for x in range(a, b + 1):
+            out[y - 1][x] = rows[y][x]
+    for x in range(a, b + 1): out[y1][x] = '.'
+    regs = copy.deepcopy(regions)
+    regs['shoeL'] = [x0, y0 - 1, x1, y1 - 1]
+    if regs.get('flats'): regs['flats'][0] = [regs['flats'][0][0], regs['flats'][0][1] - 1, regs['flats'][0][2], regs['flats'][0][3] - 1]
+    return [''.join(r) for r in out], regs
 def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
     """A view of a pose: `rows` is the body and `head` = (view, x, y, shift) places the view's base
     head on it; with `head=None` the rows are the whole figure (its head drawn in) and `headcols`
     maps each head-grid column to a figure column for the items drawn in head space."""
+    if view == 'SW' and pose in RAISE_FAR_FOOT and 'shoeL' in regions:
+        rows, regions = raise_far_foot(rows, regions)
     if head is None:
         hview, hx, hy, shift = view, 0, 0, (lambda k: 0)
         fig = rows
@@ -646,13 +667,15 @@ add('droop', 'SW', DROOP_SW, ('SW', 0, 2, lambda k: 0 if k < 5 else 1 if k < 9 e
     'skirt': {'x': 2, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('reach', 'SW', REACH_SW, ('SW', 3, 0, lambda k: 0), {
-    'torso': [7, 15, 15, 28], 'neck': [[9, 15, 13, 16], [10, 17, 12, 17]], 'shoulders': [[5, 15, 6, 18], [16, 15, 18, 18]],
-    'sleeveL': {'short': [1, 19, 7, 22], 'long': [1, 19, 7, 22], 'torn': [1, 19, 7, 20]},
-    'sleeveR': {'short': [13, 19, 20, 22], 'long': [13, 19, 20, 22]},
+    # the far shoulder, arm and fist sit a column in (the three-quarter turn); the fists stay skin where
+    # they overlap the torso box
+    'torso': [7, 15, 15, 28], 'neck': [[9, 15, 13, 16], [10, 17, 12, 17], [7, 21, 7, 24], [14, 21, 14, 24]], 'shoulders': [[6, 15, 7, 18], [16, 15, 18, 18]],
+    'sleeveL': {'short': [5, 19, 6, 20], 'long': [5, 19, 6, 20], 'torn': [5, 19, 6, 20]},
+    'sleeveR': {'short': [15, 19, 18, 20], 'long': [15, 19, 18, 20]},
     'pants': [[5, 29, 17, 35]], 'shorts': [[5, 29, 17, 32]],
     'shoeL': [4, 36, 10, 39], 'shoeR': [12, 36, 18, 39], 'flats': [[4, 38, 10, 39], [12, 38, 18, 39]],
     'collar': [[9, 17, 9, 17], [13, 17, 13, 17], [10, 18, 12, 18]], 'hem': [8, 28, 14, 28], 'frayedXs': [8, 10, 12, 14],
-    'chest': [9, 24], 'number': [10, 23], 'tie': [11, 19], 'belt': [11, 28], 'stains': [8, 25], 'gash': [5, 23],
+    'chest': [9, 24], 'number': [10, 23], 'tie': [11, 19], 'belt': [11, 28], 'stains': [7, 24], 'gash': [6, 21],
     'skirt': {'x': 5, 'y': 29, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
 add('drag', 'SW', DRAG_SW, ('SW', 0, 1, lambda k: 2 if k < 3 else 1 if k < 9 else 0), {

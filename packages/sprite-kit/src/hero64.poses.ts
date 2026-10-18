@@ -73,14 +73,14 @@ export const BODY_REACH = sprite`
   ...osssSSsSSssso...
   ...oss$$SsS$$sso...
   ..oSSs$$sss$$sSSo..
-  .ossso$$$s$$$ossso.
-  oososo$$$s$$$ososoo
-  osososo$$s$$osososo
-  osssssosssssossssso
-  ossssso$$$$$ossssso
-  ossssso$$$$$ossssso
-  oSSssso$$$$$oSSssso
-  ooooooosssssooooooo
+  ..osso$$$s$$$osso..
+  ..osso$$$s$$$osso..
+  ..ossso$$s$$ossso..
+  ..ossso$$s$$ossso..
+  ..osSSo$$s$$oSSso..
+  ..ooooo$$s$$ooooo..
+  .....os$$$$$so.....
+  .....ossssssso.....
   .....ossssssso.....
   .....osSSsSSso.....
   ....oossooossoo....
@@ -440,13 +440,17 @@ export const POSE_REACH: ZombiePose = {
   neck: [
     [7, 15, 11, 16],
     [8, 17, 10, 17],
+    // the fists in front of the chest stay skin where they overlap the torso box
+    [5, 21, 5, 24],
+    [13, 21, 13, 24],
   ],
   shoulders: [
     [2, 15, 4, 18],
     [14, 15, 16, 18],
   ],
-  sleeveL: { short: [0, 19, 5, 22], long: [0, 19, 5, 22], torn: [0, 19, 5, 20] },
-  sleeveR: { short: [13, 19, 18, 22], long: [13, 19, 18, 22] },
+  // The arms reach at the viewer: a short upper arm beside the chest, then the fist in front of it.
+  sleeveL: { short: [2, 19, 4, 20], long: [2, 19, 4, 20], torn: [2, 19, 4, 20] },
+  sleeveR: { short: [14, 19, 16, 20], long: [14, 19, 16, 20] },
   pants: [[3, 29, 15, 35]],
   shorts: [[3, 29, 15, 32]],
   shoeL: [2, 36, 8, 39],
@@ -466,8 +470,8 @@ export const POSE_REACH: ZombiePose = {
   number: [8, 23],
   tie: [9, 19],
   belt: [9, 28],
-  stains: [7, 23],
-  gash: [3, 23],
+  stains: [5, 24],
+  gash: [4, 21],
   skirt: {
     x: 3,
     y: 29,

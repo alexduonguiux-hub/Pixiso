@@ -435,3 +435,22 @@ của đầu 3/4); đầu SW/NW nay nhân cột 7 (giữa hai mắt) bằng `FAT
 
 **Số đo.** Đạt 80 → 82/130 (được zombie cảnh sát @S/SW; mất Kẻ Thính @N và zombie quân đội @W ở thước
 `lines` — ít ô tối mảnh hơn khi bớt trắng/viền hốc mắt); ô lẻ 340 → 332; lint cầm bút 89; QA sạch; 113 test.
+
+### D-077 Zombie và thể hình lớn xoay 45°, một dáng một tư thế (B3 của giám khảo vòng 3)
+
+**Bàn chân xa lùi một hàng ở mọi thân 3/4** (`gen_pose_views.py`, `raise_far_foot` trong `add()` cho SW):
+khối giày xa (cột đọc từ hàng đế, bên trái khe giữa hai chân, hàng theo hộp `shoeL`) dời lên một hàng đè lên
+hàng cuối của ống chân; hộp `shoeL`/`flats` theo. Áp cho gục đầu, vươn tay, lết chân, khom, ngoẹo cổ, to con,
+khổng lồ (bò không có chân đứng; mập đã suy từ thân SW gốc nên có sẵn). Đo lại: bàn chân trái kết thúc cao
+hơn bàn chân phải một hàng ở 13/13 thân đứng góc SW.
+
+**Dáng vươn tay = một tư thế.** S và SW từng là tay buông (thật ra là cẳng tay vươn ra trước vẽ thành khối
+5 ô bên sườn), còn W tay duỗi thẳng — giám khảo đọc là hai tư thế. Theo đơn của họ: S/SW vẽ cánh tay vươn
+về phía người xem = ống tay ngắn cạnh ngực rồi **nắm tay 3×3 trước ngực** (mép đè lên viền thân), bóng 2 ô
+ở hàng dưới; W giữ tay duỗi. Hộp tay áo rút còn hai hàng, nắm tay là da (trừ khỏi hộp thân qua `neck`),
+vết chém dời lên nắm tay, vết bẩn dời lên hàng 24 (dưới hàng nếp, trên gấu và viền đũng). Góc SW: vai xa,
+cánh tay xa và nắm tay xa lùi vào một cột, nắm tay xa 2 ô (thân hẹp hơn S một cột; thước bề rộng còn đếm
+cả mũ cứng/tai to nên không thấy).
+
+**Số đo.** Đạt 82 → 83/130; ô lẻ 332 → 335 (3 ô: nắm tay/vết bẩn mới); lint cầm bút 89 → 82 (bỏ các cột
+tay cũ); QA sạch; 113 test. Chưa làm: hộp thân zombie góc SW chưa cắt 2 cột cho các dáng khác (đã hẹp 1).
