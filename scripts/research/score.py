@@ -126,7 +126,7 @@ def base_tone(tones, count, lightness, total):
         return min(top, key=lambda t: (abs(lightness(t) - med), -lightness(t)))
     return top[0]
 
-def measure(img, rows=None):
+def measure(img, rows=None, base_rows=None):
     rgb, obj = object_mask(img)
     ys, xs = np.nonzero(obj)
     y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
@@ -259,6 +259,10 @@ def measure(img, rows=None):
         ws = pixel_lint.lint(rows)
         m['lint'] = len(ws)
         m['lintKinds'] = sorted(set(k for k, *_ in ws))
+        # the body's own warnings (the reference-copied figure has a few: crotch outline block, profile steps)
+        # are tracked by qa:pixel; here the dressing may add at most LINT_ADDED on top of them
+        m['lintBase'] = len(pixel_lint.lint(base_rows)) if base_rows is not None else 0
+        m['lintAdded'] = m['lint'] - m['lintBase']
     return m
 
 # ---------------------------------------------------------------- reference and thresholds
@@ -268,7 +272,7 @@ THRESHOLDS = {
     'materials': ('min_ratio', 0.75),
     'lineDens': ('min_ratio', 0.6),
     'lines': ('min_ratio', 0.6),
-    'lint': ('max_abs', 2),
+    'lintAdded': ('max_abs', 2),
 }
 # Largest same-colour fill region per material, as a share of that material, measured on the reference: the bald
 # mannequin's skin 26.1 % (a bare torso is one region there too), the dressed figure's face 14.3 %, its hair 10.6 %,
@@ -369,7 +373,7 @@ def main():
     results = []
     for e in entries:
         img = Image.open(os.path.join(SCORE, 'sprites', e['png'])).convert('RGBA')
-        m = measure(img, e['rows'])
+        m = measure(img, e['rows'], e.get('baseRows'))
         m['id'] = e['id']; m['view'] = e['view']; m['label'] = e['label']
         m['flags'] = judge(m, ref)
         results.append(m)
@@ -389,7 +393,7 @@ def main():
     lines.append('| ' + ' | '.join(cols) + ' |'); lines.append('|' + '---|' * len(cols))
     def tone(p): return f"{p['hl']}/{p['sh']}" if p and p.get('hl') is not None else '-'
     for m in sorted(results, key=lambda m: (-len(m['flags']), m['id'], m['view'])):
-        lines.append('| ' + ' | '.join([f"{m['id']}@{m['view']}", str(m['colors']), str(m['materials']), str(m['lineDens']), str(m['lines']), (lambda fb: max(fb.items(), key=lambda kv: kv[1])[0] + ' ' + str(max(fb.values())) if fb else '-')(m.get('flatBy')), tone(m.get('skin')), tone(m.get('cloth')), str(m['orphan']), str(m.get('lint', '-')), '; '.join(m['flags'])]) + ' |')
+        lines.append('| ' + ' | '.join([f"{m['id']}@{m['view']}", str(m['colors']), str(m['materials']), str(m['lineDens']), str(m['lines']), (lambda fb: max(fb.items(), key=lambda kv: kv[1])[0] + ' ' + str(max(fb.values())) if fb else '-')(m.get('flatBy')), tone(m.get('skin')), tone(m.get('cloth')), str(m['orphan']), f"{m.get('lint', '-')} (+{m.get('lintAdded', 0)})", '; '.join(m['flags'])]) + ' |')
     lines.append('')
     lines.append('## Silhouettes that only differ by colour (S, 1 - IoU < 0.08)')
     for a, b, d in cross['distinct']: lines.append(f'- {a} ~ {b}: {d}')

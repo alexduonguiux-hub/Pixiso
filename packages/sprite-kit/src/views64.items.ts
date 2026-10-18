@@ -717,7 +717,7 @@ export const HELMET_W: ViewLayer = {
         '...ooV^^cccoo.....',
         '..o^^^ccccccco....',
         '.o^ccccccccccco...',
-        '.ocCCCCCCCCCCCCo..',
+        '.occCCCCCCCCCCCo..',
         '.occcccccCCCCCvo..',
         '.occccCCCCCvvvvo..',
         '.occcCCCCCCvvvvo..',
@@ -806,7 +806,7 @@ export const HEADBAND_VIEWS: Views = {
 };
 
 export const ZOMBIE_FACE_VIEWS: Views = {
-  SW: { overlays: [hov(2, 9, ['...S.S...', '...S.S...', '.........', '.SoxxxoS.', '...ooo...'])] },
+  SW: { overlays: [hov(2, 9, ['...S.S...', '...S.S...', '.$.....$.', '.SoxxxoS.', '...ooo...'])] },
   W: { overlays: [hov(2, 12, ['xxxo', '.ooo'])] },
 };
 
@@ -877,7 +877,7 @@ export const MIMIC_FACE_VIEWS: Views = {
 };
 
 export const MEDIC_BAG_W: ViewLayer = {
-  overlays: [ov(8, 23, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo'])],
+  overlays: [ov(8, 22, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo'])],
 };
 
 export const MEDIC_BAG_N: ViewLayer = {

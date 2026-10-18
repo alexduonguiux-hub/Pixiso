@@ -71,7 +71,7 @@ BUZZ = {'SW': R([0,0,16,7],'hair'), 'W': [R([0,0,13,7],'hair'), R([9,8,12,11],'h
 
 # ---------------------------------------------------------------- hats (W only here; SW/N/NW reuse or flip the S drawings)
 HATS = {
- 'HELMET_W': O(-2,0, ['.....ooooooo......','...ooV^^cccoo.....','..o^^^ccccccco....','.o^ccccccccccco...','.ocCCCCCCCCCCCCo..',
+ 'HELMET_W': O(-2,0, ['.....ooooooo......','...ooV^^cccoo.....','..o^^^ccccccco....','.o^ccccccccccco...','.occCCCCCCCCCCCo..',
                       '.occcccccCCCCCvo..','.occccCCCCCvvvvo..','.occcCCCCCCvvvvo..','.ooooooooooooooo..'], rigid=True),
  'BERET_W':  O(-2,0, ['...ooooooooo......','..oQQ&&&kkkkoo....','.o&&&kkKkkkkkkoo..','.okkKkkkKkkkkkKKo.','.okkkkkkkKKKKKKqo.',
                       '.okkkKKKKKKKqqqqo.','.okkkKKKKKKKqqqqo.','.okkkKKKKKKKqqqqo.','.ooooooooooooooo..'], rigid=True),
@@ -96,7 +96,7 @@ FACE = {
  'SUNKEN_W':   O(3,8, ['.SS','.eS','SSS']),
  'SMILE_W':    O(2,12, ['oooooo','.xxxx.']),
  'HEADBAND_W': O(0,6, ['o*aaaaaaaaAAo','oAaaaaaaaAAAo']),
- 'ZFACE_SW':   O(2,9, ['...S.S...','...S.S...','.........','.SoxxxoS.','...ooo...']),
+ 'ZFACE_SW':   O(2,9, ['...S.S...','...S.S...','.$.....$.','.SoxxxoS.','...ooo...']),
  'ZFACE_W':    O(2,12, ['xxxo','.ooo']),
  'ZCHEEK_SW':  O(10,5, ['d','d']),
  'ZCHEEK_W':   O(9,5, ['d','d']),
@@ -106,7 +106,7 @@ FACE = {
 }
 # ---------------------------------------------------------------- body items (figure space)
 BODY = {
- 'BAG_W':    [O(8,23, ['ooooo','o*x*o','oxxxo','oAxAo','oAAAo','ooooo'], head=False)],
+ 'BAG_W':    [O(8,22, ['ooooo','o*x*o','oxxxo','oAxAo','oAAAo','ooooo'], head=False)],
  'BAG_N':    [O(5,17, ['......A','.....A.','....A..','...A...','..A....','.A.....','A......'], head=False),
               O(0,23, ['ooooo','o*x*o','oxxxo','oAxAo','oAAAo','ooooo'], head=False)],
  'COAT_W':   [O(3,29, ['o^cccccCo.','o^cccccCo.','o^cccccCo.','.oooooooo.'], head=False)],

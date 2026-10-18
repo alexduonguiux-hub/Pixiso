@@ -36,6 +36,8 @@ const entries: {
   w: number;
   h: number;
   rows: string[];
+  /** The undressed body: its own lint warnings are the baseline the dressing is judged against. */
+  baseRows: string[];
   png: string;
 }[] = [];
 for (const view of VIEWS) {
@@ -55,6 +57,7 @@ for (const view of VIEWS) {
       w: s.w,
       h: s.h,
       rows: toAscii(s),
+      baseRows: toAscii(figure),
       png: file,
     });
   }

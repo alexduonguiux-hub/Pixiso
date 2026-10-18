@@ -278,7 +278,7 @@ const HELMET: Overlay = {
     '....ooV^^^cccoo....',
     '...o^^^^ccccccco...',
     '..o^cccccccccccco..',
-    '..ocCCCCCCCCCCCCo..',
+    '..occCCCCCCCCCCCo..',
     '..occcccccCCCCCvo..',
     '..occccCCCCCvvvvo..',
     '.occcCCCCCCCvvvvvo.',
@@ -288,7 +288,7 @@ const HELMET: Overlay = {
 };
 
 /** Zombie face: sunken sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
-const ZOMBIE_FACE = hov(4, 9, ['...S.S...', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']);
+const ZOMBIE_FACE = hov(4, 9, ['...S.S...', '...S.S...', '.$.....$.', '.SoxxxoS.', '...ooo...']);
 /** Scalp patches and a scalp wound (blood is the wood material). */
 const ZOMBIE_SCALP = hov(5, 2, ['.SS...d', '..S....']);
 /** A gash on the cheek. */
@@ -381,7 +381,7 @@ const RANGER_HAT_V: ViewItem = {
 /** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
 const MEDIC_BAG: Overlay[] = [
   ov(5, 17, ['A......', '.A.....', '..A....', '...A...', '....A..', '.....A.', '......A']),
-  ov(12, 23, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
+  ov(12, 22, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
 ];
 
 const MEDIC_BAG_V: ViewItem = {

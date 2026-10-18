@@ -245,7 +245,7 @@ export function tailor(
         if (legW >= 3 && c.x === outer - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
         if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
       }
-      if (c.y === y1) c.shade = DEEP;
+      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow
     }
     // Light on the top of the near thigh.
     for (let y = y0; y <= y0 + 1; y++) {
