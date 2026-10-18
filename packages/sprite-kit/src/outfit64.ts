@@ -232,11 +232,98 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         return isLine(X, Y) && isLine(X + 1, Y) && isLine(X, y) && isLine(X + 1, y);
       }),
     );
+  // Sequential: a cell turned deep no longer completes a block for its neighbour.
+  const turned: number[] = [];
   for (const [i, v] of seamCells) {
     const x = i % out.w;
     const y = Math.floor(i / out.w);
-    if (out.cells[i] === LINE && doubles(x, y)) out.cells[i] = Math.floor(v / 8) * 8 + 3;
+    if (out.cells[i] === LINE && doubles(x, y)) {
+      out.cells[i] = Math.floor(v / 8) * 8 + 3;
+      turned.push(i);
+    }
+  }
+  // A deep cell of skin or of a mark material with no like neighbour is a stray dot in another colour (a
+  // collar corner on bare skin reads as a green hole, a pouch corner as a red one): it grows one cell into
+  // its own material (a shadow cell first, then the base: the shadow under a collar edge, inside a pouch's
+  // corner), and where it has none the line stays, a doubled outline where two parts meet being the lesser
+  // flaw. A garment's own deep corner against the outline is dark on dark and stays.
+  for (const i of turned) {
+    const v = out.cells[i]!;
+    if (GARMENT_MATERIALS.has(Math.floor(v / 8)) || Math.floor(v / 8) === HAIR_MATERIAL) continue;
+    const x = i % out.w;
+    const y = Math.floor(i / out.w);
+    if (N8.some(([ax, ay]) => get(x + ax, y + ay) === v)) continue;
+    const own = (n: number) => n >= 0 && Math.floor(n / 8) === Math.floor(v / 8);
+    const into =
+      N4.find(([ax, ay]) => own(get(x + ax, y + ay)) && get(x + ax, y + ay) % 8 === 0) ??
+      N4.find(([ax, ay]) => own(get(x + ax, y + ay)));
+    if (into) put(x + into[0], y + into[1], v);
+    else out.cells[i] = LINE;
   }
   combHair(out, outfit.view ?? 'S');
+  fixLoneCells(out);
   return out;
+}
+
+const N4: readonly (readonly [number, number])[] = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
+const N8: readonly (readonly [number, number])[] = [...N4, [-1, -1], [1, -1], [-1, 1], [1, 1]];
+const MID = 1;
+const LIGHT = 2;
+const BRIGHT = 4;
+const SKIN_MATERIAL = MATERIALS.indexOf('skin');
+const HAIR_MATERIAL = MATERIALS.indexOf('hair');
+/** Materials a garment is made of (what the camouflage and seam rules below act on). */
+const GARMENT_MATERIALS = new Set(
+  (['cloth', 'cloth2', 'pants', 'boots', 'leather'] as const).map((m) => MATERIALS.indexOf(m)),
+);
+/** Materials a body or garment is made of; the rest (wood, accent, metal, white) draw deliberate marks. */
+const BODY_MATERIALS = new Set(
+  (['skin', 'cloth', 'cloth2', 'pants', 'boots', 'leather'] as const).map((m) =>
+    MATERIALS.indexOf(m),
+  ),
+);
+
+/**
+ * Two stray-cell cases the garment rules cannot see, decided on the finished sprite: a cell of a garment
+ * material with no cell of its material around it, boxed in by one other garment material (a camouflage dot
+ * left on its own, a deep cloth cell among blotches), takes the tone most of that material's cells around it
+ * have (skin is never adopted or adopting: skin through a garment is a neck opening or a torn hole);
+ * a bright cell with no like neighbour (a rim cut off by a seam) steps down to light, or to mid when no light
+ * cell of its material touches it. Marks of other materials (a sore, a nail) and the body's own one-cell
+ * shading steps stay as drawn.
+ */
+function fixLoneCells(s: Sprite): void {
+  const at = (x: number, y: number) =>
+    x >= 0 && y >= 0 && x < s.w && y < s.h ? s.cells[y * s.w + x]! : EMPTY;
+  for (let y = 0; y < s.h; y++)
+    for (let x = 0; x < s.w; x++) {
+      const v = s.cells[y * s.w + x]!;
+      if (v < 0) continue;
+      const m = Math.floor(v / 8);
+      if (!BODY_MATERIALS.has(m)) continue;
+      const ring = N8.map(([ax, ay]) => at(x + ax, y + ay));
+      if (ring.some((n) => n === v)) continue;
+      if (ring.some((n) => n >= 0 && Math.floor(n / 8) === m)) {
+        if (v % 8 !== BRIGHT) continue;
+        const light = ring.some((n) => n === m * 8 + LIGHT);
+        s.cells[y * s.w + x] = m * 8 + (light ? LIGHT : MID);
+        continue;
+      }
+      if (m === SKIN_MATERIAL) continue;
+      const around = N4.map(([ax, ay]) => at(x + ax, y + ay));
+      const byMaterial = new Map<number, number[]>();
+      for (const n of around)
+        if (n >= 0 && BODY_MATERIALS.has(Math.floor(n / 8)) && Math.floor(n / 8) !== SKIN_MATERIAL)
+          byMaterial.set(Math.floor(n / 8), [...(byMaterial.get(Math.floor(n / 8)) ?? []), n]);
+      const host = [...byMaterial.entries()].find(([, ns]) => ns.length >= 3);
+      if (!host) continue;
+      const tally = new Map<number, number>();
+      for (const n of host[1]) tally.set(n, (tally.get(n) ?? 0) + 1);
+      s.cells[y * s.w + x] = [...tally.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]![0];
+    }
 }

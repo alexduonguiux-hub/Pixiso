@@ -259,4 +259,7 @@ lõi thân chứ không đo bề rộng toàn hình như vòng 3, nên D-072/D-0
 được ghi nhận nhưng không đủ; hai chấm vai (27,37)(29,37) đúng là ô tông sáng nhất của vải (`V`) đặt rời
 ở hàng vai trên mọi áo, cần tìm nguồn trong `tailor64`; mũ sắt và đầu của zombie quân đội ở SW giống hệt
 S (dáng gục đầu chưa có góc 3/4); hai mắt Đột Biến ở SW vẫn là mô-đun đầy đủ (D-076 chỉ thu mắt xa cho
-Kẻ Phun). Chưa sửa gì sau biên bản; chờ chốt thứ tự.
+Kẻ Phun). Thứ tự sửa: B2 → B3 → B4 → B5 → B6 → B1 → B7 → B8 → B9 → B10.
+
+Xử lý sau biên bản: **B2 xong** (D-078: cặp chói vai, không ô sâu/sáng/chói đơn trong món, góc đường may
+trên da/điểm nhấn, ô viền lẻ màu, thẻ bài, vết loét; đạt 83/130, ô lẻ 335 → 310, `strict` 2748 → 1691).

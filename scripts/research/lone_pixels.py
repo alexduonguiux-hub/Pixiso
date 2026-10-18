@@ -6,7 +6,10 @@ pixels (L <= 0.2) and the eye/white cells are ignored. Reads the sprites the sco
 (`pnpm qa:score` writes test-output/score/sprites.json and sprites/*.png) and reports per sprite,
 with cell coordinates in sprite space and the cell's ASCII glyph, worst sprites first.
 
-Usage: python3 -I scripts/research/lone_pixels.py [S,SW,W|all] [top]
+Usage: python3 -I scripts/research/lone_pixels.py [S,SW,W|all] [top] [strict]
+
+`strict` is the fourth review's rule: every opaque pixel (outline included, any lightness) whose
+colour has no identical 8-neighbour, eyes and teeth excepted.
 """
 import json
 import os
@@ -23,7 +26,7 @@ from score import lch, rgb_to_oklab  # noqa: E402
 SCORE_DIR = os.path.join(ROOT, 'test-output', 'score')
 
 
-def lone_cells(e):
+def lone_cells(e, strict=False):
     im = Image.open(os.path.join(SCORE_DIR, 'sprites', e['png'])).convert('RGBA')
     a = np.array(im)
     rgb = a[..., :3].astype(float)
@@ -37,7 +40,7 @@ def lone_cells(e):
     out = []
     for y in range(H):
         for x in range(W):
-            if not alpha[y, x] or L[y, x] <= 0.2:
+            if not alpha[y, x] or (L[y, x] <= 0.2 and not strict):
                 continue
             g = rows[y][x] if y < len(rows) and x < len(rows[y]) else '?'
             if g in 'eEx':
@@ -53,25 +56,27 @@ def lone_cells(e):
                         if (rgb[Y, X] == rgb[y, x]).all():
                             same = True
                         mind = min(mind, abs(L[Y, X] - L[y, x]))
-            if not same and (mind >= 0.18 or C[y, x] >= 0.12):
+            if not same and (strict or mind >= 0.18 or C[y, x] >= 0.12):
                 out.append((x, y, g))
     return out
 
 
 def main():
     views = sys.argv[1].split(',') if len(sys.argv) > 1 else ['S']
-    top = int(sys.argv[2]) if len(sys.argv) > 2 else 40
+    strict = 'strict' in sys.argv[2:]
+    nums = [a for a in sys.argv[2:] if a.isdigit()]
+    top = int(nums[0]) if nums else 40
     sprites = json.load(open(os.path.join(SCORE_DIR, 'sprites.json')))
     report = []
     for e in sprites:
         if 'all' not in views and e['view'] not in views:
             continue
-        cells = lone_cells(e)
+        cells = lone_cells(e, strict)
         report.append((len(cells), e['id'], e['view'], cells))
     report.sort(reverse=True)
     total = sum(r[0] for r in report)
     hit = sum(1 for r in report if r[0])
-    print(f"{views}: {total} lone pixels in {hit}/{len(report)} sprites")
+    print(f"{views}{' strict' if strict else ''}: {total} lone pixels in {hit}/{len(report)} sprites")
     for n, i, v, cells in report[:top]:
         if n:
             print(f'{n:3d} {i}@{v}: {cells[:16]}')

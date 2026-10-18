@@ -174,5 +174,58 @@ export function paint(
     img.data[i * 4 + 2] = c[2];
     img.data[i * 4 + 3] = 255;
   }
+  mergeLoneLineColors(s, img);
   return img;
+}
+
+/**
+ * A line cell coloured unlike every neighbour (the cap of a one-cell strap, the body outline beside a
+ * two-cell pustule) reads as a stray dot in the outline: it takes the colour most of its line neighbours
+ * have (the darker one on a tie). Decided on the colours as first painted, so the order does not matter.
+ */
+function mergeLoneLineColors(s: Sprite, img: RGBAImage): void {
+  const painted = Uint8ClampedArray.from(img.data);
+  const key = (j: number) =>
+    painted[j * 4]! * 65536 + painted[j * 4 + 1]! * 256 + painted[j * 4 + 2]!;
+  for (let i = 0; i < s.cells.length; i++) {
+    const v = s.cells[i]!;
+    if (v < 0 || v >> 3 !== LINE_INDEX) continue;
+    const x = i % s.w;
+    const y = Math.floor(i / s.w);
+    const own = key(i);
+    let lone = true;
+    const counts = new Map<number, number>();
+    for (let dy = -1; dy <= 1 && lone; dy++)
+      for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue;
+        const X = x + dx;
+        const Y = y + dy;
+        if (X < 0 || Y < 0 || X >= s.w || Y >= s.h) continue;
+        const j = Y * s.w + X;
+        const n = s.cells[j]!;
+        if (n < 0) continue;
+        const k = key(j);
+        if (k === own) {
+          lone = false;
+          break;
+        }
+        if (n >> 3 === LINE_INDEX) counts.set(k, (counts.get(k) ?? 0) + 1);
+      }
+    if (!lone || counts.size === 0) continue;
+    let best = -1;
+    let bestN = 0;
+    for (const [k, c] of counts) {
+      const darker =
+        best < 0 ||
+        (k % 256) + (Math.floor(k / 256) % 256) + Math.floor(k / 65536) <
+          (best % 256) + (Math.floor(best / 256) % 256) + Math.floor(best / 65536);
+      if (c > bestN || (c === bestN && darker)) {
+        best = k;
+        bestN = c;
+      }
+    }
+    img.data[i * 4] = Math.floor(best / 65536);
+    img.data[i * 4 + 1] = Math.floor(best / 256) % 256;
+    img.data[i * 4 + 2] = best % 256;
+  }
 }

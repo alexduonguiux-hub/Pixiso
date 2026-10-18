@@ -454,3 +454,39 @@ cả mũ cứng/tai to nên không thấy).
 
 **Số đo.** Đạt 82 → 83/130; ô lẻ 332 → 335 (3 ô: nắm tay/vết bẩn mới); lint cầm bút 89 → 82 (bỏ các cột
 tay cũ); QA sạch; 113 test. Chưa làm: hộp thân zombie góc SW chưa cắt 2 cột cho các dáng khác (đã hẹp 1).
+
+### D-078 Chấm lẻ hệ thống thành luật (B2 của giám khảo vòng 4)
+
+**Nguồn của từng loại ô lẻ** (soi bằng cách khớp ảnh ×1 của giám khảo vào `sprites.json`): (a) hai chấm chói
+X·X trên vai mọi áo = ô chói cố định của tailor ở (x0+1, y0+1), (x0+2, y0+1) — ô thứ hai rơi vào cổ áo — cộng
+ô chói đơn ở đỉnh vai áo và ống tay; (b) "rằn ri vẽ bằng ô đơn" thật ra là ô sâu `v` của luật mép xa (so le 2
+hàng, bỏ hàng thứ 4) rơi trên cột bóng rộng 1 ô, và `y` sâu lẻ của quần; (c) "lỗ lục" ở cổ sau bốn zombie =
+ô đường may đổi sang tông sâu của da (D-063) tại góc không còn ô da nào kề; (d) "màu dùng một lần" = ô viền
+lấy màu viền của vật liệu kề (nắp quai 1 ô của Sơn, viền cạnh mụn 2 ô của Kẻ Phun, viền đũng cạnh rằn ri);
+(e) góc túi Ny thành `r` sâu cùng cơ chế (c).
+
+**Luật mới.** `tailor64`: viền chói là **cặp 2 ô kề nhau** trên hàng y0+1 (ngang từ mép sáng; dọc theo mép
+sáng khi thân chỉ còn một cột cạnh ba lô), không còn ô chói đơn ở ống tay; trước khi ghi, ô sâu/sáng/chói
+**không có ô cùng tông kề 4 trong món thì lùi một bậc** (sâu→bóng, chói→sáng, sáng→gốc); cổ tay lấy thêm
+hàng trên khi hàng cuối chỉ còn 1 ô mà hàng trên rộng ≥ 2 (tay sáng, bị túi che); khối sáng góc sau 3-3-2
+thay cho 3×3 (cạnh khối vuông là dải bằng nhau cạnh cột gốc → `banding`). `dress()`: ô đường may đổi sang
+sâu mà là **da hoặc vật liệu điểm nhấn** và không có ô cùng giá trị kề 8 → nở vào ô bóng/gốc cùng vật liệu
+kề 4, không có thì giữ viền (viền đôi chỗ hai bộ phận chạm là lỗi nhẹ hơn); vải và tóc giữ như cũ (sâu cạnh
+viền là tối trên tối). Pass cuối `fixLoneCells`: ô vải không có ô cùng vật liệu quanh và bị ≥ 3 ô của một vật
+liệu vải khác bao → nhận tông phổ biến của vật liệu đó (chấm rằn ri rời, `v` kẹt giữa đốm); ô chói không có ô
+cùng giá trị kề → sáng, không có sáng kề → gốc; **da không bao giờ bị nuốt hay nuốt** (da lộ qua áo là cổ hở
+hoặc lỗ rách). `paint.ts`: ô viền không trùng màu với ô nào kề → lấy màu phổ biến của các ô viền kề (hoà thì
+tối hơn). `cast64`: thẻ bài hạ một hàng (hàng đầu dải cổ V nguyên vẹn), vết loét Lính Nhiễm thành cặp 2 ô.
+`lone_pixels.py` thêm chế độ `strict` = đúng luật giám khảo vòng 4 (mọi ô, kể cả viền, không có ô cùng màu
+kề 8; trừ mắt/răng).
+
+**Đã thử và bỏ.** Nở mọi ô lẻ kể cả bóng 1 ô của thân (gót giày `B`, ống quần `PpP`, bậc da ở cổ) → đạt 83 →
+65–79, vì đổi hình bóng mannequin và tạo banding; đóng "lỗ kim" bằng viền → tai góc sau thành khối viền
+đôi; gấu quần toàn tông sâu → banding với hàng trên; cổ tay 2 hàng cho mọi tay dài → Sơn @SW rớt `cloth
+sh` 55,3 %; đổi tông tai góc sau (`$` → `s`/`S`) → ba lính @N rớt `skin sh`. Giữ nguyên tai.
+
+**Số đo.** Đạt 83 → 83/130 (mất zombie dân thường nam @N: `skin sh` 10,5 % vì ô sâu lẻ ở góc cổ áo từng
+được đếm là bóng da; được Lính Nhiễm @N nhờ khối sáng bậc thang); ô lẻ (thước D-073) 335 → 310; ô lẻ
+`strict` 2748 → 1691; lint cầm bút 82; QA sạch; 113 test. Còn lại: ô da 1 ô kẹp giữa viền (tai, bàn tay một
+cột — 137 `S`, 58 `s`, 38 `$` theo thước D-073) là thiết kế thân, chỉ sửa được bằng vẽ lại bộ phận; cổ tay
+1 ô của lính mũ nồi @S (hộp bản đồ che cả hàng trên).

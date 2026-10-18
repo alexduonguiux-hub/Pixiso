@@ -1182,11 +1182,11 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
 });
 
 /** Sores on both bare forearms (drag pose). */
-const SORES: Overlay[] = [ov(1, 24, ['D.', '..', '.D', 'D.']), ov(13, 25, ['..D', '...', '.D.'])];
-/** Dog tag on the sternum, two cells above the pose's chest anchor column +2. */
+const SORES: Overlay[] = [ov(1, 24, ['DD', '..', '..', 'DD']), ov(13, 25, ['.DD', '...', '.DD'])];
+/** Dog tag on the sternum: two cells hanging from the pose's chest anchor row, column +2 (below the tee's neckband). */
 const dogTag = (pose: ZombiePose): Overlay => {
   const [cx, cy] = pose.chest ?? [6, 20];
-  return ov(cx + 2, cy - 1, ['w', 'w']);
+  return ov(cx + 2, cy, ['w', 'w']);
 };
 
 /** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */

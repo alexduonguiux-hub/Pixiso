@@ -149,8 +149,9 @@ export function tailor(
     // (the crease under the block relies on it, see below); the back views keep the block alone.
     const lightCells: [number, number][] = [];
     const block = g.light === 'block';
+    // The block's last row is a cell short: a square's edge is an equal run beside the base column (banding).
     for (let y = y0 + 2; y <= y0 + 4; y++)
-      for (let x = x0; x <= x0 + 2; x++) lightCells.push([x, y]);
+      for (let x = x0; x <= x0 + (y === y0 + 4 && block ? 1 : 2); x++) lightCells.push([x, y]);
     if (!block) {
       for (let y = y0 + 6; y <= y0 + 7; y++)
         for (let x = x0; x <= x0 + 1; x++) lightCells.push([x, y]);
@@ -159,8 +160,17 @@ export function tailor(
     const budget = Math.max(6, Math.min(block ? 9 : 16, Math.round(cells.length * 0.12)));
     for (const [x, y] of lightCells.filter(([x, y]) => has(x, y)).slice(0, budget))
       set(x, y, LIGHT);
-    set(x0 + 1, y0 + 1, BRIGHT);
-    set(x0 + 2, y0 + 1, BRIGHT);
+    // The bright rim is two cells side by side on the row above the block (a fixed pair loses its second
+    // cell to the neck opening and leaves a stray dot; the fourth review counted one on every shoulder).
+    const rimX = rowMin.get(y0 + 1) ?? x0;
+    if (has(rimX, y0 + 1) && has(rimX + 1, y0 + 1)) {
+      set(rimX, y0 + 1, BRIGHT);
+      set(rimX + 1, y0 + 1, BRIGHT);
+    } else if (has(rimX, y0 + 1) && has(rimX, y0 + 2)) {
+      // a sliver of torso beside a pack: the pair runs down the lit edge
+      set(rimX, y0 + 1, BRIGHT);
+      set(rimX, y0 + 2, BRIGHT);
+    }
     // Deep shadow under the far arm; the hem is a deep band across the last row above the seam.
     for (let y = y0 + 4; y <= y0 + 5; y++) set(rowMax.get(y) ?? x1, y, DEEP);
     const hemRow = cells.filter((c) => c.y === y1 - 1);
@@ -212,6 +222,15 @@ export function tailor(
     }
   } else if (g.kind === 'sleeve') {
     const lit = (g.side ?? 'L') === 'L';
+    // A cuff is the sleeve's last row; on the lit sleeve, where that row is a single cell although the row
+    // above is wider (a bag or the hand covers the sleeve's end, and a lone cell reads as a dot) it takes the
+    // row above too. A one-column far arm keeps its one cell, dark on dark.
+    const rowCount = new Map<number, number>();
+    for (const c of cells) rowCount.set(c.y, (rowCount.get(c.y) ?? 0) + 1);
+    const cuffTop =
+      h >= 6 && lit && (rowCount.get(y1) ?? 0) < 2 && (rowCount.get(y1 - 1) ?? 0) >= 2
+        ? y1 - 1
+        : y1;
     for (const c of cells) {
       const outer = lit ? rowMin.get(c.y) : rowMax.get(c.y);
       const inner = lit ? rowMax.get(c.y) : rowMin.get(c.y);
@@ -222,13 +241,12 @@ export function tailor(
         if (c.x === outer && c.y <= y0 + 1) c.shade = LIGHT; // top of the lit upper arm
         if (c.x === inner && c.y >= y0 + 2 && c.y <= y0 + 3) c.shade = SHADOW; // contact shadow against the torso
       }
-      if (g.cuff && c.y === y1) c.shade = DEEP;
+      if (g.cuff && c.y >= cuffTop) c.shade = DEEP;
     }
-    if (lit) set(rowMin.get(y0) ?? x0, y0, BRIGHT);
     // A uniform's cuff is its darker cloth, not a shade of the sleeve.
     if (g.cuff && g.cuffMaterial) {
       const cm = MATERIALS.indexOf(g.cuffMaterial);
-      for (const c of [...cells]) if (c.y === y1) setCell(c.x, c.y, cm * 8 + SHADOW);
+      for (const c of [...cells]) if (c.y >= cuffTop) setCell(c.x, c.y, cm * 8 + SHADOW);
     }
     // A long sleeve folds at the elbow: a crease across the lit sleeve, a deeper one across the far sleeve.
     if (g.cuff && h >= 6) {
@@ -316,7 +334,7 @@ export function tailor(
         if (legW >= 3 && c.x === outer - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
         if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
       }
-      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow
+      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow (one tone across bands with the row above)
       if (c.y === y0 && h >= 8) c.shade = DEEP; // waistband under the hem seam (long trousers only)
       // Knee pads: the two cells of each leg beside its lit edge, a step lighter than the knee band.
       if (g.kneePads && legW >= 3 && c.y === knee && c.x >= lo + 1 && c.x <= lo + 2)
@@ -338,9 +356,26 @@ export function tailor(
       if (c.y === y0 && c.x <= (rowMin.get(c.y) ?? x0) + 2) c.shade = LIGHT; // toe cap
     }
   }
+  // The smallest detail is two cells of one tone: a deep, light or bright cell with no 4-neighbour of its
+  // tone in the garment (the far edge's stagger on a one-cell shadow column, a knee band on a two-cell leg)
+  // steps back toward the base.
+  const STEP_BACK: Record<number, number> = { [DEEP]: SHADOW, [BRIGHT]: LIGHT, [LIGHT]: MID };
+  const before = new Map<string, number>();
+  for (const [key, i] of index) before.set(key, cells[i]!.shade);
   for (const [key, i] of index) {
     const c = cells[i]!;
-    void key;
+    const to = STEP_BACK[c.shade];
+    if (to === undefined) continue;
+    const paired = [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ].some(([ax, ay]) => before.get(`${c.x + ax!},${c.y + ay!}`) === before.get(key));
+    if (!paired) c.shade = to;
+  }
+  for (const [, i] of index) {
+    const c = cells[i]!;
     const [X, Y] = map(c.x, c.y);
     out.cells[Y * out.w + X] = mat * 8 + c.shade;
   }
