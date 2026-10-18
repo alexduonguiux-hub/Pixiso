@@ -612,3 +612,17 @@ là vòm đối xứng như S (vòm tròn nhìn từ 45° không khác; ô nhạ
 từng được đếm là một nét; so với nền 83 vẫn +1); ô lẻ 299 → 288; `strict` 1651; lint cầm bút 82 → 80 (hết
 bậc 4-1-4 ở hông SW/NW của khung và dáng vươn tay, thêm một bậc ở cuống cổ dáng lết); lệch góc nhìn 0; QA
 sạch; `problems: 0`; 113 test.
+
+### D-084 Mặt nghiêng của zombie văn phòng và Đột Biến (B7 của giám khảo vòng 4)
+
+**Zombie văn phòng @W** (dáng ngoẹo cổ): góc W từng ghép **đầu SW** lên thân nghiêng ("đầu trượt về vai gần"
+đọc từ bên hông thành mặt quay về người xem), còn tóc và miệng là lớp vẽ cho đầu W — kết quả là mép mặt phẳng
+hai cột viền, mắt xa dán sát mép, mắt gần ở chỗ tai, không mũi. Nay dáng ngoẹo cổ dùng **đầu W** như mọi dáng
+khác (vẫn nghiêng một cột từ hàng 5), hàng cuống cổ của thân vẽ lại như dáng lết (đầu W tự có hàng cổ); mặt
+nghiêng có cột mống 3 ô + một ô trắng thấp, bướu mũi, răng.
+
+**Đột Biến @W**: trán ở cột 1, hàm nhô ra cột 0 nhưng không có mũi → bướu mũi 2 hàng ở cột 0 (hàng 13–14), hàm
+lùi về cột 1 (hàng 15–16) như đầu W gốc; vuốt gần: vạch ngón kéo liền từ hàng 45 tới đầu móng (một hàng đốt
+ngón rời thành hai ô viền lẻ, script từ chối ghi).
+
+**Số đo.** Đạt 84/130 giữ nguyên; ô lẻ 288 → 286; `strict` 1646; lint 80; QA sạch; `problems: 0`; 113 test.

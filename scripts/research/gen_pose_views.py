@@ -174,7 +174,7 @@ HUNCH_W = body(16, 41, 14, [
 '.........ooooooo',
 ])
 TWIST_W = body(17, 41, 14, [
-'....ooooSSsSo....',
+'...........oo....',
 '......ossssso....',
 '.....o$SSss$$o...',
 '.....osSssSs$o...',
@@ -697,7 +697,9 @@ add('hunch', 'W', HUNCH_W, ('W', 0, 5, lambda k: 0), regions_w(2, 2,
     sleeveR={'short': [4, 18, 8, 23], 'long': [4, 18, 8, 28]},
     pants=[[4, 30, 15, 35]], shorts=[[4, 30, 15, 33]], collar=[[9, 17, 13, 17]], hem=[10, 29, 14, 29], frayedXs=[10, 12, 14],
     chest=[11, 20], gash=[5, 23]))
-add('twist', 'W', TWIST_W, ('SW', 0, 1, lambda k: 0 if k < 5 else 1), regions_w(1, 1), corners=True)
+# The side view keeps the side head (the head slid toward the near shoulder shows as a tilt from the side); the
+# three-quarter head here gave a flat-edged face with two eyes and no nose (fourth review).
+add('twist', 'W', TWIST_W, ('W', 0, 1, lambda k: 0 if k < 5 else 1), regions_w(1, 1))
 CRAWL_SW = break_column(CRAWL_SW, 2, 24, 34, [(24, 30)])
 CRAWL_SW = break_column(CRAWL_SW, 4, 24, 34, [(24, 27)])
 CRAWL_SW = break_column(CRAWL_SW, 16, 24, 34, [(24, 27)])
@@ -972,9 +974,9 @@ BRUTE_W = body(22, 61, 0, [
 '.ossssssSSssSsSSSSSSo.',
 '.ossssssEsssssSSSSSSo.',
 '.ossssssEsssssSSSSSSo.',
-'.ossssssexsssSSSSSSSo.',
+'osssssssexsssSSSSSSSo.',
 'o$$ssssssssssssSSSSSo.',
-'o$$$sssssssssssSSSSo..',
+'.o$$sssssssssssSSSSo..',
 '.o$$$ssssssssssSSSo...',
 '..o$$$sssssssssSSo....',
 '...o$sssssssssSSo.....',
@@ -1004,8 +1006,8 @@ BRUTE_W = body(22, 61, 0, [
 '.oSsssssSSoSsssssSo...',
 '..oSsssSoossssooooo...',
 '..oSsssSoo$ssssso.....',
-'..oSsssSoo$ssssso.....',
-'..oSsSsSoo$ssssso.....',
+'..oSosoSoo$ssssso.....',
+'..oSoSoSoo$ssssso.....',
 '..oSoSoSoo$ssssso.....',
 '...o.o.o.osssssso.....',
 '....oooooosssssso.....',
