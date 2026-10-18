@@ -23,7 +23,8 @@ def fig(w, rows):
     return rows
 
 # ------------------------------------------------------------------ x1.5: 25x60
-# Rows: skull 0-11 (highlight dome 2-8), brow and ears 12, eyes 13-15, jaw 16-20,
+# Rows: skull 0-11 (highlight dome 2-8), brow and ears 12, eyes 13-14 (a 2x2 red block with a white cell at
+# the upper outer corner, no socket line, the same on both sides), jaw 15-20,
 # neck 21, shoulders 22-26 (collarbones 23, pecs 24-25, under-pec shadow 26),
 # arms 27-43 (fists 38-43), torso 27-43 (light block on the left chest 24-27, abs
 # 29/32, a dark block under the right arm 28-31, pelvis 41), crotch 44, thighs 45-50, calves 51-53, feet 54-59.
@@ -40,10 +41,10 @@ GIANT15 = fig(25, [
 '...ossssssssssssssssSo...',
 '...oSssssssssssssssSSo...',
 '...oSSssssssssssssSSSo...',
-'..osSoosssssssssssooSso..',
-'..osSoxesssssssssexoSso..',
-'..osSoxesssssssssexoSso..',
-'...oSoxesssssssssexoSo...',
+'..osSsssssssssssssssSso..',
+'..osSxeessssssssseexSso..',
+'..osSseessssssssseesSso..',
+'...oSossssssssssssssSo...',
 '....oSss$$$$$ssssSSso....',
 '.....os$$$$$$$ssssSo.....',
 '......os$$$$$$sssSo......',

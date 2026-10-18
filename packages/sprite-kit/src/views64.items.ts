@@ -899,7 +899,18 @@ export const HEADBAND_VIEWS: Views = {
 };
 
 export const ZOMBIE_FACE_VIEWS: Views = {
-  SW: { overlays: [hov(2, 9, ['.$.S.S.$.', '...S.S...', '.........', '.SoxxxoS.', '...ooo...'])] },
+  SW: {
+    overlays: [
+      hov(2, 8, [
+        '........$$.',
+        '...S.S.....',
+        '...S.S.....',
+        '...........',
+        '.SoxxxoS...',
+        '...ooo.....',
+      ]),
+    ],
+  },
   W: { overlays: [hov(2, 12, ['xxxo', '.ooo'])] },
 };
 

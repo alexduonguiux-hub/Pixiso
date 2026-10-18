@@ -98,8 +98,10 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
   chân mày 2 ô, một đường ngón, một hàng đốt ngón, bóng là cụm đặt tay (D-055); sinh bằng
   `scripts/research/gen_giants.py`, khoá silhouette, đổi hàng nào phải khai báo `allow`.
 
-- Lưới đầu 17 cột, hàng mắt `HEAD_EYE_ROW = 10`; mắt 2×2 đen + 1 ô trắng góc trên, đặt ở
-  ~60 % chiều cao đầu. Gốc lưới đầu là `headX` của dáng (chỉ zombie gục đầu vẽ từ cột 0).
+- Lưới đầu 17 cột, hàng mắt `HEAD_EYE_ROW = 10`; mắt S/SW: mống 3 ô dọc (tối trên) + 2 ô trắng phía
+  ngoài hai hàng dưới; góc W: mống 3 ô + **một** ô trắng thấp phía sau (D-076); quái: khối 2×2 + 1 ô
+  trắng góc trên–ngoài, hai mắt cùng hình ở mọi góc. Không bao giờ một cột trắng suốt chiều cao mắt.
+  Gốc lưới đầu là `headX` của dáng (chỉ zombie gục đầu vẽ từ cột 0).
 - Nghiêng đầu bằng `shift` theo hàng, và **chỉ ở hàng 3, 5, 6, 7, 9** của sọ (chỗ cạnh sọ
   thẳng đứng); nghiêng ở hàng khác làm đứt viền sọ.
 - Mũ/nón là lớp cứng (`rigid`) rộng hơn sọ, dịch theo hàng mắt; mọi overlay trong không gian

@@ -107,7 +107,7 @@ FACE = {
  'SUNKEN_W':   O(3,8, ['.SS','.eS','SSS']),
  'SMILE_W':    O(2,12, ['oooooo','.xxxx.']),
  'HEADBAND_W': O(0,6, ['o**aaaaaaaAAo','oaaaaaaaaAAAo']),
- 'ZFACE_SW':   O(2,9, ['.$.S.S.$.','...S.S...','.........','.SoxxxoS.','...ooo...']),
+ 'ZFACE_SW':   O(2,8, ['........$$.','...S.S.....','...S.S.....','...........','.SoxxxoS...','...ooo.....']),
  'ZFACE_W':    O(2,12, ['xxxo','.ooo']),
  'ZCHEEK_SW':  O(10,5, ['d','d']),
  'ZCHEEK_W':   O(9,5, ['d','d']),

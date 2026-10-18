@@ -415,3 +415,23 @@ chấp nhận 1 sprite); vết bẩn hạ một hàng hay đảo thứ tự hàn
 **Số đo.** Đạt 77 → 80/130 (được: Kẻ Phun @S, Lính nón sắt @N/NW, thể thao @S/W; mất: zombie quân đội @W
 `lines`); ô lẻ 338 → 340 (2 ô da mép bụng Kẻ Phun cạnh cạp quần mới, hộp thân không phủ hết bụng béo); lint
 cầm bút 89 → 89; QA sạch; 113 test.
+
+### D-076 Mắt góc W, mắt zombie, mắt Đột Biến (B5 của giám khảo vòng 3)
+
+**Góc W (mọi nhân vật, `hero64.frames.ts`):** mống 3 ô dọc giữ nguyên, trắng chỉ còn **một ô** thấp phía sau
+mống (hàng dưới cùng của mống, cột trong); ba ô trắng cũ (cột trắng suốt chiều cao + ô má) về da. Ông Tư
+đội mũ vành nên mống trong profile mất ô trên; lớp `BRIM_EYE_V` thêm ô mống dưới để mắt vẫn 3 ô.
+
+**Mặt zombie (`ZOMBIE_FACE`, `ZFACE_SW`):** hai ô `$` "xương mày bắt sáng" nằm sát cột mống nên giám khảo đọc
+thành cột nhạt 3 ô; dời lên hàng thái dương (S: hai bên, cách mắt 2 cột; SW: cặp ô ở thái dương gần) — vẫn
+giữ sáng da cho thước `skin hl` (bỏ hẳn thì zombie cảnh sát/công nhân rớt 6,7 %).
+
+**Đột Biến:** bỏ mắt lồi 3×3 (overlay `BRUTE_EYE`); cả hai mắt là cùng một mô-đun vẽ trong thân khổng lồ
+(`gen_giants.py` S, `gen_pose_views.py` SW/W): khối đỏ 2×2 + một ô trắng ở góc trên–ngoài, không viền hốc
+mắt; góc lật không còn đổi bên mắt to.
+
+**Kẻ Phun góc SW:** mắt gần từng rộng 3 ô vì dải nhân cột của thân mập nhân cột giữa (chính là cột mắt gần
+của đầu 3/4); đầu SW/NW nay nhân cột 7 (giữa hai mắt) bằng `FAT_BANDS_Q`.
+
+**Số đo.** Đạt 80 → 82/130 (được zombie cảnh sát @S/SW; mất Kẻ Thính @N và zombie quân đội @W ở thước
+`lines` — ít ô tối mảnh hơn khi bớt trắng/viền hốc mắt); ô lẻ 340 → 332; lint cầm bút 89; QA sạch; 113 test.

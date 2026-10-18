@@ -298,7 +298,14 @@ const HELMET: Overlay = {
 };
 
 /** Zombie face: sunken sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
-const ZOMBIE_FACE = hov(4, 9, ['.$.S.S.$.', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']); // brow bones catch light
+const ZOMBIE_FACE = hov(4, 8, [
+  '$.......$',
+  '...S.S...',
+  '...S.S...',
+  '.........',
+  '.SoxxxoS.',
+  '...ooo...',
+]); // temples catch light, sunken brows, a toothy mouth
 /** Scalp patches and a scalp wound (blood is the wood material). */
 const ZOMBIE_SCALP = hov(5, 2, ['.SS..dd', '..S....']);
 /** A gash on the cheek. */
@@ -352,6 +359,8 @@ const HAIR_PONYTAIL_V: ViewItem = { S: { overlays: HAIR_PONYTAIL }, ...HAIR_PONY
 const BUZZ_V: ViewItem = { S: BUZZ_VIEWS.S!, ...BUZZ_VIEWS };
 const GLASSES_V: ViewItem = { S: same(GLASSES), ...GLASSES_VIEWS };
 const BEARD_V: ViewItem = { S: same(BEARD), ...BEARD_VIEWS };
+/** Under a hat brim the profile's iris loses its top cell; this lower cell keeps the eye three cells tall. */
+const BRIM_EYE_V: ViewItem = { S: {}, W: { overlays: [ov(4, 11, ['e'])] } };
 /** Helmets and the ranger hat look the same from the back; the beret drapes to the other side. */
 const HELMET_V: ViewItem = {
   S: same(HELMET),
@@ -716,7 +725,7 @@ const ONG_TU_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: [BEARD_V, RANGER_COAT_V],
+  extras: [BEARD_V, RANGER_COAT_V, BRIM_EYE_V],
   hem: false,
   sleeves: 'wide',
   colors: {
@@ -1360,7 +1369,6 @@ const SHELL_PLATES: Overlay[] = [
 ];
 
 /** Brute face: one bulging eye, a maw of teeth; boils on the torso (brute figure space). */
-const BRUTE_EYE = ov(8, 12, ['ooooo', 'oxeeo', 'oeeeo', 'oeeeo', 'ooooo']);
 const BRUTE_MAW = ov(11, 18, ['oxoxoxoxoxo', 'ooooooooooo']);
 const BRUTE_BOILS = ov(12, 33, [
   '.aa.....',
@@ -1605,16 +1613,14 @@ const KE_MANG_VO_LOOK: Look = {
 };
 export const KE_MANG_VO = wearPosed('ke_mang_vo', 'Kẻ Mang Vỏ', STAND_HEAVY, KE_MANG_VO_LOOK);
 
-/** The brute's face and boils per view (figure space of the brute in that view). */
-const BRUTE_EYE_ROWS = ['ooooo', 'oxeeo', 'oeeeo', 'oeeeo', 'ooooo'];
+/** The brute's maw and boils per view (figure space of the brute in that view); its eyes are drawn in the figure. */
 const BRUTE_FACE_V: ViewItem = {
-  S: { overlays: [BRUTE_EYE, BRUTE_MAW, BRUTE_BOILS] },
+  S: { overlays: [BRUTE_MAW, BRUTE_BOILS] },
   SW: {
-    overlays: [ov(6, 12, BRUTE_EYE_ROWS), ov(10, 18, ['oxoxoxoxoxo', 'ooooooooooo']), BRUTE_BOILS],
+    overlays: [ov(10, 18, ['oxoxoxoxoxo', 'ooooooooooo']), BRUTE_BOILS],
   },
   W: {
     overlays: [
-      ov(6, 10, BRUTE_EYE_ROWS),
       ov(3, 17, ['oxoxoxo', 'ooooooo']),
       ov(12, 30, ['.aa.', '....', '..aa', '....', 'aa..', '....', '.aa.']),
     ],

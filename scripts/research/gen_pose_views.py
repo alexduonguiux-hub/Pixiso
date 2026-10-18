@@ -758,6 +758,7 @@ def widen_sym(rows, bands, center=8):
         for (y0, y1), b in bands:
             if y0 <= y <= y1:
                 rep[center] += b.get('center', 0)
+                if 'col' in b: rep[b['col'][0]] += b['col'][1]   # one named column
                 for x, extra in b.get('pairs', []):   # a column and its mirror about the centre
                     rep[x] += extra; rep[2 * center - x] += extra
         out.append(''.join(c * rep[x] for x, c in enumerate(r)))
@@ -805,9 +806,12 @@ FAT_W = dup_cols(FIG['W'][:15], {7: 1, 10: 1}, 18) + [
 '........oooooooo..',
 ]
 FAT_W_HEADCOLS = [x if x <= 7 else x + 1 if x <= 10 else x + 2 for x in range(HEAD_W)]
-FAT_SW = widen_sym(FIG['SW'], FAT_BANDS)
+# The three-quarter heads keep their eyes one cell wide: the head rows repeat column 7 (between the eyes) instead
+# of the centre column, which is the near eye's own.
+FAT_BANDS_Q = [((0, 16), {'col': (7, 2)})] + [b for b in FAT_BANDS if b[0] != (0, 16)]
+FAT_SW = widen_sym(FIG['SW'], FAT_BANDS_Q)
 FAT_N = widen_sym(FIG['N'], FAT_BANDS)
-FAT_NW = widen_sym(FIG['NW'], FAT_BANDS)
+FAT_NW = widen_sym(FIG['NW'], FAT_BANDS_Q)
 def fat_regions(**over):
     r = {
         'torso': [5, 15, 17, 28], 'neck': [[8, 15, 14, 16], [9, 17, 13, 17]], 'shoulders': [[2, 15, 4, 18], [18, 15, 20, 18]],
@@ -851,10 +855,10 @@ def replace_span(rows, y, x0, text):
 BRUTE_SW = list(BRUTE_S)
 # (the face rows of the giant, drawn like the base SW head: far brow and eye against the far outline,
 #  near eye slid a column in, the near cheek in shadow; the giant sits four columns into the brute canvas)
-BRUTE_SW[12] = '....' + '..ooosssssssssooSssSSso..' + '..'
-BRUTE_SW[13] = '....' + '..oxesssssssssexossSSso..' + '..'
-BRUTE_SW[14] = '....' + '..oxesssssssssexossSSso..' + '..'
-BRUTE_SW[15] = '....' + '...oxessssssssexosSSso...' + '..'
+BRUTE_SW[12] = '....' + '..osssssssssssssSssSSso..' + '..'
+BRUTE_SW[13] = '....' + '..oxeesssssssseexssSSso..' + '..'
+BRUTE_SW[14] = '....' + '..oseesssssssseesssSSso..' + '..'
+BRUTE_SW[15] = '....' + '...ossssssssssssssSSso...' + '..'
 BRUTE_SW[16] = '....' + '....oss$$$$sssssSSSso....' + '..'
 assert all(len(BRUTE_SW[y]) == 31 for y in range(12, 17)), [len(BRUTE_SW[y]) for y in range(12, 17)]
 # the claw arm two columns behind the torso edge (rows 28-46 hold it in columns 0-8; the torso keeps columns 9-10)
@@ -894,10 +898,10 @@ BRUTE_W = body(22, 61, 0, [
 '.osss$$$$$$$ssssSSSSo.',
 '.ossss$$$$$sssssSSSSo.',
 '.ossssssssssssssSSSSo.',
-'.osssssoosssSsSSSSSSo.',
-'.ossssssexoSssSSSSSSo.',
-'.ossssssexosssSSSSSSo.',
-'.ossssssexosssSSSSSSo.',
+'.ossssssssssSsSSSSSSo.',
+'.osssssseexSssSSSSSSo.',
+'.osssssseessssSSSSSSo.',
+'.ossssssssssssSSSSSSo.',
 'o$$ssssssssssssSSSSSo.',
 'o$$$sssssssssssSSSSo..',
 '.o$$$ssssssssssSSSo...',
