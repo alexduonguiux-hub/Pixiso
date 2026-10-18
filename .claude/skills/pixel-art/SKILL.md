@@ -192,3 +192,5 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
 - Canon cộng đồng (PixelJoint "The Pixel Art Tutorial", ghi chú của Pedro Medeiros / saint11,
   Slynyrd ramps): nguồn tên gọi của các lỗi doubles, jaggies, banding, pillow, selout.
   | Tóc sẫm là "nhiễu camo" (giám khảo vòng 2, B5) | dải 2 ô xen sáng/gốc + dải quét: mọi ô sáng rời nhau, đọc như rằn ri trên nền đen | lọn có mép sáng liền và thân 2 ô, sáng/tối đổi theo chiều dài lọn chứ không theo cột; ranh đoạn thẳng hàng trên mọi lọn để mảng không dính qua lọn kề (D-069) |
+  | Râu/khăn che mặt đọc như khẩu trang (giám khảo vòng 2, B6) | hộp chữ nhật viền kín + một vạch `o` ngang đủ bề rộng | ria tách khỏi râu má bằng ô da ở khoé môi, miệng là khe sâu 2 ô, mép dưới nhọn rủ qua cổ áo; không vẽ `o` đè lên đường may đã có (D-070) |
+  | Món nới rộng thân (tay áo khoác) vẽ bằng overlay tĩnh | dải `oC` ngoài viền tay thành viền đôi, rời khỏi tay ở góc khác, chạy xuống bàn tay | nới bằng luật trên hình thật (`Garment.letOut`): dời viền từng hàng, đóng viền chỗ trống, bỏ qua hàng tạo bậc 1-2-1 hay khối viền 2×2 (D-070) |

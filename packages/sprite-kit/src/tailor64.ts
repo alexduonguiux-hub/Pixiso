@@ -26,12 +26,15 @@ export interface Garment {
   placket?: 'buttons' | 'none';
   /** Sleeve: dark band on the last row. */
   cuff?: boolean;
+  /** Sleeve: columns let out past the arm's outline (a coat sleeve); the outline moves outward with it. */
+  letOut?: number;
   /** Torso: two breast-pocket dashes. */
   pockets?: boolean;
   /** Coordinate space of the boxes (default figure; 'head' for a buzz cut's skull box). */
   space?: 'figure' | 'head';
 }
 
+const LINE = packCell(LEGEND.o!);
 const SHADOW = 0;
 const MID = 1;
 const LIGHT = 2;
@@ -244,6 +247,53 @@ export function tailor(
       for (const c of cells)
         if (c.y === ey && c.x !== (lit ? rowMin.get(ey) : rowMax.get(ey)))
           c.shade = lit ? SHADOW : DEEP;
+    }
+    // A coat sleeve let out past the arm: row by row the arm's outline moves outward by one column and the
+    // freed column takes the outer cell's tone; the new column is closed above and below where nothing is
+    // drawn (the shoulder step, a hand narrower than the sleeve). Only where the outline faces empty canvas,
+    // so an arm hanging across the torso in a side view stays as drawn.
+    for (let n = 0; n < (g.letOut ?? 0); n++) {
+      const step = lit ? -1 : 1;
+      const read = (x: number, y: number) => {
+        const [X, Y] = map(x, y);
+        return X < 0 || Y < 0 || X >= out.w || Y >= out.h ? undefined : out.cells[Y * out.w + X]!;
+      };
+      const write = (x: number, y: number, v: number) => {
+        const [X, Y] = map(x, y);
+        if (X >= 0 && Y >= 0 && X < out.w && Y < out.h) out.cells[Y * out.w + X] = v;
+      };
+      const isLine = (x: number, y: number) => read(x, y) === LINE;
+      // Would a line at (x, y) complete a 2x2 block of line cells (a doubled outline)?
+      const doubles = (x: number, y: number) =>
+        [-1, 0].some((ax) =>
+          [-1, 0].some((ay) =>
+            [
+              [x + ax, y + ay],
+              [x + ax + 1, y + ay],
+              [x + ax, y + ay + 1],
+              [x + ax + 1, y + ay + 1],
+            ].every(([X, Y]) => (X === x && Y === y) || isLine(X!, Y!)),
+          ),
+        );
+      for (let y = y0; y <= y1; y++) {
+        const outer = lit ? rowMin.get(y) : rowMax.get(y);
+        if (outer === undefined) continue;
+        const n1 = outer + step * (n + 1);
+        const n2 = outer + step * (n + 2);
+        if (read(n1, y) !== LINE || read(n2, y) !== EMPTY) continue;
+        const closeTop = read(n1, y - 1) === EMPTY;
+        const closeBottom = read(n1, y + 1) === EMPTY;
+        // The first row keeps the arm's own outline when nothing is drawn above the freed column: closing it
+        // there would put a one-row step on the shoulder slope (a 1-2-1 stair). A closing line that would
+        // double an existing outline (the collar meeting the shoulder) also leaves the row as drawn.
+        if (closeTop && (y === y0 || doubles(n1, y - 1))) continue;
+        if (closeBottom && doubles(n1, y + 1)) continue;
+        const shade = cells[index.get(`${outer},${y}`)!]!.shade;
+        write(n1, y, mat * 8 + shade);
+        write(n2, y, LINE);
+        if (closeTop) write(n1, y - 1, LINE);
+        if (closeBottom) write(n1, y + 1, LINE);
+      }
     }
   } else if (g.kind === 'pants') {
     // Two legs, each read as a cylinder: the near (left) leg lit on top of the thigh with a contact shadow

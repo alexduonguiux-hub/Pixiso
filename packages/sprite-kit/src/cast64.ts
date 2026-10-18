@@ -210,13 +210,14 @@ const GLASSES = hov(4, 8, ['...o.o...', '...ooo...', '...o.o...', 'o..o.o..o', '
 /** Headband across the forehead (accent material). */
 const HEADBAND = hov(2, 6, ['o*aaaaaaaaaAo', 'oAaaaaaaaaAAo']);
 
-/** Full beard (hair material): moustache under the nose, a line under it (the mouth, parting it from the beard), a bushy beard wider than the jaw down to the collar, its own outline. */
+/** Full beard (hair material): a moustache under the nose parted from the cheek hair by the lip corners, a short dark notch for the mouth, a bushy beard wider than the jaw, its points hanging over the collar opening. */
 const BEARD = hov(3, 12, [
-  '.o#hHhhHHo.',
-  'o#oooooooHo',
-  'o#hHhhHhhHo',
-  'oHhhHhhHHHo',
-  '.ooooooooo.',
+  '.o#.hHh.Ho.',
+  'o#hhHjjHhHo',
+  'o#hHhhHhHHo',
+  '.o#hHhHhHo.',
+  '....HjH....',
+  '....ooo....',
 ]);
 
 /** Ranger hat: crown is the skull in leather, band and brim as lines/overlay. */
@@ -534,8 +535,6 @@ const BACKPACK_V: ViewItem = {
 };
 /** Ông Tư's ranger coat: a column wider at each sleeve and a skirt to the knee, open at the front, vented at the back. */
 const RANGER_COAT: Overlay[] = [
-  ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
-  ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
   ov(1, 29, [
     'o^ccCccoccCccCo',
     'o^ccCccoccCccCo',
@@ -547,8 +546,6 @@ const RANGER_COAT: Overlay[] = [
   ]),
 ];
 const RANGER_COAT_BACK: Overlay[] = [
-  ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
-  ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
   ov(1, 29, [
     'o^ccCccoccCccCo',
     'o^ccCccoccCccCo',
@@ -720,6 +717,7 @@ const ONG_TU_LOOK: Look = {
   face: 'plain',
   extras: [BEARD_V, RANGER_COAT_V],
   hem: false,
+  sleeves: 'wide',
   colors: {
     skin: [226, 182, 144],
     hair: [104, 100, 96], // dark grey beard
@@ -793,6 +791,8 @@ export interface Look {
   face?: 'zombie' | 'plain';
   /** False drops the hem line at the waist (a coat that carries on below it). */
   hem?: boolean;
+  /** Wide sleeves: a column let out past each arm's outline (a coat). */
+  sleeves?: 'wide';
   colors: MaterialColors;
 }
 
@@ -873,7 +873,15 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   const sleeve = (side: 'L' | 'R', box: Box, cuff = false): Remap => {
     // A side view gives both sleeves the same box (the far arm is hidden): shade it once, as the near one.
     if (!garments.some((g) => g.kind === 'sleeve' && g.box.join() === box.join()))
-      garments.push({ kind: 'sleeve', side, box, material: 'cloth', cuff });
+      garments.push({
+        kind: 'sleeve',
+        side,
+        box,
+        material: 'cloth',
+        cuff,
+        // Shoulder caps are let out too, so the coat's shoulder slopes evenly into the wider sleeve.
+        ...(look.sleeves === 'wide' ? { letOut: 1 } : {}),
+      });
     return { box, to: 'cloth' };
   };
   const caps = pose.shoulders.map((box): Remap => sleeve(box[0] < tx0 ? 'L' : 'R', box));

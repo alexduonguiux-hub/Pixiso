@@ -862,10 +862,29 @@ export const GLASSES_VIEWS: Views = {
 export const BEARD_VIEWS: Views = {
   SW: {
     overlays: [
-      hov(2, 12, ['.o#hHhhHHo.', 'o#oooooooHo', 'o#hHhhHhhHo', 'oHhhHhhHHHo', '.ooooooooo.']),
+      hov(2, 12, [
+        '.#.hHh.hHH.',
+        'o#hHjjHhhHo',
+        'o#hHhhHhHHo',
+        '.o#hHhHhHo.',
+        '.....HjH...',
+        '.....ooo...',
+      ]),
     ],
   },
-  W: { overlays: [hov(0, 12, ['.o#hHho..', 'o#hHhhho.', 'o#hhHhHo.', '.oHhhHHo.', '..ooooo..'])] },
+  W: {
+    overlays: [
+      hov(0, 10, [
+        '.......H....',
+        '.......h....',
+        '.o#hHhhHhH..',
+        'o#hhHhHhHH..',
+        'o#hHhhHhHHj.',
+        '.ooHhHHhH...',
+        '...o........',
+      ]),
+    ],
+  },
 };
 
 export const MIMIC_FACE_VIEWS: Views = {

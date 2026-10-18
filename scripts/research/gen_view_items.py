@@ -89,8 +89,8 @@ RANGER_W_REMAP = R([0,0,13,6],'leather'); RANGER_W_SEAM = L([1,6,11,6])
 FACE = {
  'GLASSES_SW': O(2,8, ['...o.o.....','...ooo.....','...o.o.....','o..o.o..ooo','oooo.oooo..']),
  'GLASSES_W':  O(3,7, ['ooo...','o..ooo','o..o..','o..o..','oooo..']),
- 'BEARD_SW':   O(2,12, ['.o#hHhhHHo.','o#oooooooHo','o#hHhhHhhHo','oHhhHhhHHHo','.ooooooooo.']),
- 'BEARD_W':    O(0,12, ['.o#hHho..','o#hHhhho.','o#hhHhHo.','.oHhhHHo.','..ooooo..']),
+ 'BEARD_SW':   O(2,12, ['.#.hHh.hHH.','o#hHjjHhhHo','o#hHhhHhHHo','.o#hHhHhHo.','.....HjH...','.....ooo...']),
+ 'BEARD_W':    O(0,10, ['.......H....','.......h....','.o#hHhhHhH..','o#hhHhHhHH..','o#hHhhHhHHj.','.ooHhHHhH...','...o........']),
  'SUNKEN_SW':  O(3,9, ['SS...SS','Se...eS','SS...SS']),
  'SMILE_SW':   O(3,12, ['ooooooooo','.xxxxxx..']),
  'SUNKEN_W':   O(3,8, ['.SS','.eS','SSS']),
