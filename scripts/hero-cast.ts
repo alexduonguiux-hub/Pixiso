@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { HERO_RAMP_OPTIONS, scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
+import { scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
 import {
   buildForm,
   buildPalette,
@@ -19,6 +19,7 @@ import {
   MUTANTS,
   SOLDIERS,
   ZOMBIES,
+  HERO_RAMPS,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -40,7 +41,7 @@ const outfits =
           : CAST;
 const figures = outfits.map((outfit) => {
   const figure = dress(buildForm(outfit.form ?? FORM_BASE), outfit);
-  const palette = buildPalette(outfit.colors, HERO_RAMP_OPTIONS);
+  const palette = buildPalette(outfit.colors, HERO_RAMPS);
   return { outfit, img: paint(figure, palette, { lineStyle: 'tinted', selout: false }) };
 });
 const gap = 8;

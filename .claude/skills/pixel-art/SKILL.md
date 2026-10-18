@@ -16,24 +16,29 @@ Nguyên tắc nền: **code quyết định pixel**. Không sinh ảnh bằng AI
 
 ## 1. Từ vựng ô
 
-Một ô = vật liệu × tông. Chữ thường = tông gốc, chữ hoa = bóng, ký hiệu = sáng.
+Một ô = vật liệu × bậc sáng. Năm bậc: **sâu** (tối nhất) – **tối** – **gốc** – **sáng** – **chói**.
+Chữ thường = gốc, chữ hoa = tối, ký hiệu = sáng; cặp chữ thứ hai của mỗi vật liệu là sâu
+(thường) và chói (hoa). Da chỉ dùng 3 bậc giữa như mannequin mẫu; vải, tóc, đồ da dùng cả 5
+(áo mẫu: L 0,17 / 0,31 / 0,40 / 0,59 / 0,71).
 
-| Vật liệu | gốc | bóng | sáng |
-| -------- | --- | ---- | ---- |
-| da       | `s` | `S`  | `$`  |
-| tóc      | `h` | `H`  | `#`  |
-| vải 1    | `c` | `C`  | `^`  |
-| vải 2    | `k` | `K`  | `&`  |
-| quần     | `p` | `P`  | `+`  |
-| giày     | `b` | `B`  | `!`  |
-| kim loại | `m` | `M`  | `w`  |
-| da thuộc | `l` | `L`  | `\|` |
-| gỗ       | `d` | `D`  | `%`  |
-| nhấn     | `a` | `A`  | `*`  |
+| Vật liệu | sâu | tối | gốc | sáng | chói |
+| -------- | --- | --- | --- | ---- | ---- |
+| da       | `z` | `S` | `s` | `$`  | `Z`  |
+| tóc      | `j` | `H` | `h` | `#`  | `J`  |
+| vải 1    | `v` | `C` | `c` | `^`  | `V`  |
+| vải 2    | `q` | `K` | `k` | `&`  | `Q`  |
+| quần     | `y` | `P` | `p` | `+`  | `Y`  |
+| giày     | `g` | `B` | `b` | `!`  | `G`  |
+| kim loại | `n` | `M` | `m` | `w`  | `N`  |
+| da thuộc | `i` | `L` | `l` | `\|` | `I`  |
+| gỗ       | `t` | `D` | `d` | `%`  | `T`  |
+| nhấn     | `r` | `A` | `a` | `*`  | `R`  |
 
-`o` viền, `.` trống, `e` mắt, `x` trắng. Thân vẽ bằng da; áo quần là phép đổi vật liệu theo
-vùng (`outfit64.ts`), nên **bóng/sáng của thân chính là bóng/sáng của áo**: vẽ thân sai là
-mọi nhân vật mặc trên thân đó sai theo.
+`o` viền, `.` trống, `E` mống mắt trên (navy), `e` mống mắt dưới (xanh), `x` trắng. Thân vẽ bằng
+da; áo quần là phép đổi vật liệu theo vùng (`outfit64.ts`), nên **bóng/sáng của thân chính là
+bóng/sáng của áo**: vẽ thân sai là mọi nhân vật mặc trên thân đó sai theo. Bảng màu: da theo
+`HERO_RAMP_OPTIONS` (bước nhỏ như mẫu), mọi vật liệu khác theo `HERO_CLOTH_RAMP_OPTIONS`
+(bước rộng: tối −0,10, sâu −0,24, sáng +0,16, chói +0,29); gọi `buildPalette(colors, HERO_RAMPS)`.
 
 ## 2. Tạo hình (silhouette trước)
 

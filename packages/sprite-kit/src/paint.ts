@@ -1,5 +1,4 @@
 import {
-  buildRamp,
   buildTintedLine,
   createImage,
   DEFAULT_RAMP_OPTIONS,
@@ -10,6 +9,9 @@ import {
   oklabToOklch,
   oklchToOklab,
   oklabToSrgb8,
+  buildRamp5,
+  HERO_RAMP_OPTIONS,
+  HERO_CLOTH_RAMP_OPTIONS,
 } from '@pixiso/pixel-core';
 import { MATERIALS, unpackCell, type Material, type Sprite } from './format.js';
 
@@ -59,18 +61,28 @@ export const DEFAULT_PAINT_OPTIONS: PaintOptions = { lineStyle: 'flat', selout: 
  */
 export const REFERENCE_PAINT_OPTIONS: PaintOptions = { lineStyle: 'tinted', selout: false };
 
-/** Builds the concrete palette for a material colour set. Fixed-tone materials get flat ramps. */
+/** Ramp options per material for the 64 px hero: skin as measured on the mannequin, everything else with the wider cloth steps. */
+export const HERO_RAMPS = (m: Material): RampOptions =>
+  m === 'skin' ? HERO_RAMP_OPTIONS : HERO_CLOTH_RAMP_OPTIONS;
+
+/**
+ * Builds the concrete palette for a material colour set: five shades per
+ * material ([shadow, mid, highlight, deep, bright], the cell format's order);
+ * fixed-tone materials get flat ramps. `ramp` may be one option set or a
+ * function of the material.
+ */
 export function buildPalette(
   colors: MaterialColors = {},
-  ramp: RampOptions = DEFAULT_RAMP_OPTIONS,
+  ramp: RampOptions | ((m: Material) => RampOptions) = DEFAULT_RAMP_OPTIONS,
 ): Palette {
   const ramps: Rgb8[][] = [];
   const lines: Rgb8[] = [];
   const line = colors.line ?? DEFAULT_MATERIAL_COLORS.line;
+  const optionsFor = (m: Material): RampOptions => (typeof ramp === 'function' ? ramp(m) : ramp);
   for (const m of MATERIALS) {
     const base = colors[m] ?? DEFAULT_MATERIAL_COLORS[m];
     if (m === 'line' || m === 'white') {
-      ramps.push([base, base, base]);
+      ramps.push([base, base, base, base, base]);
       lines.push(line);
       continue;
     }
@@ -80,14 +92,14 @@ export function buildPalette(
       const dark = oklabToSrgb8(
         ...oklchToOklab(Math.max(0.1, L - 0.12), Math.min(0.3, C * 1.1), h),
       );
-      ramps.push([dark, base, base]);
+      ramps.push([dark, base, base, dark, base]);
       lines.push(line);
       continue;
     }
-    const lab = srgb8ToOklab(...base);
-    const r = buildRamp(lab, ramp);
-    ramps.push([r[0]!, r[1]!, r[2] ?? r[1]!]);
-    lines.push(buildTintedLine(srgb8ToOklab(...r[0]!), ramp));
+    const o = optionsFor(m);
+    const r = buildRamp5(srgb8ToOklab(...base), o);
+    ramps.push(r);
+    lines.push(buildTintedLine(srgb8ToOklab(...r[0]!), o));
   }
   const seen = new Map<string, Rgb8>();
   for (const r of ramps) for (const c of r) seen.set(c.join(','), c);
@@ -118,7 +130,7 @@ function borderingMaterial(s: Sprite, x: number, y: number): number {
   for (const [dx, dy] of N8) {
     const v = cellAt(s, x + dx, y + dy);
     if (v < 0) continue;
-    const m = v >> 2;
+    const m = v >> 3;
     if (m !== LINE_INDEX) counts[m]!++;
   }
   let best = -1;

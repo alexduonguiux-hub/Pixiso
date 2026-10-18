@@ -158,7 +158,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         const [fx, fy] = map(x, y);
         const v = get(fx, fy);
         if (v < 0) continue;
-        if (from.includes(Math.floor(v / 4))) put(fx, fy, to * 4 + (v % 4));
+        if (from.includes(Math.floor(v / 8))) put(fx, fy, to * 8 + (v % 8));
       }
   }
   for (const seam of outfit.lines ?? []) {

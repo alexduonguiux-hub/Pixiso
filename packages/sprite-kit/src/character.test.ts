@@ -40,12 +40,12 @@ describe('character builder', () => {
     expect(rows[30]).toMatch(/^\.+$/); // nothing below the soles
   });
 
-  it('paints with one hue-shifted ramp per material and never more than 3 shades each', () => {
+  it('paints with one hue-shifted ramp per material and never more than 5 shades each', () => {
     const img = paint(
       buildFrame(knight, 'S', { limbs: {} }),
       buildPalette({ cloth: [60, 90, 150] }),
     );
-    expect(countColors(img)).toBeLessThanOrEqual(13 * 3);
+    expect(countColors(img)).toBeLessThanOrEqual(13 * 5);
   });
 
   it('every part has both views and a known slot', () => {

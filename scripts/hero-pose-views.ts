@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { HERO_RAMP_OPTIONS, scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
+import { scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
 import {
   buildPalette,
   compose,
@@ -19,6 +19,7 @@ import {
   POSED_LOOKS,
   posedInView,
   type HeroView,
+  HERO_RAMPS,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -61,7 +62,7 @@ ids.forEach((id, r) => {
     const y = ground - (figure.h - 1) - s.oy;
     let cell = compose([{ id: 'body', sprite: s, x, y, z: 0 }], HERO_CANVAS, HERO_CANVAS);
     if (mirror) cell = flipX(cell);
-    const img = paint(cell, buildPalette(outfit.colors, HERO_RAMP_OPTIONS), {
+    const img = paint(cell, buildPalette(outfit.colors, HERO_RAMPS), {
       lineStyle: 'tinted',
       selout: false,
     });

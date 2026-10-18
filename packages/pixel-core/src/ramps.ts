@@ -45,6 +45,10 @@ export interface RampOptions {
    * keep the material's shadow hue.
    */
   lineL?: number;
+  /** Lightness delta of the deep shadow below the shadow (default 0.6 × shadowL): the fifth and fourth shades. */
+  deepL?: number;
+  /** Lightness delta of the bright highlight above the highlight (default highlightL). */
+  brightL?: number;
 }
 
 export const DEFAULT_RAMP_OPTIONS: RampOptions = {
@@ -182,6 +186,51 @@ export const HERO_RAMP_OPTIONS: RampOptions = {
   tintChroma: 0.02,
   shadowAwayFromHighlight: true,
   lineL: 0.38,
+};
+
+/**
+ * Five shades for one base colour in the order the cell format stores them:
+ * [shadow, mid, highlight, deep shadow, bright highlight]. The deep shadow
+ * steps again from the shadow and the bright highlight from the highlight, so
+ * the hue keeps drifting the same way (reference jackets: L 0.17 / 0.31 /
+ * 0.40 / 0.59 / 0.71; hair: 0.45 / 0.65 / 0.74 / 0.89 / 1.0).
+ */
+export function buildRamp5(base: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rgb8[] {
+  const shadow = shade(base, o.shadowL, o.shadowHueDeg, o.shadowChroma, o);
+  const mid: Lab = [Math.max(0.06, Math.min(0.98, base[0])), base[1], base[2]];
+  const highlight = shade(base, o.highlightL, o.highlightHueDeg, o.highlightChroma, o);
+  const deep = shade(shadow, o.deepL ?? o.shadowL * 0.6, o.shadowHueDeg, o.shadowChroma, o);
+  const bright = shade(
+    highlight,
+    o.brightL ?? o.highlightL,
+    o.highlightHueDeg,
+    o.highlightChroma,
+    o,
+  );
+  return [shadow, mid, highlight, deep, bright].map(clampToGamut);
+}
+
+/**
+ * Ramp for clothes, hair and gear on the 64 px hero (measured on the reference
+ * sheet's dressed figure): wider steps than skin (jacket mid L 0.40, shadow
+ * 0.31, light 0.59, bright 0.71, deep accents under 0.2), shadows a little
+ * more saturated, highlights not washed out, the same brown outline.
+ */
+export const HERO_CLOTH_RAMP_OPTIONS: RampOptions = {
+  steps: 3,
+  shadowL: -0.1,
+  highlightL: 0.16,
+  shadowHueDeg: 264,
+  highlightHueDeg: 100,
+  maxHueShiftDeg: 12,
+  shadowChroma: 1.15,
+  highlightChroma: 0.9,
+  minChromaForShift: 0.025,
+  tintChroma: 0.02,
+  shadowAwayFromHighlight: true,
+  lineL: 0.38,
+  deepL: -0.14,
+  brightL: 0.13,
 };
 
 /** A line colour darker and cooler than the darkest shadow in the set. */

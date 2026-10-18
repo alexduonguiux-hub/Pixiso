@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { HERO_RAMP_OPTIONS, scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
+import { scaleNearest, type RGBAImage } from '@pixiso/pixel-core';
 import {
   BASE_LOOKS,
   buildForm,
@@ -37,6 +37,7 @@ import {
   type DressedSprite,
   type HeroView,
   type MaterialColors,
+  HERO_RAMPS,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -136,7 +137,7 @@ rows.forEach((row, r) => {
       HERO_CANVAS,
     );
     if (mirror) cell = flipX(cell);
-    const img = paint(cell, buildPalette(colors, HERO_RAMP_OPTIONS), {
+    const img = paint(cell, buildPalette(colors, HERO_RAMPS), {
       lineStyle: 'tinted',
       selout: false,
     });

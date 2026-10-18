@@ -22,15 +22,22 @@ export const MATERIALS = [
 ] as const;
 export type Material = (typeof MATERIALS)[number];
 
-/** 0 = shadow, 1 = mid, 2 = highlight. */
-export type Shade = 0 | 1 | 2;
+/** 0 = shadow, 1 = mid, 2 = highlight, 3 = deep shadow, 4 = bright highlight (3 and 4 came later, so the first three keep their numbers). */
+export type Shade = 0 | 1 | 2 | 3 | 4;
 
 export interface Cell {
   material: Material;
   shade: Shade;
 }
 
-/** Glyph → cell. Lowercase = mid, uppercase = shadow, special glyphs for highlights and fixed tones. The eye has two: `E` the dark upper iris, `e` the lit lower iris (the reference draws navy over blue). */
+/**
+ * Glyph → cell. Lowercase = mid, uppercase = shadow, special glyphs for
+ * highlights and fixed tones. The eye has two: `E` the dark upper iris, `e`
+ * the lit lower iris (the reference draws navy over blue). A second letter per
+ * material gives the deep shadow (lowercase) and the bright highlight
+ * (uppercase): skin z/Z, hair j/J, cloth v/V, cloth2 q/Q, pants y/Y, boots
+ * g/G, metal n/N, leather i/I, wood t/T, accent r/R.
+ */
 export const LEGEND: Record<string, Cell> = {
   o: { material: 'line', shade: 1 },
   e: { material: 'eye', shade: 1 },
@@ -66,9 +73,29 @@ export const LEGEND: Record<string, Cell> = {
   a: { material: 'accent', shade: 1 },
   A: { material: 'accent', shade: 0 },
   '*': { material: 'accent', shade: 2 },
+  z: { material: 'skin', shade: 3 },
+  Z: { material: 'skin', shade: 4 },
+  j: { material: 'hair', shade: 3 },
+  J: { material: 'hair', shade: 4 },
+  v: { material: 'cloth', shade: 3 },
+  V: { material: 'cloth', shade: 4 },
+  q: { material: 'cloth2', shade: 3 },
+  Q: { material: 'cloth2', shade: 4 },
+  y: { material: 'pants', shade: 3 },
+  Y: { material: 'pants', shade: 4 },
+  g: { material: 'boots', shade: 3 },
+  G: { material: 'boots', shade: 4 },
+  n: { material: 'metal', shade: 3 },
+  N: { material: 'metal', shade: 4 },
+  i: { material: 'leather', shade: 3 },
+  I: { material: 'leather', shade: 4 },
+  t: { material: 'wood', shade: 3 },
+  T: { material: 'wood', shade: 4 },
+  r: { material: 'accent', shade: 3 },
+  R: { material: 'accent', shade: 4 },
 };
 
-/** A parsed template: `cells[y*w+x]` is -1 (transparent) or `materialIndex*4 + shade`. */
+/** A parsed template: `cells[y*w+x]` is -1 (transparent) or `materialIndex*8 + shade`. */
 export interface Sprite {
   w: number;
   h: number;
@@ -78,11 +105,11 @@ export interface Sprite {
 export const EMPTY = -1;
 
 export function packCell(c: Cell): number {
-  return MATERIALS.indexOf(c.material) * 4 + c.shade;
+  return MATERIALS.indexOf(c.material) * 8 + c.shade;
 }
 
 export function unpackCell(v: number): Cell {
-  return { material: MATERIALS[Math.floor(v / 4)]!, shade: (v % 4) as Shade };
+  return { material: MATERIALS[Math.floor(v / 8)]!, shade: (v % 8) as Shade };
 }
 
 /**

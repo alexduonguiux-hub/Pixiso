@@ -21,7 +21,7 @@ export function blank(w: number, h: number): Sprite {
 }
 
 export function cellOf(material: Material, shade: Shade): number {
-  return MATERIALS.indexOf(material) * 4 + shade;
+  return MATERIALS.indexOf(material) * 8 + shade;
 }
 
 export function get(s: Sprite, x: number, y: number): number {
@@ -179,7 +179,7 @@ export function recolor(s: Sprite, from: Material, to: Material, shade?: Shade):
   const fi = MATERIALS.indexOf(from);
   for (let i = 0; i < out.cells.length; i++) {
     const v = out.cells[i]!;
-    if (v >= 0 && Math.floor(v / 4) === fi) out.cells[i] = cellOf(to, shade ?? ((v % 4) as Shade));
+    if (v >= 0 && Math.floor(v / 8) === fi) out.cells[i] = cellOf(to, shade ?? ((v % 8) as Shade));
   }
   return out;
 }

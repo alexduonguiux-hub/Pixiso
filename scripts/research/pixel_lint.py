@@ -36,7 +36,7 @@ from collections import defaultdict
 
 LINE = 'o'
 EMPTY = '.'
-# glyph -> (material, shade) ; shade 0 = line, 1 = mid, 2 = shadow, 3 = highlight
+# glyph -> (material, shade) ; shade 0 = line, 1 = mid, 2 = shadow, 3 = highlight, 4 = deep shadow, 5 = bright highlight
 GLYPHS = {
     's': ('skin', 1), 'S': ('skin', 2), '$': ('skin', 3),
     'h': ('hair', 1), 'H': ('hair', 2), '#': ('hair', 3),
@@ -49,6 +49,11 @@ GLYPHS = {
     'd': ('wood', 1), 'D': ('wood', 2), '%': ('wood', 3),
     'a': ('accent', 1), 'A': ('accent', 2), '*': ('accent', 3),
     'e': ('eye', 1), 'E': ('eye', 2), 'x': ('white', 1),
+    # deep shadow (4) and bright highlight (5): the second letter pair of each material
+    'z': ('skin', 4), 'Z': ('skin', 5), 'j': ('hair', 4), 'J': ('hair', 5), 'v': ('cloth', 4), 'V': ('cloth', 5),
+    'q': ('cloth2', 4), 'Q': ('cloth2', 5), 'y': ('pants', 4), 'Y': ('pants', 5), 'g': ('boots', 4), 'G': ('boots', 5),
+    'n': ('metal', 4), 'N': ('metal', 5), 'i': ('leather', 4), 'I': ('leather', 5), 't': ('wood', 4), 'T': ('wood', 5),
+    'r': ('accent', 4), 'R': ('accent', 5),
 }
 # glyphs that may stand alone (eye highlight, teeth, wound and stain marks)
 ORPHAN_OK = set('exdDa*')

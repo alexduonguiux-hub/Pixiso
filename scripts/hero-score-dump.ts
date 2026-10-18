@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
-import { HERO_RAMP_OPTIONS, type RGBAImage } from '@pixiso/pixel-core';
+import { type RGBAImage } from '@pixiso/pixel-core';
 import {
   buildPalette,
   castInView,
@@ -17,6 +17,7 @@ import {
   posedInView,
   toAscii,
   type HeroView,
+  HERO_RAMPS,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -41,7 +42,7 @@ for (const view of VIEWS) {
   for (const outfit of [...castInView(view), ...posedInView(view)]) {
     const figure = outfit.form!.figure!;
     const s = dress(figure, outfit);
-    const img = paint(s, buildPalette(outfit.colors, HERO_RAMP_OPTIONS), {
+    const img = paint(s, buildPalette(outfit.colors, HERO_RAMPS), {
       lineStyle: 'tinted',
       selout: false,
     });
