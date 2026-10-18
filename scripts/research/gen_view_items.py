@@ -69,7 +69,10 @@ HAIR['LONG'] = {
 
 # The buzz cut: the skull of each view's head (the skin cells inside these head-space boxes) as hair, a
 # silhouette like the drawn hairstyles; hair64.ts combs it when the figure is dressed.
-BUZZ_BOXES = {'S': [[0,0,16,7]], 'SW': [[0,0,16,7]], 'W': [[0,0,13,7], [9,8,12,11]], 'N': [[0,0,16,13]], 'NW': [[0,0,16,13]]}
+# The hairline stops a row above the brows on S/SW: a brow cell touching hair takes the hair's line colour and
+# reads as a black dot beside its brown twin (fourth review). W keeps its row (both brow cells touch hair there,
+# and the shorter mass combs into one flat patch).
+BUZZ_BOXES = {'S': [[0,0,16,6]], 'SW': [[0,0,16,6]], 'W': [[0,0,13,7], [9,8,12,11]], 'N': [[0,0,16,13]], 'NW': [[0,0,16,13]]}
 def buzz_rows(view):
     head = FIG[view][:14]
     W = max(len(r) for r in head)

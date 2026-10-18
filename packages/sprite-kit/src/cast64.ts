@@ -321,6 +321,16 @@ const ZOMBIE_CHEEK = hov(11, 5, ['d', 'd']);
 /* ------------------------------------------------------------------ */
 
 const same = (o: Overlay): ViewLayer => ({ overlays: [o] });
+/**
+ * A plain face's mouth: a two-cell line under the chin light, as the reference's three-cell brown mouth line
+ * (a face under a helmet rim had nothing but eyes); off-centre toward the near cheek at SW, a notch into the
+ * profile at W; nothing from behind.
+ */
+const MOUTH_V: ViewItem = {
+  S: same(hov(7, 12, ['oo'])),
+  SW: same(hov(6, 12, ['oo'])),
+  W: same(hov(3, 12, ['oo'])),
+};
 const HAIR_SPIKY_V: ViewItem = { S: same(HAIR_SPIKY), ...HAIR_SPIKY_VIEWS };
 const HAIR_CURLY_V: ViewItem = { S: same(HAIR_CURLY), ...HAIR_CURLY_VIEWS };
 const HAIR_SWEPT_V: ViewItem = { S: same(HAIR_SWEPT), ...HAIR_SWEPT_VIEWS };
@@ -821,6 +831,8 @@ export interface Look {
   extras?: Overlay[] | ViewItem | ViewItem[];
   /** Zombie sockets, mouth and cheek gash (default), or the plain base face. */
   face?: 'zombie' | 'plain';
+  /** False drops the plain face's mouth (a drawn smile, a beard, a giant with its own teeth). */
+  mouth?: boolean;
   /** False drops the hem line at the waist (a coat that carries on below it). */
   hem?: boolean;
   /** Wide sleeves: a column let out past each arm's outline (a coat). */
@@ -1019,7 +1031,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   if ((look.face ?? 'zombie') === 'zombie') {
     push(out, layer(ZOMBIE_FACE_V, view));
     push(out, layer(ZOMBIE_CHEEK_V, view));
-  }
+  } else if (look.mouth !== false) push(out, layer(MOUTH_V, view));
   // Hats go on after the face so a scalp wound or cheek gash never lands on the hat.
   push(out, layer(look.hat, view));
   for (const d of look.details) {
@@ -1529,6 +1541,7 @@ const KE_PHUN_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
+  mouth: false, // the bloated head doubles its middle columns and would split a two-cell mouth
   extras: PUSTULES_V,
   colors: {
     skin: [150, 172, 112],
@@ -1654,6 +1667,7 @@ const DOT_BIEN_LOOK: Look = {
   shoes: 'none',
   details: [],
   face: 'plain',
+  mouth: false,
   extras: BRUTE_FACE_V,
   colors: {
     skin: [150, 162, 128],
@@ -1719,6 +1733,7 @@ const KE_BAT_CHUOC_LOOK: Look = {
   shoes: 'none',
   details: [],
   face: 'plain',
+  mouth: false,
   extras: MIMIC_V,
   colors: {
     skin: [184, 184, 164],

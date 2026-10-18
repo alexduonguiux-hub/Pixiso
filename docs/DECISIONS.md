@@ -538,3 +538,19 @@ Khổng lồ ×1,5 giữ "mắt 2–3 ô" của D-055.
 
 **Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 302 → 303 (ô bóng góc hốc mắt Kẻ Bắt Chước); `strict` 1690; QA sạch;
 lint 82; 113 test.
+
+### D-081 Mặt thường có miệng, mày đầu đinh nâu (B5 của giám khảo vòng 4)
+
+Dưới vành mũ sắt/mũ nồi chỉ còn hai mắt và mảng sáng cằm; ảnh mẫu có nét miệng nâu 3 ô. Mọi `Look` mặt
+thường (`face: 'plain'`) nay có **miệng 2 ô viền** (`MOUTH_V`): S (7,12)–(8,12) dưới mảng sáng cằm, SW
+(6,12)–(7,12) lệch về má gần, W (3,12)–(4,12) là khía vào mép mặt; góc sau không có. Ô viền lấy màu viền
+của da (nâu, cùng màu chân mày) nên đọc là nét vẽ chứ không phải lỗ. Tắt bằng `mouth: false` cho Kẻ Bắt
+Chước (nụ cười riêng), Đột Biến (răng vẽ trong thân) và Kẻ Phun (đầu mập nhân cột giữa tách miệng thành hai
+ô viền lẻ — `qa:hero` bắt); râu Ông Tư vẽ sau nên che miệng chung.
+
+**Mày lính đầu đinh**: hai ô mày đều có nhưng ô trong kề tóc nên lấy màu viền tóc (gần đen) — giám khảo đọc
+là "mày 1 ô + chấm đen". Chân tóc đầu đinh ở S/SW lên một hàng (`BUZZ_BOXES` hàng 0–6), trán lộ một hàng
+da, mày tiếp giáp da ba phía → nâu cả cặp; W giữ nguyên (cả hai ô mày đều kề tóc nên cùng màu; rút ngắn
+khối tóc W làm mảng tóc phẳng 19 % và rớt một sprite).
+
+**Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 303 → 302; `strict` 1686; QA sạch; lint 82; 113 test.

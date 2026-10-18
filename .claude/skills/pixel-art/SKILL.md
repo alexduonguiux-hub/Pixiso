@@ -103,6 +103,9 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - Lưới đầu 17 cột, hàng mắt `HEAD_EYE_ROW = 10`; mắt S/SW: mống 3 ô dọc (tối trên) + 2 ô trắng phía
   ngoài hai hàng dưới; góc W: mống 3 ô + **một** ô trắng thấp phía sau (D-076); quái: khối 2×2 + 1 ô
   trắng góc trên–ngoài, hai mắt cùng hình ở mọi góc. Không bao giờ một cột trắng suốt chiều cao mắt.
+  Mặt thường có miệng 2 ô viền dưới mảng sáng cằm (S (7,12), SW (6,12), W khía (3,12)); mắt đặc biệt (hốc
+  trũng, quái) vẫn dùng cột mống 3 ô + trắng ngoài–dưới, chỉ thêm bóng quanh (D-080, D-081). Chân tóc không
+  chạm hàng mày: ô mày kề tóc lấy màu viền tóc và thành chấm đen.
   Gốc lưới đầu là `headX` của dáng (chỉ zombie gục đầu vẽ từ cột 0).
 - Nghiêng đầu bằng `shift` theo hàng, và **chỉ ở hàng 3, 5, 6, 7, 9** của sọ (chỗ cạnh sọ
   thẳng đứng); nghiêng ở hàng khác làm đứt viền sọ.
