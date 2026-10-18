@@ -641,7 +641,7 @@ const MEDIC_BAG: Overlay[] = [
 ];
 
 /** Pustules on a bloated belly (fat form coordinates). */
-const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.']);
+const PUSTULES = ov(7, 23, ['...aa....', 'a.......*', 'A.......*', '...*a....', '.......aa']);
 
 /* ------------------------------------------------------------------ */
 /* The Vùng Xanh cast.                                                 */
@@ -838,12 +838,15 @@ const SKIN_M: Rgb8 = [172, 182, 142];
 const SKIN_F: Rgb8 = [178, 188, 152];
 
 /** Deterministic camouflage blotches inside a box (no randomness: a fixed hash of the cell). */
+/** Camouflage blotches: three-cell shapes on a 6x4 tile (the reference draws marks as 2-4 cell shapes, never lone dots). */
+const CAMO_TILE = ['xx....', '.x..x.', '....xx', 'x.....'];
 function camo(box: Box, glyph: string): Overlay {
   const [x0, y0, x1, y1] = box;
   const rows: string[] = [];
   for (let y = y0; y <= y1; y++) {
     let row = '';
-    for (let x = x0; x <= x1; x++) row += (x * 7 + y * 13 + ((x * y) % 5)) % 4 === 0 ? glyph : '.';
+    for (let x = x0; x <= x1; x++)
+      row += CAMO_TILE[(y - y0) % 4]![(x - x0) % 6] === 'x' ? glyph : '.';
     rows.push(row);
   }
   return ov(x0, y0, rows);
@@ -966,12 +969,15 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     const chest = pose.chest;
     if (d === 'stains' && pose.stains)
       overlays.push(
-        ov(...pose.stains, ['.D.....', '.......', '......D', 'D......', '.......', '....D..']),
+        ov(...pose.stains, ['.DD....', '..D....', '......D', 'DD....D', 'D......', '....DD.']),
       );
     if (d === 'gash' && pose.gash) overlays.push(ov(...pose.gash, ['d', 'd', 'd']));
-    if (d === 'hivis' && chest) {
-      const stripe = 'w'.repeat(tx1 - tx0 - 1);
-      overlays.push(ov(tx0 + 1, chest[1] + 2, [stripe]), ov(tx0 + 1, chest[1] + 5, [stripe]));
+    if (d === 'hivis') {
+      // Two reflective bands; a view without a chest anchor (the back) keeps them inside the back panel.
+      const inset = chest ? 1 : 2;
+      const stripe = 'w'.repeat(tx1 - tx0 + 1 - 2 * inset);
+      const cy = chest ? chest[1] : ty0 + 4;
+      overlays.push(ov(tx0 + inset, cy + 2, [stripe]), ov(tx0 + inset, cy + 5, [stripe]));
     }
     if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['w']));
     if (d === 'belt' && pose.belt) overlays.push(ov(...pose.belt, ['w']));
@@ -980,7 +986,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     if (d === 'number' && pose.number) overlays.push(ov(...pose.number, ['xxx', '..x', '..x']));
     if (d === 'camo')
       overlays.push(
-        camo([tx0 + 1, pose.collar[pose.collar.length - 1]![1] + 1, tx1 - 1, hemY - 1], 'C'),
+        camo([tx0 + 1, pose.collar[pose.collar.length - 1]![1] + 1, tx1 - 1, hemY - 1], 'k'), // darker-green blotches (cloth2)
       );
   }
   push(out, layer(look.extras, view));
@@ -1106,7 +1112,7 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
   shoes: 'both',
   details: ['camo', 'stains'],
   colors: {
-    skin: SKIN_M,
+    skin: [146, 150, 148], // neutral grey dead skin, duller than SKIN_M: the torn sleeves bare both forearms
     ...ARMY,
     ...BLOOD,
     ...ZOMBIE_EYES,
@@ -1423,12 +1429,15 @@ const SHELL_V: ViewItem = {
 /** Pustules on the swollen torso per view (figure space of the fat build). */
 const PUSTULES_V: ViewItem = {
   S: same(PUSTULES),
-  SW: same(ov(8, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.'])),
+  SW: same(ov(8, 23, ['...aa....', 'a.......*', 'A.......*', '...*a....', '.......aa'])),
   W: {
-    overlays: [ov(9, 22, ['.a...', '.....', '...*.', 'a....', '.....', '..a..']), ov(1, 25, ['a'])],
+    overlays: [
+      ov(9, 22, ['.aa..', '.....', '..**.', 'a....', 'A....', '..aa.']),
+      ov(1, 25, ['a', 'A']),
+    ],
   },
-  NW: same(ov(7, 22, ['..a......', '.......*.', '.........', '...a.....', '......a..'])),
-  N: same(ov(7, 22, ['..a......', '.......*.', '.........', '...a.....', '......a..'])),
+  NW: same(ov(7, 22, ['..aa.....', '......**.', '.........', '...aa....', '......aa.'])),
+  N: same(ov(7, 22, ['..aa.....', '......**.', '.........', '...aa....', '......aa.'])),
 };
 
 /** Kẻ Phun, the bloated spore spitter: fat build, bare swollen torso with pustules, torn trousers. */
