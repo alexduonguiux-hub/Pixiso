@@ -1245,9 +1245,12 @@ export const ZOMBIE_OFFICE = wearPosed(
  */
 const BIG_EARS: Overlay[] = [
   {
-    ...hov(-1, 0, [
-      '.o...',
-      'osoo.',
+    ...hov(-1, -3, [
+      '.oo..',
+      'osso.',
+      'osso.',
+      'ossSo',
+      'osSo.',
       'ossS.',
       'ossS.',
       'osS..',
@@ -1261,9 +1264,12 @@ const BIG_EARS: Overlay[] = [
     under: true,
   },
   {
-    ...hov(13, 0, [
-      '...o.',
-      '.ooso',
+    ...hov(13, -3, [
+      '..oo.',
+      '.osso',
+      '.osso',
+      'oSsso',
+      '.oSso',
       '.Ssso',
       '.Ssso',
       '..Sso',
@@ -1280,7 +1286,7 @@ const BIG_EARS: Overlay[] = [
 /** Eyes sewn shut: a dark slit where each eye was. */
 const SEALED_EYES = hov(5, 9, ['SS...SS', 'oo...oo', 'SS...SS']);
 const SEALED_EYES_V: ViewItem = { S: same(SEALED_EYES), N: {}, NW: {}, ...SEALED_EYES_VIEWS };
-/** The ears stand beside the skull in every view; in profile one ear rises over the ear of the side head. */
+/** The ears stand beside the skull and rise three rows over it in every view; in profile the near ear is a leaf leaning back past the skull. */
 const BIG_EARS_V: ViewItem = {
   S: { overlays: BIG_EARS },
   SW: { overlays: BIG_EARS },

@@ -824,17 +824,21 @@ export const SEALED_EYES_VIEWS: Views = {
 
 export const BIG_EAR_W: ViewLayer = {
   overlays: [
-    hov(5, 0, [
-      '...o..',
-      '..oso.',
-      '..osSo',
-      '.ossSo',
-      '.ossSo',
-      '.ossSo',
-      '.osSSo',
-      '.oSSSo',
-      '.oSS$o',
-      '..ooo.',
+    hov(6, -3, [
+      '....oo...',
+      '...osso..',
+      '...ossSo.',
+      '..ossSSo.',
+      '..osssSSo',
+      '..osssSSo',
+      '..osssSSo',
+      '..ossSSo.',
+      '..ossSSo.',
+      '..osSSo..',
+      '.osSSo...',
+      '.oSSo....',
+      '.oSo.....',
+      '.oo......',
     ]),
   ],
 };

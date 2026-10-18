@@ -202,24 +202,30 @@ TWIST_W = body(17, 41, 14, [
 '...oooooo$sss$o..',
 '........ooooooo..',
 ])
-CRAWL_W = body(26, 41, 24, [
-'..............oooooooo....',
-'.............o$$$$$$$so...',
-'............o$$sssssssSo..',
-'............osssssssssSSo.',
-'...........ossssssssssSSo.',
-'...........ossssssssssSSo.',
-'...........oSsosssssssSSo.',
-'...........oSsoSssssssSSo.',
-'...........oSsoSSsssssSSo.',
-'...........oSsooSSSSSSSSo.',
-'...........oSso.oooooSSSo.',
-'...........oSso.....oSSSo.',
-'...........oSso....oSSSSo.',
-'...........oSso...oSSSSSo.',
-'...........oSso..oSSSSSSo.',
-'..........oSSSo..oSSSSSSo.',
-'..........ooooo..ooooooooo',
+# Lurking crouch, side view: the standing W figure with the head sunk six rows into the
+# shoulders (as the S body), the long near arm hanging in front of the chest and down past
+# the hip to a clawed hand resting on the ground before the far foot; the far arm hidden.
+CRAWL_W = body(15, 41, 21, [
+'.....o$SSss$$o.',
+'....o$$sssSSo..',
+'...o$sso$sSSo..',
+'..o$ssos$sSSo..',
+'.osssossssSSo..',
+'.osssosssSSSo..',
+'.osssosssSSSo..',
+'ossSosssSSSSo..',
+'ossSoSSossooo..',
+'ossSoSSo$ssso..',
+'ossSoSSSossso..',
+'ossSooSSoS$sSo.',
+'ossSooSSoo$SSo.',
+'oSssooSSSos$so.',
+'oSssSoSSSoS$sso',
+'ososSooSSosssso',
+'oSoSoSSSoooSSso',
+'oooooSSSossssso',
+'...oooooo$sss$o',
+'........ooooooo',
 ])
 
 BODIES = FIG.get('bodies', {})
@@ -726,15 +732,15 @@ HUNCH_N_REGIONS = {
 
 add('hunch', 'N', HUNCH_N, ('N', 1, 4, lambda k: 0), HUNCH_N_REGIONS, under=True)
 add('hunch', 'NW', HUNCH_N, ('NW', 1, 4, lambda k: 0), HUNCH_N_REGIONS, under=True)
-add('crawl', 'W', CRAWL_W, ('W', 0, 18, lambda k: 0), {
-    'torso': [12, 24, 23, 33], 'neck': [], 'shoulders': [],
-    'sleeveL': {'short': [11, 30, 14, 33], 'long': [11, 30, 14, 37], 'torn': [11, 30, 14, 31]},
-    'sleeveR': {'short': [11, 30, 14, 33], 'long': [11, 30, 14, 37]},
-    'pants': [[16, 33, 24, 38]], 'shorts': [[16, 33, 24, 35]],
-    'shoeL': [10, 39, 14, 40], 'shoeR': [17, 38, 25, 40], 'flats': [[10, 40, 14, 40], [17, 39, 25, 40]],
-    'collar': [[12, 25, 12, 29]], 'hem': [22, 25, 22, 32], 'frayedXs': [22],
-    'chest': [15, 27], 'gash': [16, 26],
-    'skirt': {'x': 15, 'y': 33, 'rows': ['oo&kkkkkKo', '.o&kkkkkkKo', '.ooooooooo']},
+add('crawl', 'W', CRAWL_W, ('W', 1, 6, lambda k: 0), {
+    'torso': [6, 21, 12, 28], 'neck': [], 'shoulders': [],
+    'sleeveL': {'short': [4, 22, 7, 25], 'long': [1, 22, 7, 34], 'torn': [4, 22, 7, 23]},
+    'sleeveR': {'short': [4, 22, 7, 25], 'long': [1, 22, 7, 34]},
+    'pants': [[4, 29, 13, 35]], 'shorts': [[4, 29, 13, 31]],
+    'shoeL': [3, 36, 8, 40], 'shoeR': [9, 36, 14, 40], 'flats': [[3, 39, 8, 40], [9, 39, 14, 40]],
+    'collar': [], 'hem': [6, 28, 11, 28], 'frayedXs': [6, 8, 10],
+    'chest': [8, 24], 'gash': [7, 26],
+    'skirt': {'x': 4, 'y': 29, 'rows': ['o&kkkkkKo..', 'o&kkkkkkKo.', 'o&kkkkkkKo.', 'o&kkkkkkkKo', 'ooooooooooo']},
 }, full_chin=True)
 
 

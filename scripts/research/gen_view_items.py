@@ -102,7 +102,7 @@ FACE = {
  'ZCHEEK_W':   O(9,5, ['d','d']),
  'SEALED_SW':  O(3,9, ['SS...SS','oo...oo','SS...SS']),
  'SEALED_W':   O(4,8, ['SS','oo','SS']),
- 'BIG_EAR_W':  O(5,0, ['...o..','..oso.','..osSo','.ossSo','.ossSo','.ossSo','.osSSo','.oSSSo','.oSS$o','..ooo.']),
+ 'BIG_EAR_W':  O(6,-3, ['....oo...','...osso..','...ossSo.','..ossSSo.','..osssSSo','..osssSSo','..osssSSo','..ossSSo.','..ossSSo.','..osSSo..','.osSSo...','.oSSo....','.oSo.....','.oo......']),
 }
 # ---------------------------------------------------------------- body items (figure space)
 BODY = {
