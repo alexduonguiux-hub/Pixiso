@@ -125,13 +125,17 @@ BODY = {
  'RIFLE_STAND_W': [O(12,9, ['.o.', '.o.', '.o.', '.o.', '.o.', '...', '...', '...', '...', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', 'Do.', 'Do.', 'Do.', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.oo'], head=False, under=True)],
  'RIFLE_STAND_N': [O(-4,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
  'RIFLE_SLUNG_W': [O(14,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
- 'RIFLE_SLUNG_N': [O(7,17, ['oMo........', '.oMo.......', '..oMo......', '..oD.......', '...oD......', '....oD.....', '....oD.....', '.....oD....', '......oD...', '......oD...', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
- 'SATCHEL_W':  [O(13,21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo'], head=False)],
+ 'RIFLE_SLUNG_N': [O(-1,5, ['o.', 'o.', 'o.', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o'], head=False), O(7,17, ['oMo........', '.oMo.......', '..oMo......', '..oD.......', '...oD......', '....oD.....', '....oD.....', '.....oD....', '......oD...', '......oD...', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
+ 'SATCHEL_W':  [O(7,18, ['A..', '.A.', '..A'], head=False), O(13,21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo'], head=False)],
  'BACKPACK_W': [O(13,17, ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo'], head=False), O(10,7, ['....ooo', '....o%o', '...o%o.', '...odo.', '..odo..', '..odo..', '.odo...', '.odo...', 'odo....', 'odo....'], head=False, under=True)],
- 'BACKPACK_N': [O(3,11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|lllmmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False)],
+ # The pack from behind: Sơn's bat first (it rests on the right shoulder, screen-left here, leaning out past the
+ # head, under the pack's top), the top flap as wide as it shows from the front (one column narrower on the
+ # far side at NW), then the pack body.
+ 'BACKPACK_N': [O(-4,7, ['ooo....', 'o%o....', '.o%o...', '.odo...', '..odo..', '..odo..', '...odo.', '...odo.', '....odo', '....odo', '....odD', '....ooo'], head=False), O(1,11, ['.ooooooooooooo.', 'o||lllllllllLLo', 'o|lllllllllLLLo', 'ollllllllLLLLLo', 'ooooooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|lllmmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False)],
+ 'BACKPACK_NW': [O(-4,7, ['ooo....', 'o%o....', '.o%o...', '.odo...', '..odo..', '..odo..', '...odo.', '...odo.', '....odo', '....odo', '....odD', '....ooo'], head=False), O(1,11, ['.oooooooooooo.', 'o||llllllllLLo', 'o|llllllllLLLo', 'ollllllllLLLLo', 'oooooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|lllmmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False)],
  'RANGER_COAT_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccCcvo', 'occcCccCcvo', 'occcCccCcvo', 'ooooooooooo'], head=False)],
  'COAT_TAILS2_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccCcvo', 'occcCccCcvo', 'ooooooooooo'], head=False), O(1,23, ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo'], head=False)],
- 'TUNIC_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'ooooooooooo'], head=False), O(13,24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo'], head=False)],
+ 'TUNIC_W': [O(7,18, ['A..', '.A.', '..A'], head=False), O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'ooooooooooo'], head=False), O(13,24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo'], head=False)],
  'SATCHEL_N':  [O(5,17, ['......A','.....A.','....A..','...A...','..A....','.A.....','AA.....'], head=False), O(-2,23, ['ooooo', 'oA**o', 'oAaao', 'oAxao', 'oxxxo', 'oAxao', 'oAaao', 'orrro', 'ooooo'], head=False)],
 }
 
@@ -243,7 +247,7 @@ out.append("export const MEDIC_BAG_W: ViewLayer = "+ts_layers(BODY['BAG_W'])+";\
 out.append("export const MEDIC_BAG_N: ViewLayer = "+ts_layers(BODY['BAG_N'])+";\n")
 out.append("export const COAT_TAILS_W: ViewLayer = "+ts_layers(BODY['COAT_W'])+";\n")
 out.append("export const DRESS_STAINS_W: ViewLayer = "+ts_layers(BODY['STAINS_W'])+";\n")
-for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N', 'BACKPACK_W', 'BACKPACK_N', 'RANGER_COAT_W', 'COAT_TAILS2_W', 'TUNIC_W'):
+for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N', 'BACKPACK_W', 'BACKPACK_N', 'BACKPACK_NW', 'RANGER_COAT_W', 'COAT_TAILS2_W', 'TUNIC_W'):
     out.append("export const "+name+": ViewLayer = "+ts_layers(BODY[name])+";\n")
 open(OUT,'w').write('\n'.join(out))
 print('wrote', OUT)

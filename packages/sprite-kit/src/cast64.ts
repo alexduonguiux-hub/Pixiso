@@ -47,6 +47,7 @@ import {
   HEADBAND_VIEWS,
   HELMET_W,
   BACKPACK_N,
+  BACKPACK_NW,
   BACKPACK_W,
   COAT_TAILS2_W,
   RANGER_COAT_W,
@@ -541,7 +542,7 @@ const BACKPACK_V: ViewItem = {
   SW: { overlays: [...BACKPACK, BAT] },
   W: BACKPACK_W,
   N: BACKPACK_N,
-  NW: BACKPACK_N,
+  NW: BACKPACK_NW,
 };
 /** Ông Tư's ranger coat: a column wider at each sleeve and a skirt to the knee, open at the front, vented at the back. */
 const RANGER_COAT: Overlay[] = [
@@ -609,12 +610,22 @@ const TUNIC: Overlay = ov(1, 30, [
 ]);
 const POUCH: Overlay = ov(14, 23, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']);
 const POUCH_BACK: Overlay = ov(-1, 23, ['oooo', 'oaAo', 'oaAo', 'oaao', 'oooo']);
+/** The pouch's strap seen from behind: from the right shoulder (screen-left) down across the back to the hip. */
+const STRAP_BACK: Overlay = ov(5, 17, [
+  '......A',
+  '.....A.',
+  '....A..',
+  '...A...',
+  '..A....',
+  '.A.....',
+  'A......',
+]);
 const TUNIC_V: ViewItem = {
   S: { overlays: [TUNIC, POUCH] },
   SW: { overlays: [TUNIC, POUCH] },
   W: TUNIC_W,
-  N: { overlays: [TUNIC, POUCH_BACK] },
-  NW: { overlays: [TUNIC, POUCH_BACK] },
+  N: { overlays: [STRAP_BACK, TUNIC, POUCH_BACK] },
+  NW: { overlays: [STRAP_BACK, TUNIC, POUCH_BACK] },
 };
 
 /** The beret soldier's leather map case on the left hip, a column past the arm. */
@@ -1025,13 +1036,16 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
           '....DD.',
         ]),
       );
-    if (d === 'gash' && pose.gash) overlays.push(ov(...pose.gash, ['d', 'd', 'd']));
+    if (d === 'gash' && pose.gash) {
+      // Above the reflective bands when the look has them (a gash cut by a band leaves two lone cells).
+      const gy = look.details.includes('hivis') ? Math.min(pose.gash[1], hemY - 6) : pose.gash[1];
+      overlays.push(ov(pose.gash[0], gy, ['d', 'd', 'd']));
+    }
     if (d === 'hivis') {
-      // Two reflective bands; a view without a chest anchor (the back) keeps them inside the back panel.
-      const inset = chest ? 1 : 2;
-      const stripe = 'w'.repeat(tx1 - tx0 + 1 - 2 * inset);
-      const cy = chest ? chest[1] : ty0 + 4;
-      overlays.push(ov(tx0 + inset, cy + 2, [stripe]), ov(tx0 + inset, cy + 5, [stripe]));
+      // Two reflective bands above the hem, at the same rows and the same width in every view (chest-relative
+      // rows put one of them on the trousers and at different heights front and back).
+      const stripe = 'w'.repeat(tx1 - tx0 - 1);
+      overlays.push(ov(tx0 + 1, hemY - 3, [stripe]), ov(tx0 + 1, hemY - 1, [stripe]));
     }
     if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
     if (d === 'belt' && pose.belt) {
@@ -1132,7 +1146,7 @@ export const ZOMBIE_WORKER = wearPosed('zombie_worker', 'Zombie công nhân', PO
   top: 'tee',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['hivis', 'stains', 'gash'],
+  details: ['stains', 'gash', 'hivis'], // the bands last: blood does not break them
   colors: {
     skin: SKIN_M,
     accent: [232, 184, 48],

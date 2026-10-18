@@ -262,4 +262,6 @@ S (dáng gục đầu chưa có góc 3/4); hai mắt Đột Biến ở SW vẫn 
 Kẻ Phun). Thứ tự sửa: B2 → B3 → B4 → B5 → B6 → B1 → B7 → B8 → B9 → B10.
 
 Xử lý sau biên bản: **B2 xong** (D-078: cặp chói vai, không ô sâu/sáng/chói đơn trong món, góc đường may
-trên da/điểm nhấn, ô viền lẻ màu, thẻ bài, vết loét; đạt 83/130, ô lẻ 335 → 310, `strict` 2748 → 1691).
+trên da/điểm nhấn, ô viền lẻ màu, thẻ bài, vết loét; đạt 83/130, ô lẻ 335 → 310, `strict` 2748 → 1691); **B3
+xong** (D-079: dây túi Ny/quân y, gậy Sơn và nòng súng ở góc sau, dải phản quang cùng hàng; ô lẻ 302, lệch góc
+nhìn 0).

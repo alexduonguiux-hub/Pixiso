@@ -1131,6 +1131,7 @@ export const RIFLE_SLUNG_W: ViewLayer = {
 
 export const RIFLE_SLUNG_N: ViewLayer = {
   overlays: [
+    ov(-1, 5, ['o.', 'o.', 'o.', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o']),
     ov(7, 17, [
       'oMo........',
       '.oMo.......',
@@ -1154,6 +1155,7 @@ export const RIFLE_SLUNG_N: ViewLayer = {
 
 export const SATCHEL_W: ViewLayer = {
   overlays: [
+    ov(7, 18, ['A..', '.A.', '..A']),
     ov(13, 21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo']),
   ],
 };
@@ -1198,7 +1200,66 @@ export const BACKPACK_W: ViewLayer = {
 
 export const BACKPACK_N: ViewLayer = {
   overlays: [
-    ov(3, 11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo']),
+    ov(-4, 7, [
+      'ooo....',
+      'o%o....',
+      '.o%o...',
+      '.odo...',
+      '..odo..',
+      '..odo..',
+      '...odo.',
+      '...odo.',
+      '....odo',
+      '....odo',
+      '....odD',
+      '....ooo',
+    ]),
+    ov(1, 11, [
+      '.ooooooooooooo.',
+      'o||lllllllllLLo',
+      'o|lllllllllLLLo',
+      'ollllllllLLLLLo',
+      'ooooooooooooooo',
+    ]),
+    ov(3, 16, [
+      'o||lllllllo',
+      'o|llllllLLo',
+      'ollllllllLo',
+      'oiiiiiiiiio',
+      'ollllLllllo',
+      'o|lllLlllLo',
+      'o|lllmmllLo',
+      'oLLLLLLLLLo',
+      'ollllLllllo',
+      'oilllLLlLio',
+      'ooooooooooo',
+    ]),
+  ],
+};
+
+export const BACKPACK_NW: ViewLayer = {
+  overlays: [
+    ov(-4, 7, [
+      'ooo....',
+      'o%o....',
+      '.o%o...',
+      '.odo...',
+      '..odo..',
+      '..odo..',
+      '...odo.',
+      '...odo.',
+      '....odo',
+      '....odo',
+      '....odD',
+      '....ooo',
+    ]),
+    ov(1, 11, [
+      '.oooooooooooo.',
+      'o||llllllllLLo',
+      'o|llllllllLLLo',
+      'ollllllllLLLLo',
+      'oooooooooooooo',
+    ]),
     ov(3, 16, [
       'o||lllllllo',
       'o|llllllLLo',
@@ -1245,6 +1306,7 @@ export const COAT_TAILS2_W: ViewLayer = {
 
 export const TUNIC_W: ViewLayer = {
   overlays: [
+    ov(7, 18, ['A..', '.A.', '..A']),
     ov(2, 29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'ooooooooooo']),
     ov(13, 24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']),
   ],

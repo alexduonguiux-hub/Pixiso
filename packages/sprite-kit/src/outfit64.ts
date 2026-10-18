@@ -173,6 +173,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
   // the trousers' outline) it becomes the covered material's deep shade instead, so the hem stays dark but
   // thin. Decided after the overlays, which may cover the lines that would have formed the block.
   const seamCells = new Map<number, number>();
+  const overlayCorners = new Set<number>();
   for (const seam of outfit.lines ?? []) {
     const map = mapper(seam.space);
     const [x0, y0, x1, y1] = seam.box;
@@ -209,7 +210,10 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
           ]
             .map(([ax, ay]) => o.sprite.cells[(y + ay!) * o.sprite.w + x + ax!])
             .find((c) => c !== undefined && c !== EMPTY && Math.floor(c / 8) !== LINE_MATERIAL);
-          if (near !== undefined) seamCells.set(fy * out.w + fx, near);
+          if (near !== undefined) {
+            seamCells.set(fy * out.w + fx, near);
+            overlayCorners.add(fy * out.w + fx);
+          }
         }
       }
   }
@@ -243,10 +247,11 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
     }
   }
   // A deep cell of skin or of a mark material with no like neighbour is a stray dot in another colour (a
-  // collar corner on bare skin reads as a green hole, a pouch corner as a red one): it grows one cell into
-  // its own material (a shadow cell first, then the base: the shadow under a collar edge, inside a pouch's
-  // corner), and where it has none the line stays, a doubled outline where two parts meet being the lesser
-  // flaw. A garment's own deep corner against the outline is dark on dark and stays.
+  // collar corner on bare skin reads as a green hole, a pouch corner as a red one): a seam's grows one cell
+  // into its own material (a shadow cell first, then the base: the shadow under a collar edge), an overlay's
+  // corner goes back to line (growing would eat the pouch's lit corner), and where a seam has nothing to grow
+  // into the line stays too, a doubled outline where two parts meet being the lesser flaw. A garment's own
+  // deep corner against the outline is dark on dark and stays.
   for (const i of turned) {
     const v = out.cells[i]!;
     if (GARMENT_MATERIALS.has(Math.floor(v / 8)) || Math.floor(v / 8) === HAIR_MATERIAL) continue;
@@ -254,9 +259,10 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
     const y = Math.floor(i / out.w);
     if (N8.some(([ax, ay]) => get(x + ax, y + ay) === v)) continue;
     const own = (n: number) => n >= 0 && Math.floor(n / 8) === Math.floor(v / 8);
-    const into =
-      N4.find(([ax, ay]) => own(get(x + ax, y + ay)) && get(x + ax, y + ay) % 8 === 0) ??
-      N4.find(([ax, ay]) => own(get(x + ax, y + ay)));
+    const into = overlayCorners.has(i)
+      ? undefined
+      : (N4.find(([ax, ay]) => own(get(x + ax, y + ay)) && get(x + ax, y + ay) % 8 === 0) ??
+        N4.find(([ax, ay]) => own(get(x + ax, y + ay))));
     if (into) put(x + into[0], y + into[1], v);
     else out.cells[i] = LINE;
   }

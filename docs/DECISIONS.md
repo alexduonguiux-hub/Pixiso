@@ -490,3 +490,32 @@ sh` 55,3 %; đổi tông tai góc sau (`$` → `s`/`S`) → ba lính @N rớt `s
 `strict` 2748 → 1691; lint cầm bút 82; QA sạch; 113 test. Còn lại: ô da 1 ô kẹp giữa viền (tai, bàn tay một
 cột — 137 `S`, 58 `s`, 38 `$` theo thước D-073) là thiết kế thân, chỉ sửa được bằng vẽ lại bộ phận; cổ tay
 1 ô của lính mũ nồi @S (hộp bản đồ che cả hàng trên).
+
+### D-079 Phụ kiện có mặt ở mọi hướng thấy được (B3 của giám khảo vòng 4)
+
+**Dây túi của Ny** chỉ có ở S/SW (lớp `MEDIC_BAG[0]`); N/NW thêm `STRAP_BACK` (vai phải — bên trái màn hình —
+chéo qua lưng xuống hông, như dây túi quân y ở `BAG_N`), W thêm đoạn 3 ô chéo trên bắp tay gần (7,18)→(9,20)
+theo đơn của giám khảo (đè lên viền tay: dây nằm trước mép tay), dùng chung cho túi quân y (`SATCHEL_W`).
+
+**Gậy của Sơn ở N/NW**: D-068 từng bỏ hẳn vì bản nghiêng ra tạo lỗ kín 5 ô với tóc và nóc ba lô. Lật đúng
+gậy của S qua trục thân (gốc x = −4, tựa trên vai phải, nghiêng ra ngoài qua đầu) thì lỗ kín ấy lại xuất
+hiện — nguyên nhân là **nóc ba lô góc sau chỉ rộng 11 ô trong khi mặt trước 15 ô** (cùng một vật). Nóc ba
+lô N nay rộng 15 như S (`BACKPACK_N`), NW hẹp hơn một cột phía xa (`BACKPACK_NW`), tô sáng trên–trái / bóng
+dưới–phải 2-3-5 ô (nóc phẳng 13×3 đẩy `flat leather` của Sơn @N lên 22,9 %); gậy vẽ trước nóc nên khuất
+sau nóc và ló ra ở vai; chỉ còn khe 1 ô như ở S. Lệch diện tích SW/NW của Sơn (ghi nhận từ D-068) hết: thước
+nhất quán 1 → 0.
+
+**Nòng súng đeo lưng (lính nón sắt) ở N/NW**: `RIFLE_SLUNG_N` thêm nòng = cột viền 1 ô lật từ S (x = −1
+hàng 5–7, x = 0 hàng 8–16) bên trái mũ sắt; thân súng chéo và báng giữ nguyên.
+
+**Dải phản quang công nhân**: hàng dải từng tính theo neo ngực (S: 26 và 29 — hàng 29 là hàng quần; N: 21 và
+24; W: 22 và 25) nên trước/sau/bên khác nhau và vết máu vẽ sau cắt dải thành ô `w` rời. Nay dải ở `hemY − 3`
+và `hemY − 1` (25 và 27) cùng bề rộng ở mọi góc, vẽ sau vết máu (`details` của công nhân đổi thứ tự), vết
+chém dời lên trên dải khi trang phục có dải (`min(gash.y, hemY − 6)`).
+
+**Góc lớp vẽ trên viền thân** (túi Ny, túi quân y): ô viền của lớp vẽ đè viền thân đổi sang tông sâu rồi
+"nở" (D-078) đã ăn mất ô sáng góc túi (`oorrao`); nay góc lớp vẽ lẻ quay về viền (chấp nhận viền đôi tại chỗ
+túi chạm thân), chỉ đường may (cổ áo trên da) mới nở.
+
+**Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 310 → 302; `strict` 1691 → 1688; lệch góc nhìn 1 → 0; lint 82; QA
+sạch; 113 test.
