@@ -30,10 +30,11 @@ export interface Cell {
   shade: Shade;
 }
 
-/** Glyph → cell. Lowercase = mid, uppercase = shadow, special glyphs for highlights and fixed tones. */
+/** Glyph → cell. Lowercase = mid, uppercase = shadow, special glyphs for highlights and fixed tones. The eye has two: `E` the dark upper iris, `e` the lit lower iris (the reference draws navy over blue). */
 export const LEGEND: Record<string, Cell> = {
   o: { material: 'line', shade: 1 },
   e: { material: 'eye', shade: 1 },
+  E: { material: 'eye', shade: 0 },
   x: { material: 'white', shade: 1 },
   s: { material: 'skin', shade: 1 },
   S: { material: 'skin', shade: 0 },

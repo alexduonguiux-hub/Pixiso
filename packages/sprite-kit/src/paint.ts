@@ -7,6 +7,9 @@ import {
   type RampOptions,
   type Rgb8,
   type RGBAImage,
+  oklabToOklch,
+  oklchToOklab,
+  oklabToSrgb8,
 } from '@pixiso/pixel-core';
 import { MATERIALS, unpackCell, type Material, type Sprite } from './format.js';
 
@@ -66,8 +69,18 @@ export function buildPalette(
   const line = colors.line ?? DEFAULT_MATERIAL_COLORS.line;
   for (const m of MATERIALS) {
     const base = colors[m] ?? DEFAULT_MATERIAL_COLORS[m];
-    if (m === 'line' || m === 'eye' || m === 'white') {
+    if (m === 'line' || m === 'white') {
       ramps.push([base, base, base]);
+      lines.push(line);
+      continue;
+    }
+    if (m === 'eye') {
+      // Iris: shade 0 is the dark upper part (navy over blue on the reference), the rest the base colour.
+      const [L, C, h] = oklabToOklch(...srgb8ToOklab(...base));
+      const dark = oklabToSrgb8(
+        ...oklchToOklab(Math.max(0.1, L - 0.12), Math.min(0.3, C * 1.1), h),
+      );
+      ramps.push([dark, base, base]);
       lines.push(line);
       continue;
     }

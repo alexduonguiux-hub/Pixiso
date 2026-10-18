@@ -30,8 +30,9 @@ export const HERO_FIGURE_H = 40;
 
 /**
  * Front view, 17×40 with the outline, read from the sheet's large clean copy.
- * Rows: skull 0–7, eyes 8–11 (brow line, then light outer column + dark inner
- * column), chin 12–14, shoulders 15–18, torso 19–29 (pecs 21, navel 28,
+ * Rows: skull 0–7, eyes 8–11 (brow line; the iris is one column, navy on its
+ * two upper cells and blue below, with the white reflection beside it only on
+ * the two lower rows, as the reference draws it), chin 12–14, shoulders 15–18, torso 19–29 (pecs 21, navel 28,
  * crotch 29), legs 30–39 (calf 34–35, foot 36–39). The ears sit at columns
  * 1–3 and 13–15 on rows 8–10.
  */
@@ -45,8 +46,8 @@ export const HERO_S_FIGURE = sprite`
   ..ossssssssssso..
   ..oSsssssssssSo..
   .osSSoosssooSSso.
-  .osSoxesssexoSso.
-  ..oSoxesssexoSo..
+  .osSosEsssEsoSso.
+  ..oSoxEsssExoSo..
   ...oSxe$$$exSo...
   ....os$$$$$so....
   .....os$$$so.....

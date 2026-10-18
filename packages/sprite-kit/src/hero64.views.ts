@@ -21,8 +21,8 @@ export const HERO_SW_FIGURE: Sprite = sprite`
   ..ossssssssssso..
   ..oSsssssssssSo..
   ..ooosssooSssSSo.
-  ..oxe$$sexossSSo.
-  ..oxe$$sexosSSo..
+  ..osE$$sEsossSSo.
+  ..oxE$$sExosSSo..
   ..oxe$$$exoSSo...
   ..os$$$sssSSo....
   ...os$$sssSo.....

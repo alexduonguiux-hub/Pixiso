@@ -1,6 +1,8 @@
 /**
  * Hero mannequin frames transcribed from the reference sheet (scripts/research/extract_hero_frames.py).
- * Generated: do not edit by hand. Index 0 and 2 are the two walk steps, 1 is standing.
+ * Generated: do not edit by hand, except the eyes, corrected after a cell-by-cell diff against the
+ * reference at 1x (navy upper iris `E`, blue lower iris `e`, white only beside the lower rows; D-057).
+ * Index 0 and 2 are the two walk steps, 1 is standing.
  * `dtop`/`dbottom` are the frame's top and bottom rows relative to the standing frame of the same view.
  */
 export interface HeroFrameData {
@@ -25,8 +27,8 @@ export const HERO_FRAME_DATA: Record<
         '..ossssssssssso.',
         '..oSsssssssssSo.',
         '.o$SSoosssooSSso',
-        '.o$Soxess$exoSso',
-        '..oSoxexs$exoSo.',
+        '.o$SosEss$EsoSso',
+        '..oSoxExs$ExoSo.',
         '...oSxex$xexSo..',
         '....os$$$$$so...',
         '.....os$$$$o....',
@@ -72,8 +74,8 @@ export const HERO_FRAME_DATA: Record<
         '..ossssssssssso..',
         '..oSsssssssssSo..',
         '.osSSoosssooSSso.',
-        '.osSoxesssexoSso.',
-        '..oSoxesssexoSo..',
+        '.osSosEsssEsoSso.',
+        '..oSoxEsssExoSo..',
         '...oSxe$$$exSo...',
         '....os$$$$$so....',
         '.....os$$$so.....',
@@ -118,8 +120,8 @@ export const HERO_FRAME_DATA: Record<
         '.ossssssssssso..',
         '.oSsssssss$sSo..',
         'osSSoosssooSS$o.',
-        'osSoxess$exoS$o.',
-        '.oSoxess$exoSo..',
+        'osSosEss$EsoS$o.',
+        '.oSoxEss$ExoSo..',
         '..oSxe$$$exSo...',
         '...os$$$$$so....',
         '....o$$$$so.....',
@@ -308,8 +310,8 @@ export const HERO_FRAME_DATA: Record<
         '....oss$$$$$ssSSo.....',
         '....ossssssssSSSo.....',
         '....o$ssooSSoSSSo.....',
-        '.....os$exoSsoSSo.....',
-        '.....osxexossoSSo.....',
+        '.....os$ExoSsoSSo.....',
+        '.....osxExossoSSo.....',
         '....o$$xexSsoSSo......',
         '....o$$$x$sSSSSo......',
         '.....o$$$sssoSo.......',
@@ -356,8 +358,8 @@ export const HERO_FRAME_DATA: Record<
         'oss$$$$$ssSSo.',
         'ossssssssSSSo.',
         'osssooSSoSSSo.',
-        '.ossexoS$oSSo.',
-        '.ossexossoSSo.',
+        '.ossExoS$oSSo.',
+        '.ossExossoSSo.',
         'o$$xexSsoSSo..',
         'o$$$x$sSSSSo..',
         '.o$$$sssoSo...',
@@ -403,8 +405,8 @@ export const HERO_FRAME_DATA: Record<
         '...oss$$$$$ssSSo.....',
         '...ossssssssSSSo.....',
         '...osssooSSoSSSo.....',
-        '....ossexoSsoSSo.....',
-        '....ossexossoSSo.....',
+        '....ossExoSsoSSo.....',
+        '....ossExossoSSo.....',
         '...o$$xexSsoSSo......',
         '...o$$$$$sSSSSo......',
         '....o$$$sssoSo.......',

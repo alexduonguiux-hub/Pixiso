@@ -48,7 +48,7 @@ GLYPHS = {
     'l': ('leather', 1), 'L': ('leather', 2), '|': ('leather', 3),
     'd': ('wood', 1), 'D': ('wood', 2), '%': ('wood', 3),
     'a': ('accent', 1), 'A': ('accent', 2), '*': ('accent', 3),
-    'e': ('eye', 1), 'x': ('white', 1),
+    'e': ('eye', 1), 'E': ('eye', 2), 'x': ('white', 1),
 }
 # glyphs that may stand alone (eye highlight, teeth, wound and stain marks)
 ORPHAN_OK = set('exdDa*')
