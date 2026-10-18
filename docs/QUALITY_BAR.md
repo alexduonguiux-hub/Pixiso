@@ -51,25 +51,29 @@ khác nhau dưới 8 %; hai lính nón sắt trùng 100 %). Báo cáo đầy đ�
 
 ## 3. Nghiệm thu bằng mắt (bắt buộc, ×6 trên nền xám trung tính, cạnh ảnh mẫu cùng tỉ lệ)
 
-Chấm từng sprite theo 10 mục, mỗi mục đạt/không; dưới 9/10 là không đạt:
+Bảng này là bảng của người chấm độc lập (một phiên Claude khác, chỉ xem ảnh, không biết kết
+luận của người vẽ; biên bản ở §6), đối chiếu với ảnh mẫu. Chấm từng sprite ở 1×; mỗi mục
+đạt/không; dưới 9/10 là không đạt.
 
-1. **Đổ đen ở ×1 nhận ra nhân vật** (tóc, mũ, áo khoác, vật cầm đổi silhouette), không chỉ
-   nhận ra "một người".
-2. **Mắt đọc được ở ×1**: 2 ô rộng, có điểm trắng; lông mày hoặc hốc mắt tách khỏi tóc.
-3. **Tóc có khối**: ≥ 4 lọn/khối với sáng ở trên–trái từng khối, không phải một mảng + một dải.
-4. **Áo có cấu trúc may**: cổ áo (chữ V hoặc bẻ) với áo trong lộ ra, đường vai, cổ tay/gấu, túi
-   hoặc khuy; ít nhất 3 trong 5.
-5. **Nếp gấp**: mỗi mảng vải lớn (ngực, bụng, đùi) có 1–2 vạch tối ngắn hoặc cụm bóng phá
-   mảng phẳng; không mảng nào quá 7 % diện tích.
-6. **Tông áo**: tối chiếm 30–50 %, sáng ≤ 20 %, sáng chỉ ở vai và mép trên–trái.
-7. **Ba lớp trước–sau**: tay, thân, chân phân biệt bằng viền hoặc bóng tiếp xúc (bóng dưới
-   tay lên sườn, dưới gấu áo lên quần).
-8. **Chân và giày**: quần có bóng mặt trong đùi, giày tách khỏi quần bằng tất hoặc đường
-   cổ giày, mũi giày có sáng.
-9. **Không lỗi cầm bút**: không sọc dọc chi, không dải bằng nhau, không viền đôi ngoài chỗ
-   tiếp xúc, không ô lẻ ngoài điểm sáng.
-10. **8 hướng nhất quán**: cùng chiều cao chân, đầu cùng cỡ, món đồ đúng chỗ, bóng theo
-    cùng nguồn sáng (hướng lật chấp nhận theo D-042).
+1. **Mắt**: cột mống mắt màu bão hoà, 3 ô cao, tông tối ở trên; đúng một điểm trắng phản chiếu
+   (ảnh mẫu: trắng 2 ô ở phía ngoài hai hàng dưới, không phải một cột trắng suốt chiều cao);
+   ở S/SW có nét miệng hoặc bóng lông mày.
+2. **Tóc**: ≥ 3 tông tô ngoài viền; ≥ 3 lọn phân biệt được; mái chờm xuống hàng lông mày/mắt ít
+   nhất 1 ô ở đâu đó (không phải cái mũ đặt trên mặt); tông tô sáng hơn viền ≥ 12 điểm L.
+3. **Áo**: mỗi món có ≥ 1 chi tiết cấu trúc ngoài silhouette (lớp áo trong ở cổ, cột khoá/đường
+   may, cổ tay, gấu, thắt lưng, băng gối), vẽ bằng một giá trị **ngoài** dải 3 tông của món đó.
+4. **Bậc tông**: sáng ≥ +12 L và tối ≥ −12 L so với tông gốc; sáng chiếm 10–25 % chất liệu và nằm
+   trên–trái; tối là một hình khối, không phải dải 1 ô bám viền.
+5. **Góc 45°**: bề rộng thân hoặc vai khác góc chính ≥ 2 ô; mắt xa chỉ 1 ô hoặc khuất; một bàn
+   chân nhích lên/xuống 1 ô.
+6. **Góc ngang**: tay tách khỏi thân bằng đường tối hoặc khe 1 ô; thấy bàn tay; mũi nhô 1 ô; mắt
+   lùi ≥ 2 ô khỏi mép mặt; không ô lạc ở chân.
+7. **Góc sau**: không có mảng sáng ở gáy trừ khi cố ý là da; tóc sau ≥ 2 tông; cổ áo là một dải tối.
+8. **Không chấm lẻ**: không ô đơn màu nào ngoài điểm sáng mắt; máu, bẩn, rằn ri, mụn vẽ thành
+   hình 2–4 ô bám theo khối.
+9. **Nhất quán 8 hướng**: mọi phụ kiện/đặc điểm (sọc, túi, miếng vá) xuất hiện ở mọi hướng
+   nhìn thấy được nó, cùng một hình.
+10. **Nhận ra nghề/nhân vật ở 1×** bằng silhouette + một màu nhấn (mũ, nón, túi, áo gi-lê).
 
 ## 4. Quy trình
 
@@ -95,3 +99,42 @@ số đạt không tăng.
 3. **Silhouette riêng từng nhân vật.** Dàn chính dùng chung một thân và tóc gần nhau nên 28
    cặp "chỉ khác màu". Cần quyết định đặc điểm silhouette cho từng người (kiểu tóc có khối,
    áo khoác dài, mũ, vật cầm).
+
+## 6. Biên bản chấm độc lập (18/10/2026)
+
+Một phiên Claude riêng chỉ nhận ảnh mẫu và bốn tấm sheet của ta (dàn đứng 8 hướng, sáu zombie,
+bốn thể hình lớn, dàn thể hình), được yêu cầu chấm khắt khe và xếp hạng lỗi. Kết luận: _silhouette,
+tỉ lệ, viền 1 ô, điểm neo chân và hướng sáng ngang mức ảnh mẫu; phần vẽ bề mặt thì không. Của ta
+đọc như một mannequin được nhuộm màu, của mẫu đọc như một nhân vật được vẽ._ Lỗi xếp hạng:
+
+1. **Mặt trống**: mắt của ta là một cột trắng nhạt 3 ô cạnh một cột xanh; không miệng, không bóng
+   lông mày; mọi người cùng một mặt. (Đối chiếu ô: mannequin mẫu có mống mắt 1 cột, 2 ô trên màu
+   navy, ô dưới xanh, trắng chỉ ở hai hàng dưới phía ngoài; bản chép của ta để trắng cả 3 hàng và
+   mống một tông: **lỗi chép**, sửa được ngay.) Zombie lặp lỗi với khe đỏ 1 ô.
+2. **Tóc là silhouette tô đặc**: một tông + viền, "sáng" chỉ hơn gốc 4 điểm L; tóc xoăn là quả bóng
+   rắc chấm 1 ô. Mẫu: 5–6 lọn, 4 tông, sáng ở trên–trái từng lọn, một lọn chờm qua mắt.
+3. **Áo không có cấu trúc**: 3 tông một hue, mảng sáng tròn ở ngực trái, dải tối 1 ô mép phải, cổ V
+   lộ da. Không cổ tay, gấu, khuy, túi, thắt lưng, đường may, lớp trong. Mẫu: cổ V lộ áo trong
+   đen, cột khoá xám với mũi chỉ trắng, hàng gân xen tông, nẹp vai, miếng khuỷu tối, vá đỏ, băng
+   gối xám trên quần đen, quai dép hở da.
+4. **Bậc tông rụt rè**: áo gốc L35 → sáng L42 (+7); mẫu gốc L28, tối L17 (−10), điểm nhấn L65–100
+   và L4. Ở 1× thân ta phẳng thành một giá trị.
+5. **Góc 45° không xoay thân**: thân SW 16 ô so với S 17, hai mắt bằng nhau, vai và chân đối xứng.
+   Bộ 8 hướng thực chất là 3 hình. Cần vai xa thu 2–3 ô, mắt xa 1 ô hoặc khuất, cổ V lệch, một chân
+   nhích 1 ô.
+6. **Góc ngang là một cột**: tay cùng tông và dính thân, không khuỷu; mắt sát mép trước, không mũi.
+   Hùng góc W: áo ba lỗ thành tấm xám nuốt cả tay.
+7. **Nhiễu thay cho chất liệu**: máu, mụn, rằn ri, vệt da trên khổng lồ ×2 là chấm 1–2 ô rải rác;
+   ở 1× đọc như bẩn hoặc lỗi nén.
+8. Zombie lính: hai tay buông trước là chất liệu sáng nhất sprite, đọc như "chân trắng".
+9. Gi-lê công nhân đổi hình theo hướng (S một dải gấu, W hai sọc ngang, N không có).
+10. Thể hình to/mập là mannequin nới rộng: da Hùng cam bão hoà như nhựa, áo ba lỗ là hình chữ nhật
+    xám với hai vạch; bụng không có khối.
+11. Góc sau: mảng sáng trong cổ áo đọc như lỗ áo; tóc sau một tông.
+12. Tóc sẫm lẫn vào viền (L14 trên viền L0): đầu thành khối đen với hai khe trắng; giữ ≥ 12–15 L
+    giữa tô và viền.
+
+Đã đạt, không làm lại: tỉ lệ thân, viền 1 ô, điểm neo chân, giày; khổng lồ ×1,5/×2 vẽ đúng; mũ
+nón và phụ kiện đọc được ở 1× (nón sắt, nón bảo hộ, mũ nồi, túi y tế, mai rùa, gai đột biến); mặt
+Đột Biến là mặt duy nhất đạt; kỷ luật ánh sáng và bảng màu (20–26 màu/sprite); dáng zombie đọc ra
+zombie ở 1×.

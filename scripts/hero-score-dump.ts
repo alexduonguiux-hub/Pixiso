@@ -28,15 +28,34 @@ function writePng(file: string, img: RGBAImage): void {
   fs.writeFileSync(file, PNG.sync.write(png));
 }
 const VIEWS: HeroView[] = ['S', 'SW', 'W', 'NW', 'N'];
-const entries: { id: string; label: string; view: HeroView; w: number; h: number; rows: string[]; png: string }[] = [];
+const entries: {
+  id: string;
+  label: string;
+  view: HeroView;
+  w: number;
+  h: number;
+  rows: string[];
+  png: string;
+}[] = [];
 for (const view of VIEWS) {
   for (const outfit of [...castInView(view), ...posedInView(view)]) {
     const figure = outfit.form!.figure!;
     const s = dress(figure, outfit);
-    const img = paint(s, buildPalette(outfit.colors, HERO_RAMP_OPTIONS), { lineStyle: 'tinted', selout: false });
+    const img = paint(s, buildPalette(outfit.colors, HERO_RAMP_OPTIONS), {
+      lineStyle: 'tinted',
+      selout: false,
+    });
     const file = `${outfit.id}__${view}.png`;
     writePng(path.join(OUT, file), img);
-    entries.push({ id: outfit.id, label: outfit.label, view, w: s.w, h: s.h, rows: toAscii(s), png: file });
+    entries.push({
+      id: outfit.id,
+      label: outfit.label,
+      view,
+      w: s.w,
+      h: s.h,
+      rows: toAscii(s),
+      png: file,
+    });
   }
 }
 fs.writeFileSync(path.join(TEST_OUTPUT_DIR, 'score', 'sprites.json'), JSON.stringify(entries));

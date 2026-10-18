@@ -1,93 +1,72 @@
 {
- "w": 17,
- "h": 41,
- "px": 562,
- "colors": 25,
- "materials": 5,
- "lineDens": 6.9,
- "lines": 6,
- "flatMax": 5.3,
- "bigFlats": 8,
- "orphan": 31.49,
- "skin": {
-  "tones": 3,
-  "hl": 21.0,
-  "sh": 6.5,
-  "light": [
-   0.0,
-   0.3
-  ]
- },
- "cloth": {
-  "tones": 6,
-  "hl": 10.3,
-  "sh": 40.4,
-  "light": [
-   -0.2,
-   -0.7
-  ]
- },
- "families": {
-  "0": {
-   "px": 156,
-   "tones": 6,
-   "kind": "hue",
-   "hue": 134.0,
-   "hl": 10.3,
-   "sh": 40.4,
-   "light": [
-    -0.2,
-    -0.7
-   ]
+  "w": 17,
+  "h": 41,
+  "px": 562,
+  "colors": 25,
+  "materials": 5,
+  "lineDens": 6.9,
+  "lines": 6,
+  "flatMax": 5.3,
+  "bigFlats": 8,
+  "orphan": 31.49,
+  "skin": {
+    "tones": 3,
+    "hl": 21.0,
+    "sh": 6.5,
+    "light": [0.0, 0.3]
   },
-  "1": {
-   "px": 62,
-   "tones": 3,
-   "kind": "hue",
-   "hue": 67.0,
-   "hl": 21.0,
-   "sh": 6.5,
-   "light": [
-    0.0,
-    0.3
-   ]
+  "cloth": {
+    "tones": 6,
+    "hl": 10.3,
+    "sh": 40.4,
+    "light": [-0.2, -0.7]
   },
-  "2": {
-   "px": 136,
-   "tones": 6,
-   "kind": "grey-light",
-   "hue": null,
-   "hl": 16.9,
-   "sh": 22.8,
-   "light": [
-    -1.1,
-    0.1
-   ]
+  "families": {
+    "0": {
+      "px": 156,
+      "tones": 6,
+      "kind": "hue",
+      "hue": 134.0,
+      "hl": 10.3,
+      "sh": 40.4,
+      "light": [-0.2, -0.7]
+    },
+    "1": {
+      "px": 62,
+      "tones": 3,
+      "kind": "hue",
+      "hue": 67.0,
+      "hl": 21.0,
+      "sh": 6.5,
+      "light": [0.0, 0.3]
+    },
+    "2": {
+      "px": 136,
+      "tones": 6,
+      "kind": "grey-light",
+      "hue": null,
+      "hl": 16.9,
+      "sh": 22.8,
+      "light": [-1.1, 0.1]
+    },
+    "3": {
+      "px": 115,
+      "tones": 5,
+      "kind": "grey-dark",
+      "hue": null,
+      "hl": 13.0,
+      "sh": 25.2,
+      "light": [-0.7, -21.5]
+    },
+    "4": {
+      "px": 44,
+      "tones": 3,
+      "kind": "hue",
+      "hue": 41.0,
+      "hl": 56.8,
+      "sh": 11.4,
+      "light": [-3.4, 12.0]
+    }
   },
-  "3": {
-   "px": 115,
-   "tones": 5,
-   "kind": "grey-dark",
-   "hue": null,
-   "hl": 13.0,
-   "sh": 25.2,
-   "light": [
-    -0.7,
-    -21.5
-   ]
-  },
-  "4": {
-   "px": 44,
-   "tones": 3,
-   "kind": "hue",
-   "hue": 41.0,
-   "hl": 56.8,
-   "sh": 11.4,
-   "light": [
-    -3.4,
-    12.0
-   ]
-  }
- },
- "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. The sheet itself is not committed (copyright unclear)."
+  "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. The sheet itself is not committed (copyright unclear)."
 }
