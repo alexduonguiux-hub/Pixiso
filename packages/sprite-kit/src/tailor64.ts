@@ -117,29 +117,55 @@ export function tailor(
   }
 
   if (g.kind === 'hair') {
-    // A buzz cut: the skull remapped to hair, then banded like every other hairstyle (scripts/research/
-    // lock_paint.py, same numbers): 2-wide diagonal locks radiating from the crown with a 0.5 cell/row
-    // sweep, light/mid alternating on the lit half, mid/shadow on the shadow half, the far-right lock in
-    // shadow, and a one-cell sweep band (bright left, deep right) cutting every lock.
+    // A buzz cut: the skull remapped to hair, then combed like every other hairstyle (scripts/research/
+    // lock_paint.py, same numbers): locks three cells wide radiating from the parting with a 0.5 cell/row
+    // sweep, two body columns and an upper-left edge, read along their length: a light crown, a light edge
+    // over a mid body, lower down a light edge over a shadow body, on a tall mass a mid edge over a deep
+    // body, and a bottom row of mid edge, shadow body and one deep cell; each pair one tone darker on the shadow side of the sphere; two bright
+    // cells left of the parting.
     const top = y0;
     const topRow = cells.filter((c) => c.y === top + 1);
     const cx =
       topRow.length > 0
         ? (Math.min(...topRow.map((c) => c.x)) + Math.max(...topRow.map((c) => c.x))) / 2
         : x0 + (w - 1) / 2;
-    const kOf = (x: number, y: number) => {
-      const d = x - cx;
-      return (d >= 0 ? 1 : -1) * (Math.floor((Math.abs(d) + 0.5 * (y - top)) / 2) + 1);
-    };
-    const kmax = Math.max(...cells.map((c) => kOf(c.x, c.y)));
+    const R = Math.max(1, ...cells.map((c) => Math.abs(c.x - cx)));
+    const W = 3;
+    const SEG_LIT: [number, number][] = [
+      [LIGHT, MID],
+      [LIGHT, SHADOW],
+      [MID, DEEP],
+    ];
+    const SEG_SHADOW: [number, number][] = [
+      [MID, SHADOW],
+      [MID, DEEP],
+      [DEEP, SHADOW],
+    ];
+    const seg = (t: number) => (t >= 9 ? 2 : t >= 5 ? 1 : 0);
     for (const c of cells) {
-      const k = kOf(c.x, c.y);
-      const band = (((c.y - top - 3 - Math.floor((c.x - cx) / 4)) % 6) + 6) % 6 === 0;
-      if (band && c.y - top >= 2) c.shade = c.x < cx ? BRIGHT : DEEP;
-      else if (k === kmax) c.shade = SHADOW;
-      else if (k > 0) c.shade = k % 2 === 0 ? SHADOW : MID;
-      else c.shade = -k % 2 === 1 ? LIGHT : MID;
+      const t = c.y - top;
+      const u = Math.floor((c.x < cx ? cx - c.x - 0.5 : c.x - cx) + 0.5 * t);
+      // p counts from the parting outward; the upper-left edge is the outer column on the left side and
+      // the inner one on the right side
+      const p = c.x < cx ? u % W : W - 1 - (u % W);
+      const edge = p === W - 1;
+      const lit = (c.x - cx) / R + (0.5 * t) / h <= 0.6;
+      // The bottom row sits on the brow line: a mid edge, a shadow body and one deep cell where the locks
+      // meet, never a deep row that merges with the outline.
+      if (t === h - 1 && t >= 2) c.shade = edge ? MID : p === 1 ? SHADOW : DEEP;
+      else if (t < 2) c.shade = lit ? (p === 0 ? MID : LIGHT) : p === 0 ? SHADOW : MID;
+      else {
+        const [e, b] = (lit ? SEG_LIT : SEG_SHADOW)[seg(t)]!;
+        c.shade = edge ? e : b;
+      }
+      // A cell against the outline is never a dark stripe hugging it (dark hair: shadow and deep next to the
+      // line read as a thick or broken outline).
+      if (c.x === rowMin.get(c.y) || c.x === rowMax.get(c.y)) {
+        if (lit && (c.shade === SHADOW || c.shade === DEEP)) c.shade = MID;
+        else if (!lit && c.shade === DEEP) c.shade = SHADOW;
+      }
     }
+    for (const x of [Math.floor(cx) - 2, Math.floor(cx) - 1]) set(x, top + 1, BRIGHT);
   } else if (g.kind === 'torso') {
     // The shadow is a shape, not a column: narrow on the chest, wider over the ribs and the belly
     // (the terminator steps left as the torso turns away), then the two hem rows.

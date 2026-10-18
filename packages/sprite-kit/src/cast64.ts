@@ -85,99 +85,99 @@ const hseam = (box: Box): Seam => ({ box, space: 'head' });
 /** Short hair, parted on the left: strands lit on their top-left, shadow gaps between them, a deep underside, three fringe points of different lengths and one reaching the temple. */
 const HAIR_SHORT = hov(0, 0, [
   '......ooooo......',
-  '....ooh#hhHoo....',
-  '...o#hh#hhHHho...',
-  '...oJJJJhHHhho...',
-  '..oh##hhjjjjhHo..',
-  '..ohh##hHHhhjjo..',
-  '..ohh##hHHhhHHo..',
-  '..o#hh##HhhHHHo..',
-  '..HhH..HHj..HjH..',
-  '...#.............',
+  '....oo#h##hoo....',
+  '...o#hJJ##h#ho...',
+  '...ohh#hhh#HHo...',
+  '..oh#hh#hh#HHho..',
+  '..oh#hh#h#HHhHo..',
+  '..ohH#HHH#jjhHo..',
+  '..ohjhHjhHjhHHo..',
+  '..hHH..hHH..Hjj..',
+  '...h....h........',
 ]);
 
 /** Spiky hair: three points rising two rows above the skull (dress() grows the canvas), a fuller mass, tips over the brow. */
 const HAIR_SPIKY = hov(0, -2, [
   '.....o...o...o...',
   '....o#o.o#o.o#o..',
-  '...o##ho#hhoHhho.',
-  '..ohhJJJJhHHhhHo.',
-  '.o#hh##hhjjjjhHo.',
-  '.o##hh##hHHhhjjo.',
-  '.o##hh##hHHhhHHo.',
-  '..o##hh##HhhHHo..',
-  '..oJJhh##HhhHHo..',
-  '..oh#JJJJhhHHHo..',
-  '..HhH..HHj..HjH..',
-  '...h.............',
+  '...o#h#oh##o##Ho.',
+  '..oh##hJJ##h#hHo.',
+  '.ohh#hh#hhh#hHho.',
+  '.o#hh#hh#hh#HHho.',
+  '.o#hh#hh#h#hHhHo.',
+  '..o#HH#HHH#Hjho..',
+  '..o#HH#HH#HjhHo..',
+  '..ohhHjhHhHjhHo..',
+  '..hHH..hHH..Hjj..',
+  '....h........H...',
 ]);
 
 /** Fuller hair swept over the brow, sideburns over the ears. */
 const HAIR_SWEPT = hov(0, 0, [
   '......ooooo......',
-  '....ooh#hhHoo....',
-  '...o#hh#hhHHho...',
-  '..ohJJJJhHHhhHo..',
-  '..oh##hhjjjjhHo..',
-  '.o#hh##hHHhhjjjo.',
-  '.o#hh##hHHhhHHho.',
-  '.o##hh##HhhHHhho.',
-  '.oJJhh##HhhHHhho.',
+  '....oo#h##hoo....',
+  '...o#hJJ##h#ho...',
+  '..o#hh#hhh#HHho..',
+  '..oh#hh#hh#HHho..',
+  '.ohh#hh#h#hHhHHo.',
+  '.o#HH#HHH#jjhjHo.',
+  '.o#HH#HH#Hjhjjho.',
+  '.ohhHjhHhHjhHjho.',
   '.ohH.........Hjo.',
-  '.ojH.........Hjo.',
+  '.ohH.........Hjo.',
   '..oo.........oo..',
 ]);
 
 /** Chin-length bob with a fringe. */
 const HAIR_BOB = hov(0, 0, [
   '......ooooo......',
-  '....ooh#hhHoo....',
-  '...o#hh#hhHHho...',
-  '..ohJJJJhHHhhHo..',
-  '..oh##hhjjjjhHo..',
-  '.o#hh##hHHhhjjjo.',
-  '.o#hh##hHHhhHHho.',
-  '.o##hh##HhhHHhho.',
-  '.ohhH..HHj..Hjjo.',
+  '....oo#h##hoo....',
+  '...o#hJJ##h#ho...',
+  '..o#hh#hhh#HHho..',
+  '..oh#hh#hh#HHho..',
+  '.ohh#hh#h#HHhHHo.',
+  '.o#HH#HHH#jjhjHo.',
+  '.ohHjhHjhHjhHjho.',
+  '.o#hh..hHH..hHHo.',
   '.o#h.........hHo.',
-  '.ohh.........hHo.',
-  '.oHj.........jHo.',
-  '..oHo.......oHo..',
+  '.o#h.........hHo.',
+  '.ohH.........Hjo.',
+  '..oho.......oHo..',
   '...o.........o...',
 ]);
 
 /** Curly hair: a bumpy silhouette wider than the skull, two-cell curl marks, fringe over the brow, ends at the jaw. */
 const HAIR_CURLY = hov(0, 0, [
   '.....ooooooo.....',
-  '...oohh#hhHHoo...',
-  '..o##hh#hhHHhho..',
-  '.ohhJJJJhHHhhHHo.',
-  'o#hh##hhjjjjhHHho',
-  'o##hh##hHHhhjjjjo',
-  '.o#hh##hHHhhHHho.',
-  'oh##hh##HhhHHhhHo',
-  '.ohhH..HHj..Hjjo.',
-  'ohhj.........jHho',
+  '...oo##h##h#oo...',
+  '..o##hJJ##h#hHo..',
+  '.oh#hh#hhh#hHhHo.',
+  'o#hh#hh#hh#HHhHHo',
+  'o#hh#hh#h#hHhHHho',
+  '.o#HH#HHH#jjhjHo.',
+  'ohhHjhHjhHjhHjhHo',
+  '.o#hh..hHH..hHHo.',
+  'o#hh.........hHHo',
   '.o#h.........hHo.',
-  'ohHj.........jHHo',
-  '.oHj.........jHo.',
+  'ohHH.........Hjjo',
+  '.ohH.........Hjo.',
   '..oo.........oo..',
 ]);
 
 /** Long hair to the shoulders. */
 const HAIR_LONG = hov(0, 0, [
   '......ooooo......',
-  '....ooh#hhHoo....',
-  '...o#hh#hhHHho...',
-  '..ohJJJJhHHhhHo..',
-  '..oh##hhjjjjhHo..',
-  '.o#hh##hHHhhjjjo.',
-  '.o#hh##hHHhhHHho.',
-  '.o##hh##HhhHHhho.',
-  '.ohhH..HHj..Hjjo.',
+  '....oo#h##hoo....',
+  '...o#hJJ##h#ho...',
+  '..o#hh#hhh#HHho..',
+  '..oh#hh#hh#HHho..',
+  '.ohh#hh#h#HHhHHo.',
+  '.o#HH#HHH#jjhjHo.',
+  '.ohHjhHjhHjhHjho.',
+  '.o#hh..hHH..hHHo.',
   '.o#h.........hHo.',
   '.o#h.........hHo.',
-  '.ohh.........hHo.',
+  '.ohH.........Hjo.',
   '.ohH.........Hjo.',
   '.ohH.........Hjo.',
   '.oHj.........jHo.',
@@ -189,14 +189,14 @@ const HAIR_LONG = hov(0, 0, [
 const HAIR_PONYTAIL: Overlay[] = [
   hov(0, 0, [
     '......ooooo......',
-    '....ooh#hhHoo....',
-    '...o#hh#hhHHho...',
-    '...oJJJJhHHhho...',
-    '..oh##hhjjjjhHo..',
-    '..ohh##hHHhhjjo..',
-    '..ohh##hHHhhHHo..',
-    '..o#hh##HhhHHHo..',
-    '..HhH.......HjH..',
+    '....oo#h##hoo....',
+    '...o#hJJ##h#ho...',
+    '...ohh#hhh#HHo...',
+    '..oh#hh#hh#HHho..',
+    '..oh#hh#h#HHhHo..',
+    '..ohH#HHH#jjhHo..',
+    '..ohjhHjhHjhHHo..',
+    '..hHH.......Hjj..',
   ]),
   hov(13, 10, ['.ooo', 'o#Ho', 'ohHo', 'ohjo', 'oHjo', '.oo.']),
 ];
@@ -952,10 +952,18 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   }
   const hairLayer = layer(look.hair, view);
   push(out, hairLayer);
-  // A buzz cut is the skull remapped to hair: band it like the drawn hairstyles.
-  for (const r of hairLayer.remaps ?? [])
-    if (r.to === 'hair')
-      garments.push({ kind: 'hair', box: r.box, material: 'hair', space: r.space ?? 'figure' });
+  // A buzz cut is the skull remapped to hair: comb it like the drawn hairstyles, as one mass (the side view
+  // remaps the nape separately; on its own that patch would get a lit crown against the outline).
+  const hairRemaps = (hairLayer.remaps ?? []).filter((r) => r.to === 'hair');
+  if (hairRemaps.length > 0) {
+    const box: Box = [
+      Math.min(...hairRemaps.map((r) => r.box[0])),
+      Math.min(...hairRemaps.map((r) => r.box[1])),
+      Math.max(...hairRemaps.map((r) => r.box[2])),
+      Math.max(...hairRemaps.map((r) => r.box[3])),
+    ];
+    garments.push({ kind: 'hair', box, material: 'hair', space: hairRemaps[0]!.space ?? 'figure' });
+  }
   if (look.glasses) push(out, layer(GLASSES_V, view));
   if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view));
   if ((look.face ?? 'zombie') === 'zombie') {
@@ -1590,22 +1598,22 @@ export const DOT_BIEN = wearPosed('dot_bien', 'Đột Biến', STAND_BRUTE, DOT_
  */
 const HAIR_WILD = hov(0, 0, [
   '......ooooo......',
-  '....ooh#hhHoo....',
-  '...o#hh#hhHHho...',
-  '..ohJJJJhHHhhHo..',
-  '..oh##hhjjjjhHo..',
-  '.o#hh##hHHhhjjjo.',
-  '.o#hh##hHHhhHHho.',
-  '.o##hh##HhhHHhho.',
-  '.ohhH..HHj..Hjjo.',
-  '.o#h.........hHo.',
-  'ohhH.........hjo.',
-  '.ohH.........hhjo',
-  '.ohh.........Hjo.',
+  '....oo#h##hoo....',
+  '...o#hJJ##h#ho...',
+  '..o#hh#hhh#hHho..',
+  '..oh#hh#hh#HHho..',
+  '.ohh#hh#h#hHhHHo.',
+  '.o#HH#HHH#jjhjHo.',
+  '.ohHjhHjhHjhHjho.',
+  '.o#hh..#hh..hHHo.',
+  '.o#h...hH....hHo.',
+  'o#hh....h....hHo.',
+  '.ohH.........Hjjo',
   '.ohH.........Hjo.',
-  'ohHj.........jHho',
+  '.ohH.........Hjo.',
+  'oHjj.........jHHo',
   '.oHj.........jHo.',
-  '.oHo.........oHo.',
+  '.oHo.........ojo.',
   '..o...........o..',
 ]);
 /** Sunken sockets with a glowing point in each. */

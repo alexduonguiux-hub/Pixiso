@@ -1,4 +1,4 @@
-"""Repaint every hair drawing as 2-wide diagonal bands with lock_paint.paint: the S
+"""Repaint every hair drawing as 3-wide locks (an upper-left edge and a two-column body, read in segments) with lock_paint.paint: the S
 constants of cast64.ts (HAIR_SHORT ... HAIR_WILD and the ponytail crown) and the per-view hair section of
 gen_view_items.py (rewritten as literal lists). Run after changing a hair silhouette, then gen_view_items.py.
 Idempotent: tones depend only on the silhouette."""
@@ -16,7 +16,7 @@ def crown_x(rows, view):
     if view == 'W': return max(xs) - 2
     return (min(xs) + max(xs)) / 2
 def paint_view(rows, view):
-    return paint(rows, cx=crown_x(rows, view), sweep=0.5, W=2)
+    return paint(rows, cx=crown_x(rows, view), sweep=0.5, W=3)
 # ---- cast64 S hairs
 cast = open(CAST).read()
 for name in ('SHORT', 'SPIKY', 'SWEPT', 'BOB', 'CURLY', 'LONG', 'WILD', 'PONYTAIL'):
@@ -47,7 +47,7 @@ def lit(o):
     rows = ','.join("'%s'" % r for r in o['rows'])
     return f"O({o['x']},{o['y']}, [{rows}]{kw})"
 out = ['# ---------------------------------------------------------------- hair',
-       '# Literal per view; tones painted as continuous locks by scratch tool lock_paint.py (W=3, sweep 0.5): keep the',
+       '# Literal per view; tones painted as locks (upper-left edge + two-column body, in segments) by lock_paint.py (W=3, sweep 0.5): keep the',
        '# silhouettes, edit tones by repainting rather than by hand.', 'HAIR = {}']
 for style in ('SPIKY', 'CURLY', 'SWEPT', 'BOB', 'WILD', 'PONYTAIL', 'SHORT', 'LONG'):
     out.append(f"HAIR['{style}'] = {{")
