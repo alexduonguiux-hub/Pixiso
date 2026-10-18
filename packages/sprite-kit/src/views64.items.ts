@@ -996,11 +996,11 @@ export const BEARD_VIEWS: Views = {
 export const MIMIC_FACE_VIEWS: Views = {
   SW: {
     overlays: [
-      hov(3, 9, ['SS...SS', 'Se...eS', 'SS...SS']),
+      hov(3, 9, ['SES.SEs', '.ES.SEx', '.e...ex']),
       hov(3, 12, ['ooooooooo', '.xxxxxx..']),
     ],
   },
-  W: { overlays: [hov(3, 8, ['.SS', '.eS', 'SSS']), hov(2, 12, ['oooooo', '.xxxx.'])] },
+  W: { overlays: [hov(3, 8, ['.ES', '.ES', '.ex']), hov(2, 12, ['oooooo', '.xxxx.'])] },
 };
 
 export const MEDIC_BAG_W: ViewLayer = {

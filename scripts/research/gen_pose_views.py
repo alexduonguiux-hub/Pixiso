@@ -878,10 +878,10 @@ def replace_span(rows, y, x0, text):
 BRUTE_SW = list(BRUTE_S)
 # (the face rows of the giant, drawn like the base SW head: far brow and eye against the far outline,
 #  near eye slid a column in, the near cheek in shadow; the giant sits four columns into the brute canvas)
-BRUTE_SW[12] = '....' + '..osssssssssssssSssSSso..' + '..'
-BRUTE_SW[13] = '....' + '..oxeesssssssseexssSSso..' + '..'
-BRUTE_SW[14] = '....' + '..oseesssssssseesssSSso..' + '..'
-BRUTE_SW[15] = '....' + '...ossssssssssssssSSso...' + '..'
+BRUTE_SW[12] = '....' + '..ossSSsssssssSSSssSSso..' + '..'
+BRUTE_SW[13] = '....' + '..osssEssssssssEssSSSso..' + '..'
+BRUTE_SW[14] = '....' + '..osssEssssssssExsSSSso..' + '..'
+BRUTE_SW[15] = '....' + '...ossessssssssexsSSso...' + '..'
 BRUTE_SW[16] = '....' + '....oss$$$$sssssSSSso....' + '..'
 assert all(len(BRUTE_SW[y]) == 31 for y in range(12, 17)), [len(BRUTE_SW[y]) for y in range(12, 17)]
 # the claw arm two columns behind the torso edge (rows 28-46 hold it in columns 0-8; the torso keeps columns 9-10)
@@ -921,10 +921,10 @@ BRUTE_W = body(22, 61, 0, [
 '.osss$$$$$$$ssssSSSSo.',
 '.ossss$$$$$sssssSSSSo.',
 '.ossssssssssssssSSSSo.',
-'.ossssssssssSsSSSSSSo.',
-'.osssssseexSssSSSSSSo.',
-'.osssssseessssSSSSSSo.',
-'.ossssssssssssSSSSSSo.',
+'.ossssssSSssSsSSSSSSo.',
+'.ossssssEsssssSSSSSSo.',
+'.ossssssEsssssSSSSSSo.',
+'.ossssssexsssSSSSSSSo.',
 'o$$ssssssssssssSSSSSo.',
 'o$$$sssssssssssSSSSo..',
 '.o$$$ssssssssssSSSo...',

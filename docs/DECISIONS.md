@@ -519,3 +519,22 @@ túi chạm thân), chỉ đường may (cổ áo trên da) mới nở.
 
 **Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 310 → 302; `strict` 1691 → 1688; lệch góc nhìn 1 → 0; lint 82; QA
 sạch; 113 test.
+
+### D-080 Mắt Kẻ Bắt Chước và Đột Biến theo công thức chung (B4 của giám khảo vòng 4)
+
+Hai chỗ duy nhất giám khảo đọc là "điểm/khối" thay vì "mắt được vẽ": Kẻ Bắt Chước mắt 1 ô đỏ giữa hốc
+3×3, Đột Biến khối 2×2 một tông với ô trắng góc trên–ngoài (D-076). Cả hai nay dùng đúng mô-đun của thân:
+cột mống 3 ô tối-trên (`E E e`), hai ô trắng phía ngoài ở hai hàng dưới; SW mắt xa chỉ còn cột mống; W cột
+mống + một ô trắng thấp phía sau.
+
+**Kẻ Bắt Chước** (`SUNKEN_EYES`, `SUNKEN_SW/W`): hốc mắt giữ bằng ô bóng ở góc trên–ngoài và dọc mé trong mỗi
+cột mống (`SES.SES / xES.SEx / xe...ex`), lọn tóc giữa hai mắt giữ nguyên; SW góc ngoài mắt gần để tông gốc
+(ô `S` ở đó sẽ lẻ); W bóng hốc là cặp dọc sau mống.
+
+**Đột Biến** (`gen_giants.py` GIANT15 hàng 12–15, `gen_pose_views.py` BRUTE_SW hàng 12–15 và BRUTE_W hàng
+10–13): chân mày 2 ô bóng trên mỗi mắt, cột mống 3 hàng ở cột trong của khối cũ, trắng ở cột ngoài hai
+hàng dưới, bỏ ô trắng góc trên–ngoài; SW mắt xa (trái) chỉ cột mống; W mống 3 ô + trắng thấp phía sau.
+Khổng lồ ×1,5 giữ "mắt 2–3 ô" của D-055.
+
+**Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 302 → 303 (ô bóng góc hốc mắt Kẻ Bắt Chước); `strict` 1690; QA sạch;
+lint 82; 113 test.

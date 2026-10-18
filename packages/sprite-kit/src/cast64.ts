@@ -1692,7 +1692,8 @@ const HAIR_WILD = hov(0, 0, [
   '..o...........o..',
 ]);
 /** Sunken sockets with a glowing point in each. */
-const SUNKEN_EYES = hov(5, 9, ['SS...SS', 'Se...eS', 'SS...SS']);
+/** Sunken sockets around the standard eye module: a shadow at the top-outer corner and down the inner side of each three-cell iris, whites outside-below. */
+const SUNKEN_EYES = hov(5, 9, ['SES.SES', 'xES.SEx', 'xe...ex']);
 /** A smile far too wide: corners lifted at the cheeks, a line across the face, bared teeth above the chin. */
 const WIDE_SMILE = hov(4, 11, ['o.......o', '.ooooooo.', '..xxxxx..']);
 /** Blood dripping down the dress. */
