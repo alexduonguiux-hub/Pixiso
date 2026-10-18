@@ -196,9 +196,11 @@ export function tailor(
     // shirt front into the patches of the reference (no same-tone patch wider than ~20 cells), so each runs
     // from the lit edge to the terminator, catching light on its first cell and continuing deeper into the
     // shadow mass. One fold on the shadow side, and the far edge of the shadow mass turns deeper.
+    // A crease catches light on its first two cells (one cell alone reads as a stray dot), then shadows.
     const crease = (y: number) => {
       const c = cut(y);
-      for (let x = x0; x < c; x++) set(x, y, x === rowMin.get(y) ? LIGHT : SHADOW);
+      const lit = rowMin.get(y) ?? x0;
+      for (let x = x0; x < c; x++) set(x, y, x <= lit + 1 ? LIGHT : SHADOW);
       for (let x = c + 1; x < x1; x++) set(x, y, DEEP);
     };
     crease(y0 + 6);
@@ -208,7 +210,7 @@ export function tailor(
     const farEdge = x0 + Math.round(w * 0.85);
     for (const c of cells)
       if (
-        c.x >= farEdge + ((c.y - y0) % 2) &&
+        c.x >= farEdge + (Math.floor((c.y - y0) / 2) % 2) && // steps every two rows: no lone deep cell
         c.y >= y0 + 3 &&
         c.y <= y1 - 2 &&
         (c.y - y0) % 4 !== 3 && // a shadow cell every fourth row keeps the band from forming one long patch

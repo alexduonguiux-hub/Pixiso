@@ -31,7 +31,7 @@ const BRUTE_ARM = sprite`
   oSsssssSo
   ooSsssSoo
   .oSsssSo.
-  .osososo.
+  .oSoSoSo.
   .oSoSoSo.
   ..o.o.o..
 `;

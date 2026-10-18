@@ -319,3 +319,33 @@ B2: súng đeo lưng nhìn từ sau vẽ thân 2 ô (viền + nòng kim loại, 
 **Da sáng ở góc sau.** Sàn 8 % lấy từ mặt trước của mẫu, nơi sáng da là mặt; góc N/NW không có mặt, sáng da chỉ còn mấy ô đầu bắp tay và nắm tay gần — bản cũ "đạt" nhờ cột sáng ở **tay xa** (sai hướng sáng, nay bỏ). Sàn cho N/NW = 4 %.
 
 **Mũ nồi, lưỡi trai.** Khối bóng của mũ nồi 24 ô liền (31 % số ô mũ) từng lọt cổng vì cổng thứ hai tính theo số ô cả hình; thân nhỏ đi 20 ô là lộ. Mũ nồi S/SW/N/NW và W thêm nếp sâu `q` chéo qua khối bóng và một ô sâu cắt dải băng; lưỡi trai nhìn từ sau thêm đường may giữa (`K` nối hàng 1–4). Số đo cuối: **đạt 67 → 73/130** (HEAD cũ → nay; đổi thước +3, thân 45° +3 với mũ); lint tổng 92 → 89; QA sạch; silhouette trùng 0; lệch góc nhìn 1 (Sơn, D-068); 113 test. Còn rớt sau B1 có lý do: mũ nồi W 25,3 % (giảm từ 31,9).
+
+### D-073 Chi tiết nhỏ nhất là 2 ô cùng tông; ô viền góc giày lấy màu viền của giày (B4, B8 của giám khảo vòng 3)
+
+**Quy tắc ô lẻ.** Giám khảo vòng 3 đếm bằng script: một pixel mờ không có láng giềng-8 cùng màu và
+lệch mọi láng giềng ≥ 0,18 L (OKLab) hoặc tự nó bão hoà (C ≥ 0,12) là "ô lẻ"; ở 1× nó đọc như nhiễu
+máy. Từ nay một chi tiết (mụn, máu, khoá, phù hiệu, thẻ bài, điểm sáng đỉnh sọ, khớp gối, mắt cá,
+đốt ngón, vết sẹo) không bao giờ là 1 ô một tông: tối thiểu 2 ô kề nhau cùng tông, ngang hoặc dọc.
+Thước đo: `python3 -I scripts/research/lone_pixels.py all` (đọc kết quả `pnpm qa:score`), không được
+tăng sau mỗi lần vẽ. Trước: 664 ô lẻ / 122 sprite; sau: 357 / 111.
+
+**Đã đổi theo luật đó.** Đỉnh sọ: hàng 2 thành `oSS$$$$$SSo` để hai `S` hàng 1 có bạn chéo (S, N, SW,
+NW, dáng, thân ×1,5; thân béo/nặng suy ra từ thân gốc). Vai trần `oSSs$$…$$sSSo` thay vì `S s S`.
+Nắm tay `oSSsss`, hàng gối cuối `o$$so` (hàng duy nhất lộ dưới quần đùi), mắt cá `ooosso`, móng vuốt
+Đột Biến hai hàng `S`, ngón chân `SS`. Mụn Kẻ Phun, nhọt Đột Biến, máu Kẻ Bắt Chước (cả W), sẹo da
+đầu zombie: từng vết là cặp. Băng đô `**` trên–trái; khoá thắt lưng và phù hiệu `ww`; thẻ bài hai ô
+`w`; cà vạt 3 ô sáng + 4 ô tối thay vì xen kẽ từng hàng; túi cứu thương xếp lại (sáng 2 ô trên–trái,
+chữ thập ở giữa, đường may đậm hàng dưới cùng, không còn `a x A` so le); mép tối góc N của thân giữ
+cột sáng liền thay vì `S o S`; thân béo W bỏ ba `S` đơn trên vai/bụng. Luật nếp áo đã sáng 2 ô
+(hàng trước, cùng đợt): `x <= lit + 1`.
+
+**B8.** `borderingMaterial` (paint.ts) trước chỉ nhìn vòng 1: ô viền ở góc đế giày W chỉ chạm viền
+nên rơi về màu viền mặc định (28,24,36) — "dấu hiệu máy" giám khảo bắt trên 24/27 nhân vật. Nay
+vòng 1 toàn viền thì nhìn vòng 2; sprite W không còn pixel màu đó ở 6 hàng đáy.
+
+**Còn để lại, có chủ ý.** Giám khảo muốn thay vành `S` đỉnh đầu hói bằng một mảng sáng 3×2 lệch
+trên–trái; dome `$` đã là mảng sáng lớn nên chỉ ghép vành thành cặp, việc vẽ lại dome 5 góc × 4 thân
+gộp vào B1/B2. Ô thái dương (giữa viền lông mày và mắt) và ô tai khi tóc che hàng trên là thiết kế
+mặt → B5. Mép tay áo rách / nếp tay áo của zombie dân thường, công nhân, thể thao → B2. Tóc Ny ở
+N/NW → B1. Góc túi sau lưng Ny thành `r` do luật khối viền 2×2 (outfit64) — 2 ô/sprite, giữ.
+Đạt 73 → 76/130, lint 89 → 89, QA sạch.

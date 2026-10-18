@@ -30,7 +30,7 @@ def fig(w, rows):
 GIANT15 = fig(25, [
 '.........ooooooo.........',
 '.......ooSsssssSoo.......',
-'......oSs$$$$$$ssSo......',
+'......oSS$$$$$$sSSo......',
 '.....os$$$$$$$$$ssso.....',
 '....os$$$$$$$$$$sssso....',
 '....oss$$$$$$$$$sssso....',
@@ -86,7 +86,7 @@ GIANT15 = fig(25, [
 '.o$$$$ssssso.osssss$$$$o.',
 '.o$$$sssssso.ossssss$$$o.',
 '.ossssssssso.ossssssssso.',
-'.ossssssssSo.oSssssssSso.',
+'.osssssssSSo.oSSssssSSso.',
 '.ooooooooooo.ooooooooooo.',
 ])
 

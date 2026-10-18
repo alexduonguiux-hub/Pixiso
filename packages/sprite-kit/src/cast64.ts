@@ -208,7 +208,7 @@ const BUZZ: Remap = { box: [0, 0, 16, 7], to: 'hair', space: 'head' };
 const GLASSES = hov(4, 8, ['...o.o...', '...ooo...', '...o.o...', 'o..o.o..o', 'oooo.oooo']);
 
 /** Headband across the forehead (accent material). */
-const HEADBAND = hov(2, 6, ['o*aaaaaaaaaAo', 'oAaaaaaaaaAAo']);
+const HEADBAND = hov(2, 6, ['o**aaaaaaaAAo', 'oaaaaaaaaAAAo']);
 
 /** Full beard (hair material): a moustache under the nose parted from the cheek hair by the lip corners, a short dark notch for the mouth, a bushy beard wider than the jaw, its points hanging over the collar opening. */
 const BEARD = hov(3, 12, [
@@ -299,7 +299,7 @@ const HELMET: Overlay = {
 /** Zombie face: sunken sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
 const ZOMBIE_FACE = hov(4, 9, ['.$.S.S.$.', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']); // brow bones catch light
 /** Scalp patches and a scalp wound (blood is the wood material). */
-const ZOMBIE_SCALP = hov(5, 2, ['.SS...d', '..S....']);
+const ZOMBIE_SCALP = hov(5, 2, ['.SS..dd', '..S....']);
 /** A gash on the cheek. */
 const ZOMBIE_CHEEK = hov(11, 5, ['d', 'd']);
 
@@ -476,7 +476,7 @@ const RIFLE_SLUNG_V: ViewItem = {
 /** The medic's big satchel: hangs outside the right hip on the chest strap, red with a white cross. */
 const SATCHEL: Overlay[] = [
   ov(5, 17, ['A.......', '.A......', '..A.....', '...A....', '....A...', '.....A..', '......AA']),
-  ov(14, 23, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo']),
+  ov(14, 23, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo']),
 ];
 const SATCHEL_V: ViewItem = {
   S: { overlays: SATCHEL },
@@ -637,7 +637,7 @@ const MEDIC_BAG: Overlay[] = [
 ];
 
 /** Pustules on a bloated belly (fat form coordinates). */
-const PUSTULES = ov(7, 23, ['...aa....', 'a.......*', 'A.......*', '...*a....', '.......aa']);
+const PUSTULES = ov(7, 23, ['...aa....', 'aa.....**', '.........', '...aa....', '.......aa']);
 
 /* ------------------------------------------------------------------ */
 /* The Vùng Xanh cast.                                                 */
@@ -994,10 +994,10 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       const cy = chest ? chest[1] : ty0 + 4;
       overlays.push(ov(tx0 + inset, cy + 2, [stripe]), ov(tx0 + inset, cy + 5, [stripe]));
     }
-    if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['w']));
-    if (d === 'belt' && pose.belt) overlays.push(ov(...pose.belt, ['w']));
+    if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
+    if (d === 'belt' && pose.belt) overlays.push(ov(...pose.belt, ['ww']));
     if (d === 'tie' && pose.tie)
-      overlays.push(ov(...pose.tie, ['l', 'L', 'l', 'L', 'l', 'L', 'l']));
+      overlays.push(ov(...pose.tie, ['l', 'l', 'l', 'L', 'L', 'L', 'L']));
     if (d === 'number' && pose.number) overlays.push(ov(...pose.number, ['xxx', '..x', '..x']));
     if (d === 'camo')
       overlays.push(
@@ -1140,7 +1140,7 @@ const SORES: Overlay[] = [ov(1, 24, ['D.', '..', '.D', 'D.']), ov(13, 25, ['..D'
 /** Dog tag on the sternum, two cells above the pose's chest anchor column +2. */
 const dogTag = (pose: ZombiePose): Overlay => {
   const [cx, cy] = pose.chest ?? [6, 20];
-  return ov(cx + 2, cy - 1, ['w', 'm']);
+  return ov(cx + 2, cy - 1, ['w', 'w']);
 };
 
 /** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */
@@ -1326,15 +1326,15 @@ const SHELL_PLATES: Overlay[] = [
 const BRUTE_EYE = ov(8, 12, ['ooooo', 'oxeeo', 'oeeeo', 'oeeeo', 'ooooo']);
 const BRUTE_MAW = ov(11, 18, ['oxoxoxoxoxo', 'ooooooooooo']);
 const BRUTE_BOILS = ov(12, 33, [
-  '.a......',
+  '.aa.....',
   '........',
   '........',
-  '.......a',
+  '......aa',
   '........',
   '........',
-  'a.......',
+  'aa......',
   '........',
-  '.....a..',
+  '.....aa.',
 ]);
 
 /** Kẻ Thính: blind, hears everything. Upright, feeling forward; pale, huge ears, eyes sewn shut, rags. */
@@ -1452,11 +1452,11 @@ const SHELL_V: ViewItem = {
 /** Pustules on the swollen torso per view (figure space of the fat build). */
 const PUSTULES_V: ViewItem = {
   S: same(PUSTULES),
-  SW: same(ov(8, 23, ['...aa....', 'a.......*', 'A.......*', '...*a....', '.......aa'])),
+  SW: same(ov(8, 23, ['...aa....', '........*', '........*', '....aa...', '.......aa'])),
   W: {
     overlays: [
-      ov(9, 22, ['.aa..', '.....', '..**.', 'a....', 'A....', '..aa.']),
-      ov(1, 25, ['a', 'A']),
+      ov(9, 22, ['.aa..', '.....', '..**.', '.....', 'aa...', '..aa.']),
+      ov(1, 25, ['aa']),
     ],
   },
   NW: same(ov(7, 22, ['..aa.....', '......**.', '.........', '...aa....', '......aa.'])),
@@ -1579,11 +1579,11 @@ const BRUTE_FACE_V: ViewItem = {
     overlays: [
       ov(6, 10, BRUTE_EYE_ROWS),
       ov(3, 17, ['oxoxoxo', 'ooooooo']),
-      ov(12, 30, ['.a..', '....', '...a', 'a...', '....', '..a.']),
+      ov(12, 30, ['.aa.', '....', '..aa', '....', 'aa..', '....', '.aa.']),
     ],
   },
-  NW: { overlays: [ov(10, 30, ['.a....', '......', '....a.', 'a.....', '......', '..a...'])] },
-  N: { overlays: [ov(10, 30, ['.a....', '......', '....a.', 'a.....', '......', '..a...'])] },
+  NW: { overlays: [ov(10, 30, ['.aa...', '......', '....aa', '......', 'aa....', '......', '..aa..'])] },
+  N: { overlays: [ov(10, 30, ['.aa...', '......', '....aa', '......', 'aa....', '......', '..aa..'])] },
 };
 
 /** Đột Biến: the ×1.5 giant with a mutated claw arm, bone spikes, a bulging eye and a maw. */
@@ -1635,7 +1635,7 @@ const SUNKEN_EYES = hov(5, 9, ['SS...SS', 'Se...eS', 'SS...SS']);
 /** A smile far too wide: corners lifted at the cheeks, a line across the face, bared teeth above the chin. */
 const WIDE_SMILE = hov(4, 11, ['o.......o', '.ooooooo.', '..xxxxx..']);
 /** Blood dripping down the dress. */
-const DRESS_STAINS = ov(4, 30, ['....D....', '.........', '.D.......', '.........', '......D..']);
+const DRESS_STAINS = ov(4, 30, ['....DD...', '.........', '.DD......', '.........', '......DD.']);
 
 /**
  * Kẻ Bắt Chước: stands still like a person (base figure), a dirty off-white

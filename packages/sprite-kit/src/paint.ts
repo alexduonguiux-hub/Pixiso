@@ -109,34 +109,34 @@ export function buildPalette(
 
 const LINE_INDEX = MATERIALS.indexOf('line');
 
-const N8 = [
-  [-1, -1],
-  [0, -1],
-  [1, -1],
-  [-1, 0],
-  [1, 0],
-  [-1, 1],
-  [0, 1],
-  [1, 1],
-] as const;
-
 function cellAt(s: Sprite, x: number, y: number): number {
   if (x < 0 || y < 0 || x >= s.w || y >= s.h) return -1;
   return s.cells[y * s.w + x]!;
 }
 
-/** Most frequent non-line material among the 8 neighbours (ties: lower material index), or -1. */
+/**
+ * Most frequent non-line material among the 8 neighbours (ties: lower material index); a line cell
+ * touching only line cells (the corner of a sole, where two outlines meet) looks one ring further
+ * out, so it takes the tint of the part it belongs to instead of the untinted default. -1 when
+ * nothing is found within two cells.
+ */
 function borderingMaterial(s: Sprite, x: number, y: number): number {
-  const counts = new Array<number>(MATERIALS.length).fill(0);
-  for (const [dx, dy] of N8) {
-    const v = cellAt(s, x + dx, y + dy);
-    if (v < 0) continue;
-    const m = v >> 3;
-    if (m !== LINE_INDEX) counts[m]!++;
+  for (const r of [1, 2]) {
+    const counts = new Array<number>(MATERIALS.length).fill(0);
+    for (let dy = -r; dy <= r; dy++)
+      for (let dx = -r; dx <= r; dx++) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+        const v = cellAt(s, x + dx, y + dy);
+        if (v < 0) continue;
+        const m = v >> 3;
+        if (m !== LINE_INDEX) counts[m]!++;
+      }
+    let best = -1;
+    for (let m = 0; m < counts.length; m++)
+      if (counts[m]! > (best < 0 ? 0 : counts[best]!)) best = m;
+    if (best >= 0) return best;
   }
-  let best = -1;
-  for (let m = 0; m < counts.length; m++) if (counts[m]! > (best < 0 ? 0 : counts[best]!)) best = m;
-  return best;
+  return -1;
 }
 
 /** True for a line cell on the lit silhouette edge: open above or to the left, closed below and to the right. */

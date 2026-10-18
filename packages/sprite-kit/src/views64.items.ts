@@ -804,7 +804,7 @@ export const HARD_HAT_W: ViewLayer = {
 };
 
 export const HEADBAND_VIEWS: Views = {
-  W: { overlays: [hov(0, 6, ['o*aaaaaaaaAAo', 'oAaaaaaaaAAAo'])] },
+  W: { overlays: [hov(0, 6, ['o**aaaaaaaAAo', 'oaaaaaaaaAAAo'])] },
 };
 
 export const ZOMBIE_FACE_VIEWS: Views = {
@@ -917,7 +917,7 @@ export const COAT_TAILS_W: ViewLayer = {
 };
 
 export const DRESS_STAINS_W: ViewLayer = {
-  overlays: [ov(5, 30, ['...D.', '.....', 'D....', '.....', '....D'])],
+  overlays: [ov(5, 30, ['..DD.', '.....', 'DD...', '.....', '...DD'])],
 };
 
 export const RIFLE_STAND_W: ViewLayer = {
@@ -1052,14 +1052,14 @@ export const RIFLE_SLUNG_N: ViewLayer = {
 
 export const SATCHEL_W: ViewLayer = {
   overlays: [
-    ov(13, 21, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo']),
+    ov(13, 21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo']),
   ],
 };
 
 export const SATCHEL_N: ViewLayer = {
   overlays: [
     ov(5, 17, ['......A', '.....A.', '....A..', '...A...', '..A....', '.A.....', 'AA.....']),
-    ov(-2, 23, ['ooooo', 'oA*ao', 'oAaao', 'orrro', 'oAxao', 'oxxxo', 'oAxao', 'oAAAo', 'ooooo']),
+    ov(-2, 23, ['ooooo', 'oA**o', 'oAaao', 'oAxao', 'oxxxo', 'oAxao', 'oAaao', 'orrro', 'ooooo']),
   ],
 };
 
@@ -1104,7 +1104,7 @@ export const BACKPACK_N: ViewLayer = {
       'oiiiiiiiiio',
       'ollllLllllo',
       'o|lllLlllLo',
-      'o|llllmllLo',
+      'o|lllmmllLo',
       'oLLLLLLLLLo',
       'ollllLllllo',
       'oilllLLlLio',
