@@ -973,7 +973,7 @@ export const RIFLE_STAND_N: ViewLayer = {
 
 export const RIFLE_SLUNG_W: ViewLayer = {
   overlays: [
-    ov(13, 9, [
+    ov(14, 9, [
       'o...',
       'o...',
       'o...',
@@ -1004,34 +1004,22 @@ export const RIFLE_SLUNG_W: ViewLayer = {
 
 export const RIFLE_SLUNG_N: ViewLayer = {
   overlays: [
-    ov(-1, 5, [
-      'o.................',
-      '.o................',
-      '.o................',
-      '..o...............',
-      '...o..............',
-      '...o..............',
-      '....o.............',
-      '.....o............',
-      '.....o............',
-      '......o...........',
-      '.......o..........',
-      '.......o..........',
-      '........oo........',
-      '.........oo.......',
-      '..........oo......',
-      '..........o.......',
-      '...........o......',
-      '............o.....',
-      '............o.....',
-      '.............o....',
-      '..............o...',
-      '..............o...',
-      '...............ooo',
-      '...............oDo',
-      '...............oDo',
-      '...............oDo',
-      '...............ooo',
+    ov(7, 17, [
+      'oo.........',
+      '.oo........',
+      '..oo.......',
+      '..o........',
+      '...o.......',
+      '....o......',
+      '....o......',
+      '.....o.....',
+      '......o....',
+      '......o....',
+      '.......oooo',
+      '........oDo',
+      '........oDo',
+      '........oDo',
+      '........ooo',
     ]),
     ov(11, 16, ['LL', '.L']),
   ],
@@ -1047,5 +1035,90 @@ export const SATCHEL_N: ViewLayer = {
   overlays: [
     ov(5, 17, ['......A', '.....A.', '....A..', '...A...', '..A....', '.A.....', 'AA.....']),
     ov(-2, 23, ['ooooo', 'oA*ao', 'oAaao', 'orrro', 'oAxao', 'oxxxo', 'oAxao', 'oAAAo', 'ooooo']),
+  ],
+};
+
+export const BACKPACK_W: ViewLayer = {
+  overlays: [
+    ov(13, 17, [
+      '.ooo',
+      'o|lo',
+      'o|lo',
+      'oiio',
+      'oLlo',
+      'oLlo',
+      'oLlo',
+      'oLlo',
+      'oLlo',
+      'olLo',
+      'oiio',
+      '.ooo',
+    ]),
+    ov(10, 7, [
+      '....ooo',
+      '....o%o',
+      '...o%o.',
+      '...odo.',
+      '..odo..',
+      '..odo..',
+      '.odo...',
+      '.odo...',
+      'odo....',
+      'odo....',
+    ]),
+  ],
+};
+
+export const BACKPACK_N: ViewLayer = {
+  overlays: [
+    ov(3, 11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo']),
+    ov(3, 16, [
+      'o||lllllllo',
+      'o|llllllLLo',
+      'ollllllllLo',
+      'oiiiiiiiiio',
+      'ollllLllllo',
+      'o|lllLlllLo',
+      'o|llllmllLo',
+      'oLLLLLLLLLo',
+      'ollllLllllo',
+      'oilllLLlLio',
+      'ooooooooooo',
+    ]),
+  ],
+};
+
+export const RANGER_COAT_W: ViewLayer = {
+  overlays: [
+    ov(2, 29, [
+      'o^cccccCcCo',
+      'o^ccCccCcCo',
+      'occcCccCcco',
+      'occcCccCcvo',
+      'occcCccccvo',
+      'occccccccvo',
+      'ooooooooooo',
+    ]),
+  ],
+};
+
+export const COAT_TAILS2_W: ViewLayer = {
+  overlays: [
+    ov(2, 29, [
+      'o^cccccCcCo',
+      'o^ccCccCcCo',
+      'occcCccCcco',
+      'occcCccccvo',
+      'occccccccvo',
+      'ooooooooooo',
+    ]),
+    ov(1, 23, ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo']),
+  ],
+};
+
+export const TUNIC_W: ViewLayer = {
+  overlays: [
+    ov(2, 29, ['o^cccccCcCo', 'o^ccCccccCo', 'occccccccco', 'ooooooooooo']),
+    ov(13, 24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']),
   ],
 };

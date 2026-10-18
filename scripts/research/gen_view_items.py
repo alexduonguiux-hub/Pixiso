@@ -113,9 +113,14 @@ BODY = {
  'STAINS_W': [O(5,30, ['...D.','.....','D....','.....','....D'], head=False)],
  'RIFLE_STAND_W': [O(12,9, ['.o.', '.o.', '.o.', '.o.', '.o.', '...', '...', '...', '...', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', 'Do.', 'Do.', 'Do.', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.oo'], head=False, under=True)],
  'RIFLE_STAND_N': [O(-5,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
- 'RIFLE_SLUNG_W': [O(13,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
- 'RIFLE_SLUNG_N': [O(-1,5, ['o.................', '.o................', '.o................', '..o...............', '...o..............', '...o..............', '....o.............', '.....o............', '.....o............', '......o...........', '.......o..........', '.......o..........', '........oo........', '.........oo.......', '..........oo......', '..........o.......', '...........o......', '............o.....', '............o.....', '.............o....', '..............o...', '..............o...', '...............ooo', '...............oDo', '...............oDo', '...............oDo', '...............ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
+ 'RIFLE_SLUNG_W': [O(14,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
+ 'RIFLE_SLUNG_N': [O(7,17, ['oo.........', '.oo........', '..oo.......', '..o........', '...o.......', '....o......', '....o......', '.....o.....', '......o....', '......o....', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
  'SATCHEL_W':  [O(13,21, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo'], head=False)],
+ 'BACKPACK_W': [O(13,17, ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo'], head=False), O(10,7, ['....ooo', '....o%o', '...o%o.', '...odo.', '..odo..', '..odo..', '.odo...', '.odo...', 'odo....', 'odo....'], head=False, under=True)],
+ 'BACKPACK_N': [O(3,11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|llllmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False)],
+ 'RANGER_COAT_W': [O(2,29, ['o^cccccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccCcvo', 'occcCccccvo', 'occccccccvo', 'ooooooooooo'], head=False)],
+ 'COAT_TAILS2_W': [O(2,29, ['o^cccccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccccvo', 'occccccccvo', 'ooooooooooo'], head=False), O(1,23, ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo'], head=False)],
+ 'TUNIC_W': [O(2,29, ['o^cccccCcCo', 'o^ccCccccCo', 'occccccccco', 'ooooooooooo'], head=False), O(13,24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo'], head=False)],
  'SATCHEL_N':  [O(5,17, ['......A','.....A.','....A..','...A...','..A....','.A.....','AA.....'], head=False), O(-2,23, ['ooooo', 'oA*ao', 'oAaao', 'orrro', 'oAxao', 'oxxxo', 'oAxao', 'oAAAo', 'ooooo'], head=False)],
 }
 
@@ -227,7 +232,7 @@ out.append("export const MEDIC_BAG_W: ViewLayer = "+ts_layers(BODY['BAG_W'])+";\
 out.append("export const MEDIC_BAG_N: ViewLayer = "+ts_layers(BODY['BAG_N'])+";\n")
 out.append("export const COAT_TAILS_W: ViewLayer = "+ts_layers(BODY['COAT_W'])+";\n")
 out.append("export const DRESS_STAINS_W: ViewLayer = "+ts_layers(BODY['STAINS_W'])+";\n")
-for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N'):
+for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N', 'BACKPACK_W', 'BACKPACK_N', 'RANGER_COAT_W', 'COAT_TAILS2_W', 'TUNIC_W'):
     out.append("export const "+name+": ViewLayer = "+ts_layers(BODY[name])+";\n")
 open(OUT,'w').write('\n'.join(out))
 print('wrote', OUT)

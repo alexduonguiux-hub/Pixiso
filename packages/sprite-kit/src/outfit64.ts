@@ -206,8 +206,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
           ]
             .map(([ax, ay]) => o.sprite.cells[(y + ay!) * o.sprite.w + x + ax!])
             .find((c) => c !== undefined && c !== EMPTY && Math.floor(c / 8) !== LINE_MATERIAL);
-          if (near !== undefined && x > 0 && x < o.sprite.w - 1 && y > 0 && y < o.sprite.h - 1)
-            seamCells.set(fy * out.w + fx, near);
+          if (near !== undefined) seamCells.set(fy * out.w + fx, near);
         }
       }
   }

@@ -33,7 +33,6 @@ import {
   BEARD_VIEWS,
   BERET_W,
   BUZZ_VIEWS,
-  COAT_TAILS_W,
   DRESS_STAINS_W,
   GLASSES_VIEWS,
   HAIR_BOB_VIEWS,
@@ -47,10 +46,13 @@ import {
   HARD_HAT_W,
   HEADBAND_VIEWS,
   HELMET_W,
-  MEDIC_BAG_N,
-  MEDIC_BAG_W,
+  BACKPACK_N,
+  BACKPACK_W,
+  COAT_TAILS2_W,
+  RANGER_COAT_W,
   RIFLE_SLUNG_N,
   RIFLE_SLUNG_W,
+  TUNIC_W,
   RIFLE_STAND_N,
   RIFLE_STAND_W,
   SATCHEL_N,
@@ -484,19 +486,136 @@ const SATCHEL_V: ViewItem = {
   NW: SATCHEL_N,
 };
 
+/** Sơn's backpack: its top shows behind the shoulders either side of the neck, two straps down the chest; a bat rests on the right shoulder. */
+const BACKPACK: Overlay[] = [
+  {
+    ...ov(1, 11, [
+      '.ooooooooooooo.',
+      'oL|llllllllllLo',
+      'oL|lllllllllLLo',
+      'oLlllllllllllLo',
+      'ooooooooooooooo',
+    ]),
+    under: true,
+  },
+  ...(
+    [
+      [5, 17],
+      [5, 18],
+      [5, 19],
+      [5, 20],
+      [11, 17],
+      [11, 18],
+      [11, 19],
+      [11, 20],
+    ] as const
+  ).map(([x, y]) => ov(x, y, ['L'])),
+];
+const BAT: Overlay = ov(14, 7, [
+  '....ooo',
+  '....o%o',
+  '...o%o.',
+  '...odo.',
+  '..odo..',
+  '..odo..',
+  '.odo...',
+  '.odo...',
+  'odo....',
+  'odo....',
+  'Ddo....',
+  'Ddo....',
+  'ooo....',
+]);
+const BACKPACK_V: ViewItem = {
+  S: { overlays: [...BACKPACK, BAT] },
+  SW: { overlays: [...BACKPACK, BAT] },
+  W: BACKPACK_W,
+  N: BACKPACK_N,
+  NW: BACKPACK_N,
+};
+/** Ông Tư's ranger coat: a column wider at each sleeve and a skirt to the knee, open at the front, vented at the back. */
+const RANGER_COAT: Overlay[] = [
+  ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
+  ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
+  ov(1, 29, [
+    'o^cccccocccccCo',
+    'o^ccCccoccCccCo',
+    'occcCco.ocCccco',
+    'occcCco.ocCccvo',
+    'occcCco.ocCccvo',
+    'occccco.occccvo',
+    'ooooooo.ooooooo',
+  ]),
+];
+const RANGER_COAT_BACK: Overlay[] = [
+  ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
+  ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
+  ov(1, 29, [
+    'o^cccccocccccCo',
+    'o^ccCccoccCccCo',
+    'occcCccoccCccco',
+    'occcCco.ocCccvo',
+    'occcCco.ocCccvo',
+    'occccco.occccvo',
+    'ooooooo.ooooooo',
+  ]),
+];
+const RANGER_COAT_V: ViewItem = {
+  S: { overlays: RANGER_COAT },
+  SW: { overlays: RANGER_COAT },
+  W: RANGER_COAT_W,
+  N: { overlays: RANGER_COAT_BACK },
+  NW: { overlays: RANGER_COAT_BACK },
+};
+/** Bác sĩ Lan's coat tails to the knee, a column past each hip, and a clipboard held against the left thigh. */
+const COAT_TAILS2: Overlay = ov(1, 29, [
+  'o^cccccocccccCo',
+  'o^ccCccoccCccCo',
+  'occcCco.ocCccco',
+  'occcCco.ocCccvo',
+  '.occcco.occcco.',
+  '.oooooo.oooooo.',
+]);
+const COAT_TAILS2_BACK: Overlay = ov(1, 29, [
+  'o^cccccocccccCo',
+  'o^ccCccoccCccCo',
+  'occcCccoccCccco',
+  'occcCco.ocCccvo',
+  '.occcco.occcco.',
+  '.oooooo.oooooo.',
+]);
+const CLIPBOARD: Overlay = ov(-1, 23, [
+  'ooooo',
+  'oMMxo',
+  'oxxxo',
+  'oxxxo',
+  'oxxxo',
+  'oxxxo',
+  'ooooo',
+]);
+const CLIPBOARD_BACK: Overlay = ov(17, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 'oo']);
+/** Ny's scrub tunic reaches below the hips; a small red pouch hangs on the right hip. */
+const TUNIC: Overlay = ov(1, 30, [
+  'o^cccccCcccccCo',
+  'o^ccCcccccCccCo',
+  'occccccccccccco',
+  'ooooooooooooooo',
+]);
+const POUCH: Overlay = ov(14, 23, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']);
+const POUCH_BACK: Overlay = ov(-1, 23, ['oooo', 'oaAo', 'oaAo', 'oaao', 'oooo']);
+const TUNIC_V: ViewItem = {
+  S: { overlays: [TUNIC, POUCH] },
+  SW: { overlays: [TUNIC, POUCH] },
+  W: TUNIC_W,
+  N: { overlays: [TUNIC, POUCH_BACK] },
+  NW: { overlays: [TUNIC, POUCH_BACK] },
+};
+
 /** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
 const MEDIC_BAG: Overlay[] = [
   ov(5, 17, ['A......', '.A.....', '..A....', '...A...', '....A..', '.....A.', '......A']),
   ov(12, 22, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
 ];
-
-const MEDIC_BAG_V: ViewItem = {
-  S: { overlays: MEDIC_BAG },
-  SW: { overlays: MEDIC_BAG },
-  W: MEDIC_BAG_W,
-  N: MEDIC_BAG_N,
-  NW: MEDIC_BAG_N,
-};
 
 /** Pustules on a bloated belly (fat form coordinates). */
 const PUSTULES = ov(7, 23, ['....a....', 'a.......*', '.........', '...*.....', '.......a.']);
@@ -531,7 +650,7 @@ const NY_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: MEDIC_BAG_V,
+  extras: [{ S: { overlays: [MEDIC_BAG[0]!] }, SW: { overlays: [MEDIC_BAG[0]!] } }, TUNIC_V], // strap, tunic, pouch
   colors: {
     skin: [250, 214, 180],
     hair: [160, 56, 40],
@@ -553,7 +672,10 @@ const SON_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: { S: { lines: [seam([8, 19, 8, 27])] }, SW: { lines: [seam([7, 19, 7, 27])] } }, // jacket zip
+  extras: [
+    { S: { lines: [seam([8, 19, 8, 27])] }, SW: { lines: [seam([7, 19, 7, 27])] } },
+    BACKPACK_V,
+  ], // jacket zip, pack, bat
   colors: {
     skin: [240, 200, 165],
     hair: [58, 54, 66],
@@ -574,7 +696,8 @@ const ONG_TU_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: BEARD_V,
+  extras: [BEARD_V, RANGER_COAT_V],
+  hem: false,
   colors: {
     skin: [226, 182, 144],
     hair: [104, 100, 96], // dark grey beard
@@ -589,7 +712,6 @@ const ONG_TU_LOOK: Look = {
 export const ONG_TU = wear('ong_tu', 'Ông Tư', POSE_STAND, ONG_TU_LOOK);
 
 /** Lab-coat tails over the hips, open at the front (base form, figure space). */
-const COAT_TAILS = ov(2, 29, ['o^ccccoccccCo', '.o^cccocccCo.', '.o^cccocccCo.', '.ooooo.ooooo.']);
 
 /** Bác sĩ Lan, the doctor: auburn bob, round glasses, white coat open at the front over blue trousers, dark shoes. */
 const BAC_SI_LAN_LOOK: Look = {
@@ -602,11 +724,11 @@ const BAC_SI_LAN_LOOK: Look = {
   face: 'plain',
   hem: false,
   extras: {
-    S: { overlays: [COAT_TAILS], lines: [seam([8, 19, 8, 28])] }, // coat opening
-    SW: { overlays: [COAT_TAILS], lines: [seam([7, 19, 7, 28])] },
-    W: COAT_TAILS_W,
-    N: { overlays: [COAT_TAILS] }, // back vent
-    NW: { overlays: [COAT_TAILS] },
+    S: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([8, 19, 8, 28])] }, // coat opening
+    SW: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([7, 19, 7, 28])] },
+    W: COAT_TAILS2_W,
+    N: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] }, // back vent
+    NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] },
   },
   colors: {
     skin: [240, 206, 176],
