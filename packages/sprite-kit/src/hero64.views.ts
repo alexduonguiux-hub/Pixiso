@@ -2,12 +2,13 @@
  * The two three-quarter views of the standing mannequin, hand-drawn at 17×40
  * from the S, W and N transcriptions (the reference sheet has no SW/NW).
  *
- * SW faces down-left: the far (screen-left) eye hugs the outline, the near
- * cheek and ear show on the right, the far shoulder and arm are one column
- * narrower, the feet point left through their shading. NW faces up-left:
- * the back of the head with the near ear on the left and a sliver of the
- * jaw, the far (screen-right) arm narrower behind the back. Same light
- * (top-left), same 1-px outline, same soles row as the S figure.
+ * SW faces down-left: the far (screen-left) eye is one iris cell with a skin
+ * cell to the outline, the near cheek and ear show on the right, the far
+ * shoulder is two columns in and the far arm one column behind the torso,
+ * the far foot one row higher (further back). NW faces up-left: the back of
+ * the head with the near ear on the left and a sliver of the jaw, the far
+ * (screen-right) shoulder, arm and foot treated the same way. Same light
+ * (top-left), same 1-px outline; the near sole stays on the S soles row.
  */
 import { sprite, type Sprite } from './format.js';
 
@@ -22,36 +23,36 @@ export const HERO_SW_FIGURE: Sprite = sprite`
   ..oSsssssssssSo..
   ..ooosssooSssSSo.
   ..osE$$sEsossSSo.
-  ..oxE$$sExosSSo..
-  ..oxe$$$exoSSo...
+  ..osE$$sExosSSo..
+  ..ose$$$exoSSo...
   ..os$$$sssSSo....
   ...os$$sssSo.....
-  ...osooooooso....
-  ...ossssssssso...
-  ..osssSSsSSssso..
+  ....oooooooso....
+  ....osssssssso...
+  ...ossSSsSSssso..
   ...os$$SsS$$sso..
   ..osS$$sss$$SsSo.
   ..oso$$s$$$Sosso.
   ..oso$$s$$$Sosso.
-  .o$soSSsSSsSoSs$o
-  .o$sosssssssoSs$o
-  .o$so$$$$ssSoos$o
-  .o$so$$$sssSoos$o
+  ..osoSSsSSsSoSs$o
+  ..ososssssssoSs$o
+  ..oso$$$$ssSoos$o
+  ..oso$$$sssSoos$o
   .osso$$$$ssSossso
   .ossos$$$ssSososo
-  .osoosssssssoooso
-  .osoosSSsSSsoosso
+  .ossosssssssoooso
+  .osSosSSsSSsoosso
   ..ooossooossoooo.
   ...oSsso.ossSo...
   ...o$sSo.oSs$o...
   ...o$$So.oS$$o...
   ...o$sSo.oSs$o...
   ..osssso.osssso..
-  ..osssso.osssso..
-  ..oooSso.osSooo..
-  .o$$$sso.o$$sSSo.
-  .ossssso.ossssso.
-  .ooooooo.ooooooo.
+  ..oooSso.osssso..
+  .o$$$sso.osSooo..
+  .ossssso.o$$sSSo.
+  .ooooooo.ossssso.
+  .........ooooooo.
 `;
 
 export const HERO_NW_FIGURE: Sprite = sprite`
@@ -70,29 +71,29 @@ export const HERO_NW_FIGURE: Sprite = sprite`
   ....osssssSo.....
   .....ossSSo......
   ....oooSSSooo....
-  ...osssSsSssso...
+  ...osssSsSsso....
   ..oss$sssssSso...
   ..oss$$SsSSSso...
   .oSsS$$SsSSSsSo..
   .osso$SsssSSoso..
   .osso$ssssSSoso..
-  o$sSoSsssssSos$o.
-  o$sSoosssssoos$o.
-  o$sooSsssssSos$o.
-  o$SoosssssssoS$o.
-  osSSos$sss$soSso.
-  osoSo$$sSs$$oSso.
-  osoooS$sSs$Sooso.
-  oo$oosSSSSSsoo$o.
+  o$sSoSsssssSoso..
+  o$sSoosssssooso..
+  o$sooSsssssSoso..
+  o$Soosssssssoso..
+  o$SSos$sss$sosso.
+  o$oSo$$sSs$$osso.
+  osoooS$sSs$Sosso.
+  oo$oosSSSSSsosSo.
   .oooossooossooo..
   ...oSsso.ossSo...
   ...o$sSo.oSs$o...
   ...o$$So.oS$$o...
   ...o$$So.oS$$o...
   ...o$sSo.oSs$o...
-  ..oSsSSo.oSSsSo..
-  ..oSsSso.osSsSo..
-  .o$Sssso.osssS$o.
-  .o$sssso.ossss$o.
-  .ooooooo.ooooooo.
+  ..oSsSSo.osSsSo..
+  ..oSsSso.osssS$o.
+  .o$Sssso.ossss$o.
+  .o$sssso.ooooooo.
+  .ooooooo.........
 `;

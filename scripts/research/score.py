@@ -171,8 +171,16 @@ def measure(img, rows=None, base_rows=None):
             g = next((g for g in groups if g['kind'] == kind), None)
             if g is None: g = {'kind': kind, 'hue': None, 'entries': []}; groups.append(g)
         else:
-            g = next((g for g in groups if g['kind'] == 'hue' and min(abs(g['hue'] - hr[i]), 360 - abs(g['hue'] - hr[i])) < 32), None)
-            if g is None: g = {'kind': 'hue', 'hue': float(hr[i]), 'entries': []}; groups.append(g)
+            # nearest hue family by its pixel-weighted mean hue (the seed tone alone made skin and wood merge or
+            # not depending on which tone happened to be counted first)
+            def dist(g): return min(abs(g['hue'] - hr[i]), 360 - abs(g['hue'] - hr[i]))
+            cands = [g for g in groups if g['kind'] == 'hue' and dist(g) < 32]
+            g = min(cands, key=dist) if cands else None
+            if g is None: g = {'kind': 'hue', 'hue': float(hr[i]), 'entries': [], 'w': 0.0}; groups.append(g)
+            else:
+                w = g['w']; c = float(cnt[i]); d = ((hr[i] - g['hue'] + 180) % 360) - 180
+                g['hue'] = float((g['hue'] + d * c / (w + c)) % 360)
+            g['w'] = g.get('w', 0.0) + float(cnt[i])
         g['entries'].append(int(i))
     fams = {}
     for gi, g in enumerate(groups):
@@ -229,6 +237,29 @@ def measure(img, rows=None, base_rows=None):
                 info['light'] = [round(float(hx - sx), 1), round(float(hy - sy), 1)]
             return info
         m['skin'] = part('skin')
+        # materials, exact from the cells: material families present on >= 2 % of the cells, merged when their
+        # mean colours are not visibly distinct (hue within 32 degrees and lightness within 0.2; greys merge
+        # with greys by lightness only). Eyes, whites and lines are drawing, not materials. The image-based
+        # count above stays for the reference; on ours it swung with which tone happened to be counted first
+        # and with a 14-px iris family.
+        ALL = dict(SH); ALL.update({'metal': 'mMwnN', 'wood': 'dD%tT', 'accent': 'aA*rR'})
+        clusters = []
+        for mat, gl in sorted(ALL.items(), key=lambda kv: -sum(r.count(c) for r in rows for c in kv[1])):
+            cells = [(x, y) for y, r in enumerate(rows) for x, c in enumerate(r) if c in gl]
+            if len(cells) < max(8, 0.02 * n): continue
+            px = np.array([rgb[y - y0, x - x0] for x, y in cells], dtype=np.float64)
+            Lm, Cm, hm = lch(rgb_to_oklab(px.mean(axis=0)[None, :]))
+            Lm, Cm, hm = float(Lm[0]), float(Cm[0]), float(hm[0])
+            grey = Cm < 0.012
+            def near(c):
+                if c['grey'] != grey: return False
+                if grey: return abs(c['L'] - Lm) < 0.2
+                return min(abs(c['h'] - hm), 360 - abs(c['h'] - hm)) < 32 and abs(c['L'] - Lm) < 0.2
+            c = next((c for c in clusters if near(c)), None)
+            if c is None: clusters.append({'grey': grey, 'L': Lm, 'h': hm, 'mats': [mat]})
+            else: c['mats'].append(mat)
+        m['materials'] = len(clusters)
+        m['materialSets'] = [c['mats'] for c in clusters]
         # largest same-shade 4-connected region per material, as a share of that material's cells
         def flat_of(mat):
             cells = {(x, y): c for y, r in enumerate(rows) for x, c in enumerate(r) if c in SH[mat]}
@@ -317,6 +348,9 @@ def judge(m, ref):
         if p['tones'] < 3: flags.append(f'{part} tones {p["tones"]}<3')
         for k, (lo, hi) in TONE_RANGE[part].items():
             v = p.get(k)
+            # the reference is a front view whose skin highlights are the face; a back view has no face, so
+            # its skin highlights (the lit arm's upper rows, a fist) are expected at half that share
+            if part == 'skin' and k == 'hl' and m.get('view') in ('N', 'NW'): lo = lo / 2
             if v is not None and not (lo <= v <= hi): flags.append(f'{part} {k} {v}% not in {lo}-{hi}')
         if p.get('hl') is not None and p['hl'] + p['sh'] < MIN_VARIATION[part]: flags.append(f'{part} flat: hl+sh {round(p["hl"] + p["sh"], 1)}% < {MIN_VARIATION[part]}')
         # the light vector (centroid of highlights minus centroid of shadows) is reported, not gated: on a whole

@@ -19,7 +19,7 @@ const standForm = (id: string, label: string, figure: Sprite): FormSpec => ({
   headMap: (x, y) => [x, y],
 });
 
-/** Three-quarter front: as S, with the far (left) shoulder and arm one column narrower. */
+/** Three-quarter front: as S, with the far (left) shoulder two columns in, the far arm one column, the far foot one row back. */
 export const STAND_SW: ZombiePose = {
   ...POSE_STAND,
   id: 'stand_sw',
@@ -29,6 +29,12 @@ export const STAND_SW: ZombiePose = {
     [13, 15, 15, 18],
   ],
   sleeveL: { short: [1, 18, 4, 22], long: [1, 18, 4, 24], torn: [1, 18, 4, 20] },
+  // The far (left) foot sits one row higher: further back.
+  shoeL: [1, 35, 7, 38],
+  flats: [
+    [1, 36, 7, 38],
+    [9, 37, 15, 39],
+  ],
 };
 
 /**
@@ -110,7 +116,7 @@ export const STAND_N: ZombiePose = {
   ...(POSE_STAND.dress ? { dress: POSE_STAND.dress } : {}),
 };
 
-/** Three-quarter back: as N, with the far (right) shoulder and arm one column narrower. */
+/** Three-quarter back: as N, with the far (right) shoulder two columns in, the far arm one column, the far foot one row back. */
 export const STAND_NW: ZombiePose = {
   ...STAND_N,
   id: 'stand_nw',
@@ -121,6 +127,12 @@ export const STAND_NW: ZombiePose = {
   ],
   sleeveR: { short: [12, 18, 15, 22], long: [12, 18, 15, 24] },
   pants: [[0, 29, 15, 34]],
+  // The far (right) foot sits one row higher: further back.
+  shoeR: [9, 35, 15, 38],
+  flats: [
+    [1, 37, 7, 39],
+    [9, 36, 15, 38],
+  ],
 };
 
 /**

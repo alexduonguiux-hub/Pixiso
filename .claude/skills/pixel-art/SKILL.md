@@ -107,13 +107,13 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 
 Vẽ tay S, SW, W, NW, N; SE/E/NE lật thường (D-042, chấp nhận sáng từ phải).
 
-| Góc | Cách dựng                             | Chú ý                                                                                                                                                                                                               |
-| --- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| S   | vẽ tay                                | nguồn của mọi phép suy; sửa S là sửa cả N và SW suy ra                                                                                                                                                              |
-| SW  | thân 3/4 vẽ tay                       | tay xa khuất sau thân chỉ lộ một cột da; vai xa thu vào; sườn gần là cụm bóng 2–3 ô; chân xa hẹp một cột khi không có tay buông dọc; bàn chân xa ngắn một ô, bàn chân gần quay về người xem; đầu đặt đúng chỗ của S |
-| W   | vẽ tay                                | nét đặc trưng (tay vuốt, tay vươn) đặt phía gần; ngực/bụng nhô ra **trước** tay, tay buông giữa sườn; tay ngang 2 ô là chấp nhận                                                                                    |
-| NW  | mặt sau của SW (`back_regions`)       | giữ bản vẽ tay khi lưng có khối riêng (bướu)                                                                                                                                                                        |
-| N   | S lật, san bóng ngực, đầu N hàng 0–14 | đầu N phải gồm hàng cổ, nếu không hở một hàng dưới cằm                                                                                                                                                              |
+| Góc | Cách dựng                             | Chú ý                                                                                                                                                                                                                                     |
+| --- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S   | vẽ tay                                | nguồn của mọi phép suy; sửa S là sửa cả N và SW suy ra                                                                                                                                                                                    |
+| SW  | thân 3/4 vẽ tay                       | phía xa = mép trái màn hình (NW: mép phải): vai xa thu 2 cột, tay xa một cột khuất sau thân với nắm tay 2 cột, bàn chân xa cao hơn một hàng, mắt xa 1 ô mống cách viền 1 ô da; sườn gần là cụm bóng 2–3 ô; đầu đặt đúng chỗ của S (D-072) |
+| W   | vẽ tay                                | nét đặc trưng (tay vuốt, tay vươn) đặt phía gần; ngực/bụng nhô ra **trước** tay, tay buông giữa sườn; tay ngang 2 ô là chấp nhận                                                                                                          |
+| NW  | mặt sau của SW (`back_regions`)       | giữ bản vẽ tay khi lưng có khối riêng (bướu)                                                                                                                                                                                              |
+| N   | S lật, san bóng ngực, đầu N hàng 0–14 | đầu N phải gồm hàng cổ, nếu không hở một hàng dưới cằm                                                                                                                                                                                    |
 
 Dáng lật (`_m`) dùng chung W/SW/NW của dáng gốc và có N riêng.
 
@@ -196,3 +196,4 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
   | Món nới rộng thân (tay áo khoác) vẽ bằng overlay tĩnh | dải `oC` ngoài viền tay thành viền đôi, rời khỏi tay ở góc khác, chạy xuống bàn tay | nới bằng luật trên hình thật (`Garment.letOut`): dời viền từng hàng, đóng viền chỗ trống, bỏ qua hàng tạo bậc 1-2-1 hay khối viền 2×2 (D-070) |
   | Đặc điểm nhô ra (tai to) "mất" ở góc W (giám khảo vòng 2, B9) | vẽ nó trong silhouette sọ bằng cùng chất liệu, chỉ còn viền | cho nó nhô khỏi silhouette (lên trên/ra sau, canvas tự nới) với lòng tối hơn vành; rồi kéo các góc khác lên cùng chiều cao (thước nhất quán, D-071) |
   | Một dáng, hai tư thế theo góc (ngồi xổm S / bò W) | thân W vẽ theo ý khác với S | cùng một tư thế ở mọi góc; thân W = thân W đứng + đúng thay đổi của dáng S (đầu hạ n hàng, tay đặt phía gần) (D-071) |
+  | Góc 45° là góc S dịch mặt (giám khảo vòng 2, B1) | rộng S/SW bằng nhau, hai mắt bằng nhau, hai bàn chân trùng | thân SW/NW hẹp hơn S ≥ 2 ô: vai xa −2, tay xa 1 cột, chân xa +1 hàng, mắt xa 1 ô; thân suy ra (mập) kiểm tra lại vì bậc 2 cột thành ô hở (D-072) |
