@@ -49,6 +49,12 @@ import {
   HELMET_W,
   MEDIC_BAG_N,
   MEDIC_BAG_W,
+  RIFLE_SLUNG_N,
+  RIFLE_SLUNG_W,
+  RIFLE_STAND_N,
+  RIFLE_STAND_W,
+  SATCHEL_N,
+  SATCHEL_W,
   MIMIC_FACE_VIEWS,
   PEAKED_CAP_N,
   PEAKED_CAP_W,
@@ -376,6 +382,106 @@ const RANGER_HAT_V: ViewItem = {
   N: RANGER_S,
   NW: RANGER_S,
   W: RANGER_HAT_W,
+};
+
+/** A rifle held at ease in the right hand: muzzle up beside the head, butt on the ground; the hand closes on the stock. */
+const RIFLE_STAND: Overlay[] = [
+  ov(18, 9, [
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.o..',
+    '.oo.',
+    'oMmo',
+    'oMmo',
+    'oDdo',
+    'oDdo',
+    'oDdo',
+    'oD%o',
+    'oDdo',
+    'oDdo',
+    'oDdo',
+    'oDdo',
+    'oD%o',
+    'oDdo',
+    'oDdo',
+    'oDdo',
+    'oDDo',
+    'oDDo',
+    'oDDo',
+    'oDDo',
+    'oDDo',
+    '.oo.',
+  ]),
+  ov(17, 24, ['o', 's', 's', 'o']),
+];
+const RIFLE_STAND_V: ViewItem = {
+  S: { overlays: RIFLE_STAND },
+  SW: { overlays: RIFLE_STAND },
+  W: RIFLE_STAND_W,
+  N: RIFLE_STAND_N,
+  NW: RIFLE_STAND_N,
+};
+/** A rifle slung across the back: barrel up behind the left shoulder, stock below the right hip, sling over the chest. */
+const RIFLE_SLUNG: Overlay[] = [
+  {
+    ...ov(15, 5, [
+      '..o',
+      '..o',
+      '..o',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+    ]),
+    under: true,
+  },
+  ov(0, 29, ['ooD', 'odD', 'odD', 'odD', 'ooo']),
+  ...(
+    [
+      [12, 17],
+      [11, 18],
+      [11, 19],
+      [10, 20],
+      [10, 21],
+      [9, 22],
+      [9, 23],
+      [8, 24],
+      [8, 25],
+      [7, 26],
+      [7, 27],
+    ] as const
+  ).map(([x, y]) => ov(x, y, ['L'])),
+];
+const RIFLE_SLUNG_V: ViewItem = {
+  S: { overlays: RIFLE_SLUNG },
+  SW: { overlays: RIFLE_SLUNG },
+  W: RIFLE_SLUNG_W,
+  N: RIFLE_SLUNG_N,
+  NW: RIFLE_SLUNG_N,
+};
+/** The medic's big satchel: hangs outside the right hip on the chest strap, red with a white cross. */
+const SATCHEL: Overlay[] = [
+  ov(5, 17, ['A.......', '.A......', '..A.....', '...A....', '....A...', '.....A..', '......AA']),
+  ov(14, 23, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo']),
+];
+const SATCHEL_V: ViewItem = {
+  S: { overlays: SATCHEL },
+  SW: { overlays: SATCHEL },
+  W: SATCHEL_W,
+  N: SATCHEL_N,
+  NW: SATCHEL_N,
 };
 
 /** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
@@ -1409,6 +1515,7 @@ const LINH_NON_SAT_LOOK: Look = {
   shoes: 'both',
   details: ['camo', 'belt'],
   face: 'plain',
+  extras: RIFLE_SLUNG_V,
   colors: { skin: [226, 186, 150], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
 };
 export const LINH_NON_SAT = wear('linh_non_sat', 'Lính nón sắt', POSE_STAND, LINH_NON_SAT_LOOK);
@@ -1432,7 +1539,7 @@ const LINH_DAU_DINH_LOOK: Look = {
   bottoms: 'pants',
   shoes: 'both',
   details: ['belt'],
-  extras: [dogTag(POSE_STAND)],
+  extras: [{ S: { overlays: [dogTag(POSE_STAND)] } }, RIFLE_STAND_V],
   face: 'plain',
   colors: {
     skin: [196, 150, 112],
@@ -1470,7 +1577,7 @@ const LINH_QUAN_Y_LOOK: Look = {
   bottoms: 'pants',
   shoes: 'both',
   details: ['belt'],
-  extras: MEDIC_BAG_V,
+  extras: SATCHEL_V,
   face: 'plain',
   colors: {
     skin: [232, 192, 156],

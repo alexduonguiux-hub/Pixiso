@@ -894,3 +894,158 @@ export const COAT_TAILS_W: ViewLayer = {
 export const DRESS_STAINS_W: ViewLayer = {
   overlays: [ov(5, 30, ['...D.', '.....', 'D....', '.....', '....D'])],
 };
+
+export const RIFLE_STAND_W: ViewLayer = {
+  overlays: [
+    ov(12, 9, [
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '.o.',
+      '...',
+      '...',
+      '...',
+      '...',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      'Do.',
+      'Do.',
+      'Do.',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.Do',
+      '.oo',
+    ]),
+  ],
+};
+
+export const RIFLE_STAND_N: ViewLayer = {
+  overlays: [
+    ov(-5, 9, [
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '..o.',
+      '.oo.',
+      'omMo',
+      'omMo',
+      'odDo',
+      'odDo',
+      'odDo',
+      'o%Do',
+      'odDo',
+      'odDo',
+      'odDo',
+      'odDo',
+      'o%Do',
+      'odDo',
+      'odDo',
+      'odDo',
+      'oDDo',
+      'oDDo',
+      'oDDo',
+      'oDDo',
+      'oDDo',
+      '.oo.',
+    ]),
+  ],
+};
+
+export const RIFLE_SLUNG_W: ViewLayer = {
+  overlays: [
+    ov(13, 9, [
+      'o...',
+      'o...',
+      'o...',
+      'o...',
+      'o...',
+      '....',
+      '....',
+      '....',
+      '....',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.o..',
+      '.ooo',
+      '.oDo',
+      '.oDo',
+      '.ooo',
+    ]),
+  ],
+};
+
+export const RIFLE_SLUNG_N: ViewLayer = {
+  overlays: [
+    ov(-1, 5, [
+      'o.................',
+      '.o................',
+      '.o................',
+      '..o...............',
+      '...o..............',
+      '...o..............',
+      '....o.............',
+      '.....o............',
+      '.....o............',
+      '......o...........',
+      '.......o..........',
+      '.......o..........',
+      '........oo........',
+      '.........oo.......',
+      '..........oo......',
+      '..........o.......',
+      '...........o......',
+      '............o.....',
+      '............o.....',
+      '.............o....',
+      '..............o...',
+      '..............o...',
+      '...............ooo',
+      '...............oDo',
+      '...............oDo',
+      '...............oDo',
+      '...............ooo',
+    ]),
+    ov(11, 16, ['LL', '.L']),
+  ],
+};
+
+export const SATCHEL_W: ViewLayer = {
+  overlays: [
+    ov(13, 21, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo']),
+  ],
+};
+
+export const SATCHEL_N: ViewLayer = {
+  overlays: [
+    ov(5, 17, ['......A', '.....A.', '....A..', '...A...', '..A....', '.A.....', 'AA.....']),
+    ov(-2, 23, ['ooooo', 'oA*ao', 'oAaao', 'orrro', 'oAxao', 'oxxxo', 'oAxao', 'oAAAo', 'ooooo']),
+  ],
+};

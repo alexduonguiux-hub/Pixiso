@@ -111,10 +111,16 @@ BODY = {
               O(0,23, ['ooooo','o*x*o','oxxxo','oAxAo','oAAAo','ooooo'], head=False)],
  'COAT_W':   [O(3,29, ['o^cccccCo.','o^cccccCo.','o^cccccCo.','.oooooooo.'], head=False)],
  'STAINS_W': [O(5,30, ['...D.','.....','D....','.....','....D'], head=False)],
+ 'RIFLE_STAND_W': [O(12,9, ['.o.', '.o.', '.o.', '.o.', '.o.', '...', '...', '...', '...', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', 'Do.', 'Do.', 'Do.', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.oo'], head=False, under=True)],
+ 'RIFLE_STAND_N': [O(-5,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
+ 'RIFLE_SLUNG_W': [O(13,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
+ 'RIFLE_SLUNG_N': [O(-1,5, ['o.................', '.o................', '.o................', '..o...............', '...o..............', '...o..............', '....o.............', '.....o............', '.....o............', '......o...........', '.......o..........', '.......o..........', '........oo........', '.........oo.......', '..........oo......', '..........o.......', '...........o......', '............o.....', '............o.....', '.............o....', '..............o...', '..............o...', '...............ooo', '...............oDo', '...............oDo', '...............oDo', '...............ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
+ 'SATCHEL_W':  [O(13,21, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo'], head=False)],
+ 'SATCHEL_N':  [O(5,17, ['......A','.....A.','....A..','...A...','..A....','.A.....','AA.....'], head=False), O(-2,23, ['ooooo', 'oA*ao', 'oAaao', 'orrro', 'oAxao', 'oxxxo', 'oAxao', 'oAAAo', 'ooooo'], head=False)],
 }
 
 # ---------------------------------------------------------------- validation
-def compose(view, layers, pad=3, top=3):
+def compose(view, layers, pad=5, top=3):
     fig = FIG[view]; W = len(fig[0]); H = len(fig)
     g = [['.']*(W+2*pad) for _ in range(H+top+pad)]
     for y,r in enumerate(fig):
@@ -221,5 +227,7 @@ out.append("export const MEDIC_BAG_W: ViewLayer = "+ts_layers(BODY['BAG_W'])+";\
 out.append("export const MEDIC_BAG_N: ViewLayer = "+ts_layers(BODY['BAG_N'])+";\n")
 out.append("export const COAT_TAILS_W: ViewLayer = "+ts_layers(BODY['COAT_W'])+";\n")
 out.append("export const DRESS_STAINS_W: ViewLayer = "+ts_layers(BODY['STAINS_W'])+";\n")
+for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N'):
+    out.append("export const "+name+": ViewLayer = "+ts_layers(BODY[name])+";\n")
 open(OUT,'w').write('\n'.join(out))
 print('wrote', OUT)
