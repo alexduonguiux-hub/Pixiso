@@ -265,4 +265,5 @@ Xử lý sau biên bản: **B2 xong** (D-078: cặp chói vai, không ô sâu/s�
 trên da/điểm nhấn, ô viền lẻ màu, thẻ bài, vết loét; đạt 83/130, ô lẻ 335 → 310, `strict` 2748 → 1691); **B3
 xong** (D-079: dây túi Ny/quân y, gậy Sơn và nòng súng ở góc sau, dải phản quang cùng hàng; ô lẻ 302, lệch góc
 nhìn 0); **B4 xong** (D-080: mắt Kẻ Bắt Chước và Đột Biến theo mô-đun chung; ô lẻ 303); **B5 xong** (D-081: miệng 2 ô cho
-mọi mặt thường, mày đầu đinh nâu; ô lẻ 302).
+mọi mặt thường, mày đầu đinh nâu; ô lẻ 302); **B6 xong** (D-082: áo trắng hạ gốc, quần chân rộng, mai; đạt 85/130,
+ô lẻ 299; cảnh sát/công nhân giữ nguyên vì đã qua ngưỡng).

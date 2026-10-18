@@ -78,6 +78,8 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
   ba mảng chéo sáng/gốc/tối theo trường sáng trên–trái, đường lọn sẫm 4-liên thông toả từ ngôi lệch,
   vùng vượt ngưỡng phẳng bị cắt, không bậc thang (D-074). Không tô tay tông tóc; râu vẽ tay thì giữ.
 - **Vật liệu xám** (kim loại, đá): bước tông nhỏ, không dịch hue.
+- **Vải trắng** đặt gốc ở L\* ≤ 85 (ví dụ (212,210,204)): gốc sát trần gam thì ô sáng bị kẹp còn +8 L\* và áo
+  thành mảng phẳng (D-082). Chân rộng ≥ 5 ô: khối sáng đùi tỉ lệ theo bề rộng, bóng 2 ô khi chân dài.
 - **Áo quần không thừa hưởng bóng của da.** Sau remap, `tailor64.ts` tô lại món theo hộp của nó:
   vải chủ yếu tông gốc và tối (áo mẫu 10 % sáng / 40 % tối), khối bóng có ranh bậc thang, sáng
   chỉ ở vai–ngực trái, nếp gấp ngắn, khuy/túi chỉ ở góc thấy mặt trước, tay xa tối toàn bộ. Khi

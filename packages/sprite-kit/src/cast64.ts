@@ -784,7 +784,7 @@ const BAC_SI_LAN_LOOK: Look = {
   colors: {
     skin: [240, 206, 176],
     hair: [118, 42, 40],
-    cloth: [228, 226, 220],
+    cloth: [212, 210, 204], // light grey-white: a true white clips the light step to +8 L (fourth review)
     pants: [62, 80, 112],
     boots: [42, 44, 50],
     eye: [25, 123, 186],
@@ -1295,7 +1295,7 @@ export const ZOMBIE_OFFICE = wearPosed(
     colors: {
       skin: SKIN_M,
       hair: [62, 57, 57],
-      cloth: [236, 236, 232],
+      cloth: [214, 214, 210], // off-white shirt with room for a light step
       leather: [120, 30, 40],
       pants: [50, 50, 60],
       boots: [30, 30, 34],
@@ -1372,14 +1372,14 @@ const SHELL_HUMP: Overlay = {
   ...ov(0, 2, [
     '........ooooooo........',
     '......oo|lllll|oo......',
-    '.....o|lllllllll|o.....',
-    '....o|lllllllllll|o....',
-    '...o|lllllllllllllLo...',
+    '.....o||llllllll|o.....',
+    '....o||llllllllll|o....',
+    '...o||llllllllllllLo...',
     '..o|oooooooooooooooLo..',
-    '.o|lllllllllllllllllLo.',
-    'o|lllllllllllllllllllLo',
-    'olllllllllllllllllllLLo',
-    'olllllllllllllllllllLLo',
+    '.o||llllllllllllllllLo.',
+    'o||llllllllllllllllllLo',
+    'o|llllllllllllllllllLLo',
+    'o|llllllllllllllllllLLo',
     'ooooooooooooooooooooooo',
     'olllllllllllllllllllLLo',
     'olllllllllllllllllllLLo',
@@ -1738,8 +1738,8 @@ const KE_BAT_CHUOC_LOOK: Look = {
   colors: {
     skin: [184, 184, 164],
     hair: [58, 52, 54],
-    cloth: [226, 216, 196],
-    cloth2: [226, 216, 196],
+    cloth: [214, 203, 182], // dirty off-white with room for a light step
+    cloth2: [214, 203, 182],
     eye: [214, 70, 40],
     white: [236, 232, 222],
     ...BLOOD,

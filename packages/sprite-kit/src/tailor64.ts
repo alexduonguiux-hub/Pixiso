@@ -325,13 +325,20 @@ export function tailor(
       const inner = leftLeg ? hi : lo;
       const legW = hi - lo + 1;
       const short = h <= 6; // shorts: no room for a thigh crease above the knee band
+      // A wide, long leg (a giant's) carries its shadows two cells wide: a one-cell column down a six-cell leg
+      // reads as a stripe hugging the outline (fourth review). Short wide trousers (the bloated build) keep the
+      // base shadows: doubled, they pass 55 % shadow.
+      const wide = legW >= 5 && h >= 8;
       if (leftLeg) {
         if (legW >= 3 && c.x === inner && c.y > y0 && c.y < y1) c.shade = SHADOW;
+        if (wide && c.x === inner - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
         if (c.y === knee && c.x !== outer) c.shade = SHADOW;
         if (!short && c.y === thigh && c.x !== outer && c.x !== inner) c.shade = SHADOW;
       } else {
         if (c.x === outer) c.shade = SHADOW;
-        if (legW >= 3 && c.x === outer - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
+        if (legW >= 3 && c.x === outer - 1 && (wide || c.y > knee) && c.y < y1) c.shade = SHADOW;
+        // the far leg's lit (inner) side is base on a wide leg, not the body's contact column
+        if (wide && c.x === inner && c.y > y0 && c.y < y1) c.shade = MID;
         if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
       }
       if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow (one tone across bands with the row above)
@@ -340,12 +347,21 @@ export function tailor(
       if (g.kneePads && legW >= 3 && c.y === knee && c.x >= lo + 1 && c.x <= lo + 2)
         c.shade = LIGHT;
     }
-    // Light on the top of the near thigh.
-    for (let y = y0 + (h >= 8 ? 1 : 0); y <= y0 + (h >= 8 ? 2 : 1); y++) {
+    // Light on the top of the near thigh: a block in proportion to the leg (two by two on the base legs, three
+    // wide and up to four deep on a giant's), and on a wide far leg a small block on its lit inner side.
+    const top = y0 + (h >= 8 ? 1 : 0);
+    const depth = Math.min(4, Math.max(2, Math.round(h / 3)));
+    for (let y = top; y < top + depth; y++) {
       const lx = legMin.get(`L${y}`);
-      if (lx !== undefined) {
-        set(lx, y, LIGHT);
-        set(lx + 1, y, LIGHT);
+      const rx = legMax.get(`L${y}`);
+      if (lx === undefined || rx === undefined) continue;
+      const lw = Math.max(2, Math.round((rx - lx + 1) / 2));
+      for (let i = 0; i < lw; i++) set(lx + i, y, LIGHT);
+      const rlo = legMin.get(`R${y}`);
+      const rhi = legMax.get(`R${y}`);
+      if (rlo !== undefined && rhi !== undefined && rhi - rlo + 1 >= 5 && y < top + 2) {
+        set(rlo + 1, y, LIGHT);
+        set(rlo + 2, y, LIGHT);
       }
     }
   } else if (g.kind === 'boots') {

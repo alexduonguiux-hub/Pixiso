@@ -554,3 +554,27 @@ da, mày tiếp giáp da ba phía → nâu cả cặp; W giữ nguyên (cả hai
 khối tóc W làm mảng tóc phẳng 19 % và rớt một sprite).
 
 **Số đo.** Đạt 83/130 giữ nguyên; ô lẻ 303 → 302; `strict` 1686; QA sạch; lint 82; 113 test.
+
+### D-082 Bậc sáng trên áo trắng và quần chân rộng (B6 của giám khảo vòng 4)
+
+**Áo gần trắng không có bậc sáng**: ramp vải cộng +0,16 L cho ô sáng, nhưng gốc L ≈ 0,93 bị kẹp ở trần
+gam nên áo Lan chỉ sáng +8 L\*, áo zombie văn phòng +4, váy Kẻ Bắt Chước +11. Không đổi ramp (các áo khác
+đúng); hạ tông gốc của ba món theo đơn: Lan (228,226,220) → (212,210,204), văn phòng (236,236,232) →
+(214,214,210), Kẻ Bắt Chước (226,216,196) → (214,203,182) cho cả `cloth` và `cloth2`. Quy tắc rút ra:
+**vải "trắng" đặt ở L\* ≤ 85** để còn chỗ cho bậc sáng; Kẻ Bắt Chước nhờ vậy cũng đủ 3 vật liệu theo thước.
+
+**Quần chân rộng** (`tailor64` pants): khối sáng đùi gần tỉ lệ theo chân — rộng `max(2, round(legW/2))`,
+sâu `min(4, max(2, round(h/3)))` (chân gốc vẫn 2×2; Đột Biến 3×4; Kẻ Phun 3×2); chân xa rộng ≥ 5 ô có khối
+sáng 2×2 ở mé trong (phía sáng). Chân rộng **và dài** (legW ≥ 5, h ≥ 8 — khổng lồ) có bóng 2 ô: cột tiếp xúc
+mé trong chân gần rộng 2 dưới gối, mép ngoài chân xa rộng 2 suốt ống, cột tiếp xúc mé trong chân xa (phía
+sáng) về gốc. Thử áp bóng 2 ô cho cả quần ngắn chân rộng (Kẻ Phun, h = 7) → bóng vải 55,6–58,3 % ở 4 góc,
+rớt 4 sprite → giới hạn h ≥ 8.
+
+**Mai Kẻ Mang Vỏ**: dải sáng mép trên–trái của khối mai (`SHELL_HUMP`) rộng 2 ô ở các hàng 2–7, 1 ô ở
+hàng 8–9 (sáng mai 6,5 → 10,9 %).
+
+**Không làm** hai mục còn lại của B6: zombie cảnh sát (sáng 7 → 11 %) và công nhân (27 → 19 %) đều qua
+ngưỡng 5–45 %; đơn thuốc sửa từng ô đầu nếp của luật chung không áp được cho một nhân vật.
+
+**Số đo.** Đạt 83 → 85/130 (được Đột Biến @SW/@W: sáng quần 2,6 → 10,5 %); ô lẻ 302 → 299; `strict`
+1686; QA sạch; lint 82; 113 test.
