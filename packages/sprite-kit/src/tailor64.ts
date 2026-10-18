@@ -252,9 +252,10 @@ export function tailor(
         if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
       }
       if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow
+      if (c.y === y0 && h >= 8) c.shade = DEEP; // waistband under the hem seam (long trousers only)
     }
     // Light on the top of the near thigh.
-    for (let y = y0; y <= y0 + 1; y++) {
+    for (let y = y0 + (h >= 8 ? 1 : 0); y <= y0 + (h >= 8 ? 2 : 1); y++) {
       const lx = legMin.get(`L${y}`);
       if (lx !== undefined) {
         set(lx, y, LIGHT);

@@ -96,7 +96,7 @@ FACE = {
  'SUNKEN_W':   O(3,8, ['.SS','.eS','SSS']),
  'SMILE_W':    O(2,12, ['oooooo','.xxxx.']),
  'HEADBAND_W': O(0,6, ['o*aaaaaaaaAAo','oAaaaaaaaAAAo']),
- 'ZFACE_SW':   O(2,9, ['...S.S...','...S.S...','.$.....$.','.SoxxxoS.','...ooo...']),
+ 'ZFACE_SW':   O(2,9, ['.$.S.S.$.','...S.S...','.........','.SoxxxoS.','...ooo...']),
  'ZFACE_W':    O(2,12, ['xxxo','.ooo']),
  'ZCHEEK_SW':  O(10,5, ['d','d']),
  'ZCHEEK_W':   O(9,5, ['d','d']),
@@ -112,12 +112,12 @@ BODY = {
  'COAT_W':   [O(3,29, ['o^cccccCo.','o^cccccCo.','o^cccccCo.','.oooooooo.'], head=False)],
  'STAINS_W': [O(5,30, ['...D.','.....','D....','.....','....D'], head=False)],
  'RIFLE_STAND_W': [O(12,9, ['.o.', '.o.', '.o.', '.o.', '.o.', '...', '...', '...', '...', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', 'Do.', 'Do.', 'Do.', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.oo'], head=False, under=True)],
- 'RIFLE_STAND_N': [O(-5,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
+ 'RIFLE_STAND_N': [O(-4,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
  'RIFLE_SLUNG_W': [O(14,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
- 'RIFLE_SLUNG_N': [O(7,17, ['oo.........', '.oo........', '..oo.......', '..o........', '...o.......', '....o......', '....o......', '.....o.....', '......o....', '......o....', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
+ 'RIFLE_SLUNG_N': [O(7,17, ['oMo........', '.oMo.......', '..oMo......', '..oD.......', '...oD......', '....oD.....', '....oD.....', '.....oD....', '......oD...', '......oD...', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
  'SATCHEL_W':  [O(13,21, ['ooooo', 'oa*Ao', 'oaaAo', 'orrro', 'oaxAo', 'oxxxo', 'oaxAo', 'oAAAo', 'ooooo'], head=False)],
  'BACKPACK_W': [O(13,17, ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo'], head=False), O(10,7, ['....ooo', '....o%o', '...o%o.', '...odo.', '..odo..', '..odo..', '.odo...', '.odo...', 'odo....', 'odo....'], head=False, under=True)],
- 'BACKPACK_N': [O(3,11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|llllmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False), O(-3,6, ['ooo','o%o','o%o','ooo'], head=False, under=True)],
+ 'BACKPACK_N': [O(3,11, ['.ooooooooo.', 'oL|llllllLo', 'oL|lllllLLo', 'oLlllllllLo', 'ooooooooooo'], head=False), O(3,16, ['o||lllllllo', 'o|llllllLLo', 'ollllllllLo', 'oiiiiiiiiio', 'ollllLllllo', 'o|lllLlllLo', 'o|llllmllLo', 'oLLLLLLLLLo', 'ollllLllllo', 'oilllLLlLio', 'ooooooooooo'], head=False)],
  'RANGER_COAT_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccCcvo', 'occcCccCcvo', 'occcCccCcvo', 'ooooooooooo'], head=False)],
  'COAT_TAILS2_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'occcCccCcvo', 'occcCccCcvo', 'ooooooooooo'], head=False), O(1,23, ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo'], head=False)],
  'TUNIC_W': [O(2,29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'ooooooooooo'], head=False), O(13,24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo'], head=False)],
@@ -125,7 +125,7 @@ BODY = {
 }
 
 # ---------------------------------------------------------------- validation
-def compose(view, layers, pad=5, top=3):
+def compose(view, layers, pad=5, top=5):
     fig = FIG[view]; W = len(fig[0]); H = len(fig)
     g = [['.']*(W+2*pad) for _ in range(H+top+pad)]
     for y,r in enumerate(fig):

@@ -806,7 +806,7 @@ export const HEADBAND_VIEWS: Views = {
 };
 
 export const ZOMBIE_FACE_VIEWS: Views = {
-  SW: { overlays: [hov(2, 9, ['...S.S...', '...S.S...', '.$.....$.', '.SoxxxoS.', '...ooo...'])] },
+  SW: { overlays: [hov(2, 9, ['.$.S.S.$.', '...S.S...', '.........', '.SoxxxoS.', '...ooo...'])] },
   W: { overlays: [hov(2, 12, ['xxxo', '.ooo'])] },
 };
 
@@ -935,7 +935,7 @@ export const RIFLE_STAND_W: ViewLayer = {
 
 export const RIFLE_STAND_N: ViewLayer = {
   overlays: [
-    ov(-5, 9, [
+    ov(-4, 9, [
       '..o.',
       '..o.',
       '..o.',
@@ -1005,16 +1005,16 @@ export const RIFLE_SLUNG_W: ViewLayer = {
 export const RIFLE_SLUNG_N: ViewLayer = {
   overlays: [
     ov(7, 17, [
-      'oo.........',
-      '.oo........',
-      '..oo.......',
-      '..o........',
-      '...o.......',
-      '....o......',
-      '....o......',
-      '.....o.....',
-      '......o....',
-      '......o....',
+      'oMo........',
+      '.oMo.......',
+      '..oMo......',
+      '..oD.......',
+      '...oD......',
+      '....oD.....',
+      '....oD.....',
+      '.....oD....',
+      '......oD...',
+      '......oD...',
       '.......oooo',
       '........oDo',
       '........oDo',
@@ -1085,7 +1085,6 @@ export const BACKPACK_N: ViewLayer = {
       'oilllLLlLio',
       'ooooooooooo',
     ]),
-    ov(-3, 6, ['ooo', 'o%o', 'o%o', 'ooo']),
   ],
 };
 

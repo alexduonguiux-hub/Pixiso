@@ -296,7 +296,7 @@ const HELMET: Overlay = {
 };
 
 /** Zombie face: sunken sockets, a gaping mouth with yellowed teeth, bags under the eyes. */
-const ZOMBIE_FACE = hov(4, 9, ['...S.S...', '...S.S...', '.$.....$.', '.SoxxxoS.', '...ooo...']);
+const ZOMBIE_FACE = hov(4, 9, ['.$.S.S.$.', '...S.S...', '.........', '.SoxxxoS.', '...ooo...']); // brow bones catch light
 /** Scalp patches and a scalp wound (blood is the wood material). */
 const ZOMBIE_SCALP = hov(5, 2, ['.SS...d', '..S....']);
 /** A gash on the cheek. */
@@ -388,7 +388,7 @@ const RANGER_HAT_V: ViewItem = {
 
 /** A rifle held at ease in the right hand: muzzle up beside the head, butt on the ground; the hand closes on the stock. */
 const RIFLE_STAND: Overlay[] = [
-  ov(18, 9, [
+  ov(17, 9, [
     '.o..',
     '.o..',
     '.o..',
@@ -421,7 +421,6 @@ const RIFLE_STAND: Overlay[] = [
     'oDDo',
     '.oo.',
   ]),
-  ov(17, 24, ['o', 's', 's', 'o']),
 ];
 const RIFLE_STAND_V: ViewItem = {
   S: { overlays: RIFLE_STAND },
@@ -728,7 +727,7 @@ const ONG_TU_LOOK: Look = {
     cloth: [176, 158, 112],
     pants: [70, 72, 70],
     boots: [72, 52, 36],
-    eye: [60, 50, 40],
+    eye: [150, 80, 40],
     white: [212, 230, 238],
   },
 };
@@ -824,7 +823,7 @@ function push(into: { remaps: Remap[]; lines: Seam[]; overlays: Overlay[] }, l: 
   into.overlays.push(...(l.overlays ?? []));
 }
 
-const ZOMBIE_EYES: MaterialColors = { eye: [180, 50, 40], white: [206, 196, 160] };
+const ZOMBIE_EYES: MaterialColors = { eye: [222, 62, 48], white: [206, 196, 160] };
 /** One army palette for every soldier, infected or not: olive uniform, darker green caps (cloth2), dark boots, dull metal. */
 const ARMY: MaterialColors = {
   cloth: [106, 112, 72],
@@ -1114,6 +1113,7 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
   colors: {
     skin: [146, 150, 148], // neutral grey dead skin, duller than SKIN_M: the torn sleeves bare both forearms
     ...ARMY,
+    eye: [150, 80, 40],
     ...BLOOD,
     ...ZOMBIE_EYES,
   },
@@ -1138,6 +1138,7 @@ export const LINH_NHIEM = wearPosed('linh_nhiem', 'Lính Nhiễm', POSE_DRAG, {
   colors: {
     skin: [184, 186, 156],
     ...ARMY,
+    eye: [150, 80, 40],
     ...BLOOD,
     ...ZOMBIE_EYES,
   },
@@ -1521,7 +1522,7 @@ const HUNG_LOOK: Look = {
     pants: [156, 118, 70],
     boots: [70, 60, 54],
     accent: [72, 170, 96],
-    eye: [60, 50, 40],
+    eye: [150, 80, 40],
     white: [212, 230, 238],
   },
 };
@@ -1671,7 +1672,7 @@ const LINH_NON_SAT_LOOK: Look = {
   details: ['camo', 'belt'],
   face: 'plain',
   extras: RIFLE_SLUNG_V,
-  colors: { skin: [226, 186, 150], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
+  colors: { skin: [226, 186, 150], eye: [150, 80, 40], white: [212, 230, 238], ...ARMY },
 };
 export const LINH_NON_SAT = wear('linh_non_sat', 'Lính nón sắt', POSE_STAND, LINH_NON_SAT_LOOK);
 
@@ -1684,7 +1685,7 @@ const LINH_MU_NOI_LOOK: Look = {
   details: ['belt', 'badge'],
   face: 'plain',
   extras: MAP_CASE_V,
-  colors: { skin: [214, 170, 132], eye: [60, 50, 40], white: [212, 230, 238], ...ARMY },
+  colors: { skin: [214, 170, 132], eye: [150, 80, 40], white: [212, 230, 238], ...ARMY },
 };
 export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, LINH_MU_NOI_LOOK);
 
@@ -1700,7 +1701,7 @@ const LINH_DAU_DINH_LOOK: Look = {
   colors: {
     skin: [196, 150, 112],
     hair: [64, 52, 46],
-    eye: [60, 50, 40],
+    eye: [150, 80, 40],
     white: [212, 230, 238],
     ...ARMY,
   },
@@ -1719,7 +1720,7 @@ const LINH_NU_LOOK: Look = {
   colors: {
     skin: [240, 200, 165],
     hair: [70, 48, 36],
-    eye: [60, 50, 40],
+    eye: [150, 80, 40],
     white: [212, 230, 238],
     ...ARMY,
   },
@@ -1737,7 +1738,7 @@ const LINH_QUAN_Y_LOOK: Look = {
   face: 'plain',
   colors: {
     skin: [232, 192, 156],
-    eye: [60, 50, 40],
+    eye: [150, 80, 40],
     white: [240, 245, 245],
     accent: [200, 40, 50],
     ...ARMY,
