@@ -77,6 +77,9 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - **Tóc:** chỉ vẽ silhouette một tông (`h` + viền); tông do `hair64.ts` (`combHair`) chải khi mặc:
   ba mảng chéo sáng/gốc/tối theo trường sáng trên–trái, đường lọn sẫm 4-liên thông toả từ ngôi lệch,
   vùng vượt ngưỡng phẳng bị cắt, không bậc thang (D-074). Không tô tay tông tóc; râu vẽ tay thì giữ.
+  Tóc sát da đầu (đầu đinh) đánh cờ `crop` trên overlay (`O(..., crop=True)`): chải ba tông thành mảng,
+  không chu kỳ lọn, chia bằng một nét thẳng 2:1 chỉ khi mảng vượt cổng của thước; chỉ áp khi mảng vừa
+  bốn cổng (S/SW), mảng lớn hơn (W, góc sau) vẫn chải lọn (D-085).
 - **Vật liệu xám** (kim loại, đá): bước tông nhỏ, không dịch hue.
 - **Vải trắng** đặt gốc ở L\* ≤ 85 (ví dụ (212,210,204)): gốc sát trần gam thì ô sáng bị kẹp còn +8 L\* và áo
   thành mảng phẳng (D-082). Chân rộng ≥ 5 ô: khối sáng đùi tỉ lệ theo bề rộng, bóng 2 ô khi chân dài.
@@ -199,6 +202,7 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
 | Chấm lẻ hệ thống (giám khảo vòng 3, B4/B8)                                                                                                | chi tiết 1 ô (mụn, khoá, điểm sáng đỉnh sọ, đốt ngón, mắt cá, cà vạt xen kẽ từng hàng); ô viền góc đế giày không chạm vật liệu nào nên lấy màu viền mặc định            | chi tiết nhỏ nhất là 2 ô kề nhau cùng tông; sau khi vẽ chạy `python3 -I scripts/research/lone_pixels.py all`, số ô lẻ không được tăng (357 sau D-073); ô viền lấy màu vật liệu gần nhất trong 2 vòng                                                          |
 | Phụ kiện hiện rồi mất khi xoay (giám khảo vòng 4, B3): dây túi chỉ S/SW, gậy bỏ ở N/NW, nòng súng mất ở góc sau, dải phản quang khác hàng | mỗi góc vẽ riêng tay không đối chiếu với S; chi tiết neo theo ngực (khác nhau giữa mặt trước/sau)                                                                       | cùng một vật phải có ở mọi góc thấy được, lật từ S qua trục thân và cùng kích thước (nóc ba lô 15 ô cả trước lẫn sau); chi tiết trên thân neo theo gấu (`hemY`) để trước/sau/bên cùng hàng; thước nhất quán góc nhìn của `qa:score` phải 0 (D-079)            |
 | Chấm lẻ hệ thống vẫn còn (giám khảo vòng 4, B2)                                                                                           | ô chói vai cố định (x0+1, x0+2) mất một ô vào cổ áo; ô sâu của luật mép xa trên cột bóng 1 ô; ô đường may → sâu da ở góc không có da kề; ô viền lấy màu vật liệu kề 1 ô | luật D-078 (cặp chói, lùi bậc ô đơn trong món, góc đường may trên da/điểm nhấn nở hoặc giữ viền, viền lẻ màu hoà với viền kề); đo thêm `lone_pixels.py all strict` (1691 sau D-078), không được tăng; không nở bóng 1 ô của thân mannequin (đã thử: điểm tụt) |
+| Đầu đinh là hoạ tiết chấm xen kẽ, đuôi tóc lính nữ một tông (giám khảo vòng 4, B8) | bộ chải 5 tông + lọn 4–5 cột + jitter trên mảng 56 ô; đuôi tóc 2 cột `h` | overlay `crop`: ba tông thành mảng, một nét chia thẳng khi vượt cổng; đơn thuốc tô tay ba mảng rớt thước `flat hair` (mảng gốc 31 ô) nên mảng lớn hơn bốn cổng vẫn chải lọn; đuôi tóc tô tay 4 tông (D-085) |
 
 ## 9. Nguồn đã khảo sát (17/10/2026)
 

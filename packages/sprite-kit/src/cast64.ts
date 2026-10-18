@@ -199,9 +199,12 @@ const HAIR_PONYTAIL: Overlay[] = [
     '..ohhhhhhhhhhho..',
     '..ohhhhhhhhhhho..',
     '..oh...hhhhhhho..',
-    '..hhh.......hhh..',
+    '..#hH.......hhH..',
+    '...hH.......Hh...',
   ]),
-  hov(13, 10, ['.ooo', 'ohho', 'ohho', 'ohho', 'ohho', '.oo.']),
+  // The tail is drawn with its tones (too small and too dark-sided for the comb): lit on top, a shadow cell
+  // parting it into two locks, deep on its far lower side.
+  hov(13, 10, ['.ooo', 'o#ho', 'ohHo', 'ohjo', 'ohjo', '.oo.']),
 ];
 
 /** Buzz cut: the skull recoloured to hair, face and ears left alone. */

@@ -7,8 +7,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 FIG = json.load(open(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else os.path.join(ROOT, 'test-output', 'view_figures.json')))
 OUT = os.path.join(ROOT, 'packages', 'sprite-kit', 'src', 'views64.items.ts')
 
-def O(x, y, rows, head=True, rigid=False, under=False):
-    return {'kind': 'overlay', 'x': x, 'y': y, 'rows': rows, 'head': head, 'rigid': rigid, 'under': under}
+def O(x, y, rows, head=True, rigid=False, under=False, crop=False):
+    return {'kind': 'overlay', 'x': x, 'y': y, 'rows': rows, 'head': head, 'rigid': rigid, 'under': under, 'crop': crop}
 def R(box, to, head=True):
     return {'kind': 'remap', 'box': box, 'to': to, 'head': head}
 def L(box, head=True):
@@ -49,7 +49,7 @@ HAIR['WILD'] = {
   'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhho.','.ohhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohohhhhhhhhhoho.','..ooooooooooooo..']),
 }
 HAIR['PONYTAIL'] = {
-  'SW': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oh...hhhhhhho..','............hhh..']), O(13,10, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
+  'SW': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oh...hhhhhhho..','............hhH..','............Hh...']), O(13,10, ['.ooo','o#ho','ohHo','ohjo','ohjo','.oo.'])],
   'N': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..hhhhhhhhhhhhh..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....']), O(7,12, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
   'W': [O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh.....hhho.','.ohh......hho.']), O(10,8, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
   'NW': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..hhhhhhhhhhhho..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhho....','....ohhhhhho.....']), O(7,12, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
@@ -68,7 +68,8 @@ HAIR['LONG'] = {
 }
 
 # The buzz cut: the skull of each view's head (the skin cells inside these head-space boxes) as hair, a
-# silhouette like the drawn hairstyles; hair64.ts combs it when the figure is dressed.
+# silhouette like the drawn hairstyles; hair64.ts combs it when the figure is dressed, as a crop (`crop`: three
+# tones in masses, no strand period; fourth review).
 # The hairline stops a row above the brows on S/SW: a brow cell touching hair takes the hair's line colour and
 # reads as a black dot beside its brown twin (fourth review). W keeps its row (both brow cells touch hair there,
 # and the shorter mass combs into one flat patch).
@@ -82,7 +83,7 @@ def buzz_rows(view):
         inside = lambda x: any(x0 <= x <= x1 and y0 <= y <= y1 for x0, y0, x1, y1 in BUZZ_BOXES[view])
         rows.append(''.join('h' if inside(x) and c in 'sS$zZ' else '.' for x, c in enumerate(r)))
     return rows
-BUZZ = {view: O(0, 0, buzz_rows(view)) for view in ('S', 'SW', 'W', 'N', 'NW')}
+BUZZ = {view: O(0, 0, buzz_rows(view), crop=True) for view in ('S', 'SW', 'W', 'N', 'NW')}
 
 # ---------------------------------------------------------------- hats (W only here; SW/N/NW reuse or flip the S drawings)
 HATS = {
@@ -197,7 +198,7 @@ def ts_layer(l):
     if l['kind']=='overlay':
         rows=', '.join(f"'{r}'" for r in l['rows'])
         fn='hov' if l['head'] else 'ov'
-        extra=(', rigid: true' if l['rigid'] else '')
+        extra=''.join(f', {k}: true' for k in ('rigid', 'crop') if l.get(k))
         s=f"{fn}({l['x']}, {l['y']}, [{rows}])"
         return f"{{ ...{s}{extra} }}" if extra else s
     if l['kind']=='remap':

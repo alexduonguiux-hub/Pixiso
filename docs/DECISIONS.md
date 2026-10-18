@@ -626,3 +626,31 @@ lùi về cột 1 (hàng 15–16) như đầu W gốc; vuốt gần: vạch ngó
 ngón rời thành hai ô viền lẻ, script từ chối ghi).
 
 **Số đo.** Đạt 84/130 giữ nguyên; ô lẻ 288 → 286; `strict` 1646; lint 80; QA sạch; `problems: 0`; 113 test.
+
+### D-085 Tóc lính: đuôi tóc có tông, đầu đinh chải thành mảng (B8 của giám khảo vòng 4)
+
+**Lính nữ.** Hai cụm tóc hai bên mũ mềm dài thêm một hàng (`hhH` / `Hh` ở S và SW), đuôi tóc tô tay bốn
+tông: cột sáng `#` ở đỉnh, `H` giữa, khe sâu `j` hai hàng dưới (mảng tô tay nên `combHair` giữ nguyên).
+Zombie VĐV nữ dùng cùng đuôi.
+
+**Đầu đinh.** Giám khảo kê ba mảng (sáng 3×2 trên–trái, gốc, tối hai hàng dưới–phải, chân tóc liền một
+dải). Thước `flat hair` của `qa:score` không cho một vùng cùng tông vượt 1,3 × 2,1 % ô của hình (16 ô ở S,
+12 ở W), nên mảng gốc 31 ô của đơn thuốc rớt (đã thử tô tay: 84 → 81/130). Giải: overlay tóc có cờ **`crop`**
+(`Overlay.crop`; `O(..., crop=True)` trong `gen_view_items.py`), `dress()` gom ô của nó đưa vào `combHair`,
+và mảng crop được chải theo chế độ riêng trong `hair64.ts`: **ba tông** theo trường sáng (sáng 20 %, gốc,
+tối 25 %), không jitter, không chu kỳ lọn; chỉ khi một mảng vượt ngưỡng mới chia bằng **một nét thẳng 2:1
+xuống–phải**, tối và ngắn nhất đủ dùng (nét được hụt một ô ở đầu hoặc cuối để chỉ chạm mảng tối ở góc chứ
+không nhập vào nó; nét sáng chỉ khi không nét tối nào đủ); ngưỡng chia là đúng cổng hình của thước
+(`FLAT_FIG_SHARE` 0,0273). Chế độ này chỉ áp cho crop **vừa trong bốn mảng** của cổng (`CROP_MASSES`):
+đầu đinh S/SW (56 ô, cổng 16/15). W (73 ô, cổng 12), N/NW (117–121 ô, cổng 15–16) và zombie văn phòng
+(cổng 13) cần từ năm mảng trở lên nên giữ bộ chải lọn — giám khảo đã chấm đạt góc sau và không nêu góc W;
+thử chải crop ở đó cho 6–8 nét chồng chéo, xấu hơn lọn. Kết quả S/SW: `###hh / ###hhhhhh / ##hHHhhhh /
+##hhhHhhHHH / #hhhhhHHHHH / hhhhhHHHHHH` — mảng sáng, mảng gốc có một nét, mảng tối ôm chân tóc.
+
+**Thử và bỏ.** Nét chia theo lọn của bộ chải thường (chéo xuống–trái, có ô góc bậc): cắt mảng gốc thành lát
+1–4 ô, hai nét sát nhau. Nét tối chạm thẳng mảng tối: nhập vào nó, vượt cổng. Bốn tông (thêm sâu): góc sâu
+L 0,17 sát viền L 0,12 đọc thành viền dày.
+
+**Số đo.** Đạt 84/130, không sprite nào đổi trạng thái so với HEAD, đầu đinh đạt cả năm góc; ô lẻ 287 /
+`strict` 1663 — đúng bằng HEAD đo lại trong cùng phiên (D-084 ghi 286 / 1646 là số đo trước lần sửa cuối của
+B7); lint 80; QA sạch; `problems: 0`; 113 test.

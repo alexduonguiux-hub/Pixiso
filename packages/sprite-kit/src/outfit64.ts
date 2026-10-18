@@ -48,6 +48,8 @@ export interface Overlay {
   rigid?: boolean;
   /** Stamped only where the figure is still transparent (a shell behind the body). */
   under?: boolean;
+  /** Hair clipped to the skull (a buzz cut): combed as a crop, three tones in masses, no locks. */
+  crop?: boolean;
 }
 
 export interface Seam {
@@ -174,6 +176,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
   // thin. Decided after the overlays, which may cover the lines that would have formed the block.
   const seamCells = new Map<number, number>();
   const overlayCorners = new Set<number>();
+  const cropCells = new Set<number>();
   for (const seam of outfit.lines ?? []) {
     const map = mapper(seam.space);
     const [x0, y0, x1, y1] = seam.box;
@@ -199,6 +202,8 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         const [fx, fy] = map(o.x + x, o.y + y);
         if (o.under && get(fx, fy) !== EMPTY) continue;
         put(fx, fy, v);
+        if (o.crop && Math.floor(v / 8) === HAIR_MATERIAL) cropCells.add(fy * out.w + fx);
+        else cropCells.delete(fy * out.w + fx);
         // An overlay's outline cell resting on the body's outline (hair on the shoulders, a bag on the
         // hem) is judged like a seam below: remember the overlay's own material next to it.
         if (v === LINE && !seamCells.has(fy * out.w + fx)) {
@@ -266,7 +271,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
     if (into) put(x + into[0], y + into[1], v);
     else out.cells[i] = LINE;
   }
-  combHair(out, outfit.view ?? 'S');
+  combHair(out, outfit.view ?? 'S', cropCells);
   fixLoneCells(out);
   return out;
 }

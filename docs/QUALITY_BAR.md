@@ -267,4 +267,4 @@ xong** (D-079: dây túi Ny/quân y, gậy Sơn và nòng súng ở góc sau, d�
 nhìn 0); **B4 xong** (D-080: mắt Kẻ Bắt Chước và Đột Biến theo mô-đun chung; ô lẻ 303); **B5 xong** (D-081: miệng 2 ô cho
 mọi mặt thường, mày đầu đinh nâu; ô lẻ 302); **B6 xong** (D-082: áo trắng hạ gốc, quần chân rộng, mai; đạt 85/130,
 ô lẻ 299; cảnh sát/công nhân giữ nguyên vì đã qua ngưỡng); **B1 xong** (D-083: lõi thân SW/NW 6 ô, vai 13; đạt
-84/130, lint 80); **B7 xong** (D-084: đầu W cho dáng ngoẹo cổ, mũi và vạch ngón Đột Biến W; ô lẻ 286).
+84/130, lint 80); **B7 xong** (D-084: đầu W cho dáng ngoẹo cổ, mũi và vạch ngón Đột Biến W; ô lẻ 286); **B8 xong** (D-085: đuôi tóc lính nữ có tông; đầu đinh S/SW chải theo chế độ crop — ba tông thành mảng, một nét chia thẳng, ngưỡng đúng cổng của thước; W/N/NW giữ lọn vì cần ≥ 5 mảng; ô lẻ 287 / strict 1663 bằng HEAD đo lại).

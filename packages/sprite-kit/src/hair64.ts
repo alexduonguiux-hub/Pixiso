@@ -21,6 +21,12 @@
  * stroke of an adjacent tone along a lock through its middle or, as a last
  * resort, across its middle row, until every region fits.
  *
+ * A crop (hair clipped to the skull: the buzz cut, marked by its overlay) has
+ * no locks to part: it is three tones in masses (light 20 %, base, shadow 25 %
+ * of the field), no jitter and no strand period; only the flat limit parts a
+ * mass, by one stroke along a lock line, and the limit is the scorer's own
+ * figure gate so each mass is as large as the measure allows (fourth review).
+ *
  * A mass drawn with more than one tone (the beard) is left as drawn.
  */
 import { MATERIALS, type Sprite } from './format.js';
@@ -34,12 +40,21 @@ const SHADE_OF = [4, 2, 1, 0, 3] as const;
 const WIDTHS = [4, 4, 5];
 const SWEEP = 0.5;
 const QUANTILES = [0.1, 0.35, 0.68, 0.92];
+const TONES = [0, 1, 2, 3, 4];
+const CROP_QUANTILES = [0.2, 0.75];
+const CROP_TONES = [1, 2, 3];
+/** Parting strokes of a crop all run one way: 2:1 down and to the right. */
+const CROP_DIRS = [1];
+/** A crop is combed as masses only when it fits in this many regions of the gate; larger ones keep the locks. */
+const CROP_MASSES = 4;
 const JITTER = 0.07;
 /** The parting sits this share of the half-width left of the crown centre. */
 const PART = 0.15;
 /** The scorer's flat gate for hair is 13.8 % of the hair and 16 cells; stay a step inside both. */
 const FLAT_SHARE = 0.12;
 const FLAT_CELLS = 13;
+/** The scorer fails a hair region only when it is also above 1.3 x 2.1 % of the figure's cells. */
+const FLAT_FIG_SHARE = 0.0273;
 const MIN_MASS = 6;
 const N4 = [
   [1, 0],
@@ -48,8 +63,11 @@ const N4 = [
   [0, -1],
 ] as const;
 
-/** Tones every hair mass of the dressed sprite, in place. */
-export function combHair(s: Sprite, view: HeroView): void {
+/**
+ * Tones every hair mass of the dressed sprite, in place. `crop` holds the cells
+ * stamped by crop overlays; a mass that is mostly crop is combed as one.
+ */
+export function combHair(s: Sprite, view: HeroView, crop: ReadonlySet<number> = new Set()): void {
   const w = s.w;
   const h = s.h;
   const material = (i: number) => (s.cells[i]! < 0 ? -1 : s.cells[i]! >> 3);
@@ -84,15 +102,29 @@ export function combHair(s: Sprite, view: HeroView): void {
     // are not mid: outline cells of the hair turned deep by the 2x2 line rule in dress(); those stay.
     const fixed = new Set(mass.filter((c) => (s.cells[c]! & 7) !== MID));
     if (fixed.size > 0.2 * mass.length) continue;
-    comb(s, mass, fixed, view);
+    const cropped = mass.filter((c) => crop.has(c)).length * 2 >= mass.length;
+    comb(s, mass, fixed, view, cropped);
   }
 }
 
 const TONE_OF_SHADE = [3, 2, 1, 4, 0] as const;
 
-function comb(s: Sprite, mass: number[], fixed: Set<number>, view: HeroView): void {
+function comb(
+  s: Sprite,
+  mass: number[],
+  fixed: Set<number>,
+  view: HeroView,
+  cropped: boolean,
+): void {
   const w = s.w;
   const h = s.h;
+  // the scorer's figure gate (it never counts a region of 8 or fewer); a crop that cannot fit in four masses
+  // (the back of the head, the side with its sideburn) keeps the lock comb
+  const gate = Math.max(8, Math.floor(FLAT_FIG_SHARE * s.cells.filter((c) => c >= 0).length));
+  const crop = cropped && mass.length <= CROP_MASSES * gate;
+  const tones = crop ? CROP_TONES : TONES;
+  const quantiles = crop ? CROP_QUANTILES : QUANTILES;
+  const jitter = crop ? 0 : JITTER;
   const set = new Set(mass);
   const fillAt = (x: number, y: number) => x >= 0 && y >= 0 && x < w && y < h && set.has(y * w + x);
   const lineAt = (x: number, y: number) =>
@@ -147,17 +179,18 @@ function comb(s: Sprite, mass: number[], fixed: Set<number>, view: HeroView): vo
     return 0.5 * nx + 0.9 * (ny - 0.35) + 0.25 * nx * ny;
   };
   const ds = mass.map((c) => field(c % w, Math.floor(c / w))).sort((a, b) => a - b);
-  const edges = QUANTILES.map((q) => ds[Math.min(ds.length - 1, Math.floor(q * ds.length))]!);
-  // tone index of the cell's band: bright .. deep
+  const edges = quantiles.map((q) => ds[Math.min(ds.length - 1, Math.floor(q * ds.length))]!);
+  // tone index of the cell's band: bright .. deep (a crop: light .. shadow)
   const band = (x: number, y: number) => {
     const k = lock(x, y)[0];
-    const d = field(x, y) + (((k % 2) + 2) % 2 === 1 ? JITTER : -JITTER);
-    let b = 4 - edges.length;
+    const d = field(x, y) + (((k % 2) + 2) % 2 === 1 ? jitter : -jitter);
+    let b = 0;
     for (const e of edges) if (d >= e) b++;
-    return b;
+    return tones[b]!;
   };
   const againstLine = (x: number, y: number) => N4.some(([dx, dy]) => lineAt(x + dx, y + dy));
   const isSep = (x: number, y: number) => {
+    if (crop) return false;
     const [k, p, wd] = lock(x, y);
     if (p === wd - 1) return true;
     // the corner of a step: on the row below this column is the far column of the lock, here it is the first
@@ -212,7 +245,6 @@ function comb(s: Sprite, mass: number[], fixed: Set<number>, view: HeroView): vo
       tone.set(c, best);
     }
   };
-  fixLone(fixed);
   // Masses first, lines only where needed.
   const regionsOf = (tones: Map<number, number>, cells: Iterable<number>) => {
     const pool = new Set(cells);
@@ -243,11 +275,45 @@ function comb(s: Sprite, mass: number[], fixed: Set<number>, view: HeroView): vo
   };
   const largest = (tones: Map<number, number>) =>
     Math.max(0, ...regionsOf(tones, mass).map((r) => r.length));
-  const limit = Math.max(FLAT_CELLS, Math.floor(FLAT_SHARE * mass.length));
+  // a crop's masses go up to the figure gate
+  const limit = crop ? gate : Math.max(FLAT_CELLS, Math.floor(FLAT_SHARE * mass.length));
   const locked = new Set<number>(fixed);
+  fixLone(fixed);
   const candidates = (reg: number[]) => {
     const regSet = new Set(reg);
     const strokes: number[][] = [];
+    if (crop) {
+      // a crop has no locks to follow: a parting stroke is one straight line of cells through the mass,
+      // vertical or 2:1 either way, kept 4-connected by the corner cell at each step
+      const ys = [...new Set(reg.map((c) => Math.floor(c / w)))].sort((a, b) => a - b);
+      const y0 = ys[0]!;
+      const rx0 = Math.min(...reg.map((c) => c % w));
+      const rx1 = Math.max(...reg.map((c) => c % w));
+      for (const dir of CROP_DIRS)
+        for (let x0 = rx0 - ys.length; x0 <= rx1 + ys.length; x0++) {
+          const stroke = new Set<number>();
+          for (const y of ys) {
+            const x = x0 + dir * Math.floor((y - y0) / 2);
+            if (regSet.has(y * w + x)) stroke.add(y * w + x);
+            if (dir !== 0 && (y - y0) % 2 === 1 && regSet.has((y + 1) * w + x))
+              stroke.add((y + 1) * w + x);
+          }
+          if (stroke.size === 0) continue;
+          // the stroke, and the stroke short of its first or last cell: a dark stroke that ends against the
+          // shadow mass joins it, one that ends a cell short still parts the base, corner to corner
+          const cells = [...stroke].sort((a, b) => a - b);
+          strokes.push(cells);
+          if (cells.length > 2) {
+            strokes.push(cells.slice(1));
+            strokes.push(cells.slice(0, -1));
+            if (cells.length > 3) strokes.push(cells.slice(1, -1));
+          }
+        }
+      // across the middle row, as a last resort
+      const ym = ys[Math.floor(ys.length / 2)]!;
+      strokes.push(reg.filter((c) => Math.floor(c / w) === ym));
+      return strokes.map((st) => st.filter((c) => !locked.has(c))).filter((st) => st.length > 0);
+    }
     // along a lock: each column of each lock that passes through the region, with the step corners
     const cols = new Map<string, number[]>();
     for (const c of reg) {
@@ -281,15 +347,21 @@ function comb(s: Sprite, mass: number[], fixed: Set<number>, view: HeroView): vo
       let reg = big[0]!;
       for (const r of big) if (r.length > reg.length) reg = r;
       const g = tone.get(reg[0]!)!;
-      const tones = [g + 1, g - 1].filter((t) => t >= 0 && t <= 4);
+      const next = [g + 1, g - 1].filter((t) => t >= tones[0]! && t <= tones[tones.length - 1]!);
       let best: { score: [number, number]; stroke: number[]; t: number } | undefined;
       for (const stroke of candidates(reg))
-        for (const t of tones) {
+        for (const t of next) {
           const trial = new Map(tone);
           for (const c of stroke) trial.set(c, t);
           // a stroke across a row is a last resort: it stacks equal runs (the lint's banding)
           const across = new Set(stroke.map((c) => Math.floor(c / w))).size === 1;
-          const score: [number, number] = [largest(trial) + (across ? 3 : 0), stroke.length];
+          // a crop's strokes are dark and short: any stroke that brings the mass within the limit will do,
+          // the darker and shorter the better; a lighter stroke only when no dark one gets there
+          const big = largest(trial) + (across ? 3 : 0);
+          const score: [number, number] =
+            crop && big <= limit
+              ? [limit + (t < g ? 1 : 0), stroke.length]
+              : [big + (crop ? 2 : 0), stroke.length + (crop && t < g ? 100 : 0)];
           if (
             !best ||
             score[0] < best.score[0] ||
