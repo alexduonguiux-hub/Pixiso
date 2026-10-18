@@ -1,4 +1,4 @@
-"""Repaint every hair drawing (except the curly lobes) as 2-wide diagonal bands with lock_paint.paint: the S
+"""Repaint every hair drawing as 2-wide diagonal bands with lock_paint.paint: the S
 constants of cast64.ts (HAIR_SHORT ... HAIR_WILD and the ponytail crown) and the per-view hair section of
 gen_view_items.py (rewritten as literal lists). Run after changing a hair silhouette, then gen_view_items.py.
 Idempotent: tones depend only on the silhouette."""
@@ -19,7 +19,7 @@ def paint_view(rows, view):
     return paint(rows, cx=crown_x(rows, view), sweep=0.5, W=2)
 # ---- cast64 S hairs
 cast = open(CAST).read()
-for name in ('SHORT', 'SPIKY', 'SWEPT', 'BOB', 'LONG', 'WILD', 'PONYTAIL'):
+for name in ('SHORT', 'SPIKY', 'SWEPT', 'BOB', 'CURLY', 'LONG', 'WILD', 'PONYTAIL'):
     m = re.search(r"const HAIR_%s = hov\((-?\d+), (-?\d+), \[\n((?:  '[^']*',\n)+)\]\)" % name, cast)
     if not m:
         m = re.search(r"const HAIR_%s: Overlay\[\] = \[\n  hov\(0, 0, \[\n((?:    '[^']*',\n)+)  \]\)" % name, cast)
@@ -59,7 +59,7 @@ for style in ('SPIKY', 'CURLY', 'SWEPT', 'BOB', 'WILD', 'PONYTAIL', 'SHORT', 'LO
         for i, o in enumerate(items):
             o = dict(o)
             big = max(len(r) for r in o['rows']) >= 12   # the ponytail tail (4 wide) keeps its tones
-            if style != 'CURLY' and big: o['rows'] = paint_view(o['rows'], view)
+            if big: o['rows'] = paint_view(o['rows'], view)
             painted.append(o)
         body = ', '.join(lit(o) for o in painted)
         out.append(f"  '{view}': {body if len(painted) == 1 else '[' + body + ']'},")

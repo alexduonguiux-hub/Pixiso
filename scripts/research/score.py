@@ -243,8 +243,12 @@ def measure(img, rows=None):
                         if q in cells and q not in seen and cells[q] == cells[p]: seen.add(q); st.append(q)
                 best = max(best, n)
             if best <= 8: return None   # a region this small is never "flat" (the reference's largest hair region is 12 px)
-            return round(100.0 * best / len(cells), 1)
-        m['flatBy'] = {mat: f for mat in SH if (f := flat_of(mat)) is not None}
+            return round(100.0 * best / len(cells), 1), best
+        flats = {mat: f for mat in SH if (f := flat_of(mat)) is not None}
+        m['flatBy'] = {mat: f[0] for mat, f in flats.items()}
+        m['flatCells'] = {mat: f[1] for mat, f in flats.items()}
+        m['cells'] = sum(1 for r in rows for c in r if c != '.')
+        m['clothShare'] = round(100.0 * sum(1 for r in rows for c in r if c in SH['cloth'] + SH['cloth2']) / max(1, m['cells']), 1)
         ncell = sum(1 for r in rows for c in r if c != '.')
         m['skinShare'] = round(100.0 * sum(1 for r in rows for c in r if c in SH['skin']) / max(1, ncell), 1)
         garments = [(mat, part(mat)) for mat in ('cloth', 'cloth2', 'pants', 'leather', 'boots')]
@@ -269,8 +273,12 @@ THRESHOLDS = {
 # Largest same-colour fill region per material, as a share of that material, measured on the reference: the bald
 # mannequin's skin 26.1 % (a bare torso is one region there too), the dressed figure's face 14.3 %, its hair 10.6 %,
 # its jacket 17.4 % (its black trousers fragment to 5.2 % through their many near-black tones; the jacket is the
-# representative garment). A sprite whose skin is at least 40 % of its cells counts as bare. Gate: 1.3x.
+# representative garment). Gate: 1.3x.
 FLAT_REF = {'skinBare': 26.1, 'skin': 14.3, 'hair': 10.6, 'garment': 17.4}
+# The same regions as a share of the whole figure (mannequin skin 102 of 516 px; dressed hair 12 and jacket 20 of
+# 562 px): a region fails only when it is too big by both measures, so a material that barely shows (the nape under
+# a helmet from behind, a cap) is not failed for being one patch smaller than the reference's own biggest patch.
+FLAT_REF_FIG = {'skinBare': 19.8, 'skin': 19.8, 'hair': 2.1, 'garment': 3.6}
 FLAT_TOL = 1.3
 GARMENTS = ('cloth', 'cloth2', 'pants', 'leather', 'boots')
 # Tone shares relative to the most used tone, measured on the reference (dressed figure: skin 17 / 25, jacket 38 / 19
@@ -285,16 +293,20 @@ def judge(m, ref):
         v = m.get(key); r = ref.get(key) if ref else None
         if v is None: continue
         if mode == 'max_abs' and v > tol: flags.append(f'{key} {v}>{tol}')
-        elif mode == 'min_ratio' and r is not None and v < tol * r: flags.append(f'{key} {v}<{round(tol * r, 1)}')
+        elif mode == 'min_ratio' and r is not None and v < tol * r:
+            if key == 'materials' and m.get('clothShare', 100) < 5 and v >= 2: continue   # shirtless: skin + trousers
+            flags.append(f'{key} {v}<{round(tol * r, 1)}')
         elif mode == 'max_ratio' and r is not None and v > tol * r: flags.append(f'{key} {v}>{round(tol * r, 1)}')
         elif mode == 'max_plus' and r is not None and v > r + tol: flags.append(f'{key} {v}>{round(r + tol, 2)}')
     fb = m.get('flatBy')
     if fb:
-        bare = m.get('skinShare', 0) >= 40
+        # skin is judged against the bald mannequin for every sprite: it is the same body by the same hand, and its
+        # bare face alone is a 41 px region there (the dressed figure's 14.3 % face is mostly under hair)
         for mat, v in fb.items():
-            key = ('skinBare' if bare else 'skin') if mat == 'skin' else 'hair' if mat == 'hair' else 'garment'
+            key = 'skinBare' if mat == 'skin' else 'hair' if mat == 'hair' else 'garment'
             thr = round(FLAT_TOL * FLAT_REF[key], 1)
-            if v > thr: flags.append(f'flat {mat} {v}%>{thr}')
+            fig = m.get('flatCells', {}).get(mat, 0) * 100.0 / max(1, m.get('cells', 1))
+            if v > thr and fig > FLAT_TOL * FLAT_REF_FIG[key]: flags.append(f'flat {mat} {v}%>{thr}')
     for part in ('skin', 'cloth'):
         p = m.get(part)
         if not p: continue

@@ -87,6 +87,7 @@ export interface ViewLayer {
 export type ViewItem = { S: ViewLayer } & Partial<Record<HeroView, ViewLayer>>;
 
 const LINE = packCell(LEGEND.o!);
+const LINE_MATERIAL = MATERIALS.indexOf('line');
 /** Row of the eyes in head space (base head rows 9–11; the middle one). */
 const HEAD_EYE_ROW = 10;
 const IDENTITY: HeadMap = (x, y) => [x, y];
@@ -164,13 +165,21 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         if (from.includes(Math.floor(v / 8))) put(fx, fy, to * 8 + (v % 8));
       }
   }
-  for (const g of outfit.garments ?? []) tailor(out, g, left, top);
+  for (const g of outfit.garments ?? []) tailor(out, g, mapper(g.space));
+  // Seams are line cells; where one would complete a 2x2 block of line in the finished sprite (a hem meeting
+  // the trousers' outline) it becomes the covered material's deep shade instead, so the hem stays dark but
+  // thin. Decided after the overlays, which may cover the lines that would have formed the block.
+  const seamCells = new Map<number, number>();
   for (const seam of outfit.lines ?? []) {
     const map = mapper(seam.space);
     const [x0, y0, x1, y1] = seam.box;
     for (let y = y0; y <= y1; y++)
       for (let x = x0; x <= x1; x++) {
         const [fx, fy] = map(x, y);
+        if (fx < 0 || fy < 0 || fx >= out.w || fy >= out.h) continue;
+        const v = get(fx, fy);
+        if (v >= 0 && Math.floor(v / 8) !== LINE_MATERIAL && !seamCells.has(fy * out.w + fx))
+          seamCells.set(fy * out.w + fx, v);
         put(fx, fy, LINE);
       }
   }
@@ -195,5 +204,22 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         const i = (y + top) * out.w + x + left;
         out.cells[i] = bare[i]!;
       }
+  const isLine = (x: number, y: number) => {
+    const v = get(x, y);
+    return v >= 0 && Math.floor(v / 8) === LINE_MATERIAL;
+  };
+  const doubles = (x: number, y: number) =>
+    [-1, 0].some((ax) =>
+      [-1, 1].some((ay) => {
+        const X = x + ax;
+        const Y = y + ay;
+        return isLine(X, Y) && isLine(X + 1, Y) && isLine(X, y) && isLine(X + 1, y);
+      }),
+    );
+  for (const [i, v] of seamCells) {
+    const x = i % out.w;
+    const y = Math.floor(i / out.w);
+    if (out.cells[i] === LINE && doubles(x, y)) out.cells[i] = Math.floor(v / 8) * 8 + 3;
+  }
   return out;
 }

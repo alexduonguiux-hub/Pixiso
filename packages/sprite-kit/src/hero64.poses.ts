@@ -362,18 +362,18 @@ export const POSE_STAND: ZombiePose = {
   skirt: {
     x: 2,
     y: 29,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
   dress: {
     x: 1,
     y: 29,
     rows: [
-      '..o&kkkkkkkKo..',
-      '..o&kkkkkkkKo..',
-      '.o&kkkkKkkkkKo.',
-      '.o&kkkkKkkkkKo.',
-      '.o&kkKkKkkKkKo.',
-      'o&kookkkkkkooKo',
+      '..o&kkKkkKkKo..',
+      '..o&kkKkkKkKo..',
+      '.o&kkKkKKkkkKo.',
+      '.o&kkKkKKkkkKo.',
+      '.o&kkKkKKkKkKo.',
+      'o&kookkKkkkooKo',
       'ooo..oooooo..oo',
     ],
   },
@@ -425,7 +425,7 @@ export const POSE_DROOP: ZombiePose = {
   skirt: {
     x: 2,
     y: 29,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
 };
 
@@ -471,7 +471,7 @@ export const POSE_REACH: ZombiePose = {
   skirt: {
     x: 3,
     y: 29,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
 };
 
@@ -517,7 +517,7 @@ export const POSE_DRAG: ZombiePose = {
   skirt: {
     x: 2,
     y: 29,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
 };
 
@@ -566,7 +566,7 @@ export const POSE_HUNCH: ZombiePose = {
   skirt: {
     x: 4,
     y: 28,
-    rows: ['.o&kkkkkKo.', '.o&kkkkkKo.', 'o&kkkkkkkKo', 'o&kkkkkkkKo', 'o.ooo.ooo.o'],
+    rows: ['.o&kkKkkKo.', '.o&kkKkkKo.', 'o&kkKkkKkKo', 'o&kkKkkKkKo', 'o.ooo.ooo.o'],
   },
 };
 
@@ -609,7 +609,7 @@ export const POSE_TWIST: ZombiePose = {
   skirt: {
     x: 3,
     y: 29,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
 };
 
@@ -649,7 +649,7 @@ export const POSE_CRAWL: ZombiePose = {
   skirt: {
     x: 4,
     y: 28,
-    rows: ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o'],
+    rows: ['.o&kkKkkKkKo.', '.o&kkKkkKkKo.', 'o&kkKkkKkkkKo', 'o&kkKkkKkkkKo', 'oo.ooo.oooo.o'],
   },
 };
 

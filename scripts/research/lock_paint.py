@@ -30,7 +30,7 @@ def paint(rows, cx=None, sweep=0.5, W=2, lit_edge='#', shadow_edge='H', solid_on
             # locks are W-wide bands of alternating tone (the reference's 2-wide bands): light/mid on the lit
             # half, mid/shadow on the shadow half, the far-right lock in shadow; a sweep band one cell thick
             # crosses every lock (bright on the lit half, deep on the shadow half) and cuts each band in two
-            band = (y - top) == 3 + int((x - cx) // 4)
+            band = ((y - top) - 3 - int((x - cx) // 4)) % 6 == 0
             if band and (y - top) >= 2: tone = 'J' if x < cx else 'j'
             elif far_shadow and k == kmax: tone = 'H'
             elif right: tone = 'H' if k % 2 == 0 else 'h'

@@ -164,6 +164,10 @@ def _banding(rows, at, W, H):
     def runs_col(x):
         return [(v, s, l) for v, s, l in _runs([rows[y][x] for y in range(H)]) if v not in (LINE, EMPTY)]
     seen = set()
+    def same_span(y, s, l, v):
+        return 0 <= y < H and all(rows[y][x] == v for x in range(s, s + l))
+    def same_span_col(x, s, l, v):
+        return 0 <= x < W and all(rows[y][x] == v for y in range(s, s + l))
     for y in range(H - 1):
         a_runs = runs_row(y); b_runs = runs_row(y + 1)
         for v1, s1, l1 in a_runs:
@@ -174,6 +178,9 @@ def _banding(rows, at, W, H):
                 m2, sh2 = _mat(v2)
                 if m1 != m2: continue
                 if s1 == s2 and l1 == l2:
+                    # a one-cell-thick stroke of one shade inside the other (a crease, a seam row) is a drawn
+                    # line, not a terrace of a gradient: the far side of the stroke returns to the first shade
+                    if same_span(y + 2, s2, l2, v1) or same_span(y - 1, s1, l1, v2): continue
                     key = ('h', y, s1)
                     if key in seen: continue
                     seen.add(key)
@@ -188,6 +195,7 @@ def _banding(rows, at, W, H):
                 m2, sh2 = _mat(v2)
                 if m1 != m2: continue
                 if s1 == s2 and l1 == l2:
+                    if same_span_col(x + 2, s2, l2, v1) or same_span_col(x - 1, s1, l1, v2): continue
                     key = ('v', x, s1)
                     if key in seen: continue
                     seen.add(key)

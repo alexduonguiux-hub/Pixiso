@@ -98,8 +98,8 @@ const HAIR_SPIKY = hov(0, -2, [
   '.o##hh##hHHhhjjo.',
   '.o##hh##hHHhhHHo.',
   '..o##hh##HhhHHo..',
-  '..o##hh##HhhHHo..',
-  '..oh##hh#hhHHHo..',
+  '..oJJhh##HhhHHo..',
+  '..oh#JJJJhhHHHo..',
   '..HhH..HHj..HjH..',
   '...h.............',
 ]);
@@ -114,7 +114,7 @@ const HAIR_SWEPT = hov(0, 0, [
   '.o#hh##hHHhhjjjo.',
   '.o#hh##hHHhhHHho.',
   '.o##hh##HhhHHhho.',
-  '.o##hh##HhhHHhho.',
+  '.oJJhh##HhhHHhho.',
   '.ohH.........Hjo.',
   '.ojH.........Hjo.',
   '..oo.........oo..',
@@ -141,13 +141,13 @@ const HAIR_BOB = hov(0, 0, [
 /** Curly hair: a bumpy silhouette wider than the skull, two-cell curl marks, fringe over the brow, ends at the jaw. */
 const HAIR_CURLY = hov(0, 0, [
   '.....ooooooo.....',
-  '...oo#J#hh#hoo...',
-  '..o#hhHj#hhH#ho..',
-  '.o#hhhHj#hhHj#Ho.',
-  'o#hhHjhhhHjhhhHjo',
-  'o#hhhH#hhhH#hhhjo',
-  '.o#hhHj#hhHj#hHo.',
-  'o#hhhHjhhhHjhhHjo',
+  '...oohh#hhHHoo...',
+  '..o##hh#hhHHhho..',
+  '.ohhJJJJhHHhhHHo.',
+  'o#hh##hhjjjjhHHho',
+  'o##hh##hHHhhjjjjo',
+  '.o#hh##hHHhhHHho.',
+  'oh##hh##HhhHHhhHo',
   '.ohhH..HHj..Hjjo.',
   'ohhj.........jHho',
   '.o#h.........hHo.',
@@ -204,10 +204,10 @@ const HEADBAND = hov(2, 6, ['o*aaaaaaaaaAo', 'oAaaaaaaaaAAo']);
 
 /** Full beard (hair material): moustache under the nose, a line under it (the mouth, parting it from the beard), a bushy beard wider than the jaw down to the collar, its own outline. */
 const BEARD = hov(3, 12, [
-  '.o#hhhhhHo.',
+  '.o#hHhhHHo.',
   'o#oooooooHo',
-  'o#hhhhhhhHo',
-  'oHhhhhhhHHo',
+  'o#hHhhHhhHo',
+  'oHhhHhhHHHo',
   '.ooooooooo.',
 ]);
 
@@ -244,9 +244,9 @@ const HARD_HAT: Overlay = {
 const PEAKED_CAP: Overlay = {
   ...hov(-1, 0, [
     '....ooooooooooo....',
-    '...oQQ&&&&kkkkko...',
-    '..o&&&kkkkkkkkkko..',
-    '..okkkkkkkkkkKKKo..',
+    '...oQQ&&&&KkkkKo...',
+    '..o&&&kkkKkkkkkKo..',
+    '..okkkkkkKkkkKKKo..',
     '..okkkKKKKKKqqqqo..',
     '...o&&&&&kkkkkko...',
     '.okkkKKKKKKKqqqqqo.',
@@ -260,10 +260,10 @@ const BERET: Overlay = {
   ...hov(-1, 0, [
     '.....ooooooo.......',
     '...ooQQ&&&kkkoo....',
-    '..o&&&kkkkkkkkoo...',
-    '.okkkkkkkkkkkkkKoo.',
-    '.okkkkkkkkkkKKKKKKo',
-    '.okkkkkKKKKKKqqqqqo',
+    '..o&&&kkKkkkkkoo...',
+    '.okkkkkkKkkkkkkKoo.',
+    '.okkKkkkkKkkKKKKKKo',
+    '.okKkkkKKKKKKqqqqqo',
     '.ookkkKKKKKKqqqqooo',
     '..okkkKKKKKKqqqqo..',
     '.ooooooooooooooooo.',
@@ -278,7 +278,7 @@ const HELMET: Overlay = {
     '....ooV^^^cccoo....',
     '...o^^^^ccccccco...',
     '..o^cccccccccccco..',
-    '..occccccccccCCCo..',
+    '..ocCCCCCCCCCCCCo..',
     '..occcccccCCCCCvo..',
     '..occccCCCCCvvvvo..',
     '.occcCCCCCCCvvvvvo.',
@@ -618,7 +618,9 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     return { box: [tx0, ty0, tx1, y1], except: [...pose.neck, ...except], to: 'cloth' };
   };
   const sleeve = (side: 'L' | 'R', box: Box, cuff = false): Remap => {
-    garments.push({ kind: 'sleeve', side, box, material: 'cloth', cuff });
+    // A side view gives both sleeves the same box (the far arm is hidden): shade it once, as the near one.
+    if (!garments.some((g) => g.kind === 'sleeve' && g.box.join() === box.join()))
+      garments.push({ kind: 'sleeve', side, box, material: 'cloth', cuff });
     return { box, to: 'cloth' };
   };
   const caps = pose.shoulders.map((box): Remap => sleeve(box[0] < tx0 ? 'L' : 'R', box));
@@ -695,7 +697,12 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
     garments.push({ kind: 'boots', box: pose.flats, material: 'boots' });
   }
-  push(out, layer(look.hair, view));
+  const hairLayer = layer(look.hair, view);
+  push(out, hairLayer);
+  // A buzz cut is the skull remapped to hair: band it like the drawn hairstyles.
+  for (const r of hairLayer.remaps ?? [])
+    if (r.to === 'hair')
+      garments.push({ kind: 'hair', box: r.box, material: 'hair', space: r.space ?? 'figure' });
   if (look.glasses) push(out, layer(GLASSES_V, view));
   if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view));
   if ((look.face ?? 'zombie') === 'zombie') {
