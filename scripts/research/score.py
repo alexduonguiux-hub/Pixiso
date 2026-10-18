@@ -184,17 +184,19 @@ def measure(img, rows=None):
     else:
         # ours: exact from the cells. skin = s/S/$; cloth = the biggest garment material among cloth, cloth2, pants, leather, boots
         GL = {'skin': 's', 'cloth': 'c', 'cloth2': 'k', 'pants': 'p', 'leather': 'l', 'boots': 'b', 'hair': 'h'}
-        SH = {'skin': 'sS$', 'cloth': 'cC^', 'cloth2': 'kK&', 'pants': 'pP+', 'leather': 'lL|', 'boots': 'bB!', 'hair': 'hH#'}
+        # glyphs per material: mid, shadow, highlight, deep shadow, bright highlight
+        SH = {'skin': 'sS$zZ', 'cloth': 'cC^vV', 'cloth2': 'kK&qQ', 'pants': 'pP+yY', 'leather': 'lL|iI', 'boots': 'bB!gG', 'hair': 'hH#jJ'}
         def part(mat):
-            mid, sh, hl = SH[mat]
+            mid, sh, hl, deep, bright = SH[mat]
             cells = [(x, y, c) for y, r in enumerate(rows) for x, c in enumerate(r) if c in SH[mat]]
             if len(cells) < 8: return None
-            tot = len(cells); nh = sum(1 for *_, c in cells if c == hl); ns = sum(1 for *_, c in cells if c == sh)
-            tones = (nh > 0) + (ns > 0) + (tot - nh - ns > 0)
+            tot = len(cells)
+            nh = sum(1 for *_, c in cells if c in (hl, bright)); ns = sum(1 for *_, c in cells if c in (sh, deep))
+            tones = len({c for *_, c in cells})
             info = {'tones': tones, 'hl': round(100.0 * nh / tot, 1), 'sh': round(100.0 * ns / tot, 1), 'px': tot}
             if nh and ns:
-                hx = np.mean([x for x, y, c in cells if c == hl]); hy = np.mean([y for x, y, c in cells if c == hl])
-                sx = np.mean([x for x, y, c in cells if c == sh]); sy = np.mean([y for x, y, c in cells if c == sh])
+                hx = np.mean([x for x, y, c in cells if c in (hl, bright)]); hy = np.mean([y for x, y, c in cells if c in (hl, bright)])
+                sx = np.mean([x for x, y, c in cells if c in (sh, deep)]); sy = np.mean([y for x, y, c in cells if c in (sh, deep)])
                 info['light'] = [round(float(hx - sx), 1), round(float(hy - sy), 1)]
             return info
         m['skin'] = part('skin')

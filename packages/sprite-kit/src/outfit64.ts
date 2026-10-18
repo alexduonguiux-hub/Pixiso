@@ -17,6 +17,7 @@ import { EMPTY, LEGEND, MATERIALS, packCell, type Material, type Sprite } from '
 import { blank } from './draw.js';
 import type { Box, HeroView } from './hero64.js';
 import type { FormSpec, HeadMap } from './heroforms.js';
+import { tailor, type Garment } from './tailor64.js';
 
 export type Space = 'figure' | 'head';
 
@@ -59,6 +60,8 @@ export interface Outfit {
   /** Body form the outfit is drawn for (default: the base figure). */
   form?: FormSpec;
   remaps?: readonly Remap[];
+  /** Garments reshaded as cloth after the remaps (tailor64). */
+  garments?: readonly Garment[];
   /** Cells forced to the line material (hems, seams, hat brims). */
   lines?: readonly Seam[];
   overlays?: readonly Overlay[];
@@ -161,6 +164,7 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
         if (from.includes(Math.floor(v / 8))) put(fx, fy, to * 8 + (v % 8));
       }
   }
+  for (const g of outfit.garments ?? []) tailor(out, g, left, top);
   for (const seam of outfit.lines ?? []) {
     const map = mapper(seam.space);
     const [x0, y0, x1, y1] = seam.box;

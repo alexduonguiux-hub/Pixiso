@@ -25,6 +25,7 @@ import {
   type ZombiePose,
 } from './hero64.poses.js';
 import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
+import type { Garment } from './tailor64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
 import { STAND_BRUTE, STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
@@ -599,14 +600,26 @@ function camo(box: Box, glyph: string): Overlay {
 function build(id: string, label: string, pose: ZombiePose, look: Look, view: HeroView): Outfit {
   const out = { remaps: [] as Remap[], lines: [] as Seam[], overlays: [] as Overlay[] };
   const { remaps, lines, overlays } = out;
+  const garments: Garment[] = [];
   const [tx0, ty0, tx1] = pose.torso;
   const hemY = pose.hem[1];
-  const torso = (except: Box[], y1 = pose.torso[3]): Remap => ({
-    box: [tx0, ty0, tx1, y1],
-    except: [...pose.neck, ...except],
-    to: 'cloth',
-  });
-  const caps = pose.shoulders.map((box): Remap => ({ box, to: 'cloth' }));
+  const torso = (except: Box[], y1 = pose.torso[3]): Remap => {
+    garments.push({
+      kind: 'torso',
+      box: [tx0, ty0, tx1, y1],
+      material: 'cloth',
+      except: [...pose.neck, ...except],
+      // Buttons and pockets are on the front: the back views and the side view do not show them.
+      placket: look.top === 'long' && (view === 'S' || view === 'SW') ? 'buttons' : 'none',
+      pockets: look.details.includes('camo') && (view === 'S' || view === 'SW'),
+    });
+    return { box: [tx0, ty0, tx1, y1], except: [...pose.neck, ...except], to: 'cloth' };
+  };
+  const sleeve = (side: 'L' | 'R', box: Box, cuff = false): Remap => {
+    garments.push({ kind: 'sleeve', side, box, material: 'cloth', cuff });
+    return { box, to: 'cloth' };
+  };
+  const caps = pose.shoulders.map((box): Remap => sleeve(box[0] < tx0 ? 'L' : 'R', box));
   const collar = pose.collar.map(seam);
   // A dress is one piece, a coat carries on: no hem line at the waist.
   const waist = look.bottoms === 'dress' || look.hem === false ? [] : [seam(pose.hem)];
@@ -615,8 +628,8 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       remaps.push(
         torso([]),
         ...caps,
-        { box: pose.sleeveL.short, to: 'cloth' },
-        { box: pose.sleeveR.short, to: 'cloth' },
+        sleeve('L', pose.sleeveL.short),
+        sleeve('R', pose.sleeveR.short),
       );
       lines.push(...collar, ...waist);
       break;
@@ -627,8 +640,8 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       remaps.push(
         torso(holes),
         ...caps,
-        { box: pose.sleeveL.torn ?? pose.sleeveL.short, to: 'cloth' },
-        { box: pose.sleeveR.short, to: 'cloth' },
+        sleeve('L', pose.sleeveL.torn ?? pose.sleeveL.short),
+        sleeve('R', pose.sleeveR.short),
       );
       lines.push(...collar, ...pose.frayedXs.map((x) => seam([x, hemY, x, hemY])));
       break;
@@ -637,8 +650,8 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       remaps.push(
         torso([]),
         ...caps,
-        { box: pose.sleeveL.long, to: 'cloth' },
-        { box: pose.sleeveR.long, to: 'cloth' },
+        sleeve('L', pose.sleeveL.long, true),
+        sleeve('R', pose.sleeveR.long, true),
       );
       lines.push(...collar, ...waist);
       break;
@@ -655,20 +668,31 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     case 'none':
       break;
   }
-  if (look.bottoms === 'pants')
+  if (look.bottoms === 'pants') {
     remaps.push(...pose.pants.map((box): Remap => ({ box, to: 'pants' })));
-  if (look.bottoms === 'shorts')
+    garments.push({ kind: 'pants', box: pose.pants, material: 'pants' });
+  }
+  if (look.bottoms === 'shorts') {
     remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants' })));
+    garments.push({ kind: 'pants', box: pose.shorts, material: 'pants' });
+  }
   if (look.bottoms === 'skirt') overlays.push(ov(pose.skirt.x, pose.skirt.y, pose.skirt.rows));
   if (look.bottoms === 'dress') {
     const d = pose.dress ?? pose.skirt;
     overlays.push(ov(d.x, d.y, d.rows));
   }
-  if (look.shoes === 'both')
+  if (look.shoes === 'both') {
     remaps.push({ box: pose.shoeL, to: 'boots' }, { box: pose.shoeR, to: 'boots' });
-  if (look.shoes === 'right') remaps.push({ box: pose.shoeR, to: 'boots' });
-  if (look.shoes === 'flats')
+    garments.push({ kind: 'boots', box: [pose.shoeL, pose.shoeR], material: 'boots' });
+  }
+  if (look.shoes === 'right') {
+    remaps.push({ box: pose.shoeR, to: 'boots' });
+    garments.push({ kind: 'boots', box: pose.shoeR, material: 'boots' });
+  }
+  if (look.shoes === 'flats') {
     remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
+    garments.push({ kind: 'boots', box: pose.flats, material: 'boots' });
+  }
   push(out, layer(look.hair, view));
   if (look.glasses) push(out, layer(GLASSES_V, view));
   if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view));
@@ -705,6 +729,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     label,
     form: pose.form,
     remaps,
+    garments,
     lines,
     overlays,
     colors: look.colors,

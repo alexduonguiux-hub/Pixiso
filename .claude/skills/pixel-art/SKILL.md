@@ -76,6 +76,10 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - **Tóc sẫm:** không tô nguyên hàng/cột `H` sát viền (viền và bóng nhuốm màu gần nhau); chỉ cụm
   2–3 ô ở góc dưới phải.
 - **Vật liệu xám** (kim loại, đá): bước tông nhỏ, không dịch hue.
+- **Áo quần không thừa hưởng bóng của da.** Sau remap, `tailor64.ts` tô lại món theo hộp của nó:
+  vải chủ yếu tông gốc và tối (áo mẫu 10 % sáng / 40 % tối), khối bóng có ranh bậc thang, sáng
+  chỉ ở vai–ngực trái, nếp gấp ngắn, khuy/túi chỉ ở góc thấy mặt trước, tay xa tối toàn bộ. Khi
+  thêm kiểu áo mới, khai báo `Garment` trong `build()` thay vì vẽ bóng tay vào remap.
 
 ## 4. Đầu và dáng
 
