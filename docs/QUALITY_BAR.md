@@ -168,3 +168,42 @@ tiết (thắt lưng, gấu, đế sáng). Đã ngang hoặc hơn mẫu: công t
 tóc Ny/Dương/Lan, góc W của thân người, dây + túi quân y, đuôi ngựa, mai/gai, silhouette dàn zombie.
 Kết luận của giám khảo: _từ cổ trở lên đã là nhân vật được vẽ; từ cổ trở xuống phần lớn vẫn là một
 thân mannequin nhuộm màu_ — sửa B1–B5 rồi chấm lại.
+
+## 8. Biên bản chấm độc lập vòng 3 (18/10/2026, sau D-067…D-072)
+
+Cùng cách làm (agent riêng, chỉ nhận đề bài + ảnh: crop nhân vật mẫu, hai bảng 8 hướng ×1/×6 và
+27 dải hàng ×12; cấm đọc DECISIONS/PROGRESS/§5–§7, cấm sửa repo). Khác vòng 2: giám khảo này đọc
+ma trận ô ×1 của cả 27 nhân vật ở S/SW/W/N, **đếm ô lẻ bằng script**, đo ΔL từng ramp, đo bề rộng
+S–SW và hàng chân, và dựng lại ảnh mẫu về 1× (mẫu 18×41 ô, cùng cỡ sprite của ta) — nên nghiêm hơn
+hẳn và điểm không so trực tiếp với §7 được. Đề bài và toàn văn: `docs/reviews/2026-10-18-round3*.md`.
+
+Kết quả: dàn chính **4/10**, lính **4/10**, zombie **1/10**, thể hình lớn **2/9** — cả bốn chưa đạt.
+
+| Mục                 | Dàn chính | Lính  | Zombie | Thể hình lớn | Bằng chứng chính giám khảo nêu                                                                                                   |
+| ------------------- | --------- | ----- | ------ | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1 Mắt               | đạt       | đạt   | không  | không        | module S/SW trùng mẫu từng ô; ở W cột trắng 3 hàng phía trong mống (mọi người); zombie cột nhạt 3 ô; Đột Biến hai mắt khác hình  |
+| 2 Tóc               | không     | không | không  | —            | lưới chu kỳ 3 cột (`c c h c c h…`), mép mái thẳng như mũ úp (Ny, Bác sĩ Lan hàng 29 kín, hàng 30 da)                             |
+| 3 Áo                | không     | không | không  | không        | quần không đai/cổ tay/băng gối; áo thun Dương không cổ/gấu; áo–quần trắng của Bác sĩ Lan dính một cột                            |
+| 4 Bậc tông          | không     | không | không  | không        | sáng áo lính ≈ 4 % (6–8 ô vai); sáng Kẻ Phun ở bụng dưới; tối là cột 1 ô bám viền (Dương x=35, Bác sĩ Lan x=35)                  |
+| 5 Góc 45°           | đạt       | đạt   | không  | không        | A/B: rộng 17→15, mắt xa 1 cột, chân nhích; zombie/thể hình lớn: rộng bằng S, hai chân cùng hàng                                  |
+| 6 Góc ngang         | không     | không | không  | không        | ô gót màu viền mặc định (28,24,36) tại (27,60) W/E trên 24/27 nhân vật; gi-lê Hùng rời trước tay                                 |
+| 7 Góc sau           | đạt       | đạt   | không  | đạt          | gáy Ny/Bác sĩ Lan/Lính nón sắt dither `j r j r j`; cổ áo zombie nam là mảng sáng                                                 |
+| 8 Chấm lẻ           | không     | không | không  | không        | 2 ô sáng đơn (29,42)(29,46) mép thân trên mọi áo; máu đơn Kẻ Bắt Chước; 4 ô tối chữ W đỉnh đầu hói; mụn 1 ô; 45 ô `d` lẻ Kẻ Phun |
+| 9 Nhất quán 8 hướng | không     | không | không  | không        | Sơn có nút ở SW không ở S; dây đeo Lính nón sắt là vạch rời; súng đầu đinh@W đứt hàng 35–38; công nhân/Kẻ Thính @W tay duỗi      |
+| 10 Nhận ra ở 1×     | đạt       | đạt   | đạt    | đạt          | nón/mũ/túi/mai/tai/dáng phân biệt được; tốt hơn mẫu (mẫu chỉ một nhân vật)                                                       |
+
+Lỗi xếp hạng (đơn thuốc ở mức ô trong toàn văn): **B1** tóc lưới chu kỳ + mái thẳng → 3 mảng
+sáng/gốc/tối, một lọn 2 ô tụt xuống hàng mắt, xoá ô sáng đơn trong khối tối; **B2** áo quần phẳng →
+thắt lưng, cổ tay, băng gối ngoài dải 3 tông, mảng sáng áo thành khối 3×3 vai trái (≥ 10 %), tối là
+khối không phải cột; **B3** zombie/thể hình lớn không xoay 45° (rộng bằng S, hai chân cùng hàng) và
+một dáng hai tư thế (công nhân, Kẻ Thính duỗi tay ở W); **B4** chấm lẻ (ô đầu nếp, máu, mụn, chữ W
+đỉnh đầu, dither); **B5** mắt W cột trắng 3 hàng, mắt zombie, Đột Biến hai mắt khác hình, Kẻ Phun
+SW mắt 3 ô; **B6** phụ kiện đứt/trôi (dây đeo, súng W, nút Sơn, vạch 7 ô dưới mắt đọc như ria);
+**B7** gi-lê Hùng@W rời; **B8** ô gót màu viền mặc định; **B9** dither gáy.
+
+Đã ngang hoặc hơn mẫu: module mắt S/SW, ramp da, phối cảnh SW/W/N (hẹp 2 ô, mắt xa 1 cột, chân
+nhích, mũi nhô, tay tách, bàn tay rõ), viền đơn sạch, ánh sáng trên–trái nhất quán 27 × 8, phụ kiện
+bám đúng chỗ qua các hướng, nhận ra nghề/quái ở 1×. Kết luận của giám khảo: _nền tảng (thân, mắt,
+góc nhìn, viền, ánh sáng) đạt mức mẫu; lớp bề mặt (tóc, kết cấu áo quần, mảng sáng tối, ô lẻ, đồng
+bộ góc cho zombie) chưa — ở 1× là silhouette màu phẳng với hai chấm xanh, ở ×6 là "lắp ghép theo
+luật" chứ chưa phải "vẽ tay"._
