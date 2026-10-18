@@ -15,59 +15,71 @@ def L(box, head=True):
     return {'kind': 'seam', 'box': box, 'head': head}
 
 # ---------------------------------------------------------------- hair
-# Literal per view; tones painted as locks (upper-left edge + two-column body, in segments) by lock_paint.py (W=3, sweep 0.5): keep the
-# silhouettes, edit tones by repainting rather than by hand.
+# Literal per view, silhouettes in the mid tone: hair64.ts (combHair) tones every mass when the figure is
+# dressed (D-074), so only the shapes are drawn here.
 HAIR = {}
 HAIR['SPIKY'] = {
-  'SW': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o#h#oh##o##Ho.','..oh##hJJ##h#hHo.','.ohh#hh#hhh#hHho.','.o#hh#hh#hh#HHho.','.o#hh#hh#h#hHhHo.','..o#HH#HHH#Hjho..','..o#HH#HH#HjhHo..','..ohhHjhHhHjhHo..','.....hHH..jHjjH..','.......h.....H...']),
-  'N': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o#h#oh##o##Ho.','..oh##hJJ##h#hHo.','.ohh#hh#hhh#hHho.','.o#hh#hh#hh#hHho.','.o#hh#hh#h#hhhHo.','..o#HH#HHH#Hjho..','..o#HH#HH#HHhHo..','..oh#HH#H#HHhHo..','.ohH#HH#HHH#jjho.','...ohhjjhjjjHo...','...ohhjjhjhHHo...','...ohjhjjjhHHo...','....ohhHjhHHo....','.....ooooooo.....']),
-  'W': O(0,-2, ['....o..o..o...','...o#oo#oo#o..','..oh#ohJo##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#ho','oh#hh#hh#h#hHo','ohH#HH#HHH#jHo','ohjhHjhHjhHjho','ohHH.....hHHo.','.ohH......hHo.','..........hHo.','.........Hjo..','........Hjjo..','.........o....']),
-  'NW': O(0,-2, ['.....o...o...o...','....o#o.o#o.o#o..','...o#h#oh##o##Ho.','..oh##hJJ##h#hHo.','.ohh#hh#hhh#hHho.','.o#hh#hh#hh#hHho.','.o#hh#hh#h#hhhHo.','..o#HH#HHH#Hjho..','..o#HH#HH#HHhHo..','..oh#HH#H#HHhHo..','.ohH#HH#HHH#jjho.','...ohhjjhjjjHo...','...ohhjjhjhHHo...','...ohjhjjjhHHo...','....ohhHjhHHo....','.....ooooooo.....']),
+  'SW': O(0,-2, ['.....o...o...o...','....oho.oho.oho..','...ohhhohhhohhho.','..ohhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oh...hhhhhhho..','.....hhh..hhhhh..','.......h.....h...']),
+  'N': O(0,-2, ['.....o...o...o...','....oho.oho.oho..','...ohhhohhhohhho.','..ohhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....','.....ooooooo.....']),
+  'W': O(0,-2, ['....o..o..o...','...ohoohooho..','..ohhohhohhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh.....hhho.','.ohh......hho.','..........hho.','.........hho..','........hhho..','.........o....']),
+  'NW': O(0,-2, ['.....o...o...o...','....oho.oho.oho..','...ohhhohhhohhho.','..ohhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....','.....ooooooo.....']),
 }
 HAIR['CURLY'] = {
-  'SW': O(0,0, ['.....ooooooo.....','...oo##h##h#oo...','..o##hJJ##h#hHo..','.oh#hh#hhh#hHhHo.','o#hh#hh#hh#HHhHHo','o#hh#hh#h#hHhHHho','.o#HH#HHH#jjhjHo.','ohhHjhHjhHjhHjhHo','.o#..hHH..HhHHho.','o#h..........hHHo','.o#..........hHHo','ohH..........Hjjo','.oh..........Hjo.','..o..........oo..']),
-  'N': O(0,0, ['.....ooooooo.....','...oo##h##h#oo...','..o##hJJ##h#hHo..','.oh#hh#hhh#hHhHo.','o#hh#hh#hh#hHhHHo','o#hh#hh#h#hhhHHho','.o#HH#HHH#HjhjHo.','oh#HH#HH#HHhjjhHo','.oh#HH#H#HHhjjho.','ohH#HH#HHH#jjhjHo','.ohjhjjhjjjHHjHo.','ohjjhjjhjhHHjHHHo','.ohjjhjjjhHHjHHo.','..oohhHjhHjhHoo..','....ooooooooo....']),
-  'W': O(0,0, ['...oooooooo....','..oh##h##h#oo..','.o##h##hJJ##ho.','oh#hh#hh#hhh#ho','ohh#hh#hh#hh#ho','.oh#hh#hh#h#hHo','ohHjhHjhHjjhHHo','ohHH..h#hh#hh#o','.ohH..oh#h#hh#o','......oHhHHHhHo','......ojjHjjHjo','......ojjHjHjo.','.......ojjjHo..','........ojHo...','.........oo....']),
-  'NW': O(0,0, ['.....ooooooo.....','...oo##h##h#oo...','..o##hJJ##h#hHo..','.oh#hh#hhh#hHhHo.','o#hh#hh#hh#hHhHHo','o#hh#hh#h#hhhHHho','.o#HH#HHH#HjhjHo.','oh#HH#HH#HHhjjhHo','.oh#HH#H#HHhjjho.','ohH#HH#HHH#jjhjHo','.ohjhjjhjjjHHjHo.','ohjjhjjhjhHHjHHHo','.ohjjhjjjhHHjHHo.','..oohhHjhHjhHoo..','....ooooooooo....']),
+  'SW': O(0,0, ['.....ooooooo.....','...oohhhhhhhoo...','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhh...hhhhhhhhho','.oh..hhh..hhhhho.','ohh..........hhho','.oh..........hhho','ohh..........hhho','.oh..........hho.','..o..........oo..']),
+  'N': O(0,0, ['.....ooooooo.....','...oohhhhhhhoo...','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','..oohhhhhhhhhoo..','....ooooooooo....']),
+  'W': O(0,0, ['...oooooooo....','..ohhhhhhhhoo..','.ohhhhhhhhhhho.','ohhhhhhhhhhhhho','ohhhhhhhhhhhhho','.ohhhhhhhhhhhho','ohhhhhhhhhhhhho','ohhh..hhhhhhhho','.ohh..ohhhhhhho','......ohhhhhhho','......ohhhhhhho','......ohhhhhho.','.......ohhhho..','........ohho...','.........oo....']),
+  'NW': O(0,0, ['.....ooooooo.....','...oohhhhhhhoo...','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','..oohhhhhhhhhoo..','....ooooooooo....']),
 }
 HAIR['SWEPT'] = {
-  'SW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#HHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#jjhjHo.','.o#HH#HH#Hjhjjho.','.ohhHjhHhHjhHjho.','.oh..........Hjo.','.oh..........Hjo.','..o..........oo..']),
-  'N': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#Hjhjjho.','.oh#HH#HHHhjjhHo.','.ohjhjjhjjjHHjHo.','..ohhjjhjhHHjHo..','...oohHjjhHHoo...','.....ooooooo.....']),
-  'W': O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#ho','oh#hh#hh#h#hHo','ohH#HH#HHH#jHo','ohjhHjhHjhHHo.','..........hHo.','..........hHo.','.........hHo..','........Hjjo..','.........o....']),
-  'NW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#Hjhjjho.','.oh#HH#HHHhjjhHo.','.ohjhjjhjjjHHjHo.','..ohhjjhjhHHjHo..','...oohHjjhHHoo...','.....ooooooo.....']),
+  'SW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhh...hhhhhhho.','.oh..........hho.','.oh..........hho.','..o..........oo..']),
+  'N': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','...oohhhhhhhoo...','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhho.','..........hho.','..........hho.','.........hho..','........hhho..','.........o....']),
+  'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','...oohhhhhhhoo...','.....ooooooo.....']),
 }
 HAIR['BOB'] = {
-  'SW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#jjhjHo.','.ohHjhHjhHjhHjho.','.o#..hHH..HhHHho.','.o#..........hHHo','.o#..........hHHo','.oh..........Hjo.','..oh.........oHo.','...o.........oo..']),
-  'N': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#Hjhjjho.','.oh#HH#HHHhjjhHo.','.ohjhjjhjjjHHjHo.','.ohjhjjhjhHHjHHo.','..ohjhjjjhHHjHo..','...oohHjhHjhoo...','.....ooooooo.....']),
-  'W': O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#Ho','oh#hh#hh#h#hHo','ohjhHjhHjjhHHo','ohHH..#hh#hh#o','......ohHhHHho','......ohHHHhHo','......ojHjjHjo','......ojHjHjjo','.......ojjHjjo','........oooooo']),
-  'NW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#Hjhjjho.','.oh#HH#HHHhjjhHo.','.ohjhjjhjjjHHjHo.','.ohjhjjhjhHHjHHo.','..ohjhjjjhHHjHo..','...oohHjhHjhoo...','.....ooooooo.....']),
+  'SW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohh...hhhhhhhho.','.oh..hhh..hhhhho.','.oh..........hhho','.oh..........hhho','.oh..........hho.','..oh.........oho.','...o.........oo..']),
+  'N': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','...oohhhhhhhoo...','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh..hhhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','.......ohhhhho','........oooooo']),
+  'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ohhhhhhhhhhho..','...oohhhhhhhoo...','.....ooooooo.....']),
 }
 HAIR['WILD'] = {
-  'SW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#jjhjHo.','.ohHjhHjhHjhHjho.','.o#..hHH..HhHHho.','.o#.......Hj.hHHo','o#h........h.hHHo','.oh..........Hjjo','.oh..........Hjjo','.oh.........oHjjo','oHjo.........jHHo','.oHo.........jHo.','.oHo.........ojo.','..o...........o..']),
-  'N': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#hHho..','.ohh#hh#h#hhhHHo.','.o#HH#HHH#HHhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#HHhjjho.','.oh#HH#HHH#jjhHo.','ohjjhjjhjjhHHjHo.','.ohjhjjhjhjHjHHHo','.ohjjhjjjhHHjHHo.','.ohjjhjjhjHjHHHo.','ohjhjjhjhjHjHHjHo','.ohhjjhjjjjHHjHo.','.ohohHjhHjhHjoHo.','..ooooooooooooo..']),
-  'W': O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#Ho','oh#hh#hh#h#hHo','ohjhHjhHjjhHHo','o#hh..#hh#hh#o','.o#h..ohHhHHho','.o#h..ohHHHhHo','.oh...ojHjjHjo','..o...ojHjHjjo','......ojjjHjjo','.......oHjHHjo','.......oHjHHjo','.......oHHHjHo','........ohHo..','.........oo...']),
-  'NW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#hHho..','.ohh#hh#h#hhhHHo.','.o#HH#HHH#HHhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#HHhjjho.','.oh#HH#HHH#jjhHo.','ohjjhjjhjjhHHjHo.','.ohjhjjhjhjHjHHHo','.ohjjhjjjhHHjHHo.','.ohjjhjjhjHjHHHo.','ohjhjjhjhjHjHHjHo','.ohhjjhjjjjHHjHo.','.ohohHjhHjhHjoHo.','..ooooooooooooo..']),
+  'SW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohh...hhhhhhhho.','.oh..hhh..hhhhho.','.oh.......hh.hhho','ohh........h.hhho','.oh..........hhho','.oh..........hhho','.oh.........ohhho','ohho.........hhho','.oho.........hho.','.oho.........oho.','..o...........o..']),
+  'N': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhho.','.ohhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohohhhhhhhhhoho.','..ooooooooooooo..']),
+  'W': O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh..hhhhhhho','.ohh..ohhhhhho','.ohh..ohhhhhho','.oh...ohhhhhho','..o...ohhhhhho','......ohhhhhho','.......ohhhhho','.......ohhhhho','.......ohhhhho','........ohho..','.........oo...']),
+  'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhho.','.ohhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','ohhhhhhhhhhhhhhho','.ohhhhhhhhhhhhho.','.ohohhhhhhhhhoho.','..ooooooooooooo..']),
 }
 HAIR['PONYTAIL'] = {
-  'SW': [O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#HHo...','..oh#hh#hh#HHho..','..oh#hh#h#hHhHo..','..ohH#HHH#jjhHo..','..ohH#HH#HjhjHo..','............Hjh..']), O(13,10, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
-  'N': [O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#hHo...','..oh#hh#hh#HHho..','..oh#hh#h#hHhHo..','..ohH#HHH#HjhHo..','..ohH#HH#HHhjHo..','..h#HH#H#Hjhjjh..','...ohH#HHHhjHo...','...ohjjhjjjHHo...','...ohjjhjhHHHo...','....ohHjjhHHo....']), O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
-  'W': [O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#Ho','oh#hh#hh#h#hHo','ohjhHjhHjjhHHo','ohHH.....Hjjo.','.ohH......Hjo.']), O(10,8, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
-  'NW': [O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#hHo...','..oh#hh#hh#HHho..','..oh#hh#h#hHhHo..','..ohH#HHH#HjhHo..','..ohH#HH#HHhjHo..','..h#HH#H#HjhjHo..','...ohH#HHHhjHo...','...ohjjhjjjHHo...','...ohjjhjhHHo....','....ohHjjhHo.....']), O(7,12, ['.ooo','o#Ho','ohHo','ohjo','oHjo','.oo.'])],
+  'SW': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oh...hhhhhhho..','............hhh..']), O(13,10, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
+  'N': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..hhhhhhhhhhhhh..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....']), O(7,12, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
+  'W': [O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh.....hhho.','.ohh......hho.']), O(10,8, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
+  'NW': [O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..hhhhhhhhhhhho..','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhho....','....ohhhhhho.....']), O(7,12, ['.ooo','ohho','ohho','ohho','ohho','.oo.'])],
 }
 HAIR['SHORT'] = {
-  'SW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#HHo...','..oh#hh#hh#HHho..','..oh#hh#h#HHhHo..','..ohH#HHH#jjhHo..','..ohjhHjhHjhHHo..','.....hHH..jHjjH..','......h....H.....']),
-  'N': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#hHo...','..oh#hh#hh#HHho..','..oh#hh#h#hHhHo..','..ohH#HHH#HjhHo..','..ohH#HH#HHhjHo..','.oh#HH#H#Hjhjjho.','...ohH#HHHhjHo...','...ohjjhjjjHHo...','...ohjjhjhHHHo...','....ohHjjhHHo....','.....ooooooo.....']),
-  'W': O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#Ho','oh#hh#hh#h#hHo','ohjhHjhHjjhHHo','ohHH.....hHHo.','.ohH......hHo.','..........hHo.','.........Hjo..','........Hjjo..','.........o....']),
-  'NW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','...ohh#hhh#hHo...','..oh#hh#hh#HHho..','..oh#hh#h#hHhHo..','..ohH#HHH#HjhHo..','..ohH#HH#HHhjHo..','.oh#HH#H#Hjhjjho.','...ohH#HHHhjHo...','...ohjjhjjjHHo...','...ohjjhjhHHHo...','....ohHjjhHHo....','.....ooooooo.....']),
+  'SW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..oh...hhhhhhho..','.....hhh..hhhhh..','......h....h.....']),
+  'N': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....','.....ooooooo.....']),
+  'W': O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh.....hhho.','.ohh......hho.','..........hho.','.........hho..','........hhho..','.........o....']),
+  'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','...ohhhhhhhhho...','...ohhhhhhhhho...','...ohhhhhhhhho...','....ohhhhhhho....','.....ooooooo.....']),
 }
 HAIR['LONG'] = {
-  'SW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#HHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#jjhjHo.','.ohHjhHjhHjhHjho.','.o#..hHH..HhHHho.','.o#..........hHHo','.o#..........hHHo','.oh..........Hjjo','.oh..........Hjjo','.oh.........oHjjo','.oHo.........jHHo','.oHo.........jHo.','..o..........oo..']),
-  'N': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#hHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#HHhjjho.','.oh#HH#HHH#jjhHo.','.ohjhjjhjjjHHjHo.','.ohjhjjhjhHHjHHo.','.ohjjhjjjhHHjHHo.','.ohjjhjjhjHjHHHo.','.ohhjjhjhjHjHHHo.','.ohhHjhHHjhHjhHo.','..ooooooooooooo..']),
-  'W': O(0,0, ['...oooooooo...','..o##h##h##o..','.o#h##hJJ##ho.','.ohh#hh#hhh#o.','oh#hh#hh#hh#Ho','oh#hh#hh#h#hHo','ohjhHjhHjjhHHo','ohHH..#hh#hh#o','......ohHhHHho','......ohHHHhHo','......ojHjjHjo','......ojHjHjjo','......ojjjHjjo','......oHHjHHjo','......ojHjHHjo','......ojHHHjHo','......oooooooo']),
-  'NW': O(0,0, ['......ooooo......','....oo#h##hoo....','...o#hJJ##h#ho...','..o#hh#hhh#hHho..','..oh#hh#hh#hHho..','.ohh#hh#h#hHhHHo.','.o#HH#HHH#HjhjHo.','.o#HH#HH#HHhjjho.','.oh#HH#H#HHhjjho.','.oh#HH#HHH#jjhHo.','.ohjhjjhjjjHHjHo.','.ohjhjjhjhHHjHHo.','.ohjjhjjjhHHjHHo.','.ohjjhjjhjHjHHHo.','.ohhjjhjhjHjHHHo.','.ohhHjhHHjhHjhHo.','..ooooooooooooo..']),
+  'SW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohh...hhhhhhhho.','.oh..hhh..hhhhho.','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh..........hhho','.oh.........ohhho','.oho.........hhho','.oho.........hho.','..o..........oo..']),
+  'N': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ooooooooooooo..']),
+  'W': O(0,0, ['...oooooooo...','..ohhhhhhhho..','.ohhhhhhhhhho.','.ohhhhhhhhhho.','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhhhhhhhhhhho','ohhh..hhhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......ohhhhhho','......oooooooo']),
+  'NW': O(0,0, ['......ooooo......','....oohhhhhoo....','...ohhhhhhhhho...','..ohhhhhhhhhhho..','..ohhhhhhhhhhho..','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','.ohhhhhhhhhhhhho.','..ooooooooooooo..']),
 }
 
-BUZZ = {'SW': R([0,0,16,7],'hair'), 'W': [R([0,0,13,7],'hair'), R([9,8,12,11],'hair')], 'N': R([0,0,16,13],'hair'), 'NW': R([0,0,16,13],'hair')}
+# The buzz cut: the skull of each view's head (the skin cells inside these head-space boxes) as hair, a
+# silhouette like the drawn hairstyles; hair64.ts combs it when the figure is dressed.
+BUZZ_BOXES = {'S': [[0,0,16,7]], 'SW': [[0,0,16,7]], 'W': [[0,0,13,7], [9,8,12,11]], 'N': [[0,0,16,13]], 'NW': [[0,0,16,13]]}
+def buzz_rows(view):
+    head = FIG[view][:14]
+    W = max(len(r) for r in head)
+    rows = []
+    for y, r in enumerate(head):
+        r = r.ljust(W, '.')
+        inside = lambda x: any(x0 <= x <= x1 and y0 <= y <= y1 for x0, y0, x1, y1 in BUZZ_BOXES[view])
+        rows.append(''.join('h' if inside(x) and c in 'sS$zZ' else '.' for x, c in enumerate(r)))
+    return rows
+BUZZ = {view: O(0, 0, buzz_rows(view)) for view in ('S', 'SW', 'W', 'N', 'NW')}
 
 # ---------------------------------------------------------------- hats (W only here; SW/N/NW reuse or flip the S drawings)
 HATS = {

@@ -349,3 +349,39 @@ gộp vào B1/B2. Ô thái dương (giữa viền lông mày và mắt) và ô t
 mặt → B5. Mép tay áo rách / nếp tay áo của zombie dân thường, công nhân, thể thao → B2. Tóc Ny ở
 N/NW → B1. Góc túi sau lưng Ny thành `r` do luật khối viền 2×2 (outfit64) — 2 ô/sprite, giữ.
 Đạt 73 → 76/130, lint 89 → 89, QA sạch.
+
+### D-074 Tóc là ba mảng chéo có đường lọn, chải bằng luật khi mặc (B1 của giám khảo vòng 3)
+
+**Vì sao đổi.** Giám khảo vòng 3 đọc tóc D-069 là "lưới chu kỳ 3 cột, mái thẳng như mũ úp" — mỗi lọn 3 ô có
+một cột mép sáng nên ở ×6 tóc đọc như mũ len. Ảnh mẫu (dựng lại ở 1×) dùng 5 tông thành ba mảng xuôi chéo:
+mảng sáng trên–trái, mảng gốc, mảng tối ôm dưới–phải, với vài đường lọn sẫm chạy chéo giữa các mảng.
+
+**Luật mới (`packages/sprite-kit/src/hair64.ts`, `combHair`).** Tóc chỉ được _vẽ silhouette_ một tông (`h`
+
+- viền `o`) trong `cast64.ts` và `gen_view_items.py`; đầu đinh là silhouette sọ của từng góc (overlay, không
+  còn remap). Khi `dress()` xong mọi lớp, mỗi mảng tóc (8-liên thông, ≥ 6 ô, không phải râu vẽ tay) được chải
+  _trên hình đã mặc, trong không gian hình_ — nên đầu nghiêng (dịch hàng của dáng) vẫn ra mảng liền, điều mà tô
+  sẵn trên literal không đảm bảo được. Luật: (1) trường sáng chạy từ trên–trái xuống dưới–phải, cắt theo
+  phân vị thành 5 dải chói 10 % / sáng 25 % / gốc 33 % / tối 24 % / sâu 8 %, mỗi lọn lệch ±0,07 để ranh dải
+  không thẳng hàng; (2) lọn toả từ ngôi lệch trái (góc W: ngôi sát mặt), rộng 4-4-5, quét 0,5 ô/hàng _ra
+  ngoài_; cột xa của lọn là đường lọn, tối hơn một bậc so với dải tối hơn trong hai lọn nó ngăn, có ô góc ở
+  mỗi bậc để đường liền 4-liên thông; (3) ô sát viền lấy tông thân của dải (không là đường lọn, không sâu);
+  (4) ô lẻ lấy tông đa số láng giềng; (5) _mảng trước, nét sau_: vùng cùng tông vượt ngưỡng phẳng của thước
+  (13 ô hay 12 % tóc, dưới cổng 13,8 % / 16 ô) bị cắt bằng một nét tông kề dọc lọn qua giữa, bất đắc dĩ
+  mới cắt ngang; (6) chống bậc thang: hai dải cùng đầu cùng dài ≥ 3 ô kề nhau (luật `banding` của lint) thì
+  dải sau nhường ô cuối; rồi cắt lại lần nữa. Vài ô viền tóc bị `dress()` đổi thành sâu (luật khối viền 2×2)
+  giữ nguyên; mảng có > 20 % ô khác tông gốc (râu) không chải.
+
+**Mái.** Hàng mái cuối của mọi kiểu (S và SW) mất ô 4–6: mép mái bên trái ngôi cao hơn bên phải một hàng
+(đơn của giám khảo), lọn giữa hai mắt giữ nguyên; SWEPT góc SW khuyết lệch một ô để không lộ ô viền lông mày
+đơn.
+
+**Đã thử và bỏ.** Ba mảng phẳng không đường lọn: rớt `flat hair` 33/130 (vùng 20–50 ô). Đường lọn chéo 1 ô
+không có ô góc: không ngăn được vùng 4-liên thông. Quét _vào_ ngôi (D-069): ở góc N thành chữ X. Lọn rộng
+3-3-4-3 với đường lọn ở mọi lọn: mật độ nét 1/3 cột, lại "lưới". Tô sẵn bằng Python trên literal
+(`lock_paint.py`, `apply_locks.py`, đã xoá): vỡ ở đầu nghiêng (zombie dân nữ 18,7 % phẳng).
+
+**Số đo.** Đạt 76 → 77/130; `flat hair` 0 → 1 (zombie văn phòng @W, 14,x %); ô lẻ 357 → 338; lint cầm bút
+89 → 89; `lintAdded` rớt 19 → 17; banding trên tóc (lint chạy trên ma trận ô) 40 → 1; QA sạch; 113 test.
+`lineDens`/`lines` (đếm pixel tối mảnh trong ảnh) giảm trên 52 sprite vì tóc ít ô sâu hơn — thước này đo cả
+sợi tóc tối, giữ nguyên để so với mẫu cùng cách đo.

@@ -14,6 +14,7 @@
  */
 import type { MaterialColors } from './paint.js';
 import { EMPTY, LEGEND, MATERIALS, packCell, type Material, type Sprite } from './format.js';
+import { combHair } from './hair64.js';
 import { blank } from './draw.js';
 import type { Box, HeroView } from './hero64.js';
 import type { FormSpec, HeadMap } from './heroforms.js';
@@ -66,6 +67,8 @@ export interface Outfit {
   lines?: readonly Seam[];
   overlays?: readonly Overlay[];
   colors: MaterialColors;
+  /** The drawn view the outfit is for; hair is combed by it (default S). */
+  view?: HeroView;
 }
 
 /** A dressed figure: the canvas grew by `ox` columns on the left and `oy` rows on the top when overlays reached past the figure. */
@@ -234,5 +237,6 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
     const y = Math.floor(i / out.w);
     if (out.cells[i] === LINE && doubles(x, y)) out.cells[i] = Math.floor(v / 8) * 8 + 3;
   }
+  combHair(out, outfit.view ?? 'S');
   return out;
 }
