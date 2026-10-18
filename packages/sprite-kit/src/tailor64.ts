@@ -344,7 +344,10 @@ export function tailor(
         if (wide && c.x === inner && c.y > y0 && c.y < y1) c.shade = MID;
         if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
       }
-      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP; // hem; the far leg's outer cell stays shadow (one tone across bands with the row above)
+      // hem; the far leg's outer cell stays shadow (one tone across bands with the row above). Under a coat only
+      // the hem row shows and that cell reads as a stray (fourth review, Lan); deep instead, it thickens the
+      // outline below and Lan@SW loses a thin-line pixel (lineDens 4.08 < 4.1): tried and declined.
+      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP;
       if (c.y === y0 && h >= 8) c.shade = DEEP; // waistband under the hem seam (long trousers only)
       // Knee pads: the two cells of each leg beside its lit edge, a step lighter than the knee band.
       if (g.kneePads && legW >= 3 && c.y === knee && c.x >= lo + 1 && c.x <= lo + 2)
@@ -370,7 +373,9 @@ export function tailor(
   } else if (g.kind === 'boots') {
     for (const c of cells) {
       if (c.y === y1)
-        c.shade = c.x === rowMin.get(c.y) ? SHADOW : DEEP; // sole, its toe end a step lighter
+        // sole, its toe end a step lighter: one tone across would stack it on the body row as two equal runs
+        // (the banding lint) on every S shoe; the fourth review's one-tone sole was tried and declined
+        c.shade = c.x === rowMin.get(c.y) ? SHADOW : DEEP;
       else if (c.x >= (rowMax.get(c.y) ?? x1) - 1 && h >= 3) c.shade = SHADOW; // heel turns away
       if (c.y === y0 && c.x <= (rowMin.get(c.y) ?? x0) + 2) c.shade = LIGHT; // toe cap
     }

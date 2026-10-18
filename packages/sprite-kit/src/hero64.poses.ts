@@ -642,7 +642,7 @@ export const POSE_CRAWL: ZombiePose = {
     [13, 22, 13, 22],
     [8, 23, 12, 23],
   ],
-  hem: [6, 27, 14, 27],
+  hem: [6, 28, 14, 28], // the torso's last row, as in the side view: a sewn hem can close the rags there
   frayedXs: [6, 8, 10, 12, 14],
   chest: [7, 25],
   number: [8, 25],

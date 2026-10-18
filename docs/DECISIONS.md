@@ -673,3 +673,28 @@ không làm vì mũ sắt là dấu hiệu "lính" của cả hai và góc SW c�
 
 **Số đo.** Đạt 84 → 85/130 (zombie quân đội@NW đạt nhờ bóng da 13,9 %; không sprite nào rớt); ô lẻ 287 giữ,
 `strict` 1663 → 1655; lint 80; QA sạch; `problems: 0`; 113 test.
+
+### D-087 Lỗi nhỏ còn lại (B10 của giám khảo vòng 4)
+
+Năm mục, hai làm, một đã xong từ trước, hai từ chối vì vướng thước:
+
+- **(ii) Dải cổ áo zombie cảnh sát @N** — làm. Dáng gục đầu nhìn từ sau để hở lưng trên giữa gáy và đường may cổ
+  (hàng 17 của dáng S): thêm đoạn cổ áo ngay dưới gáy (`[6,14,11,14]` ở droop N, lật thành `[7,14,12,14]` cho
+  `droop_m`), đặt đầu danh sách để đoạn cuối vẫn neo cổ thun và rằn ri; tóc che nó ở mọi look khác (zombie dân
+  thường, VĐV), mũ kê-pi để lộ nên dải đọc tối liền từ x=3 đến 12.
+- **(v) Gấu áo Kẻ Bám Trần** — làm. `Look.hem: true` trên áo rách = rách được may vào một đường gấu (đường
+  `waist` thay cho năm đường may xơ), lỗ rách hai ô dời lên một hàng cho nguyên vẹn; gấu của dáng bò dời xuống hàng
+  cuối của thân (28, như góc W đã có) ở S/SW/N/NW. Áo tách khỏi hông ở 1×; ô lẻ Kẻ Bám Trần@W 5 → 4.
+- **(iii) Ô đầu vành mũ Lính nữ @W** — đã đúng màu viền mũ (0,6,0) từ D-078 (hoà màu ô viền lẻ); không sửa thêm.
+  Thử bỏ viền trên của đuôi tóc W để hết ô viền vành sau bị đổi thành tóc sâu: zombie VĐV nữ@W rớt `flat hair`
+  14,6 % → hoàn lại.
+- **(i) Ô mũi giày @W một tông với đế** — từ chối. Đế một tông xếp lên hàng thân giày thành hai dải bằng nhau
+  (lint `banding`) trên mọi giày góc S: 15 sprite rớt `lintAdded`, 85 → 70. Ô mũi nhạt hơn một bậc là chủ ý của
+  `tailor64` để phá dải; giữ.
+- **(iv) Ô gấu quần Lan (37,56)** — từ chối. Đó là đầu cột bóng của chân xa, chỉ còn một ô vì áo blouse che phần
+  trên; đổi sang sâu (`underCoat`) đúng ý giám khảo ở S nhưng ở SW ô sâu dày thêm viền bên dưới, Lan@SW mất một
+  điểm ảnh "đường mảnh" và rớt `lineDens` 4,08 < 4,1 (85 → 84). Thước ưu tiên theo CLAUDE.md; ghi lại để lần
+  hiệu chỉnh thước xem lại ngưỡng sát của Lan@SW.
+
+**Số đo.** Đạt 85/130 giữ nguyên (không sprite nào đổi trạng thái); ô lẻ 287 → 286, `strict` 1655 → 1642; lint
+80; QA sạch; `problems: 0`; 113 test. **Hết thứ tự B2 → B3 → B4 → B5 → B6 → B1 → B7 → B8 → B9 → B10 của vòng 4.**

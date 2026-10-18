@@ -865,7 +865,7 @@ export interface Look {
   face?: 'zombie' | 'plain';
   /** False drops the plain face's mouth (a drawn smile, a beard, a giant with its own teeth). */
   mouth?: boolean;
-  /** False drops the hem line at the waist (a coat that carries on below it). */
+  /** False drops the hem line at the waist (a coat that carries on below it); true sews a torn top's rags to one. */
   hem?: boolean;
   /** Wide sleeves: a column let out past each arm's outline (a coat). */
   sleeves?: 'wide';
@@ -995,8 +995,10 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       break;
     }
     case 'torn': {
+      // two-cell holes at the hem; above a sewn hem line (`hem: true`) they sit one row higher, whole
+      const holeY = look.hem ? hemY - 1 : hemY;
       const holes: Box[] = [pose.frayedXs[0]! + 1, pose.frayedXs[2] ?? pose.frayedXs[0]! + 1].map(
-        (x) => [x, hemY - 1, x, hemY],
+        (x) => [x, holeY - 1, x, holeY],
       );
       remaps.push(
         torso(holes),
@@ -1004,7 +1006,11 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         sleeve('L', pose.sleeveL.torn ?? pose.sleeveL.short),
         sleeve('R', pose.sleeveR.short),
       );
-      lines.push(...collar, ...pose.frayedXs.map((x) => seam([x, hemY, x, hemY])));
+      // `hem: true` sews the rags to a hem line (the crawler's shirt parted from its hips at 1x, fourth review)
+      lines.push(
+        ...collar,
+        ...(look.hem ? waist : pose.frayedXs.map((x) => seam([x, hemY, x, hemY]))),
+      );
       break;
     }
     case 'long':
@@ -1466,6 +1472,7 @@ export const KE_THINH = wearPosed('ke_thinh', 'Kẻ Thính', POSE_REACH, {
 /** Kẻ Bám Trần: the ceiling crawler on the ground, crouched with long clawed arms, yellow eyes. */
 export const KE_BAM_TRAN = wearPosed('ke_bam_tran', 'Kẻ Bám Trần', POSE_CRAWL, {
   top: 'torn',
+  hem: true,
   bottoms: 'shorts',
   shoes: 'none',
   details: ['scalp', 'stains', 'gash'],

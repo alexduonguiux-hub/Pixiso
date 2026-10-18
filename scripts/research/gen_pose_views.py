@@ -765,7 +765,7 @@ add('crawl', 'SW', CRAWL_SW, ('SW', 2, 6, lambda k: 0), {
     'sleeveR': {'short': [15, 24, 20, 27], 'long': [15, 24, 20, 31]},
     'pants': [[5, 28, 15, 36]], 'shorts': [[5, 28, 15, 31]],
     'shoeL': [5, 37, 9, 39], 'shoeR': [11, 37, 15, 39], 'flats': [[5, 38, 9, 39], [11, 38, 15, 39]],
-    'collar': [[7, 22, 7, 22], [13, 22, 13, 22], [8, 23, 12, 23]], 'hem': [6, 27, 14, 27], 'frayedXs': [6, 8, 10, 12, 14],
+    'collar': [[7, 22, 7, 22], [13, 22, 13, 22], [8, 23, 12, 23]], 'hem': [6, 28, 14, 28], 'frayedXs': [6, 8, 10, 12, 14],
     'chest': [7, 25], 'number': [8, 25], 'tie': [10, 24], 'belt': [10, 27], 'stains': [6, 24], 'gash': [2, 29],
     'skirt': {'x': 4, 'y': 28, 'rows': ['.o&kkkkkkkKo.', '.o&kkkkkkkKo.', 'o&kkkkkkkkkKo', 'o&kkkkkkkkkKo', 'oo.ooo.oooo.o']},
 })
@@ -1073,6 +1073,10 @@ for pose, S in POSE_S.items():
         back = mirror_regions(sw['regions'], Wsw)
         body = flatten(flipx(sw['body']), back['torso'])
         add(pose, 'NW', patched(body, PATCHES.get((pose, 'NW'), {})), ('NW', Wsw - HEAD_W - sw['headX'], sw['headY'], lambda k, t=sw['shift']: -t[k]), back_regions(back))
+# The dropped head seen from behind leaves the upper back bare above the collar seam: a collar band right under
+# the nape (row 14; a hairstyle covers it, a cap leaves it showing) so the band reads dark across the back
+# (fourth review, the police zombie). First in the list: the last collar segment anchors the neckband and camo.
+POSES['droop']['N']['regions']['collar'].insert(0, [6, 14, 11, 14])
 # Mirrored poses: their own back view (flipped, as their S view is); W, SW and NW are shared with the base pose.
 for pose in MIRRORED:
     n = POSES[pose]['N']; Wn = len(n['body'][0])
