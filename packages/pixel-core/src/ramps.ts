@@ -84,6 +84,10 @@ export const REFERENCE_RAMP_OPTIONS: RampOptions = {
 };
 
 const DEG = Math.PI / 180;
+/** Lightness the deep shade never drops below on a dark material (reference: black trousers' darkest fill L 0.17). */
+const DEEP_FLOOR_L = 0.17;
+/** Lightness the tinted outline never drops below (reference outlines on black cloth: L 0.07–0.13, never pure black). */
+const LINE_FLOOR_L = 0.1;
 
 /** Rotates hue `h` toward `towardDeg` along the shorter arc, by at most `maxDeg`. */
 export function shiftHue(hRad: number, towardDeg: number, maxDeg: number): number {
@@ -161,7 +165,9 @@ export function buildTintedLine(shadow: Lab, o: RampOptions = DEFAULT_RAMP_OPTIO
     // Mid-dark line in the shadow's own hue (the 64 px reference: brown on
     // skin); on a dark material it stays a step darker than the shadow.
     const chroma = Math.min(0.08, Math.max(o.tintChroma, C * 0.8));
-    return clampToGamut(oklchToOklab(Math.min(o.lineL, shadow[0] - 0.12), chroma, h));
+    return clampToGamut(
+      oklchToOklab(Math.max(LINE_FLOOR_L, Math.min(o.lineL, shadow[0] - 0.12)), chroma, h),
+    );
   }
   const tint = Math.min(0.05, Math.max(o.tintChroma, C * 0.5));
   return clampToGamut(oklchToOklab(0.12, tint, shiftHue(h, o.shadowHueDeg, 20)));
@@ -199,7 +205,14 @@ export function buildRamp5(base: Lab, o: RampOptions = DEFAULT_RAMP_OPTIONS): Rg
   const shadow = shade(base, o.shadowL, o.shadowHueDeg, o.shadowChroma, o);
   const mid: Lab = [Math.max(0.06, Math.min(0.98, base[0])), base[1], base[2]];
   const highlight = shade(base, o.highlightL, o.highlightHueDeg, o.highlightChroma, o);
-  const deep = shade(shadow, o.deepL ?? o.shadowL * 0.6, o.shadowHueDeg, o.shadowChroma, o);
+  let deep = shade(shadow, o.deepL ?? o.shadowL * 0.6, o.shadowHueDeg, o.shadowChroma, o);
+  // A dark base must not push the deep shade onto the outline: the reference's
+  // darkest fill (black trousers) sits at L 0.17–0.18 over a near-black line.
+  const deepFloor = Math.min(DEEP_FLOOR_L, shadow[0] - 0.03);
+  if (deep[0] < deepFloor) {
+    const [, C, h] = oklabToOklch(...deep);
+    deep = oklchToOklab(deepFloor, C, h);
+  }
   const bright = shade(
     highlight,
     o.brightL ?? o.highlightL,
@@ -226,7 +239,8 @@ export const HERO_CLOTH_RAMP_OPTIONS: RampOptions = {
   shadowChroma: 1.15,
   highlightChroma: 0.9,
   minChromaForShift: 0.025,
-  tintChroma: 0.02,
+  // Greys stay close to neutral (reference trousers' highlights are plain grey); 0.02 read as olive on dark hair.
+  tintChroma: 0.012,
   shadowAwayFromHighlight: true,
   lineL: 0.38,
   deepL: -0.14,
