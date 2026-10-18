@@ -178,7 +178,13 @@ export function tailor(
     set(x1 - 2, y0 + 8, DEEP);
     const farEdge = x0 + Math.round(w * 0.85);
     for (const c of cells)
-      if (c.x >= farEdge + ((c.y - y0) % 2) && c.y >= y0 + 3 && c.y <= y1 - 2 && c.shade === SHADOW)
+      if (
+        c.x >= farEdge + ((c.y - y0) % 2) &&
+        c.y >= y0 + 3 &&
+        c.y <= y1 - 2 &&
+        (c.y - y0) % 4 !== 3 && // a shadow cell every fourth row keeps the band from forming one long patch
+        c.shade === SHADOW
+      )
         c.shade = DEEP;
     if (g.pockets) {
       const py = y0 + 6;

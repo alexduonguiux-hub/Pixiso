@@ -286,7 +286,7 @@ const HELMET: Overlay = {
     '....ooV^^^cccoo....',
     '...o^^^^ccccccco...',
     '..o^cccccccccccco..',
-    '..occCCCCCCCCCCCo..',
+    '..o^CCCCCCCCCCCCo..',
     '..occcccccCCCCCvo..',
     '..occccCCCCCvvvvo..',
     '.occcCCCCCCCvvvvvo.',
@@ -538,12 +538,12 @@ const RANGER_COAT: Overlay[] = [
   ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
   ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
   ov(1, 29, [
-    'o^cccccocccccCo',
+    'o^ccCccoccCccCo',
     'o^ccCccoccCccCo',
     'occcCco.ocCccco',
     'occcCco.ocCccvo',
     'occcCco.ocCccvo',
-    'occccco.occccvo',
+    'occcCco.ocCccvo',
     'ooooooo.ooooooo',
   ]),
 ];
@@ -551,12 +551,12 @@ const RANGER_COAT_BACK: Overlay[] = [
   ov(-1, 18, ['oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC', 'oC']),
   ov(16, 18, ['Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co', 'Co']),
   ov(1, 29, [
-    'o^cccccocccccCo',
+    'o^ccCccoccCccCo',
     'o^ccCccoccCccCo',
     'occcCccoccCccco',
     'occcCco.ocCccvo',
     'occcCco.ocCccvo',
-    'occccco.occccvo',
+    'occcCco.ocCccvo',
     'ooooooo.ooooooo',
   ]),
 ];
@@ -569,19 +569,19 @@ const RANGER_COAT_V: ViewItem = {
 };
 /** Bác sĩ Lan's coat tails to the knee, a column past each hip, and a clipboard held against the left thigh. */
 const COAT_TAILS2: Overlay = ov(1, 29, [
-  'o^cccccocccccCo',
+  'o^ccCccoccCccCo',
   'o^ccCccoccCccCo',
   'occcCco.ocCccco',
   'occcCco.ocCccvo',
-  '.occcco.occcco.',
+  '.occCco.ocCcco.',
   '.oooooo.oooooo.',
 ]);
 const COAT_TAILS2_BACK: Overlay = ov(1, 29, [
-  'o^cccccocccccCo',
+  'o^ccCccoccCccCo',
   'o^ccCccoccCccCo',
   'occcCccoccCccco',
   'occcCco.ocCccvo',
-  '.occcco.occcco.',
+  '.occCco.ocCcco.',
   '.oooooo.oooooo.',
 ]);
 const CLIPBOARD: Overlay = ov(-1, 23, [
@@ -596,9 +596,9 @@ const CLIPBOARD: Overlay = ov(-1, 23, [
 const CLIPBOARD_BACK: Overlay = ov(17, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 'oo']);
 /** Ny's scrub tunic reaches below the hips; a small red pouch hangs on the right hip. */
 const TUNIC: Overlay = ov(1, 30, [
-  'o^cccccCcccccCo',
-  'o^ccCcccccCccCo',
-  'occccccccccccco',
+  'o^ccCccCccCccCo',
+  'o^ccCccCccCccCo',
+  'occcCccCccCccco',
   'ooooooooooooooo',
 ]);
 const POUCH: Overlay = ov(14, 23, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']);

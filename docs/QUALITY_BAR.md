@@ -140,3 +140,31 @@ tỉ lệ, viền 1 ô, điểm neo chân và hướng sáng ngang mức ảnh m
 nón và phụ kiện đọc được ở 1× (nón sắt, nón bảo hộ, mũ nồi, túi y tế, mai rùa, gai đột biến); mặt
 Đột Biến là mặt duy nhất đạt; kỷ luật ánh sáng và bảng màu (20–26 màu/sprite); dáng zombie đọc ra
 zombie ở 1×.
+
+## 7. Biên bản chấm độc lập vòng 2 (18/10/2026, sau D-057…D-066)
+
+Cùng cách làm như §6 (phiên riêng, chỉ xem ảnh mẫu ×12 và các bảng ×6/×12 của ta, chấm theo
+checklist §3). Kết quả theo nhóm — dàn chính **5/10**, lính **6/10**, zombie **5/10**, thể hình lớn
+**5/9**: đều chưa đạt, nhưng so với §6 các mục mắt (dàn chính), áo, góc ngang, góc sau và nhận diện
+nhân vật đã chuyển sang đạt. Mục còn rớt và lý do giám khảo nêu:
+
+| Mục                 | Dàn chính                                                                   | Lính                                                        | Zombie                                           | Thể hình lớn                                                                       |
+| ------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| 1 Mắt               | đạt                                                                         | không: mống nâu xám, ở 1× thành vệt đen                     | không: chấm đỏ 1 ô, không mống, không điểm trắng | không: chỉ Đột Biến đạt                                                            |
+| 2 Tóc               | không: Sơn, Kẻ Bắt Chước là nhiễu ô xám không lọn, mép mái thẳng            | không: đầu đinh nhiễu                                       | không: 4/8 tóc đen cùng pattern nhiễu            | —                                                                                  |
+| 4 Bậc tông          | không: Ông Tư dải sáng 1 ô mép ngoài hai tay, hai ống quần                  | đạt                                                         | đạt                                              | đạt                                                                                |
+| 5 Góc 45°           | không: rộng S/SW 17/16, mắt xa vẫn 2 cột, bàn chân trùng từng ô             | không                                                       | không (7/8)                                      | không (quái mai còn rộng hơn ở 45°)                                                |
+| 8 Chấm lẻ           | không: máu 1 ô trên váy Kẻ Bắt Chước, chấm gấu Ny                           | đạt                                                         | không: máu chấm 1 ô rải rác                      | không: mụn vàng 1 ô                                                                |
+| 9 Nhất quán 8 hướng | không: Sơn khối nâu 2×3 lơ lửng cạnh đầu ở NW/N/NE; dây túi Ny mất ở W/NW/N | không: súng lính 1 mất ở NW/N/NE; gậy lính 3 cách tay 1–2 ô | không: dải phản quang công nhân 1/2/0 theo hướng | không: Kẻ Thính mất tai ở W/E; Kẻ Bám Trần đứng ở S/N (34 ô) nhưng bò ở W/E (23 ô) |
+
+Lỗi xếp hạng (B1–B12): (1) góc 45° là góc S dịch mặt — thu vai xa 2 ô, tay xa vào 1 ô, chân xa lùi
+1 ô, mắt xa 1 ô mống không trắng, chừa 1 ô da giữa viền và mắt gần; (2) súng lính 1 mất ở ba góc
+sau; (3) khối nâu lơ lửng cạnh đầu Sơn ở góc sau; (4) máu/mụn/cúc là chấm 1 ô (đã sửa ở D-065, sau
+khi ảnh được chụp); (5) tóc "nhiễu camo" trên tóc sẫm — cần 3 lọn theo hướng mọc, mỗi lọn một đường
+sáng một đường tối, mái răng cưa; (6) Ông Tư sáng đối xứng, râu hình hộp đọc như khẩu trang; (7) mống
+mắt lính không bão hoà; (8) dải phản quang công nhân (đã sửa D-065); (9) tai Kẻ Thính ở W/E, dáng Kẻ
+Bám Trần; (10) mắt zombie 1×1; (11) gậy lính 3 không có nắm tay; (12) quần/giày dàn chính nghèo chi
+tiết (thắt lưng, gấu, đế sáng). Đã ngang hoặc hơn mẫu: công thức mắt dàn chính, da mannequin 4 tông,
+tóc Ny/Dương/Lan, góc W của thân người, dây + túi quân y, đuôi ngựa, mai/gai, silhouette dàn zombie.
+Kết luận của giám khảo: _từ cổ trở lên đã là nhân vật được vẽ; từ cổ trở xuống phần lớn vẫn là một
+thân mannequin nhuộm màu_ — sửa B1–B5 rồi chấm lại.

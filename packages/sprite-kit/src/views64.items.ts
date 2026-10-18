@@ -717,7 +717,7 @@ export const HELMET_W: ViewLayer = {
         '...ooV^^cccoo.....',
         '..o^^^ccccccco....',
         '.o^ccccccccccco...',
-        '.occCCCCCCCCCCCo..',
+        '.o^CCCCCCCCCCCCo..',
         '.occcccccCCCCCvo..',
         '.occccCCCCCvvvvo..',
         '.occcCCCCCCvvvvo..',
@@ -1092,12 +1092,12 @@ export const BACKPACK_N: ViewLayer = {
 export const RANGER_COAT_W: ViewLayer = {
   overlays: [
     ov(2, 29, [
-      'o^cccccCcCo',
+      'o^ccCccCcCo',
       'o^ccCccCcCo',
       'occcCccCcco',
       'occcCccCcvo',
-      'occcCccccvo',
-      'occccccccvo',
+      'occcCccCcvo',
+      'occcCccCcvo',
       'ooooooooooo',
     ]),
   ],
@@ -1106,11 +1106,11 @@ export const RANGER_COAT_W: ViewLayer = {
 export const COAT_TAILS2_W: ViewLayer = {
   overlays: [
     ov(2, 29, [
-      'o^cccccCcCo',
+      'o^ccCccCcCo',
       'o^ccCccCcCo',
       'occcCccCcco',
-      'occcCccccvo',
-      'occccccccvo',
+      'occcCccCcvo',
+      'occcCccCcvo',
       'ooooooooooo',
     ]),
     ov(1, 23, ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo']),
@@ -1119,7 +1119,7 @@ export const COAT_TAILS2_W: ViewLayer = {
 
 export const TUNIC_W: ViewLayer = {
   overlays: [
-    ov(2, 29, ['o^cccccCcCo', 'o^ccCccccCo', 'occccccccco', 'ooooooooooo']),
+    ov(2, 29, ['o^ccCccCcCo', 'o^ccCccCcCo', 'occcCccCcco', 'ooooooooooo']),
     ov(13, 24, ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']),
   ],
 };

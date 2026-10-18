@@ -287,3 +287,7 @@ Giám khảo (QUALITY_BAR §6, lỗi #7–#9): máu, mụn, rằn ri là chấm 
 ### D-066 Gáy nhìn từ sau: khối có sáng, không phải mảng bóng
 
 Thân N/NW chép từ mẫu để phần sọ dưới tóc toàn bóng (mẫu có tóc che). Với người trọc, đội mũ hoặc đầu đinh, mảng đó lộ ra như một khối tối phẳng, và thước da góc sau rớt (sáng 5–8 %, tối 42–45 %). Sửa hàng 8–13 của đầu N và NW: nửa trên gáy về tông gốc, mảng sáng 5 ô ở trên–trái (hai hàng '$$' + một ô dưới), bóng giữ mé phải và hàng dưới cùng, hàng 13 chia 'ssSS' để thân mập (nhân cột) không sinh cặp dải 5 ô thẳng hàng. Thử thước "da so với thân trần của chính sprite" (tỉ lệ mẫu 0,70/0,96) nhưng bỏ: thân dáng zombie có bóng gốc rất ít nên mặt hốc mắt hợp lý lại bị phạt (đạt 58 → 49); giữ dải cố định của mẫu. Đạt 58 → 64/130; da sáng rớt 16 → 7; QA sạch; lint template 128.
+
+### D-067 Giám khảo vòng 2 và các sửa mảng áo cuối
+
+Biên bản ở QUALITY_BAR §7: 5/10, 6/10, 5/10, 5/9 — chưa đạt nhưng mắt, áo, góc ngang, góc sau, nhận diện đã đạt. Cùng bước: vành mũ sắt bắt đầu bằng một ô sáng (tách mảng gốc trên/dưới vành mà không thành cặp dải thẳng hàng), nếp của tấm vải chạy hết chiều cao (nét 1 ô trong mảng phẳng được lint miễn từ D-062, nên không cần so le nữa), dải sâu mép xa của thân áo để một ô bóng mỗi 4 hàng. Đạt 64 → 68/130; QA sạch; lint template 128. Thứ tự việc kế theo giám khảo: súng/gậy ở góc sau (B2, B3), mắt lính và zombie (B7, B10), nắm tay (B11), thắt lưng/gấu/đế (B12), tóc sẫm (B5), râu và ánh sáng Ông Tư (B6), Kẻ Thính/Kẻ Bám Trần (B9), rồi thân 45° (B1).
