@@ -99,7 +99,8 @@ export function buildPalette(
     const o = optionsFor(m);
     const r = buildRamp5(srgb8ToOklab(...base), o);
     ramps.push(r);
-    lines.push(buildTintedLine(srgb8ToOklab(...r[0]!), o));
+    // The outline is derived from the deep shade so it stays a step darker than every tone of the material.
+    lines.push(buildTintedLine(srgb8ToOklab(...r[3]!), o));
   }
   const seen = new Map<string, Rgb8>();
   for (const r of ramps) for (const c of r) seen.set(c.join(','), c);

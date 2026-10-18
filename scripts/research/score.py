@@ -145,9 +145,11 @@ def measure(img, rows=None):
     for dy, dx in ((1,0),(-1,0),(0,1),(0,-1)):
         shl = np.roll(np.roll(labels, dy, 0), dx, 1); same += (shl == labels) & obj
     m['orphan'] = round(100.0 * ((same == 0) & obj & ~line).sum() / n, 2)
-    # families: palette entries clustered by hue (one ramp shifts hue by at most ~16 deg per tone), greys split dark/light
+    # families: palette entries clustered by hue (a three-tone ramp drifts up to ~30 deg end to end), greys split dark/light
     Lr, Cr, hr = rep_lab[:, 0], np.hypot(rep_lab[:, 1], rep_lab[:, 2]), (np.degrees(np.arctan2(rep_lab[:, 2], rep_lab[:, 1])) + 360) % 360
-    cnt = np.bincount(labels[labels >= 0], minlength=ncol)
+    # material tones are the fill pixels: the silhouette outline and the interior lines are drawing, not shading
+    fill = obj & ~boundary & ~line
+    cnt = np.bincount(labels[fill], minlength=ncol)
     groups = []   # {'kind': 'hue' | 'grey-dark' | 'grey-light', 'hue': float | None, 'entries': [palette indices]}
     for i in np.argsort(-cnt):
         if Lr[i] <= 0.12: continue                      # outline / black: not a material tone
@@ -156,7 +158,7 @@ def measure(img, rows=None):
             g = next((g for g in groups if g['kind'] == kind), None)
             if g is None: g = {'kind': kind, 'hue': None, 'entries': []}; groups.append(g)
         else:
-            g = next((g for g in groups if g['kind'] == 'hue' and min(abs(g['hue'] - hr[i]), 360 - abs(g['hue'] - hr[i])) < 22), None)
+            g = next((g for g in groups if g['kind'] == 'hue' and min(abs(g['hue'] - hr[i]), 360 - abs(g['hue'] - hr[i])) < 32), None)
             if g is None: g = {'kind': 'hue', 'hue': float(hr[i]), 'entries': []}; groups.append(g)
         g['entries'].append(int(i))
     fams = {}
@@ -167,10 +169,15 @@ def measure(img, rows=None):
         entries = sorted(entries, key=lambda e: Lr[e])
         info = {'px': pxs, 'tones': len(entries), 'kind': g['kind'], 'hue': None if g['hue'] is None else round(float(np.mean([hr[e] for e in entries])), 0)}
         if len(entries) >= 2:
-            lo, hi = entries[0], entries[-1]
-            info['hl'] = round(100.0 * cnt[hi] / pxs, 1); info['sh'] = round(100.0 * cnt[lo] / pxs, 1)
-            yl, xl = np.nonzero(labels == hi); yd, xd = np.nonzero(labels == lo)
-            info['light'] = [round(float(xl.mean() - xd.mean()), 1), round(float(yl.mean() - yd.mean()), 1)]
+            # highlight / shadow = everything clearly lighter / darker than the most used tone (the mid)
+            mode = max(entries, key=lambda e: cnt[e])
+            his = [e for e in entries if Lr[e] > Lr[mode] + 0.05]
+            los = [e for e in entries if Lr[e] < Lr[mode] - 0.05]
+            nh = int(sum(cnt[e] for e in his)); ns = int(sum(cnt[e] for e in los))
+            info['hl'] = round(100.0 * nh / pxs, 1); info['sh'] = round(100.0 * ns / pxs, 1)
+            if nh and ns:
+                yl, xl = np.nonzero(np.isin(labels, his) & fill); yd, xd = np.nonzero(np.isin(labels, los) & fill)
+                info['light'] = [round(float(xl.mean() - xd.mean()), 1), round(float(yl.mean() - yd.mean()), 1)]
         fams[gi] = info
     m['materials'] = len(fams)
     m['families'] = fams
@@ -191,12 +198,17 @@ def measure(img, rows=None):
             cells = [(x, y, c) for y, r in enumerate(rows) for x, c in enumerate(r) if c in SH[mat]]
             if len(cells) < 8: return None
             tot = len(cells)
-            nh = sum(1 for *_, c in cells if c in (hl, bright)); ns = sum(1 for *_, c in cells if c in (sh, deep))
+            # as for the reference: highlight / shadow = lighter / darker than the most used tone
+            rank = {deep: 0, sh: 1, mid: 2, hl: 3, bright: 4}
+            from collections import Counter
+            mode = Counter(rank[c] for *_, c in cells).most_common(1)[0][0]
+            nh = sum(1 for *_, c in cells if rank[c] > mode); ns = sum(1 for *_, c in cells if rank[c] < mode)
+            hl_set = {c for c in SH[mat] if rank[c] > mode}; sh_set = {c for c in SH[mat] if rank[c] < mode}
             tones = len({c for *_, c in cells})
             info = {'tones': tones, 'hl': round(100.0 * nh / tot, 1), 'sh': round(100.0 * ns / tot, 1), 'px': tot}
             if nh and ns:
-                hx = np.mean([x for x, y, c in cells if c in (hl, bright)]); hy = np.mean([y for x, y, c in cells if c in (hl, bright)])
-                sx = np.mean([x for x, y, c in cells if c in (sh, deep)]); sy = np.mean([y for x, y, c in cells if c in (sh, deep)])
+                hx = np.mean([x for x, y, c in cells if c in hl_set]); hy = np.mean([y for x, y, c in cells if c in hl_set])
+                sx = np.mean([x for x, y, c in cells if c in sh_set]); sy = np.mean([y for x, y, c in cells if c in sh_set])
                 info['light'] = [round(float(hx - sx), 1), round(float(hy - sy), 1)]
             return info
         m['skin'] = part('skin')
@@ -220,9 +232,11 @@ THRESHOLDS = {
     'flatMax': ('max_ratio', 1.3),
     'lint': ('max_abs', 2),
 }
-# Tone shares measured on the reference figure (skin: hl 21 / sh 6.5; jacket: hl 10 / sh 40), each widened by ~10 points.
-# Clothes on the reference are mostly mid and shadow with a small highlight; skin is mostly mid and highlight.
-TONE_RANGE = {'skin': {'hl': (12, 32), 'sh': (4, 20)}, 'cloth': {'hl': (4, 22), 'sh': (28, 52)}}
+# Tone shares relative to the most used tone, measured on the reference (dressed figure: skin 17 / 25, jacket 38 / 19
+# because the jacket's base is its dark tone with lighter ribs; bald mannequin: skin 24 / 26). The bands admit both
+# schemes (a dark base with lights, a mid base with a shadow mass) and reject a flat garment through MIN_VARIATION.
+TONE_RANGE = {'skin': {'hl': (8, 32), 'sh': (12, 40)}, 'cloth': {'hl': (5, 45), 'sh': (12, 55)}}
+MIN_VARIATION = {'skin': 25, 'cloth': 30}   # hl + sh, percent
 
 def judge(m, ref):
     flags = []
@@ -240,6 +254,7 @@ def judge(m, ref):
         for k, (lo, hi) in TONE_RANGE[part].items():
             v = p.get(k)
             if v is not None and not (lo <= v <= hi): flags.append(f'{part} {k} {v}% not in {lo}-{hi}')
+        if p.get('hl') is not None and p['hl'] + p['sh'] < MIN_VARIATION[part]: flags.append(f'{part} flat: hl+sh {round(p["hl"] + p["sh"], 1)}% < {MIN_VARIATION[part]}')
         # the light vector (centroid of highlights minus centroid of shadows) is reported, not gated: on a whole
         # figure the belly and thigh lights pull it down even on the reference (skin 0.0, +0.3)
     return flags

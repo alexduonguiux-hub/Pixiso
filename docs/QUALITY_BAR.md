@@ -13,21 +13,23 @@ mẫu (`scripts/research/resample_ref.py`, bước điểm ảnh 11,58 px) rồi
 xuất ra PNG 1× và đo **trong không gian ảnh bằng cùng hàm** (không dựa vào ô ngữ nghĩa của
 ta, trừ tỉ lệ tông vì ta biết chính xác ô nào là da/áo).
 
-| Số đo        | Ý nghĩa                                                                  | Ảnh mẫu                   | Ta (trung vị 130 sprite)                   |
-| ------------ | ------------------------------------------------------------------------ | ------------------------- | ------------------------------------------ |
-| `colors`     | số màu sau khi gộp màu gần nhau (OKLab 0,03)                             | 25                        | 17                                         |
-| `materials`  | số họ màu (gom theo hue 22°, xám tách tối/sáng) ≈ số chất liệu nhìn thấy | 5                         | 4                                          |
-| `tones`      | số bậc sáng trong một họ                                                 | áo 6, tóc 6, quần 5, da 3 | mọi chất liệu 3 (giới hạn của định dạng ô) |
-| `lineDens`   | ô đường nét bên trong (tối, mảnh, không phải viền ngoài) trên 100 ô      | 6,9                       | 6,6                                        |
-| `lines`      | số đoạn nét bên trong ≥ 2 ô (cổ áo, túi, cổ tay, thắt lưng, nếp gấp)     | 6                         | 6                                          |
-| `flatMax`    | mảng phẳng cùng màu lớn nhất, % diện tích                                | 5,3                       | **12,6**                                   |
-| da `hl / sh` | % ô sáng / ô tối trong da                                                | 21 / 6,5                  | 18 / 26                                    |
-| áo `hl / sh` | % ô sáng / ô tối trong chất liệu áo lớn nhất                             | 10 / 40                   | **20 / 17**                                |
+| Số đo        | Ý nghĩa                                                                  | Ảnh mẫu                                         | Ta (trung vị 130 sprite)                   |
+| ------------ | ------------------------------------------------------------------------ | ----------------------------------------------- | ------------------------------------------ |
+| `colors`     | số màu sau khi gộp màu gần nhau (OKLab 0,03)                             | 25                                              | 17                                         |
+| `materials`  | số họ màu (gom theo hue 22°, xám tách tối/sáng) ≈ số chất liệu nhìn thấy | 5                                               | 4                                          |
+| `tones`      | số bậc sáng trong một họ                                                 | áo 6, tóc 6, quần 5, da 3                       | mọi chất liệu 3 (giới hạn của định dạng ô) |
+| `lineDens`   | ô đường nét bên trong (tối, mảnh, không phải viền ngoài) trên 100 ô      | 6,9                                             | 6,6                                        |
+| `lines`      | số đoạn nét bên trong ≥ 2 ô (cổ áo, túi, cổ tay, thắt lưng, nếp gấp)     | 6                                               | 6                                          |
+| `flatMax`    | mảng phẳng cùng màu lớn nhất, % diện tích                                | 5,3                                             | **12,6**                                   |
+| da `hl / sh` | % ô sáng hơn / tối hơn tông dùng nhiều nhất của da                       | 17 / 25 (mannequin trần: 24 / 26)               | 19 / 22                                    |
+| áo `hl / sh` | % ô sáng hơn / tối hơn tông dùng nhiều nhất của chất liệu áo lớn nhất    | 38 / 19 (áo mẫu lấy tông tối làm nền, gân sáng) | 13 / 35 (sau cắt may; trước: 20 / 17)      |
 
-Hai con số in đậm là khoảng cách lớn nhất: **mảng phẳng của ta to gấp 2,4 lần** (áo là một
-khối màu trơn) và **áo của ta sáng và phẳng** trong khi áo mẫu chủ yếu là tông giữa và tông
-tối với rất ít điểm sáng. Hàng `tones` cho thấy một giới hạn cấu trúc: ô của ta chỉ có 3 bậc
-(sáng/giữa/tối) nên không thể tái tạo 5–6 bậc mà mẫu dùng cho áo và tóc.
+Con số in đậm là khoảng cách lớn nhất còn lại: **mảng phẳng của ta to gấp 2 lần** (chủ yếu
+là tóc một tông và quần). Tỉ lệ sáng/tối tính so với tông dùng nhiều nhất của từng chất liệu,
+bỏ qua viền và nét vẽ, nên hai lối tô đều đo được: áo mẫu lấy tông tối làm nền và điểm sáng
+bằng gân/khoá (38 % sáng hơn nền), áo của ta sau cắt may lấy tông gốc làm nền và khối bóng
+(35 % tối hơn nền); trước cắt may áo của ta gần như phẳng (20 / 17 với mảng sáng thừa hưởng
+từ da). Hàng `tones`: định dạng ô đã mở lên 5 bậc (D-057); mẫu dùng 5–6 bậc cho áo và tóc.
 
 ## 2. Ngưỡng đạt (tự động, `pnpm qa:score`)
 
@@ -35,8 +37,8 @@ Một sprite đạt khi **không có cờ nào** trong:
 
 - `colors` ≤ 1,2 × mẫu (30); `materials` ≥ 0,75 × mẫu (4); `lineDens` ≥ 0,6 × mẫu (4,1);
   `lines` ≥ 0,6 × mẫu (4); `flatMax` ≤ 1,3 × mẫu (6,9 %).
-- Da: 3 tông, sáng 12–32 %, tối 4–20 %. Áo: 3 tông, sáng 4–22 %, tối 28–52 % (dải của mẫu nới
-  ±10 điểm).
+- Da: ≥ 3 tông, sáng hơn nền 8–32 %, tối hơn nền 12–40 %, tổng ≥ 25 %. Áo: ≥ 3 tông, sáng 5–45 %,
+  tối 12–55 %, tổng ≥ 30 % (một món gần phẳng rớt ở tổng). Dải lấy từ hai hình mẫu nới ±8 điểm.
 - Lint cầm bút (`pixel_lint.py`: viền đôi, bậc giật, dải thẳng hàng, sọc ôm viền) ≤ 2 cảnh báo.
 - Kiểm tra chéo: hai nhân vật cùng thân không được có silhouette S trùng nhau quá 92 %
   (1 − IoU < 0,08 là "chỉ khác màu"); chiều cao và diện tích S/N, SW/NW lệch ≤ 8 %.

@@ -3,70 +3,61 @@
   "h": 41,
   "px": 562,
   "colors": 25,
-  "materials": 5,
+  "materials": 4,
   "lineDens": 6.9,
   "lines": 6,
   "flatMax": 5.3,
   "bigFlats": 8,
   "orphan": 31.49,
   "skin": {
-    "tones": 3,
-    "hl": 21.0,
-    "sh": 6.5,
-    "light": [0.0, 0.3]
+    "tones": 6,
+    "hl": 16.9,
+    "sh": 24.7,
+    "light": [-0.7, -5.0]
   },
   "cloth": {
     "tones": 6,
-    "hl": 10.3,
-    "sh": 40.4,
-    "light": [-0.2, -0.7]
+    "hl": 38.3,
+    "sh": 19.1,
+    "light": [0.1, -5.7]
   },
   "families": {
     "0": {
-      "px": 156,
+      "px": 115,
       "tones": 6,
       "kind": "hue",
       "hue": 134.0,
-      "hl": 10.3,
-      "sh": 40.4,
-      "light": [-0.2, -0.7]
+      "hl": 38.3,
+      "sh": 19.1,
+      "light": [0.1, -5.7]
     },
     "1": {
-      "px": 62,
-      "tones": 3,
+      "px": 77,
+      "tones": 6,
       "kind": "hue",
-      "hue": 67.0,
-      "hl": 21.0,
-      "sh": 6.5,
-      "light": [0.0, 0.3]
+      "hue": 54.0,
+      "hl": 16.9,
+      "sh": 24.7,
+      "light": [-0.7, -5.0]
     },
     "2": {
-      "px": 136,
+      "px": 113,
       "tones": 6,
       "kind": "grey-light",
       "hue": null,
-      "hl": 16.9,
-      "sh": 22.8,
-      "light": [-1.1, 0.1]
+      "hl": 20.4,
+      "sh": 51.3,
+      "light": [-1.2, -7.9]
     },
     "3": {
-      "px": 115,
+      "px": 97,
       "tones": 5,
       "kind": "grey-dark",
       "hue": null,
-      "hl": 13.0,
-      "sh": 25.2,
-      "light": [-0.7, -21.5]
-    },
-    "4": {
-      "px": 44,
-      "tones": 3,
-      "kind": "hue",
-      "hue": 41.0,
-      "hl": 56.8,
-      "sh": 11.4,
-      "light": [-3.4, 12.0]
+      "hl": 13.4,
+      "sh": 13.4,
+      "light": [-0.7, -23.7]
     }
   },
-  "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. The sheet itself is not committed (copyright unclear)."
+  "_source": "The dressed figure of the user's reference sheet (17x40 with its outline), resampled to 1x from the large copy (pitch 11.58 px) with scripts/research/resample_ref.py; measured by scripts/research/score.py --ref. Tone shares are relative to the most used tone of each family; outline and interior line pixels are not material tones. The sheet itself is not committed (copyright unclear)."
 }

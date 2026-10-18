@@ -448,7 +448,7 @@ const SON_LOOK: Look = {
   extras: { S: { lines: [seam([8, 19, 8, 27])] }, SW: { lines: [seam([7, 19, 7, 27])] } }, // jacket zip
   colors: {
     skin: [240, 200, 165],
-    hair: [34, 32, 40],
+    hair: [58, 54, 66],
     cloth: [40, 140, 150],
     pants: [50, 50, 60],
     boots: [40, 40, 46],
@@ -790,7 +790,7 @@ export const ZOMBIE_CIV_F = wearPosed('zombie_civ_f', 'Zombie dân thường (n�
   details: ['gash', 'stains'],
   colors: {
     skin: SKIN_F,
-    hair: [50, 40, 46],
+    hair: [62, 50, 58],
     cloth: [204, 150, 168],
     cloth2: [70, 60, 92],
     boots: [60, 40, 50],
@@ -889,7 +889,7 @@ export const ZOMBIE_ATHLETE_M = wearPosed(
     details: ['number', 'gash', 'stains'],
     colors: {
       skin: SKIN_M,
-      hair: [40, 36, 36],
+      hair: [60, 54, 54],
       accent: [240, 240, 236],
       cloth: [44, 110, 200],
       pants: [236, 236, 236],
@@ -938,7 +938,7 @@ export const ZOMBIE_OFFICE = wearPosed(
     details: ['tie', 'stains'],
     colors: {
       skin: SKIN_M,
-      hair: [50, 46, 46],
+      hair: [62, 57, 57],
       cloth: [236, 236, 232],
       leather: [120, 30, 40],
       pants: [50, 50, 60],
@@ -1367,7 +1367,7 @@ const KE_BAT_CHUOC_LOOK: Look = {
   extras: MIMIC_V,
   colors: {
     skin: [184, 184, 164],
-    hair: [38, 34, 36],
+    hair: [58, 52, 54],
     cloth: [226, 216, 196],
     cloth2: [226, 216, 196],
     eye: [214, 70, 40],
@@ -1427,7 +1427,7 @@ const LINH_DAU_DINH_LOOK: Look = {
   face: 'plain',
   colors: {
     skin: [196, 150, 112],
-    hair: [50, 40, 36],
+    hair: [64, 52, 46],
     eye: [60, 50, 40],
     white: [212, 230, 238],
     ...ARMY,
