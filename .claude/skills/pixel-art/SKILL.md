@@ -143,7 +143,7 @@ Vẽ tay S, SW, W, NW, N; SE/E/NE lật thường (D-042, chấp nhận sáng t�
 | W   | vẽ tay                                | mọi dáng dùng đầu W (đầu SW ghép lên thân W thành mặt phẳng hai mắt, D-084); nét đặc trưng (tay vuốt, tay vươn) đặt phía gần; ngực/bụng nhô ra **trước** tay, tay buông giữa sườn; tay ngang 2 ô là chấp nhận                                                                                                                                                                                                         |
 | NW  | mặt sau của SW (`back_regions`)       | đầu = silhouette SW nhìn từ sau (D-092): tai gần 2×2 bên trái, dải má cột 3, hàng 14 không nhô qua vai xa; giữ bản vẽ tay khi lưng có khối riêng (bướu)                                                                                                                                                                                                                                                                                                                                                                          |
 | N   | S lật, san bóng ngực, đầu N hàng 0–14 | đầu N phải gồm hàng cổ, nếu không hở một hàng dưới cằm; cổ áo sau chữ U ở hàng 15–16 (`back_regions`, đầu hạ thì U xuống dưới hàng cổ và các hàng sọ trong hộp thân khai là cổ)                                                                                                                                                                                                                                                                                                                                                                |
-| Bước đi (S/N/W A, B) | thân bước chép từ mẫu + đầu đứng dán lên (`withStandingHead`); vùng áo quần trong `walk64.ts` | bước A = chân trái người trước ở mọi góc; tay vung trước thân là `front` (lớp đè nằm sau tay); vật phẩm thân cần biến thể `*_WALK` trong `gen_view_items.py` (kiểm trên thân bước), không có thì hình đứng dịch `extrasDx`; váy/đuôi áo mở từ bề rộng hông; SW/NW chưa có (D-095) |
+| Bước đi (S/N/W A, B) | thân bước chép từ mẫu + đầu đứng dán lên (`withStandingHead`); vùng áo quần trong `walk64.ts` | bước A = chân trái người trước ở mọi góc; tay vung trước thân là `front` (lớp đè nằm sau tay); vật phẩm thân cần biến thể `*_WALK` trong `gen_view_items.py` (kiểm trên thân bước), không có thì hình đứng dịch `extrasDx`; váy/đuôi áo mở từ bề rộng hông; SW/NW suy từ S/N trong `gen_pose_views.py` (thu một cột phía xa mọi hàng thân; bảng `narrowed` kéo vật phẩm S0/N0 theo nguyên khối) (D-095) |
 
 Dáng lật (`_m`) dùng chung W/SW/NW của dáng gốc và có N riêng.
 
@@ -163,8 +163,9 @@ pnpm qa:1x                           # CỔNG: mảng rời 0, ô da đơn 0, m�
 pnpm typecheck && pnpm test
 ```
 
-- Dump `view_figures.json` mang cả thân bước (khoá `walk`): `gen_view_items.py` kiểm biến thể `*_WALK` trên đúng
-  thân bước; mọi thay đổi vật phẩm thân phải chạy lại dump → gen → `pnpm walk` → `qa:hero` → `qa:1x`.
+- Dump `view_figures.json` mang cả thân bước (khoá `walk`, và bốn dáng `walk_*` trong `poses`): `gen_pose_views.py`
+  suy SW/NW của bước, rồi dump lại để `gen_view_items.py` kiểm biến thể `*_WALK` trên đúng thân bước (kể cả SW/NW);
+  mọi thay đổi thân bước hay vật phẩm thân: dump → gen_pose_views → dump → gen_view_items → `pnpm walk` → `qa:hero` → `qa:1x`.
 - Viết hàng ASCII dài bằng biểu thức (`'.'*7 + 'o' + 's'*8 + ...`) và để `body()` assert độ
   dài; đếm tay 20 ký tự là nguồn lỗi lệch một ô.
 - Script vá bằng Python phải assert đúng một chỗ khớp; vá dở dang khi assert nửa chừng là lỗi đã

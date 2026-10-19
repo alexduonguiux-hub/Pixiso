@@ -10,16 +10,22 @@
  * The regions follow the reference stride: the forward leg is the near one
  * (lit) and the trailing leg the far one; a sleeve ends where the arm bends,
  * so the fist that swings in front of the hip stays bare under a short or a
- * long sleeve alike. Only S, N and W have steps drawn so far.
+ * long sleeve alike. S, N and W steps are drawn (from the reference); SW and NW
+ * are derived from them by scripts/research/gen_pose_views.py (the far side of
+ * the torso turned in a column) and read back from hero64.poses.views.ts.
  */
 import { blank } from './draw.js';
 import type { Sprite } from './format.js';
 import { heroFrames, type Box, type HeroView, type WalkKey } from './hero64.js';
 import type { ZombiePose } from './hero64.poses.js';
+import { POSE_VIEW_DATA, type PoseViewData } from './hero64.poses.views.js';
 import type { FormSpec } from './heroforms.js';
 
-export type WalkView = Extract<HeroView, 'S' | 'N' | 'W'>;
-export const WALK_VIEWS_DRAWN: readonly WalkView[] = ['S', 'N', 'W'];
+/** A view with walk steps: the drawn S, N, W and the turned SW, NW derived from S and N (D-095). */
+export type WalkView = HeroView;
+
+/** The boxes of the arm in front, per hand-drawn step, for the steps derived from them. */
+const FRONT_BOXES: Record<string, readonly Box[]> = {};
 
 /** The figure's cells inside the boxes, on the figure's own canvas: what stays in front of every overlay. */
 function frontOf(figure: Sprite, boxes: readonly Box[]): Sprite {
@@ -45,9 +51,11 @@ function stepForm(
   const stand = frames[1];
   const frame = frames[step === 0 ? 0 : 2];
   const dx = stand.x - frame.x;
+  const id = `walk_${view.toLowerCase()}${step}`;
+  FRONT_BOXES[id] = front;
   return {
     form: {
-      id: `walk_${view.toLowerCase()}${step}`,
+      id,
       label,
       figure: frame.sprite,
       headMap: (x, y) => [x + dx, y],
@@ -483,9 +491,80 @@ export const WALK_W_B: ZombiePose = {
   },
 };
 
-/** The two steps of each drawn walk view: [step A, step B]. */
-export const WALK_VIEWS: Record<WalkView, readonly [ZombiePose, ZombiePose]> = {
+type PoseRegions = Omit<ZombiePose, 'id' | 'form' | 'w'>;
+
+/** Column map of a three-quarter turn: cells on the far side of the deleted torso column moved in by one. */
+function turnMap(n: PoseViewData['narrowed']): (x: number, y: number) => number {
+  if (!n) return (x) => x;
+  const cols = new Map(n.cols);
+  return n.side === 'L'
+    ? (x, y) => {
+        const d = cols.get(y);
+        return d !== undefined && x <= d ? x + 1 : x;
+      }
+    : (x, y) => {
+        const d = cols.get(y);
+        return d !== undefined && x >= d ? x - 1 : x;
+      };
+}
+
+/**
+ * A turned step (SW from an S step, NW from an N step) from the generated pose views: the regions the
+ * generator moved with the turn, the view's standing head where the head map puts it, the arm in front
+ * carried over through the turn's column map, and the source step as the base its items are drawn for.
+ */
+function turnedStep(view: 'SW' | 'NW', step: 0 | 1, base: ZombiePose): ZombiePose | undefined {
+  const d = POSE_VIEW_DATA[base.id]?.[view];
+  if (!d) return undefined;
+  const frames = heroFrames(view);
+  const frame = frames[step === 0 ? 0 : 2];
+  const stand = frames[1];
+  const figure = frame.sprite;
+  const map = turnMap(d.narrowed);
+  const front = (FRONT_BOXES[base.id] ?? []).flatMap((b): Box[] => {
+    const out: Box[] = [];
+    for (let y = b[1]; y <= b[3]; y++) out.push([map(b[0], y), y, map(b[2], y), y]);
+    return out;
+  });
+  const id = `walk_${view.toLowerCase()}${step}`;
+  const regions = d.regions as unknown as PoseRegions;
+  return {
+    ...regions,
+    id,
+    form: {
+      id,
+      label: `${step === 0 ? 'Bước A' : 'Bước B'} (${view})`,
+      figure,
+      headMap: (x, y) => [x + d.headX + (d.shift[y] ?? 0), y + d.headY],
+      front: frontOf(figure, front),
+    },
+    w: figure.w,
+    walkKey: `${view}${step}`,
+    extrasDx: stand.x - frame.x,
+    stepBase: { key: base.walkKey!, map },
+  };
+}
+
+const swA = turnedStep('SW', 0, WALK_S_A);
+const swB = turnedStep('SW', 1, WALK_S_B);
+const nwA = turnedStep('NW', 0, WALK_N_A);
+const nwB = turnedStep('NW', 1, WALK_N_B);
+
+/** The two steps of each walk view: [step A, step B]; SW and NW only once their views are generated. */
+export const WALK_VIEWS: Partial<Record<WalkView, readonly [ZombiePose, ZombiePose]>> = {
   S: [WALK_S_A, WALK_S_B],
-  N: [WALK_N_A, WALK_N_B],
+  ...(swA && swB ? { SW: [swA, swB] as const } : {}),
   W: [WALK_W_A, WALK_W_B],
+  ...(nwA && nwB ? { NW: [nwA, nwB] as const } : {}),
+  N: [WALK_N_A, WALK_N_B],
 };
+/** The views that have walk steps, in drawing order. */
+export const WALK_VIEWS_DRAWN: readonly WalkView[] = (['S', 'SW', 'W', 'NW', 'N'] as const).filter(
+  (v) => v in WALK_VIEWS,
+);
+/** The step pose of a view; throws for a view without steps. */
+export function walkPose(view: WalkView, step: 0 | 1): ZombiePose {
+  const pair = WALK_VIEWS[view];
+  if (!pair) throw new Error(`no walk steps for view ${view}`);
+  return pair[step];
+}

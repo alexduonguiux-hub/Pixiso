@@ -103,7 +103,7 @@ describe('hero 64 mannequin', () => {
     for (const view of WALK_VIEWS_DRAWN) {
       const frames = heroFrames(view);
       for (const step of [0, 1] as const) {
-        const pose = WALK_VIEWS[view][step];
+        const pose = WALK_VIEWS[view]![step];
         const figure = pose.form.figure!;
         const frame = frames[step === 0 ? 0 : 2];
         expect(toAscii(figure)).toEqual(toAscii(frame.sprite));

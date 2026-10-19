@@ -325,6 +325,11 @@ export interface ZombiePose {
   extrasDx?: number;
   /** Set on a walk step: items pick their drawing for this step when they have one (D-095). */
   walkKey?: WalkKey;
+  /**
+   * A turned step derived from another step (SW from S, NW from N): items drawn for that step land here
+   * through `map` (their figure columns moved with the three-quarter turn's deleted torso column).
+   */
+  stepBase?: { key: WalkKey; map: (x: number, y: number) => number };
   /** Torso cells inside a sleeve box (a forearm swung across the chest): the sleeve leaves them to the torso. */
   sleeveExcept?: Box[];
 }

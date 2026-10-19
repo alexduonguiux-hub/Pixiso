@@ -904,3 +904,16 @@ hàng 16–17 là đúng. Số: frag 334 → 321 (mốc hạ theo), islands 0, s
 - Chấp nhận/để lại: súng cầm của Lính đầu đinh đứng yên bên hông khi tay vung (S) và đi qua trước chân sau (W A);
   ba lô Sơn @W B gần như khuất sau cánh tay (chỉ nắp lộ); dáng W của mẫu vung tay cùng bên chân trước (giữ theo
   mẫu). SW/NW chưa có khung bước (E/NE/SE lật từ W/NW như D-042).
+
+**Bổ sung D-095 (cùng ngày): khung bước SW/NW suy từ bước S/N.** `gen_pose_views.py` nhận bốn dáng bước
+(`walk_s0/s1/n0/n1`, thân không đầu và vị trí lưới đầu đi theo dump) và suy SW từ bước S như dáng zombie
+(`narrow_torso`: bỏ một cột thân phía xa mỗi hàng, ở đây **mọi hàng** từ vai tới gấu vì nắm đấm che gần hết thân ở
+vài hàng — hàng không thu sẽ xé nắm đấm), NW từ bước N thu phía xa bên phải (lật, thu, lật lại); không nâng bàn
+chân xa (bàn chân bước đã khác độ cao, nâng sẽ tách khối đế). Cột đã bỏ từng hàng được phát ra (`narrowed`) để
+`walk64.ts` dựng `front` và để vật phẩm vẽ cho bước S/N tự theo sang SW/NW: `ViewItem` tra `SW0` → `S0` (dịch qua
+bảng cột, **nguyên khối theo đa số ô** vì dịch từng ô xé súng chéo lưng) → `SW` dịch cột. `heroFrames('SW'/'NW')`
+đọc hình suy ra từ `hero64.poses.views.ts`, đầu lưới đặt đúng chỗ đầu đứng, hàng theo bước nguồn; chưa sinh thì
+đứng yên. Bảng đi bộ đủ 8 hướng (NE/E/SE lật). Số: 110 sprite bước; frag 438 → **527** (SW 49, NW 40, đứng giữ
+321), islands 0, skin1 0, cặp lẫn 0; khối viền do mặc 47 (14 đứng + 33 bước); lint `qa:pixel` 74 → 138: toàn bộ
+phần tăng là thân bước (30: khối đế giày đặc của ảnh mẫu ở hàng 36–39, hai góc nắm đấm chạm thân, một dải, một
+bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. Chấp nhận khối đế vì là nét của ảnh mẫu đã duyệt.

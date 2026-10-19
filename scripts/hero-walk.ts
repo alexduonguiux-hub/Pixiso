@@ -1,11 +1,12 @@
 /**
  * Walk sheet of the standing cast (D-095): one row per character (the bare
- * mannequin first, then BASE_LOOKS), and for each of S, W, E, N the cycle
- * step A, standing, step B, standing (HERO_WALK_CYCLE). E mirrors W (D-042).
- * SCALE (default 4), BG=r,g,b, ONLY=id,id to pick characters. Also writes the
- * dressed step frames at 1x to test-output/walk/sprites/<id>__<view><step>.png
- * and test-output/walk/sprites.json (the score dump's shape, views `S0`, `S1`,
- * `N0`, `N1`, `W0`, `W1`) for the research scripts.
+ * mannequin first, then BASE_LOOKS), and for each of the eight directions the
+ * cycle step A, standing, step B, standing (HERO_WALK_CYCLE). NE, E and SE
+ * mirror NW, W and SW (D-042). SCALE (default 4), BG=r,g,b, ONLY=id,id to pick
+ * characters. Also writes the dressed step frames at 1x to
+ * test-output/walk/sprites/<id>__<view><step>.png and
+ * test-output/walk/sprites.json (the score dump's shape, views `S0`..`N1`)
+ * for the research scripts.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -42,12 +43,16 @@ const SCALE = Number(process.env.SCALE ?? 4);
 const BG = (process.env.BG ?? '110,106,100').split(',').map(Number) as [number, number, number];
 const ONLY = process.env.ONLY?.split(',').filter(Boolean);
 
-const DIRECTIONS = ['S', 'W', 'E', 'N'] as const;
+const DIRECTIONS = ['S', 'SW', 'W', 'NW', 'N', 'NE', 'E', 'SE'] as const;
 const SOURCE: Record<(typeof DIRECTIONS)[number], { view: WalkView; mirror: boolean }> = {
   S: { view: 'S', mirror: false },
+  SW: { view: 'SW', mirror: false },
   W: { view: 'W', mirror: false },
-  E: { view: 'W', mirror: true },
+  NW: { view: 'NW', mirror: false },
   N: { view: 'N', mirror: false },
+  NE: { view: 'NW', mirror: true },
+  E: { view: 'W', mirror: true },
+  SE: { view: 'SW', mirror: true },
 };
 const MANNEQUIN: MaterialColors = {
   skin: [249, 209, 173],
@@ -68,13 +73,13 @@ const rows: { id: string; cell: (view: WalkView, frame: 0 | 1 | 2) => Cell }[] =
   ...BASE_LOOKS.filter((c) => !ONLY || ONLY.includes(c.id)).map((c) => ({
     id: c.id,
     cell: (view: WalkView, frame: 0 | 1 | 2): Cell => {
-      if (frame === 1) {
+      if (frame === 1 || !WALK_VIEWS[view]) {
         const outfit = wearView(c.id, c.label, c.look, view);
         return { sprite: dress(STAND_VIEWS[view].form.figure!, outfit), colors: outfit.colors };
       }
       const step = frame === 0 ? 0 : 1;
       const outfit = wearWalk(c.id, c.label, c.look, view, step);
-      return { sprite: dress(WALK_VIEWS[view][step].form.figure!, outfit), colors: outfit.colors };
+      return { sprite: dress(WALK_VIEWS[view]![step].form.figure!, outfit), colors: outfit.colors };
     },
   })),
 ];
@@ -143,7 +148,7 @@ if (!ONLY) {
     for (const step of [0, 1] as const)
       for (const c of BASE_LOOKS) {
         const outfit = wearWalk(c.id, c.label, c.look, view as WalkView, step);
-        const figure = WALK_VIEWS[view as WalkView][step].form.figure!;
+        const figure = WALK_VIEWS[view as WalkView]![step].form.figure!;
         const s = dress(figure, outfit);
         const img = paint(s, buildPalette(outfit.colors, HERO_RAMPS), {
           lineStyle: 'tinted',

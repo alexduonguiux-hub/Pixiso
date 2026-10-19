@@ -544,7 +544,12 @@ POSE_S = FIG['poses']               # id -> {body, hx, hy, shift, regions}: the 
 MIRRORED = FIG.get('mirrored', [])  # poses that also exist flipped (`*_m`)
 LABELS = {'droop': 'Zombie gục đầu', 'reach': 'Zombie vươn tay', 'drag': 'Zombie lết chân',
           'hunch': 'Zombie khom lưng', 'twist': 'Zombie ngoẹo cổ', 'crawl': 'Dáng bò rình',
-          'heavy': 'To con', 'fat': 'Mập', 'brute': 'Đột biến khổng lồ'}
+          'heavy': 'To con', 'fat': 'Mập', 'brute': 'Đột biến khổng lồ',
+          'walk_s0': 'Bước A', 'walk_s1': 'Bước B', 'walk_n0': 'Bước A', 'walk_n1': 'Bước B'}
+# The walk steps (D-095): the S steps turn to SW like the standing figure (far side a column in); the N steps
+# turn to NW the same way on their far (right) side. Their W views are drawn, so nothing else is derived.
+WALK_S = {'walk_s0', 'walk_s1'}
+WALK_N = {'walk_n0', 'walk_n1'}
 HEAD_W = 17
 
 def flipx(rows): return [r[::-1] for r in rows]
@@ -624,8 +629,8 @@ def raise_far_foot(rows, regions):
     regs['shoeL'] = [x0, y0 - 1, x1, y1 - 1]
     if regs.get('flats'): regs['flats'][0] = [regs['flats'][0][0], regs['flats'][0][1] - 1, regs['flats'][0][2], regs['flats'][0][3] - 1]
     return [''.join(r) for r in out], regs
-TURN_TORSO = {'droop', 'reach', 'drag', 'hunch', 'twist'}  # the crawl's torso hides behind its arms and is a column narrower already
-def narrow_torso(rows, regions):
+TURN_TORSO = {'droop', 'reach', 'drag', 'hunch', 'twist'} | WALK_S  # the crawl's torso hides behind its arms and is a column narrower already
+def narrow_torso(rows, regions, min_cells=4):
     """The three-quarter turn, second part (fourth review): the torso core loses one base column on the far
     side between its top row and the hem, so a seven-cell front reads six and the far shoulder a cell less;
     everything further out (the far arm, its outlines) moves in by one, the light mass, the neck and the near
@@ -644,7 +649,7 @@ def narrow_torso(rows, regions):
         r = rows[y]
         ok = lambda x: x < len(r) and r[x] not in '.o' and not any(inside(x, y, b) for b in regions['neck'])
         xs = [x for x in range(tx0, tx1 + 1) if ok(x)]
-        if len(xs) < 4: continue  # a neck stub under a lowered head is not the torso
+        if len(xs) < min_cells: continue  # a neck stub under a lowered head is not the torso
         if y < arm_top:
             cand = xs[0]
         else:
@@ -668,16 +673,19 @@ def narrow_torso(rows, regions):
     regs['neck'] = [box(b) for b in regs['neck']]
     for k in ('chest', 'number', 'tie', 'belt', 'stains', 'gash'):
         if k in regs: regs[k] = [sh(regs[k][0], regs[k][1]), regs[k][1]]
-    return [''.join(r) for r in out], regs
+    return [''.join(r) for r in out], regs, deleted
 
-def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
+def add(pose, view, rows, head, regions, under=False, headcols=None, narrowed=None, **opts):
     """A view of a pose: `rows` is the body and `head` = (view, x, y, shift) places the view's base
     head on it; with `head=None` the rows are the whole figure (its head drawn in) and `headcols`
     maps each head-grid column to a figure column for the items drawn in head space."""
     if view == 'SW' and pose in RAISE_FAR_FOOT and 'shoeL' in regions:
         rows, regions = raise_far_foot(rows, regions)
     if view == 'SW' and pose in TURN_TORSO:
-        rows, regions = narrow_torso(rows, regions)
+        # a walk step turns every torso row: the fist in front leaves few torso cells on its rows, and a row
+        # left unturned would tear the fist (D-095)
+        rows, regions, deleted = narrow_torso(rows, regions, 1 if pose in WALK_S else 4)
+        narrowed = ('L', sorted(deleted.items()))
     if head is None:
         hview, hx, hy, shift = view, 0, 0, (lambda k: 0)
         fig = rows
@@ -713,7 +721,7 @@ def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
     label = LABELS[base] + (' lật' if pose.endswith('_m') else '') + f' ({view})'
     POSES.setdefault(pose, {})[view] = {'rows': fig, 'body': rows, 'headView': hview, 'headX': hx, 'headY': hy,
                                         'shift': table, 'regions': regions, 'label': label, 'headUnder': under,
-                                        'headCols': headcols}
+                                        'headCols': headcols, 'narrowed': narrowed}
 
 # ------------------------------------------------------------------ hand-drawn views
 add('droop', 'W', DROOP_W, ('W', 0, 2, lambda k: 0), regions_w(2, 3, hem=[11, 28, 13, 28]))
@@ -1089,7 +1097,21 @@ add('brute', 'W', BRUTE_W, None, {
 # Cells of an S body that the view's head (a different footprint) leaves open next to where the S head was.
 PATCHES = {
 }
+# Walk steps: SW from the S step (add() turns the torso), NW from the N step turned on its far (right) side.
+WALK_KEYS = ('legSplit', 'nearLeg', 'extrasDx', 'walkKey')  # step fields mirror_regions does not carry
+for pose in sorted(WALK_S & set(POSE_S)):
+    S = POSE_S[pose]
+    add(pose, 'SW', S['body'], ('SW', S['hx'], S['hy'], lambda k, t=S['shift']: t[k]), S['regions'])
+for pose in sorted(WALK_N & set(POSE_S)):
+    S = POSE_S[pose]; W = len(S['body'][0])
+    rows, regs, deleted = narrow_torso(flipx(S['body']), mirror_regions(S['regions'], W), 1)
+    regs = mirror_regions(regs, W)
+    for k in WALK_KEYS:
+        if k in S['regions']: regs[k] = S['regions'][k]
+    add(pose, 'NW', flipx(rows), ('NW', S['hx'], S['hy'], lambda k, t=S['shift']: t[k]), regs,
+        narrowed=('R', [(y, W - 1 - x) for y, x in sorted(deleted.items())]))
 for pose, S in POSE_S.items():
+    if pose.startswith('walk_'): continue
     W = len(S['body'][0]); regs = S['regions']
     sh = lambda k, t=S['shift']: t[k]
     views = POSES.setdefault(pose, {})
@@ -1200,6 +1222,11 @@ export interface PoseViewData {
   headY: number;
   /** Column shift of each base-head row (17 entries). */
   shift: number[];
+  /**
+   * The three-quarter turn's deleted torso column per row ([row, column]): cells on the far `side` of it
+   * moved one column toward the centre, so items drawn for the source view follow (D-095).
+   */
+  narrowed?: { side: 'L' | 'R'; cols: [number, number][] };
   regions: Record<string, unknown>;
   label: string;
 }
@@ -1211,6 +1238,7 @@ for pose, views in POSES.items():
     for view, d in views.items():
         under = ', headUnder: true' if d['headUnder'] else ''
         if d.get('headCols'): under += f", headCols: {ts(d['headCols'])}"
+        if d.get('narrowed'): under += f", narrowed: {ts({'side': d['narrowed'][0], 'cols': [list(c) for c in d['narrowed'][1]]})}"
         out.append(f"    {view}: {{ rows: {ts(d['rows'])}, body: {ts(d['body'])}{under}, headView: '{d['headView']}', headX: {d['headX']}, headY: {d['headY']}, shift: {ts(d['shift'])}, regions: {ts(d['regions'])}, label: {ts(d['label'])} }},\n")
     out.append("  },\n")
 out.append("};\n")

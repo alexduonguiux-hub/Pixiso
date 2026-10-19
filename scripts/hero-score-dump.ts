@@ -69,7 +69,7 @@ for (const view of VIEWS) {
 for (const view of WALK_VIEWS_DRAWN)
   for (const step of [0, 1] as const)
     for (const outfit of walkCastInView(view, step)) {
-      const figure = WALK_VIEWS[view][step].form.figure!;
+      const figure = WALK_VIEWS[view]![step].form.figure!;
       const s = dress(figure, outfit);
       const img = paint(s, buildPalette(outfit.colors, HERO_RAMPS), {
         lineStyle: 'tinted',

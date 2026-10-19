@@ -19,6 +19,7 @@ import type { BodyView } from './body32.js';
 import { blank } from './draw.js';
 import { parseSprite, sprite, toAscii, type Sprite } from './format.js';
 import { HERO_FRAME_DATA, type HeroFrameData } from './hero64.frames.js';
+import { POSE_VIEW_DATA } from './hero64.poses.views.js';
 import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 
 export const HERO_CANVAS = 64;
@@ -81,8 +82,8 @@ export const HERO_S_FIGURE = sprite`
 
 /** Drawn views; SE, E and NE come from mirroring SW, W and NW (plain flip, D-042). */
 export type HeroView = 'S' | 'SW' | 'W' | 'NW' | 'N';
-/** A walk step of a drawn view (D-095): the view letter and the step, 0 for A and 1 for B. */
-export type WalkKey = `${'S' | 'N' | 'W'}${0 | 1}`;
+/** A walk step of a view (D-095): the view and the step, 0 for A and 1 for B. */
+export type WalkKey = `${HeroView}${0 | 1}`;
 export const HERO_VIEWS: readonly HeroView[] = ['S', 'SW', 'W', 'NW', 'N'];
 /** Views with transcribed walk frames; SW and NW have the standing frame only so far. */
 export type HeroWalkView = 'S' | 'N' | 'W';
@@ -158,7 +159,20 @@ export function heroFrames(view: HeroView): [HeroFrame, HeroFrame, HeroFrame] {
       x: HERO_PIVOT.x - Math.floor(fig.w / 2),
       y: HERO_GROUND - (HERO_FIGURE_H - 1),
     };
-    return [stand, stand, stand];
+    // The turned steps are derived by scripts/research/gen_pose_views.py from the S steps (SW) and the N
+    // steps (NW), the view's standing head stamped on (D-095); until generated the view stands still. The
+    // step's head grid lands where the standing head is, and the step keeps its source's row.
+    const base = view === 'SW' ? 'S' : 'N';
+    const d0 = POSE_VIEW_DATA[`walk_${base.toLowerCase()}0`]?.[view];
+    const d1 = POSE_VIEW_DATA[`walk_${base.toLowerCase()}1`]?.[view];
+    if (!d0 || !d1) return [stand, stand, stand];
+    const src = heroFrames(base);
+    const step = (d: typeof d0, k: 0 | 2): HeroFrame => ({
+      sprite: parseSprite(d.rows, `${view}${k}`),
+      x: stand.x - d.headX,
+      y: src[k].y,
+    });
+    return [step(d0, 0), stand, step(d1, 2)];
   }
   const d = HERO_FRAME_DATA[view];
   const stand = place(d[1], `${view}1`);

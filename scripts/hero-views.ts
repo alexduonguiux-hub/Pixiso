@@ -40,6 +40,12 @@ import {
   HERO_RAMPS,
   WALK_VIEWS,
   WALK_VIEWS_DRAWN,
+  WALK_N_A,
+  WALK_N_B,
+  WALK_S_A,
+  WALK_S_B,
+  EMPTY,
+  type Sprite,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -55,12 +61,31 @@ if (process.env.DUMP) {
   const out: Record<string, unknown> = {};
   for (const v of HERO_VIEWS) out[v] = toAscii(STAND_VIEWS[v].form.figure!);
   // `headX` is where column 0 of the 17-column head grid sits (posedFigure's convention; the drooped zombie draws its head from column 0).
+  // The walk steps of S and N as poses (D-095): their bodies without the stamped standing head (rows 0-13),
+  // the head grid where the step's head map puts it; the generator turns them into the SW and NW steps.
+  const headless = (s: Sprite): Sprite => {
+    const cells = Int16Array.from(s.cells);
+    for (let i = 0; i < 14 * s.w; i++) cells[i] = EMPTY;
+    return { w: s.w, h: s.h, cells };
+  };
+  const walkPoses = [WALK_S_A, WALK_S_B, WALK_N_A, WALK_N_B];
   const bodies = {
     droop: { body: ZOMBIE_BODY, headX: 0, headTop: ZOMBIE_HEAD_TOP, shift: zombieHeadShift },
     ...POSE_BODIES,
     heavy: { body: HEAVY_BODY, headX: HEAVY_HEAD_X, headTop: 0, shift: () => 0 },
+    ...Object.fromEntries(
+      walkPoses.map((p) => [
+        p.id,
+        {
+          body: headless(p.form.figure!),
+          headX: p.form.headMap!(0, 0)[0],
+          headTop: 0,
+          shift: () => 0,
+        },
+      ]),
+    ),
   };
-  const allPoses = [...ZOMBIE_POSES, POSE_CRAWL, STAND_HEAVY];
+  const allPoses = [...ZOMBIE_POSES, POSE_CRAWL, STAND_HEAVY, ...walkPoses];
   out['poses'] = Object.fromEntries(
     Object.entries(bodies).map(([k, b]) => {
       const { id: _id, form: _form, w: _w, ...regions } = allPoses.find((q) => q.id === k)!;
@@ -87,7 +112,7 @@ if (process.env.DUMP) {
   // The walk steps (D-095), for the walk variants of the body items in gen_view_items.py.
   out['walk'] = Object.fromEntries(
     WALK_VIEWS_DRAWN.flatMap((v) =>
-      ([0, 1] as const).map((step) => [`${v}${step}`, toAscii(WALK_VIEWS[v][step].form.figure!)]),
+      ([0, 1] as const).map((step) => [`${v}${step}`, toAscii(WALK_VIEWS[v]![step].form.figure!)]),
     ),
   );
   fs.mkdirSync(path.dirname(process.env.DUMP), { recursive: true });

@@ -9,7 +9,7 @@
  * sprites in broad strokes (colours and silhouettes), redrawn at this scale.
  */
 import type { Rgb8 } from '@pixiso/pixel-core';
-import { flipX, LEGEND, MATERIALS, packCell, parseSprite, toAscii } from './format.js';
+import { EMPTY, flipX, LEGEND, MATERIALS, packCell, parseSprite, toAscii } from './format.js';
 import type { Box, HeroView, WalkKey } from './hero64.js';
 import {
   POSE_CRAWL,
@@ -30,7 +30,7 @@ import type { Garment } from './tailor64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
 import { STAND_BRUTE, STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
-import { WALK_VIEWS, type WalkView } from './walk64.js';
+import { walkPose, type WalkView } from './walk64.js';
 import {
   BACKPACK_N,
   BACKPACK_NW,
@@ -941,11 +941,17 @@ export interface Look {
 function layer(
   item: Overlay | Overlay[] | Remap | ViewItem | ViewItem[] | undefined,
   view: HeroView,
-  walk?: { key: WalkKey; dx: number },
+  walk?: { key: WalkKey; dx: number; base?: ZombiePose['stepBase'] },
 ): ViewLayer {
   if (!item) return {};
   const dx = walk?.dx ?? 0;
-  const pick = (i: ViewItem): ViewLayer => (walk && i[walk.key]) || shifted(i[view] ?? {}, dx);
+  const pick = (i: ViewItem): ViewLayer => {
+    if (!walk) return i[view] ?? {};
+    if (i[walk.key]) return i[walk.key]!;
+    // a turned step: the drawing made for the step it derives from, moved with the turn
+    if (walk.base && i[walk.base.key]) return mapped(i[walk.base.key]!, walk.base.map);
+    return shifted(i[view] ?? {}, dx);
+  };
   const merge = (parts: ViewLayer[]): ViewLayer => ({
     overlays: parts.flatMap((p) => p.overlays ?? []),
     remaps: parts.flatMap((p) => p.remaps ?? []),
@@ -981,6 +987,44 @@ const SKIN_F: Rgb8 = [178, 188, 152];
 
 /** Deterministic camouflage blotches inside a box (no randomness: a fixed hash of the cell). */
 /** Camouflage blotches: three-cell shapes on a 6x4 tile (the reference draws marks as 2-4 cell shapes, never lone dots). */
+/**
+ * A layer's figure-space parts put through a column map (a three-quarter turn's). Each drawing moves as one
+ * piece, by the shift most of its cells get: a rigid thing (a bag, a rifle across the back) must not tear
+ * where the turn's deleted column crosses it.
+ */
+function mapped(l: ViewLayer, map: (x: number, y: number) => number): ViewLayer {
+  const figure = (space: Space | undefined) => space !== 'head';
+  const majority = (shifts: number[]): number => {
+    const count = new Map<number, number>();
+    for (const s of shifts) count.set(s, (count.get(s) ?? 0) + 1);
+    return [...count.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? 0;
+  };
+  const box = ([x0, y0, x1, y1]: Box): Box => {
+    const shifts: number[] = [];
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) shifts.push(map(x, y) - x);
+    const s = majority(shifts);
+    return [x0 + s, y0, x1 + s, y1];
+  };
+  const overlay = (o: Overlay): Overlay => {
+    const shifts: number[] = [];
+    for (let y = 0; y < o.sprite.h; y++)
+      for (let x = 0; x < o.sprite.w; x++)
+        if (o.sprite.cells[y * o.sprite.w + x] !== EMPTY)
+          shifts.push(map(o.x + x, o.y + y) - (o.x + x));
+    const s = majority(shifts);
+    return s ? { ...o, x: o.x + s } : o;
+  };
+  return {
+    overlays: l.overlays?.map((o) => (figure(o.space) ? overlay(o) : o)),
+    remaps: l.remaps?.map((r) =>
+      figure(r.space)
+        ? { ...r, box: box(r.box), ...(r.except ? { except: r.except.map(box) } : {}) }
+        : r,
+    ),
+    lines: l.lines?.map((m) => (figure(m.space) ? { ...m, box: box(m.box) } : m)),
+  };
+}
+
 /** A layer's figure-space parts moved by `dx` columns (head-space parts follow the form's head map instead). */
 function shifted(l: ViewLayer, dx: number): ViewLayer {
   if (!dx) return l;
@@ -1196,7 +1240,9 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     garments.push({ kind: 'boots', box: pose.flats, material: 'boots' });
   }
   // On a walk step, items pick their step drawing or move with the step's canvas (D-095).
-  const walk = pose.walkKey ? { key: pose.walkKey, dx: pose.extrasDx ?? 0 } : undefined;
+  const walk = pose.walkKey
+    ? { key: pose.walkKey, dx: pose.extrasDx ?? 0, base: pose.stepBase }
+    : undefined;
   const hairLayer = layer(look.hair, view, walk);
   push(out, hairLayer);
   if (look.glasses) push(out, layer(GLASSES_V, view, walk));
@@ -2108,7 +2154,7 @@ export function wearWalk(
   view: WalkView,
   step: 0 | 1,
 ): Outfit {
-  return build(id, label, WALK_VIEWS[view][step], look, view);
+  return build(id, label, walkPose(view, step), look, view);
 }
 
 /** Every base character dressed for one walk step. */
