@@ -68,7 +68,10 @@ describe('hero registry', () => {
       const cast = BASE_LOOKS.find((c) => c.id === id)!;
       expect(config.colors.length).toBe(Object.keys(cast.look.colors).length);
       for (const c of config.colors) {
-        expect(COLOR_TARGETS.some((t) => t.id === c.target), `${id}: ${c.target}`).toBe(true);
+        expect(
+          COLOR_TARGETS.some((t) => t.id === c.target),
+          `${id}: ${c.target}`,
+        ).toBe(true);
         expect(c.color).toMatch(/^#[0-9a-f]{6}$/);
       }
       expect(config.animations).toEqual([...HERO_CLIP_IDS]);
