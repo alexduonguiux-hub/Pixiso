@@ -78,9 +78,9 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
 - **Đầu:** sáng ở trán trái, bóng dưới cằm và dưới mái tóc; đầu trọc dùng `BALD_V` để bỏ mảng
   bóng gáy của đầu gốc (nếu không người trọc nhìn như có tóc).
 - **Tóc:** chỉ vẽ silhouette một tông (`h` + viền); tông do `hair64.ts` (`combHair`) chải khi mặc.
-  Mảng dưới 130 ô (mọi kiểu ở S/SW/W): **ba tông thành mảng lớn** (tới 30 % mảng một vùng), không lọn, không
-  jitter, chia bằng một nét thẳng khi vượt (D-090). Mảng lớn hơn (tóc dài, góc sau): năm tông, ba mảng chéo
-  theo trường sáng, đường lọn sẫm 4-liên thông (D-074). Không tô tay tông tóc; râu vẽ tay thì giữ.
+  Mọi mảng: **ba tông thành mảng lớn** (tới 30 % mảng một vùng), không lọn, không jitter, chia bằng một nét
+  thẳng khi vượt (D-090, D-091); bộ chải lọn năm tông (D-074) nghỉ, còn trong mã để tham khảo. Không tô tay
+  tông tóc; râu vẽ tay thì giữ. Góc sau của áo không có nếp (D-091).
   Tóc sát da đầu (đầu đinh) đánh cờ `crop` trên overlay (`O(..., crop=True)`): chải ba tông thành mảng,
   không chu kỳ lọn, chia bằng một nét thẳng 2:1 chỉ khi mảng vượt cổng của thước; chỉ áp khi mảng vừa
   bốn cổng (S/SW), mảng lớn hơn (W, góc sau) vẫn chải lọn (D-085).

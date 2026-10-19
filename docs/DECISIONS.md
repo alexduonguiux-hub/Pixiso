@@ -786,3 +786,11 @@ Ba thay đổi, cùng một lý do: ở 1× mỗi bước tông thừa là một
 ngưỡng 0,076: Dương ~ Lính nữ, Lính nón sắt ~ quân y, Ông Tư ~ quân y); lint thân 74; ô lẻ theo luật màu 242 /
 `strict` 1482; QA sạch; 113 test. Thước ×6 tham khảo 77 → 53/130 (flat hair 40, flat cloth 8): thước đó đòi tóc
 5 tông và vùng ≤ 13 ô, trái với mục tiêu 1×; không chạy theo nữa.
+
+### D-091 Góc sau: tóc một khối, lưng áo không nếp
+
+Người dùng chỉ vào góc sau của Dương và Ông Tư (19/10): tóc từ sau vẫn là mảnh ghép năm tông với vệt lọn chéo
+(mảng 140–190 ô còn chải lọn sau D-090), lưng áo có hai nếp ngang đọc thành sọc. Sửa: **mọi mảng tóc** chải
+theo chế độ mảng (ba tông, một vùng tới 30 % mảng) — `SMALL_MASS` vượt mọi mảng, bộ chải lọn D-074 giữ trong
+mã để tham khảo; **không nếp ở góc sau** (`light === 'block'`): lưng chỉ còn khối sáng vai, mảng bóng bên phải
+và gấu. Thước 1× giữ nguyên (islands 0, skin1 0, frag 731, cặp lẫn 0); 113 test; QA sạch.

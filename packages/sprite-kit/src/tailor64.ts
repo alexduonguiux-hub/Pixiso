@@ -198,8 +198,12 @@ export function tailor(
       for (let x = x0; x < c; x++) set(x, y, x <= lit + lead ? LIGHT : SHADOW);
       for (let x = c + 1; x < x1; x++) set(x, y, DEEP);
     };
-    crease(y0 + 6);
-    crease(y0 + Math.round(h * 0.68));
+    // No creases on the back (D-091): across a back they read as stripes at game size; the back keeps the
+    // shoulder block, the shadow side and the hem.
+    if (!block) {
+      crease(y0 + 6);
+      crease(y0 + Math.round(h * 0.68));
+    }
     // D-090: the two deep cells under the far crease and the stepped deep band along the far edge were
     // flecks at game size; the shadow mass is one tone, deep stays for the creases, hem and cuffs.
     if (g.pockets) {

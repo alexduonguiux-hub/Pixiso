@@ -47,9 +47,10 @@ const CROP_TONES = [1, 2, 3];
 const CROP_DIRS = [1];
 /**
  * Below this many cells a mass is combed like a crop: three tones in masses, no lock period (D-090: at game
- * size five tones and locks on a 60-cell mass read as noise). Long hair and the back of the head keep the locks.
+ * size five tones and locks on a 60-cell mass read as noise). D-091 raised it past every mass: the five-tone
+ * lock comb on the back of the head (140-190 cells) read as static too. The lock comb stays for reference.
  */
-const SMALL_MASS = 130;
+const SMALL_MASS = 1000;
 /** A small mass may hold one same-tone region this share of itself (never under the scorer's figure gate). */
 const MASS_SHARE = 0.3;
 const JITTER = 0.07;
