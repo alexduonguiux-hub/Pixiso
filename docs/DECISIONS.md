@@ -825,3 +825,31 @@ Số: islands 0, skin1 0, frag 731 → 720 (mốc hạ theo), cặp lẫn 0; lin
 `skin sh` > 40 % vì phần da còn thấy dưới mũ sắt chủ yếu là chén bóng gáy; Lính Nhiễm @N `lintAdded`). 40 sprite
 đổi, chỉ N/NW. Còn lại: đầu gục nhìn từ sau vẫn hạ hai hàng như mặt trước (đầu cúi thì ụ chẩm phải cao hơn và
 gáy lộ nhiều hơn — cần vẽ lại hàng 14–17 của thân gục ở N/NW); bàn tay và gót góc sau chưa vẽ riêng.
+
+### D-093 Chi tiết dạng chấm thành mảng ba ô trở lên (mục 3 của kế hoạch 19/10)
+
+Thước 1× đếm 720 mảnh vật liệu dưới 3 ô. Kiểm kê theo nguồn sinh (`scripts/research/frag_inventory.py`: mảnh
+theo vật liệu, chữ ô và vật liệu bao quanh): dây túi/dây súng chéo một ô (~65 — mỗi ô chéo là một vùng
+4-liên-thông riêng), vết máu/vết loét/vết da đầu và má bằng gỗ `D` (~105: cặp 2 ô, hoặc bị cà vạt, thẻ bài, dải
+phản quang cắt, hoặc bị dải lệch của đầu nghiêng xé chéo), mụn Kẻ Phun và nhọt Đột Biến (~50), cổ tay vải 2 trên
+tay áo hẹp (27), thắt lưng một hàng bị khoá 2 ô chia thành mẩu 2 ô (38), rằn ri bị mép hộp cắt (15), quần Ny lộ
+một dải giữa gấu áo và tunic (8), súng sau lưng vẽ nét một ô (6). Luật thay cho sửa từng nhân vật:
+
+- **Dây chéo rộng 2 ô** (bậc thang `A./AA/.AA`): dây túi Ny và quân y ở mọi góc, dây súng đeo lưng (mỗi bậc
+  chung một cột với bậc kế), gậy Sơn (2 ô gỗ ở hàng đổi bậc), nòng và báng súng từ sau `oMMo`/`oDD` như súng
+  cầm trước (`omMo`).
+- **Vết là mảng chữ L ba ô** (`STAIN_ROWS`, vết váy Kẻ Bắt Chước, vết loét Lính Nhiễm, mụn/nhọt mỗi góc, vết da
+  đầu ba ô một hàng, vết má `dd/.d` ở hàng 6–7 — nằm trong một dải lệch của mọi đầu nghiêng nên không bị xé);
+  `cullSmallBlotches()` cắt vết theo cột lòng thân (thân quay hẹp hơn: vết đè lên viền tay) và chỉ giữ hàng
+  trên dải phản quang, mảng còn dưới 3 ô thì bỏ; rằn ri qua cùng bộ lọc. Cà vạt vẽ sau vết máu.
+- **Thắt lưng hai hàng** (hàng gấu và hàng trên), khoá 2×2 đặt sao cho mẩu đai bên cạnh ≥ 2 cột; phù hiệu 2×2;
+  thẻ bài = ô xích + bản 2 ô.
+- **Cổ tay vải 2 ≥ 3 ô**: tay áo 2 cột lấy 2 hàng, tay xa 1 cột lấy 3 hàng (`tailor64.ts`).
+- Tunic Ny bắt đầu ngay dưới đường may eo (hàng 29).
+
+Số: frag 720 → 334 (mốc hạ theo), islands 0, skin1 0, cặp lẫn 0; lint 74 = 74; QA sạch; 113 test; ô lẻ 234 → 227,
+strict 1536 → 1518; thước ×6 tham khảo 34 → 33. 97 sprite đổi (24 nhân vật). 334 mảnh còn lại chủ yếu là ô
+cấu trúc: da 206 (cơ thang cạnh cằm góc S/SW 37, bàn tay/ngón 2 ô 24, khoé miệng zombie 39, tai một ô dưới tóc
+ngắn 8), vải 58 (đuôi áo một ô dưới gấu @W 12, góc vai dáng gục/ngoẹo), quần 22 (ô cạp cạnh tay buông của dáng
+lết/ngoẹo), vải 2 15, tóc 12. Đó là nét dựng hình (hàng cằm, góc cổ áo, má hóp) hơn là chấm rời; xử lý tiếp nếu
+người dùng còn thấy rớt pixel ở 1×.

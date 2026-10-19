@@ -51,7 +51,10 @@ bóng/sáng của áo**: vẽ thân sai là mọi nhân vật mặc trên thân 
 5. Bên trong chỉ kẻ `o` ở ranh giới bộ phận (cổ, nách, đũng, cổ tay) và nét mặt. Không kẻ
    đường bóng dài bằng `o`.
 6. Khe 1–2 ô giữa hai chi là ánh sáng lọt, cho phép; lỗ kín ≥ 3 ô là lỗi.
-7. Mọi hình ≥ 3 ô một cụm; điểm 1 ô chỉ cho sáng mắt, răng, vết máu, đinh kim loại.
+7. Mọi hình ≥ 3 ô một cụm (thước `frag` của `qa:1x`): dây chéo là bậc thang rộng 2 ô (`A./AA/.AA`, mỗi bậc
+   chung một cột với bậc kế), vết máu/mụn/nhọt là mảng chữ L ba ô vẽ qua `cullSmallBlotches` (mảng bị mép hộp,
+   viền tay hay dải phản quang cắt còn dưới 3 ô thì bỏ), thắt lưng hai hàng với khoá 2×2, cổ tay vải 2 ít nhất
+   3 ô, vết trên đầu nghiêng nằm trong một dải lệch; điểm 1 ô chỉ cho sáng mắt và răng (D-093).
 8. **Ở cỡ thật không có gì rời khỏi thân** (D-088): đồ vật chạm thân hoặc có dây/ngón bắc qua ở mọi góc; không ô
    da nào đứng một mình (tai, ngón cái, má) — `dress()` phủ ô da rời bằng tóc/áo, nhưng thân vẽ đúng thì không
    cần phủ; không vẽ chi, dây, nét bằng một ô chéo liền nhau.
@@ -216,6 +219,7 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
 | Ô mũi giày khác tông đế ở W, ô bóng cuối gấu quần dưới áo blouse (giám khảo vòng 4, B10)                                                  | đế một tông xếp lên hàng thân giày thành hai dải bằng nhau; ô sâu cuối gấu dày thêm viền dưới                                                                                                     | hai ô đó là chủ ý phá `banding` và giữ đường mảnh: đế một tông làm 15 sprite rớt lint, gấu sâu làm Lan@SW rớt `lineDens`; khi giám khảo bắt ô đơn kiểu này, đo thước trước khi sửa (D-087)                                                                    |
 | Pixel rời khỏi thân, chấm da đơn, khó nhận dạng ở cỡ thật (người dùng, 19/10)                                                             | viền ngoài hốc mắt kẹp ô da góc mắt và má; tai N một cột; ngón cái treo một ô; chi một ô chéo ở dáng lết @W; dùi cui/bảng kẹp/súng chéo cách thân một cột không có cầu; thước ×6 không đo cỡ thật | thước `pnpm qa:1x` là cổng (islands 0, skin1 0, frag và cặp lẫn không tăng); mặt không viền ngoài hốc mắt; tai, ngón, chi ≥ 2 ô; đồ vật chạm thân; `coverLoneSkin` trong `dress()` (D-088)                                                                    |
 | "Ý tôi chưa ổn là tạo hình theo góc nhìn này chứ không phải màu" (góc sau Dương, Ông Tư, 19/10) | góc sau là mặt trước lật: gáy mang đường cằm (Ông Tư thành "quả trứng không mặt"), cổ thắt giữa hai khối `ooo`, cổ áo sau vạch thẳng ngang V trước (gáy 13 ô), tai sau là ô tóc kẹp viền, đầu NW = đầu N bớt một cột | dựng góc sau như một hình riêng (D-092): chén bóng ụ chẩm + cơ thang, NW theo silhouette SW với tai gần và dải má, cổ U cao hơn V hai hàng, tóc ngắn chừa tai 2×2 và phủ tới gáy; soi ×10 cạnh khung N của ảnh mẫu trước khi báo |
+| Thước 1× còn 720 mảnh dưới 3 ô sau D-092 | dây chéo một ô (mỗi ô một vùng), vết/mụn cặp 2 ô hoặc bị cà vạt, thẻ bài, dải phản quang, dải lệch đầu nghiêng cắt, khoá 2 ô chia đai thành mẩu 2 ô, cổ tay 2 ô, rằn ri bị mép hộp cắt | kiểm kê theo nguồn sinh (`frag_inventory.py`) rồi đặt luật (D-093): dây rộng 2 ô, vết là mảng chữ L qua `cullSmallBlotches`, đai hai hàng + khoá 2×2, cổ tay ≥ 3 ô; không sửa từng nhân vật |
 
 ## 9. Nguồn đã khảo sát (17/10/2026)
 

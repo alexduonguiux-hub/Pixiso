@@ -278,15 +278,17 @@ quân phục lục không phân biệt được. Từ 19/10, **`pnpm qa:1x` là 
 | --------- | --------------------------------------------------------------- | ----------------------------- | ---------- |
 | `islands` | mảng 8-liên-thông tách khỏi thân                                | 3 → **0**                     | phải 0     |
 | `skin1`   | ô da không có ô da nào trong 8 ô quanh                          | 143 → **0**                   | phải 0     |
-| `frag`    | vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) | 1012 → **731** → **720** (D-092) | không tăng |
+| `frag`    | vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) | 1012 → **731** → 720 (D-092) → **334** (D-093) | không tăng |
 | cặp lẫn   | góc S, IoU silhouette ≥ 0,82 và ΔE sáu dải ≤ 0,075              | 7 → **7** → **0** (D-089)     | không tăng |
 
 Báo cáo: `test-output/score/report_1x.md` (danh sách theo sprite, mảnh theo vật liệu, mọi cặp IoU ≥ 0,82).
 Khi một thay đổi hạ `frag` hay số cặp, hạ `BASELINE` trong `scripts/research/qa_1x.py` cùng commit.
 
-Việc còn lại theo kế hoạch 19/10: (3) chi tiết dạng chấm (máu, rằn ri, mụn, dải phản quang, dây túi chéo một ô)
-thành mảng ≥ 3 ô có viền — `frag` 731 nằm ở đây; (6) 5 ô lấp viền tạo khối 2×2 (ngón cái dưới cổ tay áo @N, tai
-dưới mũ sắt @NW). Mục 5 (bảng màu nhận diện) xong 19/10, D-089: 7 cặp → 0. Mục 4 (nhiễu tông) xong 19/10, D-090:
+Mục (3) xong 19/10, D-093: dây chéo rộng 2 ô, vết máu/mụn/nhọt là mảng chữ L ba ô qua `cullSmallBlotches`, thắt
+lưng hai hàng + khoá 2×2, cổ tay vải 2 ≥ 3 ô — `frag` 720 → 334; kiểm kê mảnh theo nguồn sinh bằng
+`python3 -I scripts/research/frag_inventory.py [view]` trước khi sửa. 334 mảnh còn lại là ô cấu trúc (cơ thang
+cạnh cằm @S/SW, khoé miệng zombie, đuôi áo @W, góc cổ áo dáng gục). Việc còn lại: (6) 5 ô lấp viền tạo khối 2×2
+(ngón cái dưới cổ tay áo @N, tai dưới mũ sắt @NW); đầu gục @N/NW vẫn hạ hai hàng như mặt trước (D-092). Mục 5 (bảng màu nhận diện) xong 19/10, D-089: 7 cặp → 0. Mục 4 (nhiễu tông) xong 19/10, D-090:
 tóc mảng dưới 130 ô ba tông, áo không chấm chói/sâu 2 ô, trần viền 0,22; thước ×6 còn 53/130 vì `flat hair` đòi
 vùng ≤ 13 ô — thước đó không còn là đích. Ba cặp lẫn sát ngưỡng (ΔE 0,076): đổi màu nhóm lục phải đo lại.
 

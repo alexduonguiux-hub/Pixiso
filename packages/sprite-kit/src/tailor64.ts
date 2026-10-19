@@ -224,10 +224,20 @@ export function tailor(
     // row above too. A one-column far arm keeps its one cell, dark on dark.
     const rowCount = new Map<number, number>();
     for (const c of cells) rowCount.set(c.y, (rowCount.get(c.y) ?? 0) + 1);
-    const cuffTop =
+    let cuffTop =
       h >= 6 && lit && (rowCount.get(y1) ?? 0) < 2 && (rowCount.get(y1 - 1) ?? 0) >= 2
         ? y1 - 1
         : y1;
+    // A cuff in its own material is at least three cells (D-093): on a two-column sleeve it takes two
+    // rows, on a one-column far arm three.
+    if (g.cuff && g.cuffMaterial && h >= 6) {
+      let n = 0;
+      for (let y = y1; y >= cuffTop; y--) n += rowCount.get(y) ?? 0;
+      while (n < 3 && cuffTop > y0 + 2) {
+        cuffTop--;
+        n += rowCount.get(cuffTop) ?? 0;
+      }
+    }
     for (const c of cells) {
       const outer = lit ? rowMin.get(c.y) : rowMax.get(c.y);
       const inner = lit ? rowMax.get(c.y) : rowMin.get(c.y);

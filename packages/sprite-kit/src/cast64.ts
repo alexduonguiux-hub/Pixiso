@@ -311,9 +311,9 @@ const ZOMBIE_FACE = hov(4, 8, [
   '...ooo...',
 ]); // temples catch light, sunken brows, a toothy mouth
 /** Scalp patches and a scalp wound (blood is the wood material). */
-const ZOMBIE_SCALP = hov(5, 2, ['.SS..dd', '..S....']);
+const ZOMBIE_SCALP = hov(5, 2, ['.SS.ddd', '..S....']); // the wound in one row: a tilted head shears rows apart
 /** A gash on the cheek. */
-const ZOMBIE_CHEEK = hov(11, 5, ['d', 'd']);
+const ZOMBIE_CHEEK = hov(11, 6, ['dd', '.d']); // rows 6-7 sit in one shift band of every tilted head (D-093)
 
 /* ------------------------------------------------------------------ */
 /* Base figure (17×40) regions in figure space.                        */
@@ -511,18 +511,24 @@ const RIFLE_SLUNG: Overlay[] = [
     under: true,
   },
   ov(0, 29, ['ooD', 'odD', 'odD', 'odD', 'ooo']),
+  // two cells on the rows where the sling steps over, so the band is one piece at 1x (D-093)
   ...(
     [
       [12, 17],
       [11, 18],
+      [12, 18],
       [11, 19],
       [10, 20],
+      [11, 20],
       [10, 21],
       [9, 22],
+      [10, 22],
       [9, 23],
       [8, 24],
+      [9, 24],
       [8, 25],
       [7, 26],
+      [8, 26],
       [7, 27],
     ] as const
   ).map(([x, y]) => ov(x, y, ['L'])),
@@ -536,7 +542,7 @@ const RIFLE_SLUNG_V: ViewItem = {
 };
 /** The medic's big satchel: hangs outside the right hip on the chest strap, red with a white cross. */
 const SATCHEL: Overlay[] = [
-  ov(5, 17, ['A.......', '.A......', '..A.....', '...A....', '....A...', '.....A..', '......AA']),
+  ov(5, 17, ['A.......', 'AA......', '.AA.....', '..AA....', '...AA...', '....AA..', '.....AAA']),
   ov(14, 23, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo']),
 ];
 const SATCHEL_V: ViewItem = {
@@ -572,16 +578,17 @@ const BACKPACK: Overlay[] = [
     ] as const
   ).map(([x, y]) => ov(x, y, ['L'])),
 ];
+// Two wood cells where the shaft steps over: a one-cell 45° stick is a row of lone pairs at 1x (D-093).
 const BAT: Overlay = ov(14, 7, [
   '....ooo',
   '....o%o',
-  '...o%o.',
+  '...o%%o',
   '...odo.',
+  '..oddo.',
   '..odo..',
-  '..odo..',
+  '.oddo..',
   '.odo...',
-  '.odo...',
-  'odo....',
+  'oddo...',
   'odo....',
   'Ddo....',
   'Ddo....',
@@ -654,7 +661,8 @@ const CLIPBOARD_BACK: Overlay = ov(17, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 
 /** The back of the turned figure is a column narrower: the clipboard stays against the arm (1x yardstick). */
 const CLIPBOARD_BACK_NW: Overlay = ov(16, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 'oo']);
 /** Ny's scrub tunic reaches below the hips; a small red pouch hangs on the right hip. */
-const TUNIC: Overlay = ov(1, 30, [
+const TUNIC: Overlay = ov(1, 29, [
+  'o^ccCccCccCccCo',
   'o^ccCccCccCccCo',
   'o^ccCccCccCccCo',
   'occcCccCccCccco',
@@ -665,12 +673,12 @@ const POUCH_BACK: Overlay = ov(-1, 23, ['oooo', 'oaAo', 'oaAo', 'oaao', 'oooo'])
 /** The pouch's strap seen from behind: from the right shoulder (screen-left) down across the back to the hip. */
 const STRAP_BACK: Overlay = ov(5, 17, [
   '......A',
-  '.....A.',
-  '....A..',
-  '...A...',
-  '..A....',
-  '.A.....',
-  'A......',
+  '.....AA',
+  '....AA.',
+  '...AA..',
+  '..AA...',
+  '.AA....',
+  'AA.....',
 ]);
 const TUNIC_V: ViewItem = {
   S: { overlays: [TUNIC, POUCH] },
@@ -703,14 +711,15 @@ const POLICE_GEAR_V: ViewItem = {
   NW: { overlays: [ov(17, 26, BATON_R), ov(1, 28, HOLSTER_L)] },
 };
 
-/** Red medic bag on the right hip with a white cross, plus a strap across the chest. */
+/** Red medic bag on the right hip with a white cross, plus a strap across the chest (two cells wide: a
+ * one-cell diagonal is a row of lone dots at 1x, D-093). */
 const MEDIC_BAG: Overlay[] = [
-  ov(5, 17, ['A......', '.A.....', '..A....', '...A...', '....A..', '.....A.', '......A']),
+  ov(5, 17, ['A......', 'AA.....', '.AA....', '..AA...', '...AA..', '....AA.', '.....AA']),
   ov(12, 22, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
 ];
 
 /** Pustules on a bloated belly (fat form coordinates). */
-const PUSTULES = ov(7, 23, ['...aa....', 'aa.....**', '.........', '...aa....', '.......aa']);
+const PUSTULES = ov(7, 23, ['...aa....', 'aa.a...**', 'a......*.', '...aa...a', '...a...aa']);
 
 /* ------------------------------------------------------------------ */
 /* The Vùng Xanh cast.                                                 */
@@ -927,17 +936,49 @@ const SKIN_F: Rgb8 = [178, 188, 152];
 /** Deterministic camouflage blotches inside a box (no randomness: a fixed hash of the cell). */
 /** Camouflage blotches: three-cell shapes on a 6x4 tile (the reference draws marks as 2-4 cell shapes, never lone dots). */
 const CAMO_TILE = ['xx....', '.x..x.', '....xx', 'x.....'];
-function camo(box: Box, glyph: string): Overlay {
-  const [x0, y0, x1, y1] = box;
+/**
+ * Rows of marks keeping only the 4-connected groups of three or more cells: a mark cut to one or two
+ * cells (by a box edge, an arm line) is a lone dot at 1x (D-093). `cell` gives the glyph at (x, y) or '.'.
+ */
+function cullSmallBlotches(w: number, h: number, cell: (x: number, y: number) => string): string[] {
+  const on = (x: number, y: number) => x >= 0 && y >= 0 && x < w && y < h && cell(x, y) !== '.';
+  const keep = new Set<number>();
+  const seen = new Set<number>();
+  for (let y = 0; y < h; y++)
+    for (let x = 0; x < w; x++) {
+      if (!on(x, y) || seen.has(y * w + x)) continue;
+      const comp: number[] = [];
+      const stack: [number, number][] = [[x, y]];
+      while (stack.length) {
+        const [cx, cy] = stack.pop()!;
+        const k = cy * w + cx;
+        if (seen.has(k) || !on(cx, cy)) continue;
+        seen.add(k);
+        comp.push(k);
+        stack.push([cx + 1, cy], [cx - 1, cy], [cx, cy + 1], [cx, cy - 1]);
+      }
+      if (comp.length >= 3) for (const k of comp) keep.add(k);
+    }
   const rows: string[] = [];
-  for (let y = y0; y <= y1; y++) {
+  for (let y = 0; y < h; y++) {
     let row = '';
-    for (let x = x0; x <= x1; x++)
-      row += CAMO_TILE[(y - y0) % 4]![(x - x0) % 6] === 'x' ? glyph : '.';
+    for (let x = 0; x < w; x++) row += keep.has(y * w + x) ? cell(x, y) : '.';
     rows.push(row);
   }
-  return ov(x0, y0, rows);
+  return rows;
 }
+function camo(box: Box, glyph: string): Overlay {
+  const [x0, y0, x1, y1] = box;
+  return ov(
+    x0,
+    y0,
+    cullSmallBlotches(x1 - x0 + 1, y1 - y0 + 1, (x, y) =>
+      CAMO_TILE[y % 4]![x % 6] === 'x' ? glyph : '.',
+    ),
+  );
+}
+/** Blood on a garment: three-cell blotches, two of them off the lit chest crease. */
+const STAIN_ROWS = ['.DD....', '.D.....', '.....DD', 'DD....D', 'D....D.', '....DD.'];
 
 /** Builds an outfit from a look laid on a pose's regions, for one view (zombies, mutants, soldiers and the cast alike). */
 function build(id: string, label: string, pose: ZombiePose, look: Look, view: HeroView): Outfit {
@@ -1087,18 +1128,25 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   push(out, layer(look.hat, view));
   for (const d of look.details) {
     const chest = pose.chest;
-    if (d === 'stains' && pose.stains)
-      // one column right of the anchor: the first stain pair stays off the chest crease's lit cells
+    if (d === 'stains' && pose.stains) {
+      // one column right of the anchor: the first stain pair stays off the chest crease's lit cells; inside
+      // the torso's own columns (the turned torso is narrower: a blotch on the arm line cut the line, D-093)
+      const sx = pose.stains[0] + 1;
       overlays.push(
-        ov(pose.stains[0] + 1, pose.stains[1], [
-          '.DD....',
-          '..D....',
-          '......D',
-          'DD....D',
-          'D......',
-          '....DD.',
-        ]),
+        ov(
+          sx,
+          pose.stains[1],
+          // and above the reflective bands when the look has them (a band cuts a blotch to a dot)
+          cullSmallBlotches(STAIN_ROWS[0]!.length, STAIN_ROWS.length, (x, y) =>
+            sx + x > tx0 &&
+            sx + x < tx1 &&
+            (!look.details.includes('hivis') || pose.stains![1] + y < hemY - 3)
+              ? STAIN_ROWS[y]![x]!
+              : '.',
+          ),
+        ),
       );
+    }
     if (d === 'gash' && pose.gash) {
       // Above the reflective bands when the look has them (a gash cut by a band leaves two lone cells).
       const gy = look.details.includes('hivis') ? Math.min(pose.gash[1], hemY - 6) : pose.gash[1];
@@ -1110,7 +1158,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       const stripe = 'w'.repeat(tx1 - tx0 - 1);
       overlays.push(ov(tx0 + 1, hemY - 3, [stripe]), ov(tx0 + 1, hemY - 1, [stripe]));
     }
-    if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
+    if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww', 'ww']));
     if (d === 'armband') {
       // the sleeve's cloth two rows below its top goes white; a remap, so the arm's outline stays (D-089).
       // Not on a one-column far arm (the turned back view): the band would cut its cloth into fragments.
@@ -1124,11 +1172,16 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       // staggered the way that leaves the fold shadows beside it in pairs (the turned torso is narrower)
       overlays.push(ov(chest[0] + 2, chest[1] + 3, view === 'S' ? ['ss.', '.ss'] : ['.ss', 'ss.']));
     if (d === 'belt' && pose.belt) {
-      // The belt is the hem row itself in leather, with a two-cell buckle on the front views.
+      // The belt is the hem row and the row above it in leather, with a two-by-two buckle on the front
+      // views placed so no belt piece beside it is under two columns (D-093: one-row belt pieces and a
+      // two-cell buckle were fragments at 1x).
       const [hx0, hy, hx1] = pose.hem;
       const strap = 'b'.repeat(hx1 - hx0 + 1); // the boots' dark brown, as the reference's belt
-      overlays.push(ov(hx0, hy, [strap]));
-      if (view === 'S' || view === 'SW') overlays.push(ov(pose.belt[0], hy, ['ww']));
+      overlays.push(ov(hx0, hy - 1, [strap, strap]));
+      if (view === 'S' || view === 'SW') {
+        const bx = Math.min(pose.belt[0], hx1 - 3);
+        overlays.push(ov(bx, hy - 1, ['ww', 'ww']));
+      }
     }
     if (d === 'tie' && pose.tie)
       overlays.push(ov(...pose.tie, ['l', 'l', 'l', 'L', 'L', 'L', 'L']));
@@ -1276,11 +1329,11 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
 });
 
 /** Sores on both bare forearms (drag pose). */
-const SORES: Overlay[] = [ov(1, 24, ['DD', '..', '..', 'DD']), ov(13, 25, ['.DD', '...', '.DD'])];
+const SORES: Overlay[] = [ov(1, 24, ['DD', 'D.', '.D', 'DD']), ov(13, 25, ['.DD', '.D.'])];
 /** Dog tag on the sternum: two cells hanging from the pose's chest anchor row, column +2 (below the tee's neckband). */
 const dogTag = (pose: ZombiePose): Overlay => {
   const [cx, cy] = pose.chest ?? [6, 20];
-  return ov(cx + 2, cy, ['w', 'w']);
+  return ov(cx + 2, cy, ['w.', 'ww']); // chain cell over a two-cell plate: three cells (D-093)
 };
 
 /** Lính Nhiễm, the infected soldier (NPC): helmet, olive uniform with one sleeve torn off, sores on the forearms, dog tag, dragging a leg. */
@@ -1359,7 +1412,7 @@ export const ZOMBIE_OFFICE = wearPosed(
     top: 'long',
     bottoms: 'pants',
     shoes: 'both',
-    details: ['tie', 'stains'],
+    details: ['stains', 'tie'], // the tie over the blood: a stain cut the tie in two at 1x (D-093)
     colors: {
       skin: SKIN_M,
       hair: [118, 116, 112], // grey: with black hair he paired with Dương at 1x (D-089)
@@ -1466,15 +1519,16 @@ const SHELL_PLATES: Overlay[] = [
 const BRUTE_MAW = ov(11, 18, ['oxoxoxoxoxo', 'ooooooooooo']);
 const BRUTE_BOILS = ov(12, 33, [
   '.aa.....',
-  '........',
+  '.a......',
   '........',
   '......aa',
-  '........',
+  '.......a',
   '........',
   'aa......',
-  '........',
+  'a.......',
   '.....aa.',
-]);
+  '.....a..',
+]); // boils of three cells (D-093)
 
 /** Kẻ Thính: blind, hears everything. Upright, feeling forward; pale, huge ears, eyes sewn shut, rags. */
 export const KE_THINH = wearPosed('ke_thinh', 'Kẻ Thính', POSE_REACH, {
@@ -1592,15 +1646,15 @@ const SHELL_V: ViewItem = {
 /** Pustules on the swollen torso per view (figure space of the fat build). */
 const PUSTULES_V: ViewItem = {
   S: same(PUSTULES),
-  SW: same(ov(8, 23, ['...aa....', '........*', '........*', '....aa...', '.......aa'])),
+  SW: same(ov(8, 23, ['...aa....', '...a...**', '.......*.', '....aa...', '....a....'])),
   W: {
     overlays: [
-      ov(9, 22, ['.aa..', '.....', '..**.', '.....', 'aa...', '..aa.']),
+      ov(9, 22, ['.aa..', '.a...', '..**.', '...*.', 'aa...', 'a....']),
       ov(1, 25, ['aa']),
     ],
   },
-  NW: same(ov(7, 22, ['..aa.....', '......**.', '.........', '...aa....', '......aa.'])),
-  N: same(ov(7, 22, ['..aa.....', '......**.', '.........', '...aa....', '......aa.'])),
+  NW: same(ov(7, 22, ['..aa.....', '..a...**.', '.......*.', '...aa.a..', '...a..aa.'])),
+  N: same(ov(7, 22, ['..aa.....', '..a...**.', '.......*.', '...aa.a..', '...a..aa.'])),
 };
 
 /** Kẻ Phun, the bloated spore spitter: fat build, bare swollen torso with pustules, torn trousers. */
@@ -1701,14 +1755,18 @@ const BRUTE_FACE_V: ViewItem = {
   W: {
     overlays: [
       ov(3, 17, ['oxoxoxo', 'ooooooo']),
-      ov(12, 30, ['.aa.', '....', '..aa', '....', 'aa..', '....', '.aa.']),
+      ov(12, 30, ['.aa.', '.a..', '..aa', '...a', 'aa..', 'a...', '.aa.', '.a..']),
     ],
   },
   NW: {
-    overlays: [ov(10, 30, ['.aa...', '......', '....aa', '......', 'aa....', '......', '..aa..'])],
+    overlays: [
+      ov(10, 30, ['.aa...', '.a....', '....aa', '.....a', 'aa....', 'a.....', '..aa..', '..a...']),
+    ],
   },
   N: {
-    overlays: [ov(10, 30, ['.aa...', '......', '....aa', '......', 'aa....', '......', '..aa..'])],
+    overlays: [
+      ov(10, 30, ['.aa...', '.a....', '....aa', '.....a', 'aa....', 'a.....', '..aa..', '..a...']),
+    ],
   },
 };
 
@@ -1763,7 +1821,7 @@ const SUNKEN_EYES = hov(5, 9, ['SES.SES', 'xES.SEx', 'xe...ex']);
 /** A smile far too wide: corners lifted at the cheeks, a line across the face, bared teeth above the chin. */
 const WIDE_SMILE = hov(4, 11, ['o.......o', '.ooooooo.', '..xxxxx..']);
 /** Blood dripping down the dress. */
-const DRESS_STAINS = ov(4, 30, ['....DD...', '.........', '.DD......', '.........', '......DD.']);
+const DRESS_STAINS = ov(4, 30, ['....DD...', '....D....', '.DD......', '..D....D.', '......DD.']);
 
 /**
  * Kẻ Bắt Chước: stands still like a person (base figure), a dirty off-white
