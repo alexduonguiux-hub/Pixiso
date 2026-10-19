@@ -8,6 +8,7 @@ import { DIRECTIONS_8, type Direction } from '@pixiso/shared';
 import { CANVAS_H, CANVAS_W, PIVOT, type BodyView } from './body32.js';
 import { buildBody, CHIBI_CLASSIC } from './bodygen.js';
 import type { Material } from './format.js';
+import { HERO_CANVAS, HERO_PIVOT } from './hero64.js';
 
 export const SLOT_IDS = ['head', 'hand_right', 'hand_left', 'back'] as const;
 export type SlotId = (typeof SLOT_IDS)[number];
@@ -38,10 +39,13 @@ export interface BodyDef {
   canvas: { w: number; h: number };
   /** Foot anchor, pixel coordinates from the top-left of the canvas. */
   pivot: { x: number; y: number };
-  views: Record<View, BodyView>;
+  /** Limb drawings of a 32 px body; the 64 px hero is drawn whole (hero64.registry.ts) and has none. */
+  views?: Record<View, BodyView>;
 }
 
 export const REFERENCE_BODY = 'human';
+/** The 64 px hero mannequin (hero64.ts): the Vùng Xanh cast's body, dressed from Look patches (D-096). */
+export const HERO_BODY_ID = 'hero';
 
 export const BODIES: readonly BodyDef[] = [
   {
@@ -49,6 +53,11 @@ export const BODIES: readonly BodyDef[] = [
     canvas: { w: CANVAS_W, h: CANVAS_H },
     pivot: { x: PIVOT.x, y: PIVOT.y },
     views: buildBody(CHIBI_CLASSIC),
+  },
+  {
+    id: HERO_BODY_ID,
+    canvas: { w: HERO_CANVAS, h: HERO_CANVAS },
+    pivot: { x: HERO_PIVOT.x, y: HERO_PIVOT.y },
   },
 ];
 
@@ -73,4 +82,7 @@ export const COLOR_TARGETS: readonly ColorTargetDef[] = [
   { id: 'leather', material: 'leather' },
   { id: 'wood', material: 'wood' },
   { id: 'accent', material: 'accent' },
+  // the hero's eyes and whites (D-096): every colour of the cast is a target, so a preset is a plain config
+  { id: 'eyes', material: 'eye' },
+  { id: 'white', material: 'white' },
 ];

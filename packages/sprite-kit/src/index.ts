@@ -25,3 +25,4 @@ export * from './views64.js';
 export * from './walk64.js';
 export * from './hero64.poses.views.js';
 export * from './poseviews64.js';
+export * from './hero64.registry.js';

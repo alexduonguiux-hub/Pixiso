@@ -1,6 +1,12 @@
 import { DEFAULT_ANIMATION_IDS } from './defaults.js';
-import type { Catalog, CatalogPart } from './schema.js';
-import { COLOR_NAMES, PART_NONE, type CharacterConfig, type ColorName } from './types.js';
+import type { Catalog, CatalogAnimation, CatalogPart, CatalogSlot } from './schema.js';
+import {
+  COLOR_NAMES,
+  PART_NONE,
+  type CharacterConfig,
+  type ColorAssignment,
+  type HexColor,
+} from './types.js';
 
 export interface NormalizeResult {
   config: CharacterConfig;
@@ -14,6 +20,23 @@ export function partFitsCharacter(part: CatalogPart, characterId: string): boole
 
 export function partsForSlot(catalog: Catalog, slotId: string, characterId: string): CatalogPart[] {
   return catalog.parts.filter((p) => p.slots.includes(slotId) && partFitsCharacter(p, characterId));
+}
+
+/** Slots that have at least one part for the character (the others are not shown for it). */
+export function slotsForCharacter(catalog: Catalog, characterId: string): CatalogSlot[] {
+  return catalog.slots.filter((s) => partsForSlot(catalog, s.id, characterId).length > 0);
+}
+
+export function animationFitsCharacter(anim: CatalogAnimation, characterId: string): boolean {
+  return !anim.characters || anim.characters.includes('*') || anim.characters.includes(characterId);
+}
+
+export function animationsForCharacter(catalog: Catalog, characterId: string): CatalogAnimation[] {
+  return catalog.animations.filter((a) => animationFitsCharacter(a, characterId));
+}
+
+export function isHexColor(c: string): c is HexColor {
+  return /^#[0-9a-fA-F]{6}$/.test(c);
 }
 
 /**
@@ -52,21 +75,25 @@ export function normalizeConfig(input: CharacterConfig, catalog: Catalog): Norma
   const targetIds = new Set(catalog.colorTargets.map((t) => t.id));
   const colorIds = new Set<string>(COLOR_NAMES);
   const seenTargets = new Set<string>();
-  const colors: { target: string; color: ColorName }[] = [];
+  const colors: ColorAssignment[] = [];
   for (const c of input.colors) {
     if (!targetIds.has(c.target)) {
       dropped.push(`color target "${c.target}"`);
       continue;
     }
-    if (!colorIds.has(c.color)) {
+    const hex = isHexColor(c.color);
+    if (!colorIds.has(c.color) && !hex) {
       dropped.push(`color "${c.color}"`);
       continue;
     }
     if (seenTargets.has(c.target)) continue; // first assignment wins
     seenTargets.add(c.target);
-    if (c.color !== 'original') colors.push({ target: c.target, color: c.color });
+    if (c.color !== 'original')
+      colors.push({ target: c.target, color: hex ? (c.color.toLowerCase() as HexColor) : c.color });
   }
 
+  // Animations the character has frames for; the rest are dropped (never to an empty list).
+  const fitting = new Set(animationsForCharacter(catalog, baseCharacter).map((a) => a.id));
   const animIds = new Set(catalog.animations.map((a) => a.id));
   const animations: string[] = [];
   for (const id of input.animations) {
@@ -74,11 +101,15 @@ export function normalizeConfig(input: CharacterConfig, catalog: Catalog): Norma
       dropped.push(`animation "${id}"`);
       continue;
     }
+    if (!fitting.has(id)) {
+      dropped.push(`animation "${id}" for character "${baseCharacter}"`);
+      continue;
+    }
     if (!animations.includes(id)) animations.push(id);
   }
   if (animations.length === 0) {
-    for (const id of DEFAULT_ANIMATION_IDS) if (animIds.has(id)) animations.push(id);
-    if (animations.length === 0) animations.push(catalog.animations[0]!.id);
+    for (const id of DEFAULT_ANIMATION_IDS) if (fitting.has(id)) animations.push(id);
+    if (animations.length === 0) animations.push([...fitting][0] ?? catalog.animations[0]!.id);
   }
 
   return { config: { version: 1, baseCharacter, parts, colors, animations }, dropped };

@@ -15,6 +15,7 @@ export interface CharacterSpec {
 function viewFor(bodyId: string, view: View): { body: BodyView; w: number; h: number } {
   const def = bodyById(bodyId);
   if (!def) throw new Error(`unknown body "${bodyId}"`);
+  if (!def.views) throw new Error(`body "${bodyId}" is drawn whole, not by limbs`);
   return { body: def.views[view], w: def.canvas.w, h: def.canvas.h };
 }
 

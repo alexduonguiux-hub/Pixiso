@@ -22,6 +22,11 @@ import {
   BODIES,
   CLIPS,
   COLOR_TARGETS,
+  HERO_BODY_ID,
+  HERO_CLIP_IDS,
+  HERO_PARTS,
+  HERO_PRESETS,
+  HERO_SLOT_IDS,
   PARTS,
   REFERENCE_BODY,
   SLOT_IDS,
@@ -44,6 +49,7 @@ const labelsSchema = z.object({
   colorTargets: z.record(z.string(), z.object({ label_vi: z.string() })),
   colors: z.record(z.string(), z.object({ label_vi: z.string(), hex: z.string() })),
   animations: z.record(z.string(), labeled),
+  presets: z.record(z.string(), labeled.extend({ description_vi: z.string().optional() })),
 });
 
 export type Labels = z.infer<typeof labelsSchema>;
@@ -69,12 +75,8 @@ export function buildCatalog(labels: Labels): Catalog {
     BODIES.map((b) => b.id),
     labels.characters,
   );
-  pairUp('slots', SLOT_IDS, labels.slots);
-  pairUp(
-    'parts',
-    PARTS.map((p) => p.id),
-    labels.parts,
-  );
+  pairUp('slots', [...SLOT_IDS, ...HERO_SLOT_IDS], labels.slots);
+  pairUp('parts', [...PARTS.map((p) => p.id), ...HERO_PARTS.map((p) => p.id)], labels.parts);
   pairUp(
     'colorTargets',
     COLOR_TARGETS.map((t) => t.id),
@@ -85,6 +87,11 @@ export function buildCatalog(labels: Labels): Catalog {
     'animations',
     CLIPS.map((c) => c.id),
     labels.animations,
+  );
+  pairUp(
+    'presets',
+    HERO_PRESETS.map((p) => p.id),
+    labels.presets,
   );
   if (labels.referenceCharacter !== REFERENCE_BODY) {
     fail(`referenceCharacter must be "${REFERENCE_BODY}" (sprite-kit REFERENCE_BODY)`);
@@ -105,13 +112,20 @@ export function buildCatalog(labels: Labels): Catalog {
         pivot: { ...b.pivot },
       };
     }),
-    slots: SLOT_IDS.map((id) => ({ id, label_vi: labels.slots[id]!.label_vi })),
-    parts: PARTS.map((p) => ({
+    slots: [...SLOT_IDS, ...HERO_SLOT_IDS].map((id) => ({
+      id,
+      label_vi: labels.slots[id]!.label_vi,
+    })),
+    // The 32 px parts fit the limb body, the hero's parts its own body (D-096): a part names its body.
+    parts: [
+      ...PARTS.map((p) => ({ id: p.id, slot: p.slot, body: REFERENCE_BODY })),
+      ...HERO_PARTS.map((p) => ({ id: p.id, slot: p.slot, body: HERO_BODY_ID })),
+    ].map((p) => ({
       id: p.id,
       slots: [p.slot],
       label_vi: labels.parts[p.id]!.label_vi,
       tags: labels.parts[p.id]!.tags,
-      characters: ['*'],
+      characters: [p.body],
     })),
     colorTargets: COLOR_TARGETS.map((t) => ({
       id: t.id,
@@ -130,8 +144,20 @@ export function buildCatalog(labels: Labels): Catalog {
       frames: c.frames.S.length,
       frameMs: c.frameMs,
       tags: labels.animations[c.id]!.tags,
+      // idle and walk have frames on every body; the other clips are the limb body's offset tables
+      characters: (HERO_CLIP_IDS as readonly string[]).includes(c.id) ? ['*'] : [REFERENCE_BODY],
     })),
     directions: [...AVAILABLE_DIRECTIONS],
+    presets: HERO_PRESETS.map((p) => {
+      const l = labels.presets[p.id]!;
+      return {
+        id: p.id,
+        label_vi: l.label_vi,
+        ...(l.description_vi ? { description_vi: l.description_vi } : {}),
+        tags: l.tags,
+        config: p.config,
+      };
+    }),
   };
   const parsed = catalogSchema.parse(catalog);
   const problems = checkCatalogReferences(parsed);
@@ -143,7 +169,7 @@ function main(): void {
   const catalog = buildCatalog(readLabels());
   fs.writeFileSync(CATALOG_JSON, JSON.stringify(catalog, null, 2) + '\n');
   console.log(
-    `[build-catalog] ${catalog.characters.length} bodies, ${catalog.slots.length} slots, ${catalog.parts.length} parts, ${catalog.colorTargets.length} colour targets, ${catalog.animations.length} clips, directions ${catalog.directions.join('/')} -> ${path.relative(process.cwd(), CATALOG_JSON)}`,
+    `[build-catalog] ${catalog.characters.length} bodies, ${catalog.slots.length} slots, ${catalog.parts.length} parts, ${catalog.colorTargets.length} colour targets, ${catalog.animations.length} clips, ${catalog.presets.length} presets, directions ${catalog.directions.join('/')} -> ${path.relative(process.cwd(), CATALOG_JSON)}`,
   );
 }
 

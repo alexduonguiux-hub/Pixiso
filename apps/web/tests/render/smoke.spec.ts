@@ -67,3 +67,36 @@ test('preview draws the configured character, reacts to parts and directions, de
   await expect(page.getByTestId('frame-strip').locator('canvas')).toHaveCount(2);
   await expect(page.getByTestId('pixel-palette').locator('.swatch')).not.toHaveCount(0);
 });
+
+test('a hero preset renders at 64 px with its own slots, clips and a custom colour', async ({
+  page,
+}) => {
+  await openFresh(page);
+  await drawn(page, 'S:idle:0:0:0');
+  // Sơn: six parts (hair, glasses, jacket, trousers, boots, backpack) and seven measured colours
+  await page.getByTestId('preset-son').click();
+  const son = await drawn(page, 'S:idle:0:6:7');
+  expect(son.opaque).toBeGreaterThan(0);
+  await expect(page.getByTestId('preview-status')).toContainText('Ô 64×64');
+  await expect(page.getByTestId('part-gear')).toHaveValue('backpack');
+  await expect(page.getByTestId('part-head')).toHaveCount(0);
+  await expect(page.getByTestId('anim-run')).toBeDisabled();
+  await expect(page.getByTestId('anim-walk')).toBeChecked();
+  await page.getByTestId('preview-stage').screenshot({ path: path.join(dir, 'son-S.png') });
+
+  // A custom hex colour replaces the jacket's colour (same number of assignments, other pixels).
+  await page.getByTestId('color-body-custom').fill('#d1343a');
+  await expect(page.getByTestId('color-body-custom')).toHaveValue('#d1343a');
+  await page.evaluate(() =>
+    window.__pixiso!.store.getState().setPreview({ playing: false, direction: 'W' }),
+  );
+  const west = await drawn(page, 'W:idle:0:6:7');
+  expect(west.hash).not.toBe(son.hash);
+  await page.getByTestId('preview-stage').screenshot({ path: path.join(dir, 'son-W-red.png') });
+
+  // Back to the 32 px body: its slots return, the hero parts are gone, the colours (shared targets) stay.
+  await page.getByTestId('character-human').click();
+  await expect(page.getByTestId('part-head')).toHaveCount(1);
+  await expect(page.getByTestId('part-gear')).toHaveCount(0);
+  await drawn(page, 'W:idle:0:0:7');
+});

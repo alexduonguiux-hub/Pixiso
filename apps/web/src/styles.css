@@ -183,6 +183,16 @@ canvas {
 .swatch.original {
   background: repeating-conic-gradient(#555 0 25%, #333 0 50%) 0 0 / 8px 8px;
 }
+input.swatch.custom {
+  background: none;
+}
+input.swatch.custom::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input.swatch.custom::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
 
 .preview-stage {
   position: relative;

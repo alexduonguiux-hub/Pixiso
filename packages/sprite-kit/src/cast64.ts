@@ -798,6 +798,13 @@ const NY_LOOK: Look = {
 };
 export const NY = wear('ny', 'Ny', POSE_STAND, NY_LOOK);
 
+/** A jacket's zip: a seam down the chest on the front views; on the walk steps it stops above the fist swung in front of the hip (D-095). */
+const JACKET_ZIP_V: ViewItem = {
+  S: { lines: [seam([8, 19, 8, 27])] },
+  SW: { lines: [seam([7, 19, 7, 27])] },
+  S0: { lines: [seam([7, 19, 7, 25])] },
+  S1: { lines: [seam([8, 19, 8, 25])] },
+};
 const SON_LOOK: Look = {
   hair: HAIR_SWEPT_V,
   glasses: true,
@@ -806,16 +813,7 @@ const SON_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: [
-    {
-      S: { lines: [seam([8, 19, 8, 27])] },
-      SW: { lines: [seam([7, 19, 7, 27])] },
-      // on the walk steps the zip stops above the fist swung in front of the hip (D-095)
-      S0: { lines: [seam([7, 19, 7, 25])] },
-      S1: { lines: [seam([8, 19, 8, 25])] },
-    },
-    BACKPACK_V,
-  ], // jacket zip, pack, bat
+  extras: [JACKET_ZIP_V, BACKPACK_V], // jacket zip, pack, bat
   colors: {
     skin: [240, 200, 165],
     hair: [58, 54, 66],
@@ -852,7 +850,15 @@ const ONG_TU_LOOK: Look = {
 };
 export const ONG_TU = wear('ong_tu', 'Ông Tư', POSE_STAND, ONG_TU_LOOK);
 
-/** Lab-coat tails over the hips, open at the front (base form, figure space). */
+/** Lab-coat tails over the hips, open at the front (coat opening seam, back vent), with the clipboard against the left thigh. */
+const LAB_COAT_V: ViewItem = {
+  S: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([8, 19, 8, 28])] }, // coat opening
+  SW: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([7, 19, 7, 28])] },
+  W: COAT_TAILS2_W,
+  N: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] }, // back vent
+  NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK_NW] },
+  ...COAT_TAILS2_WALK,
+};
 
 /** Bác sĩ Lan, the doctor: auburn bob, round glasses, white coat open at the front over blue trousers, dark shoes. */
 const BAC_SI_LAN_LOOK: Look = {
@@ -864,14 +870,7 @@ const BAC_SI_LAN_LOOK: Look = {
   details: [],
   face: 'plain',
   hem: false,
-  extras: {
-    S: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([8, 19, 8, 28])] }, // coat opening
-    SW: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([7, 19, 7, 28])] },
-    W: COAT_TAILS2_W,
-    N: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] }, // back vent
-    NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK_NW] },
-    ...COAT_TAILS2_WALK,
-  },
+  extras: LAB_COAT_V,
   colors: {
     skin: [240, 206, 176],
     hair: [118, 42, 40],
@@ -889,10 +888,10 @@ export const BAC_SI_LAN = wear('bac_si_lan', 'Bác sĩ Lan', POSE_STAND, BAC_SI_
 /* pose's regions (hero64.poses.ts).                                   */
 /* ------------------------------------------------------------------ */
 
-type Top = 'tee' | 'torn' | 'long' | 'tank' | 'crop' | 'none';
-type Bottoms = 'pants' | 'shorts' | 'skirt' | 'dress';
-type Footwear = 'both' | 'right' | 'flats' | 'none';
-type Detail =
+export type Top = 'tee' | 'torn' | 'long' | 'tank' | 'crop' | 'none';
+export type Bottoms = 'pants' | 'shorts' | 'skirt' | 'dress' | 'none';
+export type Footwear = 'both' | 'right' | 'flats' | 'none';
+export type Detail =
   | 'stains'
   | 'gash'
   | 'hivis'
@@ -1967,19 +1966,20 @@ const DRESS_STAINS = ov(4, 30, ['....DD...', '....D....', '.DD......', '..D....D
  * hair, red points in sunken sockets and a smile too wide.
  */
 const HAIR_WILD_V: ViewItem = { S: same(HAIR_WILD), ...HAIR_WILD_VIEWS };
-const walkStains = (key: WalkKey): Overlay[] => DRESS_STAINS_WALK[key]?.overlays ?? [];
-const MIMIC_V: ViewItem = {
-  S: { overlays: [SUNKEN_EYES, WIDE_SMILE, DRESS_STAINS] },
-  SW: { overlays: [...(MIMIC_FACE_VIEWS.SW?.overlays ?? []), DRESS_STAINS] },
-  W: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...(DRESS_STAINS_W.overlays ?? [])] },
-  N: { overlays: [DRESS_STAINS] },
-  NW: { overlays: [DRESS_STAINS] },
-  S0: { overlays: [SUNKEN_EYES, WIDE_SMILE, ...walkStains('S0')] },
-  S1: { overlays: [SUNKEN_EYES, WIDE_SMILE, ...walkStains('S1')] },
-  N0: { overlays: walkStains('N0') },
-  N1: { overlays: walkStains('N1') },
-  W0: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...walkStains('W0')] },
-  W1: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...walkStains('W1')] },
+/** The mimic's face: red points in sunken sockets and a smile too wide; nothing from behind. */
+const MIMIC_FACE_V: ViewItem = {
+  S: { overlays: [SUNKEN_EYES, WIDE_SMILE] },
+  SW: MIMIC_FACE_VIEWS.SW!,
+  W: MIMIC_FACE_VIEWS.W!,
+};
+/** Blood dripping down a dress, on every side; the walk steps carry their own drawing (D-095). */
+const DRESS_STAINS_V: ViewItem = {
+  S: same(DRESS_STAINS),
+  SW: same(DRESS_STAINS),
+  W: DRESS_STAINS_W,
+  N: same(DRESS_STAINS),
+  NW: same(DRESS_STAINS),
+  ...DRESS_STAINS_WALK,
 };
 const KE_BAT_CHUOC_LOOK: Look = {
   hair: HAIR_WILD_V,
@@ -1989,7 +1989,7 @@ const KE_BAT_CHUOC_LOOK: Look = {
   details: [],
   face: 'plain',
   mouth: false,
-  extras: MIMIC_V,
+  extras: [MIMIC_FACE_V, DRESS_STAINS_V],
   colors: {
     skin: [184, 184, 164],
     hair: [58, 52, 54],
@@ -2053,6 +2053,8 @@ const LINH_MU_NOI_LOOK: Look = {
 };
 export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, LINH_MU_NOI_LOOK);
 
+/** The dog tag on the standing figure's sternum (front view only: the tee's neckband hides it when turned). */
+const DOG_TAG_V: ViewItem = { S: { overlays: [dogTag(POSE_STAND)] } };
 /** Off duty: buzz cut, olive tee, dog tag. */
 const LINH_DAU_DINH_LOOK: Look = {
   hair: BUZZ_V,
@@ -2060,7 +2062,7 @@ const LINH_DAU_DINH_LOOK: Look = {
   bottoms: 'pants',
   shoes: 'both',
   details: ['belt', 'cuffs', 'kneepads'],
-  extras: [{ S: { overlays: [dogTag(POSE_STAND)] } }, RIFLE_STAND_V],
+  extras: [DOG_TAG_V, RIFLE_STAND_V],
   face: 'plain',
   colors: {
     skin: [196, 150, 112],
@@ -2183,3 +2185,57 @@ export const ZOMBIES: readonly Outfit[] = [
   ZOMBIE_ATHLETE_F,
   ZOMBIE_OFFICE,
 ];
+
+/* ------------------------------------------------------------------ */
+/* Items a config picks on the hero body (hero64.registry.ts, D-096).  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The drawn items a hero part stands for, by the registry's part id. Hair, hats
+ * and faces are head-space items that land on any form; the rest are drawn for
+ * the standing figure and its walk steps.
+ */
+export const HERO_ITEMS = {
+  hair: {
+    short: HAIR_SHORT_V,
+    spiky: HAIR_SPIKY_V,
+    swept: HAIR_SWEPT_V,
+    bob: HAIR_BOB_V,
+    curly: HAIR_CURLY_V,
+    long: HAIR_LONG_V,
+    ponytail: HAIR_PONYTAIL_V,
+    buzz: BUZZ_V,
+    wild: HAIR_WILD_V,
+    /** A shaven head: no drawing, the skull's hair shadow lightened (D-092). */
+    bald: BALD_V,
+  },
+  hat: {
+    helmet: HELMET_V,
+    beret: BERET_V,
+    peaked_cap: PEAKED_CAP_V,
+    police_cap: POLICE_CAP_V,
+    ranger_hat: RANGER_HAT_V,
+    hard_hat: HARD_HAT_V,
+    headband: HEADBAND_V,
+  },
+  face: { beard: BEARD_V, mimic: MIMIC_FACE_V },
+  top: {
+    ny_strap: NY_STRAP_V,
+    tunic: TUNIC_V,
+    jacket_zip: JACKET_ZIP_V,
+    ranger_coat: RANGER_COAT_V,
+    lab_coat: LAB_COAT_V,
+    dog_tag: DOG_TAG_V,
+  },
+  bottoms: { dress_stains: DRESS_STAINS_V },
+  gear: {
+    backpack: BACKPACK_V,
+    rifle_slung: RIFLE_SLUNG_V,
+    rifle_stand: RIFLE_STAND_V,
+    map_case: MAP_CASE_V,
+    satchel: SATCHEL_V,
+    medic_cross: MEDIC_CROSS_V,
+  },
+  /** Under a hat brim the profile's iris keeps its lower cell (the ranger hat). */
+  brim_eye: BRIM_EYE_V,
+};

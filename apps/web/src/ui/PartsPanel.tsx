@@ -1,4 +1,4 @@
-import { PART_NONE, partsForSlot } from '@pixiso/shared';
+import { PART_NONE, partsForSlot, slotsForCharacter } from '@pixiso/shared';
 import { vi } from '../i18n/vi.js';
 import { useAppStore } from '../state/store.js';
 
@@ -10,7 +10,7 @@ export function PartsPanel() {
   return (
     <section className="panel">
       <h2>{vi.panels.parts}</h2>
-      {catalog.slots.map((slot) => {
+      {slotsForCharacter(catalog, baseCharacter).map((slot) => {
         const options = partsForSlot(catalog, slot.id, baseCharacter);
         return (
           <div className="row" key={slot.id}>

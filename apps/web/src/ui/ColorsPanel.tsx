@@ -1,4 +1,4 @@
-import type { ColorName } from '@pixiso/shared';
+import { isHexColor, type ColorName, type HexColor } from '@pixiso/shared';
 import { vi } from '../i18n/vi.js';
 import { useAppStore } from '../state/store.js';
 
@@ -10,7 +10,9 @@ export function ColorsPanel() {
     <section className="panel">
       <h2>{vi.panels.colors}</h2>
       {catalog.colorTargets.map((target) => {
-        const current: ColorName = colors.find((c) => c.target === target.id)?.color ?? 'original';
+        const current: ColorName | HexColor =
+          colors.find((c) => c.target === target.id)?.color ?? 'original';
+        const custom = isHexColor(current);
         return (
           <div className="row" key={target.id}>
             <label>{target.label_vi}</label>
@@ -28,6 +30,15 @@ export function ColorsPanel() {
                   onClick={() => setColor(target.id, c.id)}
                 />
               ))}
+              <input
+                type="color"
+                className={`swatch custom${custom ? ' active' : ''}`}
+                value={custom ? current : '#888888'}
+                title={vi.colors.custom}
+                aria-label={`${target.label_vi}: ${vi.colors.custom}`}
+                data-testid={`color-${target.id}-custom`}
+                onChange={(e) => setColor(target.id, e.target.value as HexColor)}
+              />
             </div>
           </div>
         );

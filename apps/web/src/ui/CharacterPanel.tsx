@@ -5,6 +5,7 @@ export function CharacterPanel() {
   const catalog = useAppStore((s) => s.catalog);
   const current = useAppStore((s) => s.config.baseCharacter);
   const setBaseCharacter = useAppStore((s) => s.setBaseCharacter);
+  const replaceConfig = useAppStore((s) => s.replaceConfig);
   return (
     <section className="panel">
       <h2>{vi.panels.characters}</h2>
@@ -22,6 +23,25 @@ export function CharacterPanel() {
           </button>
         ))}
       </div>
+      {catalog.presets.length > 0 && (
+        <>
+          <h3>{vi.panels.presets}</h3>
+          <div className="character-list" data-testid="preset-list">
+            {catalog.presets.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className="character-card"
+                data-testid={`preset-${p.id}`}
+                title={p.description_vi}
+                onClick={() => replaceConfig(p.config)}
+              >
+                <strong>{p.label_vi}</strong>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

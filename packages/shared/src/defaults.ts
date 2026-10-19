@@ -12,18 +12,23 @@ export const DEFAULT_PROJECT_STYLE: ProjectStyle = {
 
 export const DEFAULT_ANIMATION_IDS = ['idle', 'walk'] as const;
 
-/** A valid, empty-handed config for the catalog's reference character. */
-export function defaultCharacterConfig(catalog: Catalog): CharacterConfig {
+/** A valid, empty-handed config for a character of the catalog (the reference character by default). */
+export function defaultCharacterConfig(
+  catalog: Catalog,
+  characterId: string = catalog.referenceCharacter,
+): CharacterConfig {
   const parts: Record<string, string> = {};
   for (const slot of catalog.slots) parts[slot.id] = PART_NONE;
-  const animations = DEFAULT_ANIMATION_IDS.filter((id) =>
-    catalog.animations.some((a) => a.id === id),
-  );
+  const fits = (a: Catalog['animations'][number]) =>
+    !a.characters || a.characters.includes('*') || a.characters.includes(characterId);
+  const fitting = catalog.animations.filter(fits);
+  const animations = DEFAULT_ANIMATION_IDS.filter((id) => fitting.some((a) => a.id === id));
   return {
     version: 1,
-    baseCharacter: catalog.referenceCharacter,
+    baseCharacter: characterId,
     parts,
     colors: [],
-    animations: animations.length > 0 ? [...animations] : [catalog.animations[0]!.id],
+    animations:
+      animations.length > 0 ? [...animations] : [(fitting[0] ?? catalog.animations[0]!).id],
   };
 }

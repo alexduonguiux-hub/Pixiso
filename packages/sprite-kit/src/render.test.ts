@@ -115,3 +115,79 @@ describe('config → frames', () => {
     expect(renderClip(knight, { ...style, fps: 12 }, 'walk', 'S', table).frameMs).toBe(80);
   });
 });
+
+/** A hero config (D-096): Dương's parts, the tee in a hex colour. */
+const hero: CharacterConfig = {
+  version: 1,
+  baseCharacter: 'hero',
+  parts: {
+    hair: 'hair_spiky',
+    hat: 'none',
+    face: 'none',
+    top: 'tee',
+    bottoms: 'pants',
+    shoes: 'boots',
+    gear: 'none',
+  },
+  colors: [{ target: 'body', color: '#469664' }],
+  animations: ['idle', 'walk'],
+};
+
+describe('hero config → frames (D-096)', () => {
+  it('renders the 64 px body: idle holds the standing frame, walk runs the four-frame cycle', () => {
+    const idle = renderClip(hero, style, 'idle', 'S', table);
+    expect(idle.frames.length).toBe(2);
+    expect(idle.frameMs).toBe(500);
+    expect(idle.scale).toBe(1);
+    expect(idle.cell).toEqual({ w: 64, h: 64 });
+    expect(idle.pivot).toEqual({ x: 32, y: 62 });
+    expect(imageHash(idle.frames[0]!)).toBe(imageHash(idle.frames[1]!));
+    const walk = renderClip(hero, style, 'walk', 'S', table);
+    expect(walk.frames.length).toBe(4);
+    expect(walk.frameMs).toBe(140);
+    // contact, pass, contact, pass: the passes are the standing frame, the contacts differ
+    expect(imageHash(walk.frames[1]!)).toBe(imageHash(idle.frames[0]!));
+    expect(imageHash(walk.frames[3]!)).toBe(imageHash(idle.frames[0]!));
+    expect(imageHash(walk.frames[0]!)).not.toBe(imageHash(walk.frames[2]!));
+    expect(imageHash(walk.frames[0]!)).not.toBe(imageHash(walk.frames[1]!));
+    expect(usedColors(walk.frames)).toEqual(walk.palette);
+  });
+
+  it('mirrors E from W, renders every direction and refuses clips without hero frames', () => {
+    const w = renderClip(hero, style, 'walk', 'W', table);
+    const e = renderClip(hero, style, 'walk', 'E', table);
+    for (let i = 0; i < 4; i++)
+      for (let y = 0; y < 64; y += 3)
+        for (let x = 0; x < 64; x++)
+          expect(pixel(e.frames[i]!, 63 - x, y)).toEqual(pixel(w.frames[i]!, x, y));
+    for (const d of ['SW', 'NW', 'N', 'NE', 'SE'] as const)
+      expect(renderClip(hero, style, 'idle', d, table).frames.length).toBe(2);
+    expect(() => renderClip(hero, style, 'run', 'S', table)).toThrow(/no hero frames/);
+    expect(() => renderClip(hero, style, 'idle', 'UP' as never, table)).toThrow(/no drawn view/);
+  });
+
+  it('a hex colour recolours its target, stays deterministic, and 64 px height keeps scale 1', () => {
+    const green = renderClip(hero, style, 'idle', 'S', table);
+    const red = renderClip(
+      { ...hero, colors: [{ target: 'body', color: '#d1343a' }] },
+      style,
+      'idle',
+      'S',
+      table,
+    );
+    expect(imageHash(red.frames[0]!)).not.toBe(imageHash(green.frames[0]!));
+    expect(red.palette.length).toBe(green.palette.length);
+    expect(imageHash(green.frames[0]!)).toBe(
+      imageHash(renderClip(hero, style, 'idle', 'S', table).frames[0]!),
+    );
+    expect(
+      materialColorsFor({ ...hero, colors: [{ target: 'eyes', color: '#102030' }] }, table),
+    ).toEqual({ eye: [0x10, 0x20, 0x30] });
+    const tall = renderClip(hero, { ...style, characterHeightPx: 64 }, 'idle', 'S', table);
+    expect(tall.scale).toBe(1);
+    expect(imageHash(tall.frames[0]!)).toBe(imageHash(green.frames[0]!));
+    // outline presets still differ on the hero
+    const none = renderClip(hero, { ...style, outline: 'none' }, 'idle', 'S', table);
+    expect(imageHash(none.frames[0]!)).not.toBe(imageHash(green.frames[0]!));
+  });
+});

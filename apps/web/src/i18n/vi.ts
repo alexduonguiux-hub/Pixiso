@@ -10,6 +10,7 @@ export const vi = {
   },
   panels: {
     characters: 'Nhân vật gốc',
+    presets: 'Nhân vật mẫu',
     parts: 'Phụ kiện',
     colors: 'Màu',
     animations: 'Animation',
@@ -30,6 +31,7 @@ export const vi = {
   },
   colors: {
     original: 'Giữ màu gốc',
+    custom: 'Màu tự chọn',
   },
   animations: {
     frames: 'khung hình',
@@ -37,6 +39,7 @@ export const vi = {
     preview: 'Xem',
     loop: 'lặp',
     once: 'một lần',
+    unavailable: 'Nhân vật này chưa có khung hình cho animation này.',
   },
   preview: {
     direction: 'Hướng',

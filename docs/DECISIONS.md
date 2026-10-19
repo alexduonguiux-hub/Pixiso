@@ -917,3 +917,37 @@ bảng cột, **nguyên khối theo đa số ô** vì dịch từng ô xé súng
 321), islands 0, skin1 0, cặp lẫn 0; khối viền do mặc 47 (14 đứng + 33 bước); lint `qa:pixel` 74 → 138: toàn bộ
 phần tăng là thân bước (30: khối đế giày đặc của ảnh mẫu ở hàng 36–39, hai góc nắm đấm chạm thân, một dải, một
 bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. Chấp nhận khối đế vì là nét của ảnh mẫu đã duyệt.
+
+### D-096 Thân hero 64 px vào registry/catalog: bộ phận là mảnh `Look`, preset là dàn Vùng Xanh viết thành cấu hình
+
+- **Thân** `hero` (canvas 64×64, neo (32, 62)) nằm trong `BODIES` cạnh `human`; `BodyDef.views` thành tuỳ chọn vì thân
+  hero vẽ nguyên khối, không tách chi. `renderClip` rẽ nhánh theo `baseCharacter === 'hero'` → `renderHeroClip`: mặc
+  `Look` lên thân đứng của góc vẽ (`wearView`) và lên thân bước (`wearWalk`) cho walk, đặt lên canvas đúng chỗ
+  `heroFrames` đặt khung, lật ngang cho NE/E/SE, tô bằng `HERO_RAMPS` qua `paintSetupFor(style, colors, ramp)`.
+  Idle = khung đứng giữ hai khung (chưa có nhịp thở), walk = `HERO_WALK_CYCLE` bốn khung; thời lượng lấy từ `CLIPS`
+  (500/140 ms). Các clip khác (run, attack, hit, death) chỉ của `human`: animation trong catalog có `characters`,
+  `normalizeConfig` bỏ clip nhân vật không có khung hình (`animation "run" for character "hero"`),
+  `defaultCharacterConfig(catalog, id)` chọn từ tập vừa; `slotsForCharacter` cho UI chỉ hiện slot có bộ phận.
+- **Slot và bộ phận** (`hero64.registry.ts`): bảy slot `hair, hat, face, top, bottoms, shoes, gear`; một bộ phận là
+  hàm vá lên bản nháp `Look`, áp theo thứ tự cố định hair → face → top → bottoms → shoes → gear → hat (đúng thứ tự
+  extras của các look trong `cast64`, mũ sau mặt như `build()`), nên một preset xếp lớp y như look của nó. 45 bộ
+  phận: 9 kiểu tóc, 7 mũ, 3 mặt (kính, râu, mặt Kẻ Bắt Chước), 13 áo (áo thun lính = thun + thắt lưng/cổ tay/gối +
+  thẻ bài; áo y tá = thun + dây + tunic; ba quân phục = áo dài tay + chi tiết; hai áo khoác tắt gấu, áo kiểm lâm nới
+  tay), 5 quần/váy (váy dính máu = váy + vết máu), 3 giày, 5 đồ mang (ba lô + gậy, hai kiểu súng, túi bản đồ, túi cứu
+  thương + chữ thập trên mũ). Đầu không tóc không mũ → `BALD_V`. `cast64` xuất `HERO_ITEMS` và tách `JACKET_ZIP_V`,
+  `LAB_COAT_V`, `DOG_TAG_V`, `MIMIC_FACE_V` + `DRESS_STAINS_V` (trước gộp trong `MIMIC_V`); hệ quả duy nhất: bước
+  SW của Kẻ Bắt Chước nay mang mặt góc SW thay vì mặt S dán lên đầu đã xoay (hai sprite đổi, mọi thước giữ).
+  Chi tiết zombie (vết máu áo, rách, dải phản quang, cà vạt, số áo) và dáng zombie/thể hình chưa vào catalog.
+- **Màu**: `ColorAssignment.color` nhận thêm `#rrggbb` (schema `colorValueSchema`, normalize hạ chữ thường,
+  `materialColorsFor` đọc thẳng không qua bảng tên); thêm mục tiêu `eyes` (eye) và `white` (white) để mọi màu của
+  dàn diễn đạt được. Mặc định thân hero (`HERO_DEFAULT_COLORS`): da/mắt/trắng của mannequin + áo quần của Dương,
+  còn lại `DEFAULT_MATERIAL_COLORS` (đúng màu các look đang dùng ngầm, nên preset không lệch).
+- **Preset** (`catalog.presets`, `catalogPresetSchema`, nhãn trong `catalog-labels.yaml`): 11 look của `BASE_LOOKS`
+  viết thành cấu hình đầy đủ (bộ phận + màu hex trên mục tiêu); `hero64.registry.test.ts` chứng minh preset mặc ra
+  **đúng từng ô và từng màu** với look gốc ở 5 góc và 10 bước đi, và mọi bộ phận mặc được lên thân trần ở 5 góc.
+  Bộ phận 32 px nay ghi `characters: ['human']` thay vì `['*']`. Web: nút preset trong panel nhân vật
+  (`replaceConfig`), panel phụ kiện theo `slotsForCharacter`, animation không có khung bị khoá, ô màu tự chọn
+  (`<input type="color">`), `setColor` nhận hex; Playwright có kịch bản preset Sơn → 64×64 → màu hex → về thân 32 px.
+- Số: 125 test (114 + 11), Playwright 3; catalog 2 thân / 11 slot / 49 bộ phận / 12 mục tiêu màu / 6 clip / 11
+  preset; qa:1x giữ (islands 0, skin1 0, frag 527, cặp lẫn 0), qa:hero sạch, lint 138. Để lại: idle hero không nhịp
+  thở; xuất file (Phase 3) và Mô tả (Phase 5) cho thân hero.

@@ -15,18 +15,81 @@ characters:
     label_vi: Người (chibi 32 px)
     description_vi: Thân 32 px kiểu chibi, đầu 14 px, mắt 2×2
     tags: [người, chibi, cơ bản, nhân vật]
+  hero:
+    label_vi: Người (64 px, vẽ tay)
+    description_vi: Thân 64 px vẽ tay năm góc, đi bộ tám hướng; dàn nhân vật Vùng Xanh mặc trên thân này
+    tags: [người, '64 px', vẽ tay, vùng xanh, nhân vật]
 
 slots:
   head: { label_vi: Đầu }
   hand_right: { label_vi: Tay phải }
   hand_left: { label_vi: Tay trái }
   back: { label_vi: Lưng }
+  hair: { label_vi: Tóc }
+  hat: { label_vi: Mũ }
+  face: { label_vi: Mặt }
+  top: { label_vi: Áo }
+  bottoms: { label_vi: Quần / váy }
+  shoes: { label_vi: Giày }
+  gear: { label_vi: Đồ mang theo }
 
 parts:
   knight_helmet: { label_vi: Mũ giáp hiệp sĩ, tags: [mũ, giáp, hiệp sĩ, kim loại, bảo vệ] }
   sword_1handed: { label_vi: Kiếm một tay, tags: [kiếm, cận chiến, vũ khí, chém] }
   shield_round: { label_vi: Khiên tròn, tags: [khiên, phòng thủ, gỗ, bảo vệ] }
   cape: { label_vi: Áo choàng, tags: [áo choàng, lưng, vải, hiệp sĩ] }
+  # hero (64 px): hair
+  hair_short: { label_vi: Tóc ngắn, tags: [tóc, ngắn, rẽ ngôi, nam] }
+  hair_spiky: { label_vi: Tóc dựng, tags: [tóc, dựng, gai, trẻ] }
+  hair_swept: { label_vi: Tóc vuốt lệch, tags: [tóc, vuốt, lệch, gọn] }
+  hair_bob: { label_vi: Tóc bob, tags: [tóc, bob, ngang vai, nữ] }
+  hair_curly: { label_vi: Tóc xoăn, tags: [tóc, xoăn, bồng, nữ] }
+  hair_long: { label_vi: Tóc dài, tags: [tóc, dài, xoã, nữ] }
+  hair_ponytail: { label_vi: Tóc đuôi ngựa, tags: [tóc, đuôi ngựa, buộc, nữ] }
+  hair_buzz: { label_vi: Đầu đinh, tags: [tóc, đinh, cạo, lính] }
+  hair_wild: { label_vi: Tóc rối dài, tags: [tóc, rối, dài, ma, kinh dị] }
+  # hero: hats
+  helmet: { label_vi: Nón sắt, tags: [nón, sắt, lính, chiến đấu] }
+  beret: { label_vi: Mũ nồi, tags: [mũ, nồi, sĩ quan, lính] }
+  peaked_cap: { label_vi: Mũ lưỡi trai, tags: [mũ, lưỡi trai, tuần tra, lính] }
+  police_cap: { label_vi: Mũ kê-pi cảnh sát, tags: [mũ, kê-pi, cảnh sát, băng đỏ] }
+  ranger_hat: { label_vi: Mũ kiểm lâm, tags: [mũ, vành, kiểm lâm, rừng, già] }
+  hard_hat: { label_vi: Nón bảo hộ, tags: [nón, bảo hộ, công nhân, công trường] }
+  headband: { label_vi: Băng đô, tags: [băng đô, trán, khoẻ, võ] }
+  # hero: face
+  glasses: { label_vi: Kính tròn, tags: [kính, tròn, trí thức, bác sĩ, kỹ thuật] }
+  beard: { label_vi: Râu quai nón, tags: [râu, rậm, già, ông] }
+  mimic: { label_vi: Mặt Kẻ Bắt Chước, tags: [mặt, hốc mắt, cười rộng, ma, quái] }
+  # hero: tops
+  tee: { label_vi: Áo thun, tags: [áo, thun, ngắn tay, thường] }
+  tee_torn: { label_vi: Áo thun rách, tags: [áo, thun, rách, zombie] }
+  tee_army: { label_vi: Áo thun lính, tags: [áo, thun, lính, thẻ bài, thắt lưng] }
+  scrubs: { label_vi: Áo y tá, tags: [áo, y tá, tunic, túi, cứu thương] }
+  jacket: { label_vi: Áo khoác, tags: [áo, khoác, dài tay, khuy] }
+  jacket_zip: { label_vi: Áo khoác khoá kéo, tags: [áo, khoác, khoá kéo, kỹ thuật] }
+  coat_ranger: { label_vi: Áo khoác kiểm lâm, tags: [áo, khoác, dài, kiểm lâm, rừng] }
+  coat_lab: { label_vi: Áo blouse, tags: [áo, blouse, bác sĩ, trắng, bìa kẹp] }
+  uniform_camo: { label_vi: Quân phục rằn ri, tags: [quân phục, rằn ri, lính, thắt lưng] }
+  uniform_officer: { label_vi: Quân phục sĩ quan, tags: [quân phục, sĩ quan, phù hiệu, lính] }
+  uniform_medic: { label_vi: Quân phục quân y, tags: [quân phục, quân y, băng tay, lính] }
+  tank: { label_vi: Áo ba lỗ, tags: [áo, ba lỗ, sát nách, khoẻ] }
+  crop: { label_vi: Áo lửng, tags: [áo, lửng, hở eo, thể thao] }
+  # hero: bottoms
+  pants: { label_vi: Quần dài, tags: [quần, dài, thường] }
+  shorts: { label_vi: Quần ngắn, tags: [quần, ngắn, thể thao, nóng] }
+  skirt: { label_vi: Váy ngắn, tags: [váy, ngắn, nữ] }
+  dress: { label_vi: Váy liền, tags: [váy, liền, dài, nữ] }
+  dress_stained: { label_vi: Váy liền dính máu, tags: [váy, liền, máu, ma, kinh dị] }
+  # hero: shoes
+  boots: { label_vi: Giày hai chân, tags: [giày, bốt, đủ đôi] }
+  boot_right: { label_vi: Một chiếc giày (chân phải), tags: [giày, mất một chiếc, zombie] }
+  flats: { label_vi: Giày bệt, tags: [giày, bệt, nữ, văn phòng] }
+  # hero: gear
+  backpack: { label_vi: Ba lô và gậy, tags: [ba lô, gậy, kỹ thuật, du hành] }
+  rifle_slung: { label_vi: Súng đeo lưng, tags: [súng, đeo lưng, dây, lính] }
+  rifle_stand: { label_vi: Súng cầm tay, tags: [súng, cầm, chống đất, lính] }
+  map_case: { label_vi: Túi bản đồ, tags: [túi, bản đồ, hông, sĩ quan] }
+  satchel_medic: { label_vi: Túi cứu thương, tags: [túi, cứu thương, chữ thập, quân y] }
 
 colorTargets:
   skin: { label_vi: Da }
@@ -39,6 +102,8 @@ colorTargets:
   leather: { label_vi: Da thuộc }
   wood: { label_vi: Gỗ }
   accent: { label_vi: Điểm nhấn }
+  eyes: { label_vi: Mắt }
+  white: { label_vi: Trắng (mắt, vạch) }
 
 colors:
   original: { label_vi: Màu gốc, hex: '#888888' }
@@ -66,3 +131,50 @@ animations:
   attack: { label_vi: Chém, tags: [tấn công, chém, kiếm, đánh] }
   hit: { label_vi: Trúng đòn, tags: [bị đánh, trúng, đau, lùi] }
   death: { label_vi: Ngã gục, tags: [chết, ngã, gục, thua] }
+
+# Ready-made characters on the hero body (sprite-kit BASE_LOOKS, D-096).
+presets:
+  duong:
+    label_vi: Dương
+    description_vi: Thủ lĩnh nhóm sống sót, tóc dựng, áo thun xanh lá
+    tags: [vùng xanh, thủ lĩnh, người chơi, dương]
+  ny:
+    label_vi: Ny
+    description_vi: Y tá của nhóm, tóc xoăn đỏ, áo y tá bạc hà với túi cứu thương
+    tags: [vùng xanh, y tá, người chơi, ny]
+  son:
+    label_vi: Sơn
+    description_vi: Kỹ thuật viên, kính tròn, áo khoác khoá kéo, ba lô và gậy
+    tags: [vùng xanh, kỹ thuật, người chơi, sơn]
+  ong_tu:
+    label_vi: Ông Tư
+    description_vi: Kiểm lâm già, mũ vành, râu bạc, áo khoác dài vàng đất
+    tags: [vùng xanh, kiểm lâm, già, ông tư]
+  bac_si_lan:
+    label_vi: Bác sĩ Lan
+    description_vi: Bác sĩ, tóc bob nâu đỏ, kính tròn, áo blouse trắng với bìa kẹp
+    tags: [vùng xanh, bác sĩ, lan]
+  ke_bat_chuoc:
+    label_vi: Kẻ Bắt Chước
+    description_vi: Kẻ giả dạng người, tóc rối dài, váy liền dính máu, mắt đỏ và nụ cười quá rộng
+    tags: [vùng xanh, quái, ma, kẻ bắt chước]
+  linh_non_sat:
+    label_vi: Lính nón sắt
+    description_vi: Lính bộ binh, nón sắt, quân phục rằn ri, súng đeo lưng
+    tags: [vùng xanh, lính, quân đội, nón sắt]
+  linh_mu_noi:
+    label_vi: Lính mũ nồi
+    description_vi: Sĩ quan, mũ nồi đỏ rượu, quân phục có phù hiệu, túi bản đồ
+    tags: [vùng xanh, lính, sĩ quan, mũ nồi]
+  linh_dau_dinh:
+    label_vi: Lính đầu đinh
+    description_vi: Lính ngoài giờ, đầu đinh, áo thun lính với thẻ bài, súng cầm tay
+    tags: [vùng xanh, lính, đầu đinh]
+  linh_nu:
+    label_vi: Lính nữ
+    description_vi: Nữ quân nhân, mũ lưỡi trai trên tóc đuôi ngựa, quân phục rằn ri
+    tags: [vùng xanh, lính, nữ]
+  linh_quan_y:
+    label_vi: Lính quân y
+    description_vi: Quân y, nón sắt có chữ thập đỏ, băng tay trắng, túi cứu thương lớn
+    tags: [vùng xanh, lính, quân y, cứu thương]

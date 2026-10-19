@@ -26,6 +26,26 @@
         "x": 16,
         "y": 30
       }
+    },
+    {
+      "id": "hero",
+      "label_vi": "Người (64 px, vẽ tay)",
+      "description_vi": "Thân 64 px vẽ tay năm góc, đi bộ tám hướng; dàn nhân vật Vùng Xanh mặc trên thân này",
+      "tags": [
+        "người",
+        "64 px",
+        "vẽ tay",
+        "vùng xanh",
+        "nhân vật"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
     }
   ],
   "slots": [
@@ -44,6 +64,34 @@
     {
       "id": "back",
       "label_vi": "Lưng"
+    },
+    {
+      "id": "hair",
+      "label_vi": "Tóc"
+    },
+    {
+      "id": "hat",
+      "label_vi": "Mũ"
+    },
+    {
+      "id": "face",
+      "label_vi": "Mặt"
+    },
+    {
+      "id": "top",
+      "label_vi": "Áo"
+    },
+    {
+      "id": "bottoms",
+      "label_vi": "Quần / váy"
+    },
+    {
+      "id": "shoes",
+      "label_vi": "Giày"
+    },
+    {
+      "id": "gear",
+      "label_vi": "Đồ mang theo"
     }
   ],
   "parts": [
@@ -61,7 +109,7 @@
         "bảo vệ"
       ],
       "characters": [
-        "*"
+        "human"
       ]
     },
     {
@@ -77,7 +125,7 @@
         "chém"
       ],
       "characters": [
-        "*"
+        "human"
       ]
     },
     {
@@ -93,7 +141,7 @@
         "bảo vệ"
       ],
       "characters": [
-        "*"
+        "human"
       ]
     },
     {
@@ -109,7 +157,732 @@
         "hiệp sĩ"
       ],
       "characters": [
-        "*"
+        "human"
+      ]
+    },
+    {
+      "id": "hair_short",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc ngắn",
+      "tags": [
+        "tóc",
+        "ngắn",
+        "rẽ ngôi",
+        "nam"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_spiky",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc dựng",
+      "tags": [
+        "tóc",
+        "dựng",
+        "gai",
+        "trẻ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_swept",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc vuốt lệch",
+      "tags": [
+        "tóc",
+        "vuốt",
+        "lệch",
+        "gọn"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_bob",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc bob",
+      "tags": [
+        "tóc",
+        "bob",
+        "ngang vai",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_curly",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc xoăn",
+      "tags": [
+        "tóc",
+        "xoăn",
+        "bồng",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_long",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc dài",
+      "tags": [
+        "tóc",
+        "dài",
+        "xoã",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_ponytail",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc đuôi ngựa",
+      "tags": [
+        "tóc",
+        "đuôi ngựa",
+        "buộc",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_buzz",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Đầu đinh",
+      "tags": [
+        "tóc",
+        "đinh",
+        "cạo",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hair_wild",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Tóc rối dài",
+      "tags": [
+        "tóc",
+        "rối",
+        "dài",
+        "ma",
+        "kinh dị"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "helmet",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Nón sắt",
+      "tags": [
+        "nón",
+        "sắt",
+        "lính",
+        "chiến đấu"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "beret",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Mũ nồi",
+      "tags": [
+        "mũ",
+        "nồi",
+        "sĩ quan",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "peaked_cap",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Mũ lưỡi trai",
+      "tags": [
+        "mũ",
+        "lưỡi trai",
+        "tuần tra",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "police_cap",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Mũ kê-pi cảnh sát",
+      "tags": [
+        "mũ",
+        "kê-pi",
+        "cảnh sát",
+        "băng đỏ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "ranger_hat",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Mũ kiểm lâm",
+      "tags": [
+        "mũ",
+        "vành",
+        "kiểm lâm",
+        "rừng",
+        "già"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "hard_hat",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Nón bảo hộ",
+      "tags": [
+        "nón",
+        "bảo hộ",
+        "công nhân",
+        "công trường"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "headband",
+      "slots": [
+        "hat"
+      ],
+      "label_vi": "Băng đô",
+      "tags": [
+        "băng đô",
+        "trán",
+        "khoẻ",
+        "võ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "glasses",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Kính tròn",
+      "tags": [
+        "kính",
+        "tròn",
+        "trí thức",
+        "bác sĩ",
+        "kỹ thuật"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "beard",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Râu quai nón",
+      "tags": [
+        "râu",
+        "rậm",
+        "già",
+        "ông"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "mimic",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Mặt Kẻ Bắt Chước",
+      "tags": [
+        "mặt",
+        "hốc mắt",
+        "cười rộng",
+        "ma",
+        "quái"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "tee",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo thun",
+      "tags": [
+        "áo",
+        "thun",
+        "ngắn tay",
+        "thường"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "tee_torn",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo thun rách",
+      "tags": [
+        "áo",
+        "thun",
+        "rách",
+        "zombie"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "tee_army",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo thun lính",
+      "tags": [
+        "áo",
+        "thun",
+        "lính",
+        "thẻ bài",
+        "thắt lưng"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "scrubs",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo y tá",
+      "tags": [
+        "áo",
+        "y tá",
+        "tunic",
+        "túi",
+        "cứu thương"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "jacket",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo khoác",
+      "tags": [
+        "áo",
+        "khoác",
+        "dài tay",
+        "khuy"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "jacket_zip",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo khoác khoá kéo",
+      "tags": [
+        "áo",
+        "khoác",
+        "khoá kéo",
+        "kỹ thuật"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "coat_ranger",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo khoác kiểm lâm",
+      "tags": [
+        "áo",
+        "khoác",
+        "dài",
+        "kiểm lâm",
+        "rừng"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "coat_lab",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo blouse",
+      "tags": [
+        "áo",
+        "blouse",
+        "bác sĩ",
+        "trắng",
+        "bìa kẹp"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "uniform_camo",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Quân phục rằn ri",
+      "tags": [
+        "quân phục",
+        "rằn ri",
+        "lính",
+        "thắt lưng"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "uniform_officer",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Quân phục sĩ quan",
+      "tags": [
+        "quân phục",
+        "sĩ quan",
+        "phù hiệu",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "uniform_medic",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Quân phục quân y",
+      "tags": [
+        "quân phục",
+        "quân y",
+        "băng tay",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "tank",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo ba lỗ",
+      "tags": [
+        "áo",
+        "ba lỗ",
+        "sát nách",
+        "khoẻ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "crop",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo lửng",
+      "tags": [
+        "áo",
+        "lửng",
+        "hở eo",
+        "thể thao"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "pants",
+      "slots": [
+        "bottoms"
+      ],
+      "label_vi": "Quần dài",
+      "tags": [
+        "quần",
+        "dài",
+        "thường"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "shorts",
+      "slots": [
+        "bottoms"
+      ],
+      "label_vi": "Quần ngắn",
+      "tags": [
+        "quần",
+        "ngắn",
+        "thể thao",
+        "nóng"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "skirt",
+      "slots": [
+        "bottoms"
+      ],
+      "label_vi": "Váy ngắn",
+      "tags": [
+        "váy",
+        "ngắn",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "dress",
+      "slots": [
+        "bottoms"
+      ],
+      "label_vi": "Váy liền",
+      "tags": [
+        "váy",
+        "liền",
+        "dài",
+        "nữ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "dress_stained",
+      "slots": [
+        "bottoms"
+      ],
+      "label_vi": "Váy liền dính máu",
+      "tags": [
+        "váy",
+        "liền",
+        "máu",
+        "ma",
+        "kinh dị"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "boots",
+      "slots": [
+        "shoes"
+      ],
+      "label_vi": "Giày hai chân",
+      "tags": [
+        "giày",
+        "bốt",
+        "đủ đôi"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "boot_right",
+      "slots": [
+        "shoes"
+      ],
+      "label_vi": "Một chiếc giày (chân phải)",
+      "tags": [
+        "giày",
+        "mất một chiếc",
+        "zombie"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "flats",
+      "slots": [
+        "shoes"
+      ],
+      "label_vi": "Giày bệt",
+      "tags": [
+        "giày",
+        "bệt",
+        "nữ",
+        "văn phòng"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "backpack",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Ba lô và gậy",
+      "tags": [
+        "ba lô",
+        "gậy",
+        "kỹ thuật",
+        "du hành"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "rifle_slung",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Súng đeo lưng",
+      "tags": [
+        "súng",
+        "đeo lưng",
+        "dây",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "rifle_stand",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Súng cầm tay",
+      "tags": [
+        "súng",
+        "cầm",
+        "chống đất",
+        "lính"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "map_case",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Túi bản đồ",
+      "tags": [
+        "túi",
+        "bản đồ",
+        "hông",
+        "sĩ quan"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "satchel_medic",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Túi cứu thương",
+      "tags": [
+        "túi",
+        "cứu thương",
+        "chữ thập",
+        "quân y"
+      ],
+      "characters": [
+        "hero"
       ]
     }
   ],
@@ -163,6 +936,16 @@
       "id": "accent",
       "label_vi": "Điểm nhấn",
       "material": "accent"
+    },
+    {
+      "id": "eyes",
+      "label_vi": "Mắt",
+      "material": "eye"
+    },
+    {
+      "id": "white",
+      "label_vi": "Trắng (mắt",
+      "material": "white"
     }
   ],
   "colors": [
@@ -263,6 +1046,9 @@
         "đứng",
         "nghỉ",
         "chờ"
+      ],
+      "characters": [
+        "*"
       ]
     },
     {
@@ -275,6 +1061,9 @@
         "đi",
         "di chuyển",
         "bước"
+      ],
+      "characters": [
+        "*"
       ]
     },
     {
@@ -287,6 +1076,9 @@
         "chạy",
         "di chuyển",
         "nhanh"
+      ],
+      "characters": [
+        "human"
       ]
     },
     {
@@ -300,6 +1092,9 @@
         "chém",
         "kiếm",
         "đánh"
+      ],
+      "characters": [
+        "human"
       ]
     },
     {
@@ -313,6 +1108,9 @@
         "trúng",
         "đau",
         "lùi"
+      ],
+      "characters": [
+        "human"
       ]
     },
     {
@@ -326,6 +1124,9 @@
         "ngã",
         "gục",
         "thua"
+      ],
+      "characters": [
+        "human"
       ]
     }
   ],
@@ -338,5 +1139,682 @@
     "NE",
     "E",
     "SE"
+  ],
+  "presets": [
+    {
+      "id": "duong",
+      "label_vi": "Dương",
+      "description_vi": "Thủ lĩnh nhóm sống sót, tóc dựng, áo thun xanh lá",
+      "tags": [
+        "vùng xanh",
+        "thủ lĩnh",
+        "người chơi",
+        "dương"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_spiky",
+          "hat": "none",
+          "face": "none",
+          "top": "tee",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#f9d1ad"
+          },
+          {
+            "target": "hair",
+            "color": "#382c28"
+          },
+          {
+            "target": "body",
+            "color": "#469664"
+          },
+          {
+            "target": "legs",
+            "color": "#303a60"
+          },
+          {
+            "target": "boots",
+            "color": "#6e4a30"
+          },
+          {
+            "target": "eyes",
+            "color": "#197bba"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "ny",
+      "label_vi": "Ny",
+      "description_vi": "Y tá của nhóm, tóc xoăn đỏ, áo y tá bạc hà với túi cứu thương",
+      "tags": [
+        "vùng xanh",
+        "y tá",
+        "người chơi",
+        "ny"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_curly",
+          "hat": "none",
+          "face": "none",
+          "top": "scrubs",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#fad6b4"
+          },
+          {
+            "target": "hair",
+            "color": "#a03828"
+          },
+          {
+            "target": "body",
+            "color": "#80c0a8"
+          },
+          {
+            "target": "legs",
+            "color": "#aaaab0"
+          },
+          {
+            "target": "boots",
+            "color": "#ececec"
+          },
+          {
+            "target": "accent",
+            "color": "#c82832"
+          },
+          {
+            "target": "eyes",
+            "color": "#197bba"
+          },
+          {
+            "target": "white",
+            "color": "#f0f5f5"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "son",
+      "label_vi": "Sơn",
+      "description_vi": "Kỹ thuật viên, kính tròn, áo khoác khoá kéo, ba lô và gậy",
+      "tags": [
+        "vùng xanh",
+        "kỹ thuật",
+        "người chơi",
+        "sơn"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_swept",
+          "hat": "none",
+          "face": "glasses",
+          "top": "jacket_zip",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "backpack"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#f0c8a5"
+          },
+          {
+            "target": "hair",
+            "color": "#3a3642"
+          },
+          {
+            "target": "body",
+            "color": "#288c96"
+          },
+          {
+            "target": "legs",
+            "color": "#32323c"
+          },
+          {
+            "target": "boots",
+            "color": "#28282e"
+          },
+          {
+            "target": "eyes",
+            "color": "#197bba"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "ong_tu",
+      "label_vi": "Ông Tư",
+      "description_vi": "Kiểm lâm già, mũ vành, râu bạc, áo khoác dài vàng đất",
+      "tags": [
+        "vùng xanh",
+        "kiểm lâm",
+        "già",
+        "ông tư"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "none",
+          "hat": "ranger_hat",
+          "face": "beard",
+          "top": "coat_ranger",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#e2b690"
+          },
+          {
+            "target": "hair",
+            "color": "#bcb6ac"
+          },
+          {
+            "target": "body",
+            "color": "#c29454"
+          },
+          {
+            "target": "legs",
+            "color": "#4e4034"
+          },
+          {
+            "target": "boots",
+            "color": "#483424"
+          },
+          {
+            "target": "leather",
+            "color": "#785c3c"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "bac_si_lan",
+      "label_vi": "Bác sĩ Lan",
+      "description_vi": "Bác sĩ, tóc bob nâu đỏ, kính tròn, áo blouse trắng với bìa kẹp",
+      "tags": [
+        "vùng xanh",
+        "bác sĩ",
+        "lan"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_bob",
+          "hat": "none",
+          "face": "glasses",
+          "top": "coat_lab",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#f0ceb0"
+          },
+          {
+            "target": "hair",
+            "color": "#762a28"
+          },
+          {
+            "target": "body",
+            "color": "#d4d2cc"
+          },
+          {
+            "target": "legs",
+            "color": "#3e5070"
+          },
+          {
+            "target": "boots",
+            "color": "#2a2c32"
+          },
+          {
+            "target": "eyes",
+            "color": "#197bba"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "ke_bat_chuoc",
+      "label_vi": "Kẻ Bắt Chước",
+      "description_vi": "Kẻ giả dạng người, tóc rối dài, váy liền dính máu, mắt đỏ và nụ cười quá rộng",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "ma",
+        "kẻ bắt chước"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_wild",
+          "hat": "none",
+          "face": "mimic",
+          "top": "tank",
+          "bottoms": "dress_stained",
+          "shoes": "none",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#b8b8a4"
+          },
+          {
+            "target": "hair",
+            "color": "#3a3436"
+          },
+          {
+            "target": "body",
+            "color": "#d6cbb6"
+          },
+          {
+            "target": "cape",
+            "color": "#d6cbb6"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#d64628"
+          },
+          {
+            "target": "white",
+            "color": "#ece8de"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "linh_non_sat",
+      "label_vi": "Lính nón sắt",
+      "description_vi": "Lính bộ binh, nón sắt, quân phục rằn ri, súng đeo lưng",
+      "tags": [
+        "vùng xanh",
+        "lính",
+        "quân đội",
+        "nón sắt"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "none",
+          "hat": "helmet",
+          "face": "none",
+          "top": "uniform_camo",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "rifle_slung"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#e2ba96"
+          },
+          {
+            "target": "body",
+            "color": "#6a7048"
+          },
+          {
+            "target": "legs",
+            "color": "#5c6040"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#4e5638"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "linh_mu_noi",
+      "label_vi": "Lính mũ nồi",
+      "description_vi": "Sĩ quan, mũ nồi đỏ rượu, quân phục có phù hiệu, túi bản đồ",
+      "tags": [
+        "vùng xanh",
+        "lính",
+        "sĩ quan",
+        "mũ nồi"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "none",
+          "hat": "beret",
+          "face": "none",
+          "top": "uniform_officer",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "map_case"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#d6aa84"
+          },
+          {
+            "target": "body",
+            "color": "#505c48"
+          },
+          {
+            "target": "legs",
+            "color": "#464c3e"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#762a36"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "linh_dau_dinh",
+      "label_vi": "Lính đầu đinh",
+      "description_vi": "Lính ngoài giờ, đầu đinh, áo thun lính với thẻ bài, súng cầm tay",
+      "tags": [
+        "vùng xanh",
+        "lính",
+        "đầu đinh"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_buzz",
+          "hat": "none",
+          "face": "none",
+          "top": "tee_army",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "rifle_stand"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#c49670"
+          },
+          {
+            "target": "hair",
+            "color": "#40342e"
+          },
+          {
+            "target": "body",
+            "color": "#6a7048"
+          },
+          {
+            "target": "legs",
+            "color": "#5c6040"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#4e5638"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "linh_nu",
+      "label_vi": "Lính nữ",
+      "description_vi": "Nữ quân nhân, mũ lưỡi trai trên tóc đuôi ngựa, quân phục rằn ri",
+      "tags": [
+        "vùng xanh",
+        "lính",
+        "nữ"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_ponytail",
+          "hat": "peaked_cap",
+          "face": "none",
+          "top": "uniform_camo",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#f0c8a5"
+          },
+          {
+            "target": "hair",
+            "color": "#463024"
+          },
+          {
+            "target": "body",
+            "color": "#807e4e"
+          },
+          {
+            "target": "legs",
+            "color": "#6e6c46"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#646842"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "linh_quan_y",
+      "label_vi": "Lính quân y",
+      "description_vi": "Quân y, nón sắt có chữ thập đỏ, băng tay trắng, túi cứu thương lớn",
+      "tags": [
+        "vùng xanh",
+        "lính",
+        "quân y",
+        "cứu thương"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "none",
+          "hat": "helmet",
+          "face": "none",
+          "top": "uniform_medic",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "satchel_medic"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#e8c09c"
+          },
+          {
+            "target": "body",
+            "color": "#8c9468"
+          },
+          {
+            "target": "legs",
+            "color": "#7a7c5a"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#c4c4ba"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "accent",
+            "color": "#c82832"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#f0f5f5"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    }
   ]
 }

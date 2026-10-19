@@ -15,8 +15,8 @@ Web app giúp người **không biết vẽ, không biết dựng 3D** tạo nh�
   - giảm màu và bảng màu;
   - viền, dọn pixel lẻ, ngưỡng alpha;
   - xếp sprite sheet, sinh JSON kiểu Aseprite.
-- `packages/sprite-kit`: nguồn sự thật của pixel. Template ASCII ô (vật liệu + bậc sáng), ghép lớp theo điểm neo trên khung 24×32, animation là bảng offset từng chi, tô màu bằng dải hue-shift của pixel-core; `render.ts` biến `CharacterConfig` + `ProjectStyle` thành khung hình. Registry (thân, slot, bộ phận, mục tiêu màu, hướng vẽ được) là nguồn sinh catalog.
-- `packages/shared`: kiểu dữ liệu dùng chung (`CharacterConfig`, catalog) và schema zod.
+- `packages/sprite-kit`: nguồn sự thật của pixel. Template ASCII ô (vật liệu + bậc sáng), ghép lớp theo điểm neo trên khung 24×32, animation là bảng offset từng chi, tô màu bằng dải hue-shift của pixel-core; `render.ts` biến `CharacterConfig` + `ProjectStyle` thành khung hình. Registry (thân, slot, bộ phận, mục tiêu màu, hướng vẽ được) là nguồn sinh catalog. Thân 64 px (`hero64*.ts`, `cast64.ts`) vào catalog qua `hero64.registry.ts`: bộ phận là mảnh vá lên `Look`, preset là dàn Vùng Xanh viết thành cấu hình, test giữ preset đúng từng ô với look gốc (D-096).
+- `packages/shared`: kiểu dữ liệu dùng chung (`CharacterConfig`, catalog gồm preset) và schema zod; màu trong cấu hình là tên trong catalog hoặc `#rrggbb`.
 - `scripts/`: sinh `catalog.json` từ registry sprite-kit + `scripts/catalog-labels.yaml`; render sheet kiểm tra; script nghiên cứu ảnh tham chiếu (`scripts/research/`, Python, chỉ dùng khi nghiên cứu).
 - Test:
   - Vitest cho logic;

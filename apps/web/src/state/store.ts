@@ -10,6 +10,7 @@ import {
   type CharacterConfig,
   type ColorName,
   type Direction,
+  type HexColor,
   type ProjectStyle,
 } from '@pixiso/shared';
 import { createStore, type StoreApi } from 'zustand/vanilla';
@@ -35,7 +36,8 @@ export interface AppState {
   preview: PreviewState;
   setBaseCharacter: (id: string) => void;
   setPart: (slotId: string, partId: string) => void;
-  setColor: (target: string, color: ColorName) => void;
+  /** A catalog colour name, "original" to clear, or an exact `#rrggbb` (D-096). */
+  setColor: (target: string, color: ColorName | HexColor) => void;
   toggleAnimation: (animationId: string) => void;
   /** Replaces the whole config (e.g. from JSON or Claude); returns what normalization dropped. */
   replaceConfig: (config: CharacterConfig) => string[];

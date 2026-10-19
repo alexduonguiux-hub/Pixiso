@@ -3,15 +3,17 @@ import { COLOR_NAMES, DIRECTIONS_8 } from './types.js';
 
 export const colorNameSchema = z.enum(COLOR_NAMES);
 
+const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'expected #rrggbb');
+/** A named colour of the catalog, or an exact `#rrggbb` (D-096: presets keep the cast's measured colours). */
+export const colorValueSchema = colorNameSchema.or(hexColor as z.ZodType<`#${string}`>);
+
 export const characterConfigSchema = z.object({
   version: z.literal(1),
   baseCharacter: z.string().min(1),
   parts: z.record(z.string(), z.string()),
-  colors: z.array(z.object({ target: z.string().min(1), color: colorNameSchema })),
+  colors: z.array(z.object({ target: z.string().min(1), color: colorValueSchema })),
   animations: z.array(z.string().min(1)),
 });
-
-const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'expected #rrggbb');
 
 export const projectStyleSchema = z.object({
   characterHeightPx: z.union([z.literal(32), z.literal(64)]),
@@ -94,6 +96,17 @@ export const catalogAnimationSchema = z.object({
   /** Milliseconds per frame at the clip's own speed. */
   frameMs: z.number().int().min(10),
   tags: z.array(z.string()),
+  /** Character ids that have frames for this clip, or ["*"] for all (absent: all). */
+  characters: z.array(z.string()).min(1).optional(),
+});
+
+/** A ready-made character: a full config on one body (the Vùng Xanh cast on the hero body, D-096). */
+export const catalogPresetSchema = z.object({
+  id: idSchema,
+  label_vi: z.string(),
+  description_vi: z.string().optional(),
+  tags: z.array(z.string()),
+  config: characterConfigSchema,
 });
 
 export const catalogSchema = z.object({
@@ -108,6 +121,7 @@ export const catalogSchema = z.object({
   animations: z.array(catalogAnimationSchema).min(1),
   /** Directions that can be rendered today (the rest arrive with more drawn views). */
   directions: z.array(directionSchema).min(1),
+  presets: z.array(catalogPresetSchema).default([]),
 });
 
 export type Catalog = z.infer<typeof catalogSchema>;
@@ -118,6 +132,7 @@ export type CatalogPart = z.infer<typeof catalogPartSchema>;
 export type CatalogColorTarget = z.infer<typeof catalogColorTargetSchema>;
 export type CatalogColor = z.infer<typeof catalogColorSchema>;
 export type CatalogAnimation = z.infer<typeof catalogAnimationSchema>;
+export type CatalogPreset = z.infer<typeof catalogPresetSchema>;
 
 /**
  * Cross-reference checks that zod alone cannot express.
@@ -172,6 +187,24 @@ export function checkCatalogReferences(catalog: Catalog): string[] {
   for (const d of catalog.directions) {
     if (dirs.has(d)) problems.push(`duplicate direction "${d}"`);
     dirs.add(d);
+  }
+  for (const a of catalog.animations)
+    for (const ch of a.characters ?? [])
+      if (ch !== '*' && !charIds.has(ch))
+        problems.push(`animation "${a.id}" references unknown character "${ch}"`);
+  const presetIds = new Set<string>();
+  for (const p of catalog.presets) {
+    if (presetIds.has(p.id)) problems.push(`duplicate preset id "${p.id}"`);
+    presetIds.add(p.id);
+    if (!charIds.has(p.config.baseCharacter))
+      problems.push(`preset "${p.id}" uses unknown character "${p.config.baseCharacter}"`);
+    for (const [slot, part] of Object.entries(p.config.parts)) {
+      if (!slotIds.has(slot)) problems.push(`preset "${p.id}" uses unknown slot "${slot}"`);
+      if (part !== 'none' && !partIds.has(part))
+        problems.push(`preset "${p.id}" uses unknown part "${part}"`);
+    }
+    for (const id of p.config.animations)
+      if (!animIds.has(id)) problems.push(`preset "${p.id}" uses unknown animation "${id}"`);
   }
   return problems;
 }

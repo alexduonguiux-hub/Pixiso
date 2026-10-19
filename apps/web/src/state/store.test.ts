@@ -1,4 +1,4 @@
-import { characterConfigSchema } from '@pixiso/shared';
+import { characterConfigSchema, normalizeConfig } from '@pixiso/shared';
 import { catalog } from '@pixiso/shared/catalog';
 import { describe, expect, it } from 'vitest';
 import { createAppStore } from './store.js';
@@ -91,6 +91,30 @@ describe('app store', () => {
     expect(res.ok).toBe(true);
     if (res.ok) expect(res.dropped).toEqual(['character "dragon"', 'animation "fly"']);
     expect(store.getState().config.baseCharacter).toBe(catalog.referenceCharacter);
+  });
+
+  it('applies a catalog preset as a whole config and keeps hex colours (D-096)', () => {
+    const store = createAppStore(catalog);
+    const preset = catalog.presets.find((p) => p.id === 'son')!;
+    expect(store.getState().replaceConfig(preset.config)).toEqual([]);
+    expect(store.getState().config).toEqual(normalizeConfig(preset.config, catalog).config);
+    expect(store.getState().config.baseCharacter).toBe('hero');
+    expect(store.getState().config.parts.gear).toBe('backpack');
+    expect(store.getState().config.animations).toContain(store.getState().preview.animationId);
+    store.getState().setColor('body', '#FF0000');
+    expect(store.getState().config.colors.find((c) => c.target === 'body')?.color).toBe('#ff0000');
+    // a 32 px part does not fit the hero, and a clip without hero frames is dropped
+    store.getState().setPart('head', 'knight_helmet');
+    expect(store.getState().config.parts.head).toBe('none');
+    store.getState().toggleAnimation('run');
+    expect(store.getState().config.animations).toEqual(['idle', 'walk']);
+    // the round trip through JSON is lossless
+    const other = createAppStore(catalog);
+    expect(other.getState().importConfigJson(store.getState().exportConfigJson())).toEqual({
+      ok: true,
+      dropped: [],
+    });
+    expect(other.getState().config).toEqual(store.getState().config);
   });
 
   it('restores a persisted config after normalizing it', () => {

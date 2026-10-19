@@ -24,10 +24,12 @@ export const COLOR_NAMES = [
 ] as const;
 
 export type ColorName = (typeof COLOR_NAMES)[number];
+/** An exact sRGB colour, `#rrggbb` (presets carry the cast's measured colours; the UI offers names). */
+export type HexColor = `#${string}`;
 
 export interface ColorAssignment {
   target: string;
-  color: ColorName;
+  color: ColorName | HexColor;
 }
 
 export interface CharacterConfig {
