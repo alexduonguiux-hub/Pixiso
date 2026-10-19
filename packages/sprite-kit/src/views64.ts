@@ -56,7 +56,8 @@ export const STAND_W: ZombiePose = {
   id: 'stand_w',
   form: standForm('stand_w', 'Đứng (W)', heroStand('W').sprite),
   w: 14,
-  torso: [8, 16, 12, 29],
+  // to the hem seam: a row below it left one cloth cell hanging under the seam at the back (D-094)
+  torso: [8, 16, 12, 28],
   neck: [[8, 16, 8, 23]],
   shoulders: [[5, 16, 7, 17]],
   sleeveL: { short: [3, 18, 8, 22], long: [3, 18, 8, 25], torn: [3, 18, 8, 19] },

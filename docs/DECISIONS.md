@@ -853,3 +853,24 @@ cấu trúc: da 206 (cơ thang cạnh cằm góc S/SW 37, bàn tay/ngón 2 ô 24
 ngắn 8), vải 58 (đuôi áo một ô dưới gấu @W 12, góc vai dáng gục/ngoẹo), quần 22 (ô cạp cạnh tay buông của dáng
 lết/ngoẹo), vải 2 15, tóc 12. Đó là nét dựng hình (hàng cằm, góc cổ áo, má hóp) hơn là chấm rời; xử lý tiếp nếu
 người dùng còn thấy rớt pixel ở 1×.
+
+### D-094 Khối viền 2×2 phát sinh khi mặc đồ (mục 6 của kế hoạch 19/10)
+
+Thước mới `scripts/research/doubles_dressed.py`: canh thân trần dưới sprite đã mặc rồi trừ các khối 2×2 của
+chính thân, còn lại là khối do mũ, đường may, đạo cụ hay ô lấp viền tạo ra: HEAD 40 khối, sau D-092/D-093 còn 26.
+Năm nguồn không phải "hai vật chạm nhau" được sửa bằng luật:
+
+- **Mày dưới vành nón bảo hộ**: nón 8 hàng để lộ hàng mày ngay dưới vành (khối 2×2 ở hai mày). Nón S có hàng
+  thứ 9 bằng ô da trán đè lên mày; góc SW có bản riêng vì mày lệch hai cột; góc sau giữ 8 hàng.
+- **Gọng kính @W**: viền dưới gọng nằm trên đường miệng; bỏ ô góc trước của viền dưới (`.ooo..`).
+- **Báng súng đeo lưng @N/NW**: báng đè nửa bàn tay phải, để lại một ô da bị vây kín rồi lấp viền thành khối
+  3×3; báng kéo dài thêm hai hàng có viền phải (`oDDo`) phủ trọn bàn tay, phần đuôi hạ xuống hàng 29–33 cạnh
+  chân (cách viền chân một cột, bàn tay còn lộ bốn ô bên phải báng).
+- **Vai dáng gù @N/NW**: hàng đỉnh bướu bớt một ô viền mỗi bên; gáy lộ cạnh bướu thay vì một ô da bị vây kín.
+- **Đuôi áo @W**: hộp thân góc ngang kết thúc ở hàng may gấu (28) thay vì 29 (thân đứng, `regions_w`, dáng vươn);
+  ô vải đơn dưới gấu sau lưng thành cạp quần, và áo @W có lại dải gấu sâu ở hàng 27.
+
+Còn 14 khối, tất cả ở chỗ đạo cụ chạm thân (túi hông Ny/quân y, ba lô và gậy Sơn): chấp nhận theo SKILL §2.3.
+Đầu gục @N/NW giữ hạ hai hàng (ghi chú để lại ở D-092 rút lại): cúi đầu thì đỉnh đầu hạ ở mọi góc, gáy lộ hai
+hàng 16–17 là đúng. Số: frag 334 → 321 (mốc hạ theo), islands 0, skin1 0, cặp lẫn 0; lint 74 = 74; QA sạch;
+113 test; ô lẻ 227 → 226, strict 1518 → 1511; thước ×6 tham khảo 33/130. **Hết sáu mục của kế hoạch 19/10.**

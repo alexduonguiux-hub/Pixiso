@@ -493,7 +493,7 @@ HEAVY_SW = body(23, 45, 14, [
 # behind the legs pass in front of the hanging arms.
 HUNCH_N = body(19, 40, 12, [
 '.......ooooo.......',
-'.....oo$$ssSoo.....',
+'......o$$ssSo......',   # the hump's top row one line cell narrower each side: the nape shows beside it (D-094)
 '..oooo$$sssSSoooo..',
 '.osss$$ssssSSSssso.',
 '.o$sssssssSSSsss$o.',
@@ -526,7 +526,7 @@ def regions_w(dx, legs_dx=None, **over):
     """STAND_W regions shifted by dx (legs by legs_dx), with overrides."""
     ld = dx if legs_dx is None else legs_dx
     r = {
-        'torso': [8+dx, 16, 12+dx, 29], 'neck': [[8+dx, 16, 8+dx, 23]], 'shoulders': [[5+dx, 16, 7+dx, 17]],
+        'torso': [8+dx, 16, 12+dx, 28], 'neck': [[8+dx, 16, 8+dx, 23]], 'shoulders': [[5+dx, 16, 7+dx, 17]],
         'sleeveL': {'short': [3+dx, 18, 8+dx, 22], 'long': [3+dx, 18, 8+dx, 25], 'torn': [3+dx, 18, 8+dx, 19]},
         'sleeveR': {'short': [3+dx, 18, 8+dx, 22], 'long': [3+dx, 18, 8+dx, 25]},
         'pants': [[3+min(dx, ld), 29, 13+ld, 35]], 'shorts': [[3+min(dx, ld), 29, 13+ld, 32]],
@@ -718,7 +718,7 @@ def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
 # ------------------------------------------------------------------ hand-drawn views
 add('droop', 'W', DROOP_W, ('W', 0, 2, lambda k: 0), regions_w(2, 3, hem=[11, 28, 13, 28]))
 add('reach', 'W', REACH_W, ('W', 6, 0, lambda k: 0), regions_w(6, 6,
-    torso=[10, 16, 18, 29], neck=[], shoulders=[[11, 16, 13, 17]],
+    torso=[10, 16, 18, 28], neck=[], shoulders=[[11, 16, 13, 17]],
     sleeveL={'short': [6, 19, 9, 22], 'long': [1, 19, 9, 22], 'torn': [8, 19, 9, 22]},
     sleeveR={'short': [6, 19, 9, 22], 'long': [1, 19, 9, 22]},
     collar=[[12, 16, 16, 16]], hem=[10, 28, 18, 28], frayedXs=[10, 13, 17], chest=[12, 20], gash=[11, 24]))

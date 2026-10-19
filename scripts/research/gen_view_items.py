@@ -107,7 +107,7 @@ RANGER_W_REMAP = R([0,0,13,6],'leather'); RANGER_W_SEAM = L([1,6,11,6])
 # ---------------------------------------------------------------- faces
 FACE = {
  'GLASSES_SW': O(2,8, ['...o.o.....','...ooo.....','...o.o.....','o..o.o..ooo','oooo.oooo..']),
- 'GLASSES_W':  O(3,7, ['ooo...','o..ooo','o..o..','o..o..','oooo..']),
+ 'GLASSES_W':  O(3,7, ['ooo...','o..ooo','o..o..','o..o..','.ooo..']),  # the lower rim's front corner open: it sat on the mouth line (D-094)
  'BEARD_SW':   O(2,12, ['.#.hHh.hHH.','o#hHjjHhhHo','o#hHhhHhHHo','.o#hHhHhHo.','.....HjH...','.....ooo...']),
  'BEARD_W':    O(0,10, ['.......H....','.......h....','.o#hHhhHhH..','o#hhHhHhHH..','o#hHhhHhHHj.','.ooHhHHhH...','...o........']),
  'SUNKEN_SW':  O(3,9, ['SES.SEs','.ES.SEx','.e...ex']),
@@ -135,7 +135,7 @@ BODY = {
  # the sling: two leather cells from the shoulder (row 17) to the stock (row 18) tie the stock to the body; without
  # them it hangs a column behind the back as a piece apart (1x yardstick)
  'RIFLE_SLUNG_W': [O(13,9, ['.o...', '.o...', '.o...', '.o...', '.o...', '.....', '.....', '.....', 'o....', '.oo..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..ooo', '..oDo', '..oDo', '..ooo'], head=False, under=True)],
- 'RIFLE_SLUNG_N': [O(-1,5, ['o.', 'o.', 'o.', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o'], head=False), O(7,17, ['oMMo.......', '.oMMo......', '..oMMo.....', '..oDD......', '...oDD.....', '....oDD....', '....oDD....', '.....oDD...', '......oDD..', '......oDD..', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
+ 'RIFLE_SLUNG_N': [O(-1,5, ['o.', 'o.', 'o.', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o'], head=False), O(7,17, ['oMMo........', '.oMMo.......', '..oMMo......', '..oDD.......', '...oDD......', '....oDD.....', '....oDD.....', '.....oDD....', '......oDD...', '......oDD...', '.......oDDo.', '.......oDDo.', '........oooo', '.........oDo', '.........oDo', '.........oDo', '.........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
  'SATCHEL_W':  [O(7,18, ['A..', 'AA.', '.AA'], head=False), O(13,21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo'], head=False)],
  'BACKPACK_W': [O(13,17, ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo'], head=False), O(10,7, ['....ooo', '....o%o', '...o%%o', '...odo.', '..oddo.', '..odo..', '.oddo..', '.odo...', 'oddo...', 'odo....'], head=False, under=True)],
  # The pack from behind: Sơn's bat first (it rests on the right shoulder, screen-left here, leaning out past the

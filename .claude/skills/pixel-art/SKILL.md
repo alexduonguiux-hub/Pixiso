@@ -125,7 +125,8 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
   Gốc lưới đầu là `headX` của dáng (chỉ zombie gục đầu vẽ từ cột 0).
 - Nghiêng đầu bằng `shift` theo hàng, và **chỉ ở hàng 3, 5, 6, 7, 9** của sọ (chỗ cạnh sọ
   thẳng đứng); nghiêng ở hàng khác làm đứt viền sọ.
-- Mũ/nón là lớp cứng (`rigid`) rộng hơn sọ, dịch theo hàng mắt; mọi overlay trong không gian
+- Mũ/nón là lớp cứng (`rigid`) rộng hơn sọ, dịch theo hàng mắt; nón có vành ở hàng 7 phải mang thêm hàng
+  da che mày (hàng 8), nếu không vành và mày thành khối viền 2×2 (D-094); mọi overlay trong không gian
   đầu nằm trong phạm vi **một cột** ngoài lưới đầu mỗi bên (khung hẹp nhất 19 cột cắt phần
   thừa và hình mất viền).
 - Thứ gì che đầu từ phía sau (bướu, mai giáp) vẽ thân với `headUnder` + `FormSpec.front`;
@@ -220,6 +221,7 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
 | Pixel rời khỏi thân, chấm da đơn, khó nhận dạng ở cỡ thật (người dùng, 19/10)                                                             | viền ngoài hốc mắt kẹp ô da góc mắt và má; tai N một cột; ngón cái treo một ô; chi một ô chéo ở dáng lết @W; dùi cui/bảng kẹp/súng chéo cách thân một cột không có cầu; thước ×6 không đo cỡ thật | thước `pnpm qa:1x` là cổng (islands 0, skin1 0, frag và cặp lẫn không tăng); mặt không viền ngoài hốc mắt; tai, ngón, chi ≥ 2 ô; đồ vật chạm thân; `coverLoneSkin` trong `dress()` (D-088)                                                                    |
 | "Ý tôi chưa ổn là tạo hình theo góc nhìn này chứ không phải màu" (góc sau Dương, Ông Tư, 19/10) | góc sau là mặt trước lật: gáy mang đường cằm (Ông Tư thành "quả trứng không mặt"), cổ thắt giữa hai khối `ooo`, cổ áo sau vạch thẳng ngang V trước (gáy 13 ô), tai sau là ô tóc kẹp viền, đầu NW = đầu N bớt một cột | dựng góc sau như một hình riêng (D-092): chén bóng ụ chẩm + cơ thang, NW theo silhouette SW với tai gần và dải má, cổ U cao hơn V hai hàng, tóc ngắn chừa tai 2×2 và phủ tới gáy; soi ×10 cạnh khung N của ảnh mẫu trước khi báo |
 | Thước 1× còn 720 mảnh dưới 3 ô sau D-092 | dây chéo một ô (mỗi ô một vùng), vết/mụn cặp 2 ô hoặc bị cà vạt, thẻ bài, dải phản quang, dải lệch đầu nghiêng cắt, khoá 2 ô chia đai thành mẩu 2 ô, cổ tay 2 ô, rằn ri bị mép hộp cắt | kiểm kê theo nguồn sinh (`frag_inventory.py`) rồi đặt luật (D-093): dây rộng 2 ô, vết là mảng chữ L qua `cullSmallBlotches`, đai hai hàng + khoá 2×2, cổ tay ≥ 3 ô; không sửa từng nhân vật |
+| Khối viền 2×2 chỉ có sau khi mặc (mày dưới vành nón bảo hộ, gọng kính @W trên đường miệng, báng súng đè nửa bàn tay @N, bướu dáng gù vây một ô da, đuôi áo một ô dưới gấu @W) | nón 8 hàng không che mày; viền dưới gọng chạm miệng; đạo cụ che nửa bàn tay để lại ô da bị vây rồi lấp viền; hộp thân dài hơn hàng gấu | chạy `doubles_dressed.py` sau mỗi lần mặc (D-094); nón che mày hoặc thêm hàng da; đạo cụ che trọn hay không che bàn tay; hộp thân kết thúc ở hàng gấu; khối do đạo cụ chạm thân thì chấp nhận |
 
 ## 9. Nguồn đã khảo sát (17/10/2026)
 

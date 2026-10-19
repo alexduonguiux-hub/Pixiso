@@ -240,17 +240,25 @@ const RANGER_HAT = {
  */
 
 /** Hard hat: rounded dome one column wider than the skull, a centre ridge, a thin brim all round. */
+const HARD_HAT_ROWS = [
+  '......ooooooo......',
+  '.....o****aaao.....',
+  '....o***a*aaaao....',
+  '...o*aaaa*aaaaao...',
+  '...oaaaaa*aaaAAo...',
+  '...oaaaaaaAAAAro...',
+  '..o*aaaAAAAArrrro..',
+  '..ooooooooooooooo..',
+];
+/** From the front the brows sit right under the brim: they go (forehead skin), or brim and brow make a 2x2 line block (D-094). */
 const HARD_HAT: Overlay = {
-  ...hov(-1, 0, [
-    '......ooooooo......',
-    '.....o****aaao.....',
-    '....o***a*aaaao....',
-    '...o*aaaa*aaaaao...',
-    '...oaaaaa*aaaAAo...',
-    '...oaaaaaaAAAAro...',
-    '..o*aaaAAAAArrrro..',
-    '..ooooooooooooooo..',
-  ]),
+  ...hov(-1, 0, [...HARD_HAT_ROWS, '......ss...ss......']),
+  rigid: true,
+};
+const HARD_HAT_BACK: Overlay = { ...hov(-1, 0, HARD_HAT_ROWS), rigid: true };
+// the three-quarter face carries its brows two columns further left
+const HARD_HAT_SW: Overlay = {
+  ...hov(-1, 0, [...HARD_HAT_ROWS, '....ss..ss.........']),
   rigid: true,
 };
 
@@ -349,9 +357,9 @@ const HEADBAND_V: ViewItem = {
 };
 const HARD_HAT_V: ViewItem = {
   S: same(HARD_HAT),
-  SW: same(HARD_HAT),
-  N: same(HARD_HAT),
-  NW: same(HARD_HAT),
+  SW: same(HARD_HAT_SW),
+  N: same(HARD_HAT_BACK),
+  NW: same(HARD_HAT_BACK),
   W: HARD_HAT_W,
 };
 /** Zombie face per view: sockets and mouth (none from behind), the cheek gash, the scalp wound (seen from everywhere). */
