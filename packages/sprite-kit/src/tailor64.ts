@@ -30,6 +30,10 @@ export interface Garment {
   cuffMaterial?: Material;
   /** Pants: two light cells on each knee (a uniform's knee pads). */
   kneePads?: boolean;
+  /** Pants: the column that parts the two legs (default: the middle of the garment); cells left of it are one leg. */
+  split?: number;
+  /** Pants: which leg is the near one, lit on top of the thigh (default the left; a stride can put it on the right). */
+  near?: 'L' | 'R';
   /** Torso: the back views keep only the shoulder block of the light (no tail down the chest). */
   /** A three-quarter view: the torso core is a column narrower on the lit far side, so the terminator moves a column toward the near edge to keep the shadow share. */
   turned?: boolean;
@@ -310,48 +314,49 @@ export function tailor(
       }
     }
   } else if (g.kind === 'pants') {
-    // Two legs, each read as a cylinder: the near (left) leg lit on top of the thigh with a contact shadow
-    // down its inner side, the far (right) leg turned away with its outer column in shadow; a crease across
-    // each thigh, a deep knee band, a deep hem over the shoe. Every patch stays under ~10 cells.
-    const mid = x0 + (w - 1) / 2;
+    // Two legs, each read as a cylinder: the near leg lit on top of the thigh with a contact shadow down its
+    // right side, the far leg turned away with its right column in shadow; a crease across each thigh, a deep
+    // knee band, a deep hem over the shoe. Every patch stays under ~10 cells. The near leg is the left one
+    // unless the pose says otherwise (a stride with the right leg forward, D-095).
+    const mid = g.split ?? x0 + (w - 1) / 2;
+    const nearLeft = g.near !== 'R';
+    const side = (x: number) => ((x < mid) === nearLeft ? 'N' : 'F');
     const knee = y0 + Math.round(h * 0.55);
     const thigh = y0 + 2;
     const legMin = new Map<string, number>();
     const legMax = new Map<string, number>();
     for (const c of cells) {
-      const k = `${c.x < mid ? 'L' : 'R'}${c.y}`;
+      const k = `${side(c.x)}${c.y}`;
       legMin.set(k, Math.min(legMin.get(k) ?? Infinity, c.x));
       legMax.set(k, Math.max(legMax.get(k) ?? -Infinity, c.x));
     }
     for (const c of cells) {
-      const leftLeg = c.x < mid;
-      const k = `${leftLeg ? 'L' : 'R'}${c.y}`;
+      const near = side(c.x) === 'N';
+      const k = `${side(c.x)}${c.y}`;
       const lo = legMin.get(k)!;
       const hi = legMax.get(k)!;
-      const outer = leftLeg ? lo : hi;
-      const inner = leftLeg ? hi : lo;
       const legW = hi - lo + 1;
       const short = h <= 6; // shorts: no room for a thigh crease above the knee band
       // A wide, long leg (a giant's) carries its shadows two cells wide: a one-cell column down a six-cell leg
       // reads as a stripe hugging the outline (fourth review). Short wide trousers (the bloated build) keep the
       // base shadows: doubled, they pass 55 % shadow.
       const wide = legW >= 5 && h >= 8;
-      if (leftLeg) {
-        if (legW >= 3 && c.x === inner && c.y > y0 && c.y < y1) c.shade = SHADOW;
-        if (wide && c.x === inner - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
-        if (c.y === knee && c.x !== outer) c.shade = SHADOW;
-        if (!short && c.y === thigh && c.x !== outer && c.x !== inner) c.shade = SHADOW;
+      if (near) {
+        if (legW >= 3 && c.x === hi && c.y > y0 && c.y < y1) c.shade = SHADOW;
+        if (wide && c.x === hi - 1 && c.y > knee && c.y < y1) c.shade = SHADOW;
+        if (c.y === knee && c.x !== lo) c.shade = SHADOW;
+        if (!short && c.y === thigh && c.x !== lo && c.x !== hi) c.shade = SHADOW;
       } else {
-        if (c.x === outer) c.shade = SHADOW;
-        if (legW >= 3 && c.x === outer - 1 && (wide || c.y > knee) && c.y < y1) c.shade = SHADOW;
+        if (c.x === hi) c.shade = SHADOW;
+        if (legW >= 3 && c.x === hi - 1 && (wide || c.y > knee) && c.y < y1) c.shade = SHADOW;
         // the far leg's lit (inner) side is base on a wide leg, not the body's contact column
-        if (wide && c.x === inner && c.y > y0 && c.y < y1) c.shade = MID;
-        if ((c.y === knee || (!short && c.y === thigh)) && c.x !== outer) c.shade = DEEP;
+        if (wide && c.x === lo && c.y > y0 && c.y < y1) c.shade = MID;
+        if ((c.y === knee || (!short && c.y === thigh)) && c.x !== hi) c.shade = DEEP;
       }
       // hem; the far leg's outer cell stays shadow (one tone across bands with the row above). Under a coat only
       // the hem row shows and that cell reads as a stray (fourth review, Lan); deep instead, it thickens the
       // outline below and Lan@SW loses a thin-line pixel (lineDens 4.08 < 4.1): tried and declined.
-      if (c.y === y1) c.shade = !leftLeg && c.x === outer ? SHADOW : DEEP;
+      if (c.y === y1) c.shade = !near && c.x === hi ? SHADOW : DEEP;
       if (c.y === y0 && h >= 8) c.shade = DEEP; // waistband under the hem seam (long trousers only)
       // Knee pads: the two cells of each leg beside its lit edge, a step lighter than the knee band.
       if (g.kneePads && legW >= 3 && c.y === knee && c.x >= lo + 1 && c.x <= lo + 2)
@@ -362,13 +367,13 @@ export function tailor(
     const top = y0 + (h >= 8 ? 1 : 0);
     const depth = Math.min(4, Math.max(2, Math.round(h / 3)));
     for (let y = top; y < top + depth; y++) {
-      const lx = legMin.get(`L${y}`);
-      const rx = legMax.get(`L${y}`);
+      const lx = legMin.get(`N${y}`);
+      const rx = legMax.get(`N${y}`);
       if (lx === undefined || rx === undefined) continue;
       const lw = Math.max(2, Math.round((rx - lx + 1) / 2));
       for (let i = 0; i < lw; i++) set(lx + i, y, LIGHT);
-      const rlo = legMin.get(`R${y}`);
-      const rhi = legMax.get(`R${y}`);
+      const rlo = legMin.get(`F${y}`);
+      const rhi = legMax.get(`F${y}`);
       if (rlo !== undefined && rhi !== undefined && rhi - rlo + 1 >= 5 && y < top + 2) {
         set(rlo + 1, y, LIGHT);
         set(rlo + 2, y, LIGHT);

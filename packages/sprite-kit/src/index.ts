@@ -22,5 +22,6 @@ export * from './hero64.heavy.js';
 export * from './hero64.poses.js';
 export * from './hero64.mutants.js';
 export * from './views64.js';
+export * from './walk64.js';
 export * from './hero64.poses.views.js';
 export * from './poseviews64.js';

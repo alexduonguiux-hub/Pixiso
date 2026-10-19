@@ -278,7 +278,7 @@ quân phục lục không phân biệt được. Từ 19/10, **`pnpm qa:1x` là 
 | --------- | --------------------------------------------------------------- | ----------------------------- | ---------- |
 | `islands` | mảng 8-liên-thông tách khỏi thân                                | 3 → **0**                     | phải 0     |
 | `skin1`   | ô da không có ô da nào trong 8 ô quanh                          | 143 → **0**                   | phải 0     |
-| `frag`    | vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) | 1012 → **731** → 720 (D-092) → 334 (D-093) → **321** (D-094) | không tăng |
+| `frag`    | vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) | 1012 → **731** → 720 (D-092) → 334 (D-093) → **321** (D-094) → 438 (D-095: thêm 66 sprite bước, 130 sprite đứng giữ 321) | không tăng |
 | cặp lẫn   | góc S, IoU silhouette ≥ 0,82 và ΔE sáu dải ≤ 0,075              | 7 → **7** → **0** (D-089)     | không tăng |
 
 Báo cáo: `test-output/score/report_1x.md` (danh sách theo sprite, mảnh theo vật liệu, mọi cặp IoU ≥ 0,82).
@@ -299,3 +299,9 @@ vùng ≤ 13 ô — thước đó không còn là đích. Ba cặp lẫn sát ng
 cổ, đầu NW mang silhouette SW (tai gần, dải má), cổ áo sau chữ U cao hơn V trước hai hàng, tóc ngắn chừa tai 2×2;
 kiểm bằng mắt ở ×10 cạnh khung N của ảnh mẫu, không chỉ bằng thước (thước ×6 rớt thêm 4 sprite lính đội mũ vì da
 dưới mũ sắt chủ yếu là chén bóng — chấp nhận). Còn: đầu gục @N/NW vẫn hạ hai hàng như mặt trước.
+
+**Khung đi bộ S/N/W** (D-095, 19/10): `hero-score-dump.ts` dump cả 66 sprite bước (góc `S0`, `S1`, `N0`, `N1`, `W0`,
+`W1`) nên `qa:1x`, `qa:score`, `doubles_dressed.py`, `frag_inventory.py` đo chúng cùng thước với thân đứng; `qa:hero`
+và `hero64.test.ts` kiểm từng bước. Phần bước đóng góp 117 mảnh (cơ thang cạnh cằm và tay 2 ô như thân đứng, dây chéo
+cắt rằn ri, súng cầm đè chân @W) và 29 khối viền 2×2 (đạo cụ chạm thân/tay). Xem bằng mắt: `pnpm walk` (×4) hoặc
+`SCALE=8 ONLY=id pnpm walk`, so chu kỳ A–đứng–B–đứng của S/W/E/N cạnh nhau.

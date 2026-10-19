@@ -143,6 +143,7 @@ Vẽ tay S, SW, W, NW, N; SE/E/NE lật thường (D-042, chấp nhận sáng t�
 | W   | vẽ tay                                | mọi dáng dùng đầu W (đầu SW ghép lên thân W thành mặt phẳng hai mắt, D-084); nét đặc trưng (tay vuốt, tay vươn) đặt phía gần; ngực/bụng nhô ra **trước** tay, tay buông giữa sườn; tay ngang 2 ô là chấp nhận                                                                                                                                                                                                         |
 | NW  | mặt sau của SW (`back_regions`)       | đầu = silhouette SW nhìn từ sau (D-092): tai gần 2×2 bên trái, dải má cột 3, hàng 14 không nhô qua vai xa; giữ bản vẽ tay khi lưng có khối riêng (bướu)                                                                                                                                                                                                                                                                                                                                                                          |
 | N   | S lật, san bóng ngực, đầu N hàng 0–14 | đầu N phải gồm hàng cổ, nếu không hở một hàng dưới cằm; cổ áo sau chữ U ở hàng 15–16 (`back_regions`, đầu hạ thì U xuống dưới hàng cổ và các hàng sọ trong hộp thân khai là cổ)                                                                                                                                                                                                                                                                                                                                                                |
+| Bước đi (S/N/W A, B) | thân bước chép từ mẫu + đầu đứng dán lên (`withStandingHead`); vùng áo quần trong `walk64.ts` | bước A = chân trái người trước ở mọi góc; tay vung trước thân là `front` (lớp đè nằm sau tay); vật phẩm thân cần biến thể `*_WALK` trong `gen_view_items.py` (kiểm trên thân bước), không có thì hình đứng dịch `extrasDx`; váy/đuôi áo mở từ bề rộng hông; SW/NW chưa có (D-095) |
 
 Dáng lật (`_m`) dùng chung W/SW/NW của dáng gốc và có N riêng.
 
@@ -157,10 +158,13 @@ pnpm exec prettier --write packages/sprite-kit/src/hero64.poses.views.ts
 pnpm qa:pixel                        # lint cầm bút: doubles, jaggies, banding, outline-band
 pnpm qa:hero                         # mũ/tóc/da hở, viền sọ, lỗ kín, mọi nhân vật mọi góc
 pnpm exec tsx scripts/hero-pose-views.ts   # lưới 8 hướng (ONLY=id, SCALE=n); hero-views.ts cho dàn đứng
+pnpm walk                            # bảng đi bộ S/W/E/N (A, đứng, B, đứng); SCALE=8 ONLY=id để soi
 pnpm qa:1x                           # CỔNG: mảng rời 0, ô da đơn 0, mảnh < 3 ô và cặp lẫn không tăng (D-088)
 pnpm typecheck && pnpm test
 ```
 
+- Dump `view_figures.json` mang cả thân bước (khoá `walk`): `gen_view_items.py` kiểm biến thể `*_WALK` trên đúng
+  thân bước; mọi thay đổi vật phẩm thân phải chạy lại dump → gen → `pnpm walk` → `qa:hero` → `qa:1x`.
 - Viết hàng ASCII dài bằng biểu thức (`'.'*7 + 'o' + 's'*8 + ...`) và để `body()` assert độ
   dài; đếm tay 20 ký tự là nguồn lỗi lệch một ô.
 - Script vá bằng Python phải assert đúng một chỗ khớp; vá dở dang khi assert nửa chừng là lỗi đã
@@ -222,6 +226,8 @@ tỉ lệ. "Nhìn ổn" không phải là tiêu chí.
 | "Ý tôi chưa ổn là tạo hình theo góc nhìn này chứ không phải màu" (góc sau Dương, Ông Tư, 19/10) | góc sau là mặt trước lật: gáy mang đường cằm (Ông Tư thành "quả trứng không mặt"), cổ thắt giữa hai khối `ooo`, cổ áo sau vạch thẳng ngang V trước (gáy 13 ô), tai sau là ô tóc kẹp viền, đầu NW = đầu N bớt một cột | dựng góc sau như một hình riêng (D-092): chén bóng ụ chẩm + cơ thang, NW theo silhouette SW với tai gần và dải má, cổ U cao hơn V hai hàng, tóc ngắn chừa tai 2×2 và phủ tới gáy; soi ×10 cạnh khung N của ảnh mẫu trước khi báo |
 | Thước 1× còn 720 mảnh dưới 3 ô sau D-092 | dây chéo một ô (mỗi ô một vùng), vết/mụn cặp 2 ô hoặc bị cà vạt, thẻ bài, dải phản quang, dải lệch đầu nghiêng cắt, khoá 2 ô chia đai thành mẩu 2 ô, cổ tay 2 ô, rằn ri bị mép hộp cắt | kiểm kê theo nguồn sinh (`frag_inventory.py`) rồi đặt luật (D-093): dây rộng 2 ô, vết là mảng chữ L qua `cullSmallBlotches`, đai hai hàng + khoá 2×2, cổ tay ≥ 3 ô; không sửa từng nhân vật |
 | Khối viền 2×2 chỉ có sau khi mặc (mày dưới vành nón bảo hộ, gọng kính @W trên đường miệng, báng súng đè nửa bàn tay @N, bướu dáng gù vây một ô da, đuôi áo một ô dưới gấu @W) | nón 8 hàng không che mày; viền dưới gọng chạm miệng; đạo cụ che nửa bàn tay để lại ô da bị vây rồi lấp viền; hộp thân dài hơn hàng gấu | chạy `doubles_dressed.py` sau mỗi lần mặc (D-094); nón che mày hoặc thêm hàng da; đạo cụ che trọn hay không che bàn tay; hộp thân kết thúc ở hàng gấu; khối do đạo cụ chạm thân thì chấp nhận |
+| Túi, đuôi áo, súng lệch chỗ trên khung bước                                          | hình vẽ cho thân đứng chỉ dịch cột; thân bước hẹp hơn một cột, hông cao hơn một hàng, tay vung                                                | biến thể theo bước (`*_WALK`, D-095); tay vung trước là `front`; súng/túi theo thân (vai, hông), không theo đầu                                                                                                   |
+| Góc trên váy/đuôi áo hở trên khung bước; nòng súng khép túi kín sau sọ; dây chéo cắt khoá thắt lưng | khi đứng bàn tay buông che góc váy; nòng kéo dài tới vai; dây đè lên khoá                                                                        | váy/đuôi áo thu hai hàng đầu về bề rộng hông; nòng giữ 12 hàng (chạm vành mũ); dây dừng trên thắt lưng hoặc trước nắm đấm                                                                                            |
 
 ## 9. Nguồn đã khảo sát (17/10/2026)
 

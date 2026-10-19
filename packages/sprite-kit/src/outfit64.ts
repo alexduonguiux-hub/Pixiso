@@ -16,7 +16,7 @@ import type { MaterialColors } from './paint.js';
 import { EMPTY, LEGEND, MATERIALS, packCell, type Material, type Sprite } from './format.js';
 import { combHair } from './hair64.js';
 import { blank } from './draw.js';
-import type { Box, HeroView } from './hero64.js';
+import type { Box, HeroView, WalkKey } from './hero64.js';
 import type { FormSpec, HeadMap } from './heroforms.js';
 import { tailor, type Garment } from './tailor64.js';
 
@@ -87,9 +87,11 @@ export interface ViewLayer {
 }
 /**
  * An item drawn per view (hair, hat, glasses, bag...). S is required; a view
- * that is missing simply leaves the item out (glasses seen from behind).
+ * that is missing simply leaves the item out (glasses seen from behind). A
+ * walk step (`S0`, `W1`...) may carry its own drawing (D-095); without one the
+ * step uses the view's drawing moved by the step's column shift.
  */
-export type ViewItem = { S: ViewLayer } & Partial<Record<HeroView, ViewLayer>>;
+export type ViewItem = { S: ViewLayer } & Partial<Record<HeroView | WalkKey, ViewLayer>>;
 
 const LINE = packCell(LEGEND.o!);
 const LINE_MATERIAL = MATERIALS.indexOf('line');

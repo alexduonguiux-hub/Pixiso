@@ -17,7 +17,7 @@
  */
 import type { BodyView } from './body32.js';
 import { blank } from './draw.js';
-import { parseSprite, sprite, type Sprite } from './format.js';
+import { parseSprite, sprite, toAscii, type Sprite } from './format.js';
 import { HERO_FRAME_DATA, type HeroFrameData } from './hero64.frames.js';
 import { HERO_NW_FIGURE, HERO_SW_FIGURE } from './hero64.views.js';
 
@@ -81,6 +81,8 @@ export const HERO_S_FIGURE = sprite`
 
 /** Drawn views; SE, E and NE come from mirroring SW, W and NW (plain flip, D-042). */
 export type HeroView = 'S' | 'SW' | 'W' | 'NW' | 'N';
+/** A walk step of a drawn view (D-095): the view letter and the step, 0 for A and 1 for B. */
+export type WalkKey = `${'S' | 'N' | 'W'}${0 | 1}`;
 export const HERO_VIEWS: readonly HeroView[] = ['S', 'SW', 'W', 'NW', 'N'];
 /** Views with transcribed walk frames; SW and NW have the standing frame only so far. */
 export type HeroWalkView = 'S' | 'N' | 'W';
@@ -100,6 +102,53 @@ function place(d: HeroFrameData, name: string): HeroFrame {
   return { sprite: s, x: HERO_PIVOT.x - Math.floor(s.w / 2), y: standTop + d.dtop };
 }
 
+/** Rows of the head above the chin line (the chin line is row 14, HEAD_ROWS - 1 + 1). */
+const HEAD_ROWS = 14;
+
+/**
+ * A walk step wearing the standing frame's head (D-095): the steps were transcribed before the base
+ * head was corrected (eyes, ears, nape) and their heads drifted a column with the sheet's cropping;
+ * the head must not change along a cycle. Rows 0-13 come from the standing frame, shifted so the
+ * skull sits on the same columns; row 14 (chin line, trapezius) too, except where the step's body
+ * below needs its own cell (a shoulder swung a column out); the body from row 15 is the step's own.
+ * The step moves on the canvas so its head lands where the standing head is.
+ */
+function withStandingHead(step: HeroFrame, stand: HeroFrame, name: string): HeroFrame {
+  const sRows = toAscii(stand.sprite);
+  const fRows = toAscii(step.sprite);
+  const skullCol = (rows: string[]) => rows[2]!.indexOf('o');
+  const shift = skullCol(fRows) - skullCol(sRows);
+  const w = step.sprite.w;
+  const shifted = (row: string): string => {
+    const cells = row.split('');
+    const out = Array<string>(w).fill('.');
+    cells.forEach((c, x) => {
+      if (c === '.') return;
+      const nx = x + shift;
+      if (nx < 0 || nx >= w)
+        throw new Error(`${name}: head cell (${x}) falls off the step's canvas`);
+      out[nx] = c;
+    });
+    return out.join('');
+  };
+  const rows: string[] = [];
+  for (let y = 0; y < HEAD_ROWS; y++) rows.push(shifted(sRows[y]!));
+  // the chin row: the standing one, plus the step's own cells where its shoulders reach further out
+  const chin = shifted(sRows[HEAD_ROWS]!).split('');
+  const own = fRows[HEAD_ROWS]!;
+  const below = fRows[HEAD_ROWS + 1]!;
+  for (let x = 0; x < w; x++)
+    if (chin[x] === '.' && own[x] !== '.' && below[x] !== undefined && below[x] !== '.')
+      chin[x] = own[x]!;
+  rows.push(chin.join(''));
+  for (let y = HEAD_ROWS + 1; y < fRows.length; y++) rows.push(fRows[y]!);
+  return {
+    sprite: parseSprite(rows, name),
+    x: stand.x + skullCol(sRows) - skullCol(fRows),
+    y: step.y,
+  };
+}
+
 /** The three frames of a view: [step A, standing, step B]. */
 export function heroFrames(view: HeroView): [HeroFrame, HeroFrame, HeroFrame] {
   if (view === 'SW' || view === 'NW') {
@@ -112,7 +161,15 @@ export function heroFrames(view: HeroView): [HeroFrame, HeroFrame, HeroFrame] {
     return [stand, stand, stand];
   }
   const d = HERO_FRAME_DATA[view];
-  return [place(d[0], `${view}0`), place(d[1], `${view}1`), place(d[2], `${view}2`)];
+  const stand = place(d[1], `${view}1`);
+  // Step A is the one with the person's left leg forward in every view (D-095): the reference sheet's front
+  // row has its steps the other way round from its back and side rows, so S takes them in reverse.
+  const [a, b] = view === 'S' ? [d[2], d[0]] : [d[0], d[2]];
+  return [
+    withStandingHead(place(a, `${view}0`), stand, `${view}0`),
+    stand,
+    withStandingHead(place(b, `${view}2`), stand, `${view}2`),
+  ];
 }
 
 /** Standing frame of a view. */

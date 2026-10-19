@@ -14,10 +14,11 @@ import {
   heroStand,
   heroViewS,
 } from './hero64.js';
-import { BASE_LOOKS, castInView } from './cast64.js';
+import { BASE_LOOKS, castInView, walkCastInView } from './cast64.js';
 import { buildForm, FORMS } from './heroforms.js';
 import { dress } from './outfit64.js';
 import { STAND_VIEWS } from './views64.js';
+import { WALK_VIEWS, WALK_VIEWS_DRAWN } from './walk64.js';
 import { buildPalette, paint } from './paint.js';
 
 describe('hero 64 mannequin', () => {
@@ -95,6 +96,36 @@ describe('hero 64 mannequin', () => {
                 if ((dx || dy) && (rows[y + dy]?.[x + dx] ?? '.') !== '.') n++;
             expect(n, `${o.id}@${view} (${x},${y})`).toBeGreaterThan(0);
           }
+      }
+    }
+  });
+  it('every base character dresses on every drawn walk step with the standing head in place', () => {
+    for (const view of WALK_VIEWS_DRAWN) {
+      const frames = heroFrames(view);
+      for (const step of [0, 1] as const) {
+        const pose = WALK_VIEWS[view][step];
+        const figure = pose.form.figure!;
+        const frame = frames[step === 0 ? 0 : 2];
+        expect(toAscii(figure)).toEqual(toAscii(frame.sprite));
+        // the head grid lands where the standing head is: head row 2 starts on the same canvas column
+        const skull = (rows: string[]) => rows[2]!.indexOf('o');
+        const [hx] = pose.form.headMap!(skull(toAscii(frames[1].sprite)), 2);
+        expect(frame.x + hx).toBe(frames[1].x + skull(toAscii(frames[1].sprite)));
+        const outfits = walkCastInView(view, step);
+        expect(outfits).toHaveLength(BASE_LOOKS.length);
+        for (const o of outfits) {
+          const s = dress(figure, o);
+          const rows = toAscii(s);
+          for (let y = 0; y < s.h; y++)
+            for (let x = 0; x < s.w; x++) {
+              if (rows[y]![x] === '.') continue;
+              let n = 0;
+              for (let dy = -1; dy <= 1; dy++)
+                for (let dx = -1; dx <= 1; dx++)
+                  if ((dx || dy) && (rows[y + dy]?.[x + dx] ?? '.') !== '.') n++;
+              expect(n, `${o.id}@${view}${step} (${x},${y})`).toBeGreaterThan(0);
+            }
+        }
       }
     }
   });

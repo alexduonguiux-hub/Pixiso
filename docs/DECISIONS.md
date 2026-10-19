@@ -874,3 +874,33 @@ Còn 14 khối, tất cả ở chỗ đạo cụ chạm thân (túi hông Ny/qu�
 Đầu gục @N/NW giữ hạ hai hàng (ghi chú để lại ở D-092 rút lại): cúi đầu thì đỉnh đầu hạ ở mọi góc, gáy lộ hai
 hàng 16–17 là đúng. Số: frag 334 → 321 (mốc hạ theo), islands 0, skin1 0, cặp lẫn 0; lint 74 = 74; QA sạch;
 113 test; ô lẻ 227 → 226, strict 1518 → 1511; thước ×6 tham khảo 33/130. **Hết sáu mục của kế hoạch 19/10.**
+
+### D-095 Khung đi bộ S/N/W của dàn nhân vật đứng: đầu đứng ghép lên thân bước, áo quần theo vùng từng khung
+
+- **Thân bước** là bản chép từ ảnh mẫu (`hero64.frames.ts`, chỉ số 0 và 2); đầu chép lệch cột và chưa có mắt/gáy
+  đã sửa, nên `withStandingHead()` dán 14 hàng đầu đứng (+ hàng cằm) lên thân bước và dịch khung để đầu nằm đúng
+  chỗ đầu đứng trên canvas (đầu không được đổi dọc chu kỳ). **Bước A ở mọi góc là chân trái người trước**; hàng S
+  của ảnh mẫu xếp ngược với hàng N/W nên `heroFrames('S')` đảo hai bước, để quay người giữa chừng không đổi chân.
+- `walk64.ts`: sáu dáng `ZombiePose` (S/N/W × A/B) với hộp áo quần đọc từ thân bước, như `views64.ts` đọc từ thân
+  đứng. Trường mới: `legSplit` + `nearLeg` (thợ may quần tách hai ống ở cột khai báo và chân gần/sáng có thể là
+  chân phải), `sleeveExcept` (ô thân nằm trong hộp tay áo khi cẳng tay vắt chéo ngực @W), `extrasDx` (dịch cột
+  cho lớp vẽ thân của góc đứng), `walkKey`. `form.front` = cẳng tay + nắm đấm vung trước thân (và cả cánh tay vung
+  sau ở W B): mọi lớp đè (túi, đuôi áo, thắt lưng, ba lô) nằm sau tay.
+- **Vật phẩm thân**: `ViewItem` nhận thêm khoá bước `S0..W1`; không có thì lấy hình góc đứng dịch `extrasDx`.
+  Biến thể vẽ riêng trong `gen_view_items.py` (`*_WALK`, kiểm trên thân bước qua khoá `walk` của dump): dây và
+  túi Ny, ba lô + gậy Sơn, áo khoác Ông Tư, đuôi áo + bảng kẹp + khoá kéo Lan, vết máu váy Kẻ Bắt Chước, súng đeo
+  lưng, túi quân y, túi bản đồ, súng cầm @W. Quy tắc rút ra: váy/đuôi áo trên khung bước mở từ bề rộng hông (hai
+  hàng thu dần) vì bàn tay che góc trên khi đứng đã vung đi; nòng súng dài hơn khung đứng khép túi kín sau sọ (giữ
+  12 hàng, đỉnh chạm vành mũ); dây chéo dừng trên thắt lưng và trước nắm đấm (đè khoá còn một chấm); rằn ri chỉ
+  trên ô thân và ngoài vùng ngoại lệ của thân (hộp thân @W chứa viền tay); thắt lưng chỉ trên ô thân, khoá về phía
+  bàn tay không che; tay áo dài của tay vung sau dài sáu hàng để cổ tay có ba ô.
+- Sửa thân bước (ngoại lệ ghi ở đầu `hero64.frames.ts`): nắm tay vung sau ở S thành khối sáu ô (đường đốt ngón của
+  mẫu để lại mảnh da 1–2 ô ở 1×); góc hông W A (15,27) là ô thân để đường may gấu không khép khối viền.
+- **Thước**: `hero-score-dump.ts` dump thêm 66 sprite bước → `qa:1x`, `qa:score`, `doubles_dressed.py` đo cả
+  khung bước; `hero-qa` và test `hero64.test.ts` cũng kiểm. Mốc `frag` 321 → **438** (= 321 đứng không đổi + 117
+  bước: cơ thang cạnh cằm và tay buông 2 ô như thân đứng, dây chéo cắt rằn ri/vải, súng cầm đè chân @W, hàng gấu sâu
+  bị rằn ri cắt). islands 0, skin1 0, cặp lẫn 0, lint 74, 114 test; khối viền do mặc 43 (14 đứng + 29 bước, đều là
+  đạo cụ chạm thân hoặc tay). `pnpm walk` render bảng S/W/E/N (A, đứng, B, đứng) ×4 vào `test-output/walk/`.
+- Chấp nhận/để lại: súng cầm của Lính đầu đinh đứng yên bên hông khi tay vung (S) và đi qua trước chân sau (W A);
+  ba lô Sơn @W B gần như khuất sau cánh tay (chỉ nắp lộ); dáng W của mẫu vung tay cùng bên chân trước (giữ theo
+  mẫu). SW/NW chưa có khung bước (E/NE/SE lật từ W/NW như D-042).

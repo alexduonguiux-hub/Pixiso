@@ -7,7 +7,7 @@
  */
 import { blank } from './draw.js';
 import { sprite, type Sprite } from './format.js';
-import { cut, HERO_S_FIGURE, type Box } from './hero64.js';
+import { cut, HERO_S_FIGURE, type Box, type WalkKey } from './hero64.js';
 import type { FormSpec, HeadMap } from './heroforms.js';
 import { HERO_ZOMBIE_S, ZOMBIE_HEAD_TOP, zombieHeadShift } from './hero64.zombie.js';
 
@@ -313,6 +313,20 @@ export interface ZombiePose {
   skirt: { x: number; y: number; rows: string[] };
   /** Long dress to the ankles (optional). */
   dress?: { x: number; y: number; rows: string[] };
+  /** Column parting the two legs for the trousers' shading (default: the middle of the trousers' box). */
+  legSplit?: number;
+  /** The near leg, lit on top of the thigh (default the left; a stride with the right leg forward says 'R'). */
+  nearLeg?: 'L' | 'R';
+  /**
+   * Columns that figure-space items drawn for this view's standing figure move by on this pose (a walk step's
+   * canvas is cropped a column or four differently from the standing frame, D-095). Head-space items follow
+   * `form.headMap` instead.
+   */
+  extrasDx?: number;
+  /** Set on a walk step: items pick their drawing for this step when they have one (D-095). */
+  walkKey?: WalkKey;
+  /** Torso cells inside a sleeve box (a forearm swung across the chest): the sleeve leaves them to the torso. */
+  sleeveExcept?: Box[];
 }
 
 const form = (id: string, label: string, figure: Sprite, headMap: HeadMap): FormSpec => ({

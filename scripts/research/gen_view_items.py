@@ -7,8 +7,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 FIG = json.load(open(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else os.path.join(ROOT, 'test-output', 'view_figures.json')))
 OUT = os.path.join(ROOT, 'packages', 'sprite-kit', 'src', 'views64.items.ts')
 
-def O(x, y, rows, head=True, rigid=False, under=False, crop=False):
-    return {'kind': 'overlay', 'x': x, 'y': y, 'rows': rows, 'head': head, 'rigid': rigid, 'under': under, 'crop': crop}
+def O(x, y, rows, head=True, rigid=False, under=False, crop=False, emit=True):
+    return {'kind': 'overlay', 'x': x, 'y': y, 'rows': rows, 'head': head, 'rigid': rigid, 'under': under, 'crop': crop, 'emit': emit}
+def B(x, y, rows):
+    """A body (figure-space) overlay."""
+    return O(x, y, rows, head=False)
+def BU(x, y, rows):
+    """A body overlay drawn only where the figure is empty (a barrel behind the shoulder); emitted with `under`."""
+    return dict(O(x, y, rows, head=False, under=True), emit_under=True)
+def V(x, y, rows):
+    """A body overlay composed for the check only (the dress a stain sits on), not emitted."""
+    return O(x, y, rows, head=False, emit=False)
+# The walk step figures (S0, S1, N0, N1, W0, W1) ride along in the dump under 'walk'.
+FIG.update(FIG.get('walk', {}))
 def R(box, to, head=True):
     return {'kind': 'remap', 'box': box, 'to': to, 'head': head}
 def L(box, head=True):
@@ -149,6 +160,145 @@ BODY = {
  'SATCHEL_N':  [O(5,17, ['......A','.....AA','....AA.','...AA..','..AA...','.AA....','AA.....'], head=False), O(-2,23, ['ooooo', 'oA**o', 'oAaao', 'oAxao', 'oxxxo', 'oAxao', 'oAaao', 'orrro', 'ooooo'], head=False)],
 }
 
+
+# ---------------------------------------------------------------- walk steps (D-095)
+# Body items on the six walk steps of the standing cast, in each step's own figure coordinates (step A
+# is the one with the person's left leg forward: on S that is the viewer's right leg, with the left fist
+# swung in front of the hip)
+# (walk64.ts). Only what the step's canvas shift cannot place is drawn: the hips sit a row higher
+# on the S/N steps, the front torso is a column narrower, the arms swing, and the side view's torso
+# moves four columns. The arm that swings in front of the body is `front` on the step's form, so a
+# bag or a coat tail drawn under it shows around the fist, not over it.
+WALK = {}
+STRAP5 = ['A....', 'AA...', '.AA..', '..AA.', '...AA']
+STRAP6 = ['A.....', 'AA....', '.AA...', '..AA..', '...AA.', '....AA']
+STRAP_BACK7 = ['......A', '.....AA', '....AA.', '...AA..', '..AA...', '.AA....', 'AA.....']
+STRAP_BACK6 = ['.....A', '....AA', '...AA.', '..AA..', '.AA...', 'AA....']
+STRAP_WA = ['A.', 'AA', '.A']
+STRAP_WB = ['A..', 'AA.', '.AA']
+# Ny: the chest strap (S only; the tunic carries the strap on W and from behind)
+WALK['NY_STRAP'] = {'S1': [B(5,17, STRAP5)], 'S0': [B(5,17, STRAP6)]}
+# The S/N skirts open from the hips' width (the hands that covered their top corners when standing have swung
+# away): two tapered rows, then the standing width.
+TUNIC5 = ['...o^ccCccCo...', '..o^ccCccCcCo..', '.o^ccCccCccCco.', 'occcCccCccCccco', 'ooooooooooooooo']
+TUNIC_WA = ['o^ccCccCccCo', 'o^ccCccCccCo', 'occcCccCccco', 'oooooooooooo']
+TUNIC_WB = ['o^ccCccCccCco', 'o^ccCccCccCco', 'occcCccCccCco', 'ooooooooooooo']
+POUCH_R = ['oooo', 'oAao', 'oAao', 'oaao', 'oooo']
+POUCH_L = ['oooo', 'oaAo', 'oaAo', 'oaao', 'oooo']
+WALK['TUNIC'] = {
+ 'S1': [B(1,28, TUNIC5), B(14,22, POUCH_R)],
+ 'S0': [B(0,28, TUNIC5), B(13,22, POUCH_R)],
+ 'N0': [B(4,17, STRAP_BACK7), B(0,28, TUNIC5), B(-3,22, POUCH_L)],
+ 'N1': [B(5,17, STRAP_BACK6), B(0,28, TUNIC5), B(-3,22, POUCH_L)],
+ 'W0': [B(13,18, STRAP_WA), B(6,29, TUNIC_WA), B(16,26, POUCH_R)],
+ 'W1': [B(9,17, STRAP_WB), B(5,29, TUNIC_WB), B(15,28, POUCH_R)],
+}
+# Sơn: pack top behind the shoulders (under the body on the front steps), two chest straps on the torso's
+# edge columns, the bat on the right shoulder; from behind the pack body is as wide as the back
+FLAP_S = ['.ooooooooooooo.', 'oL|llllllllllLo', 'oL|lllllllllLLo', 'oLlllllllllllLo', 'ooooooooooooooo']
+FLAP_N = ['.ooooooooooooo.', 'o||lllllllllLLo', 'o|lllllllllLLLo', 'ollllllllLLLLLo', 'ooooooooooooooo']
+BAT_S = ['....ooo', '....o%o', '...o%%o', '...odo.', '..oddo.', '..odo..', '.oddo..', '.odo...', 'oddo...', 'odo....', 'Ddo....', 'Ddo....', 'ooo....']
+BAT_N = ['ooo....', 'o%o....', 'o%%o...', '.odo...', '.oddo..', '..odo..', '..oddo.', '...odo.', '...oddo', '....odo', '....odD', '....ooo']
+BAT_W = ['....ooo', '....o%o', '...o%%o', '...odo.', '..oddo.', '..odo..', '.oddo..', '.odo...', 'oddo...', 'odo....']
+PACK8 = ['o||lllLo', 'o|lllLLo', 'ollllllo', 'oiiiiiio', 'ollLlllo', 'o|lLllLo', 'o|mmllLo', 'oLLLLLLo', 'ollLlllo', 'oilLLlio', 'oooooooo']
+PACK_W = ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo']
+def straps(xs, y0=17, y1=20): return [B(x, y, ['L']) for x in xs for y in range(y0, y1 + 1)]
+WALK['BACKPACK'] = {
+ 'S1': [BU(1,11, FLAP_S), *straps((5, 10)), B(13,7, BAT_S)],
+ 'S0': [BU(0,11, FLAP_S), *straps((5, 10)), B(12,7, BAT_S)],
+ 'N0': [B(-5,7, BAT_N), B(0,11, FLAP_N), B(3,16, PACK8)],
+ 'N1': [B(-4,7, BAT_N), B(0,11, FLAP_N), B(4,16, PACK8)],
+ 'W0': [B(15,17, PACK_W), BU(14,7, BAT_W)],
+ # the near arm swings back over the pack: only its top shows behind the shoulder
+ 'W1': [B(16,15, ['oooo', 'ollo', 'ollo', 'oooo']), BU(13,7, BAT_W)],
+}
+# Ông Tư's coat skirt and Bác sĩ Lan's coat tails: a row higher on the S/N steps (the hips are), draped
+# across both thighs on the side steps (the front edge follows the forward leg, the back edge the trailing one)
+RANGER = ['...o^ccoccCo...', '..o^cCcocCcCo..', '.o^ccCo.ocCcCo.', 'occcCco.ocCccvo', 'occcCco.ocCccvo', 'occcCco.ocCccvo', 'ooooooo.ooooooo']
+RANGER_BACK = ['...o^ccoccCo...', '..o^cCcocCcCo..', '.o^ccCcoccCcCo.', 'occcCco.ocCccvo', 'occcCco.ocCccvo', 'occcCco.ocCccvo', 'ooooooo.ooooooo']
+COAT_WA = ['..o^ccCccCcCo...', '..o^ccCccCccCo..', '.o^ccCccCccCcCo.', '.o^ccCccCccCcCo.', 'o^ccCccCccCcCcCo', 'o^ccCccCccCcCcCo', 'oooooooooooooooo']
+COAT_WB = ['...o^ccCccCcCo...', '..o^ccCccCccCo...', '..o^ccCccCccCco..', '.o^ccCccCccCcCo..', '.o^ccCccCccCcCco.', 'o^ccCccCccCcCcCco', 'ooooooooooooooooo']
+WALK['RANGER_COAT'] = {
+ 'S1': [B(1,28, RANGER)], 'S0': [B(0,28, RANGER)],
+ 'N0': [B(0,28, RANGER_BACK)], 'N1': [B(0,28, RANGER_BACK)],
+ 'W0': [B(4,29, COAT_WA)], 'W1': [B(3,29, COAT_WB)],
+}
+TAILS = ['...o^ccoccCo...', '..o^cCcocCcCo..', '.o^ccCo.ocCcCo.', 'occcCco.ocCccvo', '.occCco.ocCcco.', '.oooooo.oooooo.']
+TAILS_BACK = ['...o^ccoccCo...', '..o^cCcocCcCo..', '.o^ccCcoccCcCo.', 'occcCco.ocCccvo', '.occCco.ocCcco.', '.oooooo.oooooo.']
+TAILS_WA = COAT_WA[:5] + [COAT_WA[6]]
+TAILS_WB = COAT_WB[:5] + [COAT_WB[6]]
+CLIP = ['ooooo', 'oMMxo', 'oxxxo', 'oxxxo', 'oxxxo', 'oxxxo', 'ooooo']
+WALK['COAT_TAILS2'] = {
+ # the clipboard stays in the left hand: beside the back-swinging hand on A, behind the forward fist on B
+ 'S1': [B(1,28, TAILS), B(-1,22, CLIP), L([8,19,8,27], head=False)],
+ 'S0': [B(0,28, TAILS), B(0,22, CLIP), L([7,19,7,27], head=False)],
+ # from behind only the board's edge shows beside the arm, as tall as the arm's outline runs
+ 'N0': [B(0,28, TAILS_BACK), B(15,21, ['oo', 'xo', 'xo', 'xo', 'xo', 'oo'])],
+ 'N1': [B(0,28, TAILS_BACK), B(15,20, ['oo', 'xo', 'xo', 'xo', 'oo'])],
+ 'W0': [B(4,29, TAILS_WA), B(-1,22, CLIP)],
+ 'W1': [B(3,29, TAILS_WB), B(15,21, CLIP)],
+}
+# Kẻ Bắt Chước: the dress stains follow the step's dress (walk64.ts); the dress rides along for the check only
+STAINS = ['....DD...', '....D....', '.DD......', '..D....D.', '......DD.']
+STAINS_W = ['..DD.', '.....', 'DD...', '.....', '...DD']
+DRESS_S = ['..o&kkKkkKkKo..', '..o&kkKkkKkKo..', '.o&kkKkKKkkkKo.', '.o&kkKkKKkkkKo.', '.o&kkKkKKkKkKo.', 'o&kookkKkkkooKo', 'ooo..oooooo..oo']
+DRESS_WA = ['..o&kkKkkKkKo...', '..o&kkKkkKkkKo..', '.o&kkKkkKkkKkKo.', '.o&kkKkkKkkKkKo.', 'o&kkKkkKkkKkKkKo', 'o&kkKkkKkkKkKkKo', 'oooooooooooooooo']
+DRESS_WB = ['...o&kkKkkKkKo...', '..o&kkKkkKkkKo...', '..o&kkKkkKkkKko..', '.o&kkKkkKkkKkKo..', '.o&kkKkkKkkKkKko.', 'o&kkKkkKkkKkKkKko', 'ooooooooooooooooo']
+WALK['DRESS_STAINS'] = {
+ 'S1': [V(1,28, DRESS_S), B(4,29, STAINS)], 'S0': [V(0,28, DRESS_S), B(3,29, STAINS)],
+ 'N0': [V(0,28, DRESS_S), B(3,29, STAINS)], 'N1': [V(0,28, DRESS_S), B(3,29, STAINS)],
+ 'W0': [V(4,29, DRESS_WA), B(9,30, STAINS_W)], 'W1': [V(3,29, DRESS_WB), B(8,30, STAINS_W)],
+}
+# Lính nón sắt's slung rifle: the barrel as when standing (behind the right shoulder, under the figure; its top
+# meets the helmet rim, and longer it closed the pocket behind the skull), the stock beside the left thigh a row
+# higher, the sling stepping across the narrower torso two cells wide and ending above the belt (over it, it
+# cut the buckle to a dot) or at the fist swung in front
+def sling(cells): return [B(x, y, ['L']) for x, y in cells]
+BARREL = lambda n: ['..o'] * 3 + ['.o.'] * n
+STOCK = ['ooo', 'odD', 'odD', 'odD', 'ooo']
+BARREL_N = ['o.'] * 3 + ['.o'] * 9
+RIFLE_N_BODY = ['oMMo........', '.oMMo.......', '..oMMo......', '..oDD.......', '...oDD......', '....oDD.....', '....oDD.....', '.....oDD....', '......oDD...', '......oDD...', '.......oDDo.', '.......oDDo.', '........oooo', '.........oDo', '.........oDo', '.........oDo', '.........ooo']
+RIFLE_WA = ['.o...'] * 5 + ['.....'] * 3 + ['o....', '.oo..'] + ['..o..'] * 8 + ['.o...', '.o...', '.ooo.', '.oDo.', '.oDo.', '.ooo.']
+RIFLE_WB = ['o...'] * 5 + ['....'] * 15 + ['.ooo', '.oDo', '.oDo', '.ooo']
+WALK['RIFLE_SLUNG'] = {
+ 'S1': [BU(15,5, BARREL(9)), B(1,28, STOCK), *sling([(11,17),(10,17),(10,18),(9,18),(10,19),(9,19),(9,20),(8,20),(9,21),(8,21),(8,22),(7,22),(8,23),(7,23),(7,24),(6,24),(7,25),(6,25)])],
+ 'S0': [BU(15,5, BARREL(9)), B(0,28, STOCK), *sling([(12,17),(11,17),(11,18),(10,18),(10,19),(9,19),(9,20),(8,20),(8,21),(7,21),(8,22),(7,22),(8,23),(7,23)])],
+ 'N0': [B(-2,5, BARREL_N), B(3,17, RIFLE_N_BODY), B(7,17, ['LL', '.L'])],
+ 'N1': [B(-2,5, BARREL_N), B(3,17, RIFLE_N_BODY), B(7,17, ['LL', '.L'])],
+ 'W0': [BU(16,9, RIFLE_WA)], 'W1': [BU(16,9, RIFLE_WB)],
+}
+# Lính quân y's satchel: on the right hip, behind the forward fist on S0, outside the back-swinging arm on S1
+SATCHEL_R = ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo']
+SATCHEL_L = ['ooooo', 'oA**o', 'oAaao', 'oAxao', 'oxxxo', 'oAxao', 'oAaao', 'orrro', 'ooooo']
+WALK['SATCHEL'] = {
+ 'S1': [B(5,17, STRAP5), B(14,22, SATCHEL_R)],
+ 'S0': [B(5,17, STRAP6), B(13,23, SATCHEL_R)],
+ 'N0': [B(4,17, STRAP_BACK7), B(-4,22, SATCHEL_L)],
+ 'N1': [B(5,17, STRAP_BACK6), B(-3,22, SATCHEL_L)],
+ 'W0': [B(13,18, STRAP_WA), B(15,20, SATCHEL_R)],
+ 'W1': [B(9,17, STRAP_WB), B(16,24, SATCHEL_R)],
+}
+# Lính mũ nồi's map case on the left hip
+CASE_L = ['oooo', 'oLlo', 'oLlo', 'olio', 'oooo']
+CASE_R = ['oooo', 'olLo', 'olLo', 'oilo', 'oooo']
+WALK['MAP_CASE'] = {
+ 'S1': [B(-3,22, CASE_L)], 'S0': [B(-2,22, CASE_L)],
+ 'N0': [B(14,22, CASE_R)], 'N1': [B(14,22, CASE_R)],
+ 'W0': [B(4,26, CASE_L)], 'W1': [B(3,27, CASE_L)],
+}
+# Lính đầu đinh's held rifle on the side steps: at the standing side view's place beside the back; on step B
+# the near arm hangs over its middle, so only the muzzle above the shoulder and the stock below the hand show
+RIFLE_W_FULL = ['.o.'] * 5 + ['...'] * 4 + ['.Do'] * 11 + ['Do.'] * 3 + ['.Do'] * 4 + ['oDo'] + ['.Do'] * 2 + ['.oo']
+RIFLE_W_SPLIT = ['.o.'] * 5 + ['...'] * 15 + ['Do.'] * 3 + ['.Do'] * 7 + ['.oo']
+RIFLE_S = ['.o..'] * 10 + ['.oo.', 'oMmo', 'oMmo', 'oDdo', 'oDdo', 'oDdo', 'oD%o', 'oDdo', 'oDdo', 'oDdo', 'oDdo', 'oD%o', 'oDdo', 'oDdo', 'oDdo'] + ['oDDo'] * 5 + ['.oo.']
+RIFLE_N = ['..o.'] * 10 + ['.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo'] + ['oDDo'] * 5 + ['.oo.']
+# on the front and back steps the rifle stays against the arm's outline (a step's canvas shift would leave it a
+# column off the body, a piece apart at 1x)
+WALK['RIFLE_STAND'] = {
+ 'S1': [B(16,9, RIFLE_S)], 'N0': [B(-4,9, RIFLE_N)], 'N1': [B(-4,9, RIFLE_N)],
+ 'W0': [B(15,9, RIFLE_W_FULL)], 'W1': [B(15,9, RIFLE_W_SPLIT)],
+}
+
 # ---------------------------------------------------------------- validation
 def compose(view, layers, pad=5, top=5):
     fig = FIG[view]; W = len(fig[0]); H = len(fig)
@@ -196,6 +346,8 @@ for k,l in HATS.items():
     bad+=check(k, view, layers)
 for k,l in FACE.items(): bad+=check(k, 'W' if k.endswith('_W') else 'SW', l)
 for k,l in BODY.items(): bad+=check(k, 'W' if k.endswith('_W') else 'N', l)
+for k,v in WALK.items():
+    for key,l in v.items(): bad+=check(k+'_WALK', key, l)
 print('problems:', bad)
 if bad and '--force' not in sys.argv: sys.exit(1)
 
@@ -204,7 +356,7 @@ def ts_layer(l):
     if l['kind']=='overlay':
         rows=', '.join(f"'{r}'" for r in l['rows'])
         fn='hov' if l['head'] else 'ov'
-        extra=''.join(f', {k}: true' for k in ('rigid', 'crop') if l.get(k))
+        extra=''.join(f', {k}: true' for k in ('rigid', 'crop') if l.get(k)) + (', under: true' if l.get('emit_under') else '')
         s=f"{fn}({l['x']}, {l['y']}, [{rows}])"
         return f"{{ ...{s}{extra} }}" if extra else s
     if l['kind']=='remap':
@@ -212,6 +364,7 @@ def ts_layer(l):
     return f"{{ box: [{', '.join(map(str,l['box']))}]{', space: \'head\'' if l['head'] else ''} }}"
 def ts_layers(ls):
     ls = ls if isinstance(ls, list) else [ls]
+    ls = [l for l in ls if l.get('emit', True)]
     ov=[ts_layer(l) for l in ls if l['kind']=='overlay']; rm=[ts_layer(l) for l in ls if l['kind']=='remap']; sm=[ts_layer(l) for l in ls if l['kind']=='seam']
     parts=[]
     if ov: parts.append('overlays: ['+', '.join(ov)+']')
@@ -220,15 +373,18 @@ def ts_layers(ls):
     return '{ '+', '.join(parts)+' }'
 out=['''/**
  * Per-view drawings (SW, W, NW, N) of hair, hats, faces and body items for the
- * standing base figure, as ViewLayer tables keyed by view. The S drawings
+ * standing base figure, as ViewLayer tables keyed by view, and the body items'
+ * drawings on the walk steps (`*_WALK`, keyed S0..W1; D-095). The S drawings
  * live in cast64.ts; a view that reuses an S drawing is wired there.
  * Generated by scripts/research/gen_view_items.py (validates every drawing on its view figure); do not edit by hand.
  */
-import type { HeroView } from './hero64.js';
+import type { HeroView, WalkKey } from './hero64.js';
 import { parseSprite } from './format.js';
 import type { Overlay, ViewLayer } from './outfit64.js';
 
 type Views = Partial<Record<HeroView, ViewLayer>>;
+/** An item's drawings on the walk steps that need their own (D-095). */
+type Walks = Partial<Record<WalkKey, ViewLayer>>;
 function ov(x: number, y: number, rows: string[]): Overlay {
   return { sprite: parseSprite(rows, 'view-item'), x, y };
 }
@@ -259,5 +415,7 @@ out.append("export const COAT_TAILS_W: ViewLayer = "+ts_layers(BODY['COAT_W'])+"
 out.append("export const DRESS_STAINS_W: ViewLayer = "+ts_layers(BODY['STAINS_W'])+";\n")
 for name in ('RIFLE_STAND_W', 'RIFLE_STAND_N', 'RIFLE_SLUNG_W', 'RIFLE_SLUNG_N', 'SATCHEL_W', 'SATCHEL_N', 'BACKPACK_W', 'BACKPACK_N', 'BACKPACK_NW', 'RANGER_COAT_W', 'COAT_TAILS2_W', 'TUNIC_W'):
     out.append("export const "+name+": ViewLayer = "+ts_layers(BODY[name])+";\n")
+for k,v in WALK.items():
+    out.append(f"export const {k}_WALK: Walks = {{\n"+''.join(f"  {key}: {ts_layers(l)},\n" for key,l in v.items())+"};\n")
 open(OUT,'w').write('\n'.join(out))
 print('wrote', OUT)

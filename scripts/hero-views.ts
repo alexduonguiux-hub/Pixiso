@@ -38,6 +38,8 @@ import {
   type HeroView,
   type MaterialColors,
   HERO_RAMPS,
+  WALK_VIEWS,
+  WALK_VIEWS_DRAWN,
 } from '@pixiso/sprite-kit';
 import { TEST_OUTPUT_DIR } from './lib/paths.js';
 
@@ -82,6 +84,12 @@ if (process.env.DUMP) {
   out['fat_S'] = toAscii(buildForm(FORM_FAT));
   // The brute (giant with the claw arm and spikes), whose other views the generator edits from this.
   out['brute_S'] = toAscii(HERO_BRUTE_S);
+  // The walk steps (D-095), for the walk variants of the body items in gen_view_items.py.
+  out['walk'] = Object.fromEntries(
+    WALK_VIEWS_DRAWN.flatMap((v) =>
+      ([0, 1] as const).map((step) => [`${v}${step}`, toAscii(WALK_VIEWS[v][step].form.figure!)]),
+    ),
+  );
   fs.mkdirSync(path.dirname(process.env.DUMP), { recursive: true });
   fs.writeFileSync(process.env.DUMP, JSON.stringify(out));
   console.log(`-> ${process.env.DUMP}`);

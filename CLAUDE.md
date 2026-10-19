@@ -33,10 +33,11 @@ Web app giúp người **không biết vẽ, không biết dựng 3D** tạo nh�
 | `pnpm typecheck` | `tsc --noEmit` mọi package |
 | `pnpm assets:catalog` | Sinh `packages/shared/catalog.json` từ sprite-kit + nhãn (có test giữ file đồng bộ) |
 | `pnpm sheets` | Render sheet ×8 vào `test-output/sheets/` để tự xem bằng mắt |
-| `pnpm qa:hero` | Kiểm tra hình nhân vật ở mọi góc (viền sọ, da hở trên mũ, lỗ kín) |
+| `pnpm qa:hero` | Kiểm tra hình nhân vật ở mọi góc (viền sọ, da hở trên mũ, lỗ kín), gồm cả khung đi bộ |
+| `pnpm walk` | Render bảng đi bộ S/W/E/N (bước A, đứng, bước B, đứng) ×4 vào `test-output/walk/` + dump 1× `sprites.json` của khung bước |
 | `pnpm qa:pixel` | Lint cầm bút pixel (viền đôi, bậc giật, dải thẳng hàng, sọc ôm viền) trên thân và mọi góc dáng |
 | `pnpm qa:score` | Chấm điểm mọi nhân vật ở 5 góc theo thước đo của ảnh mẫu (số tông, mảng phẳng, đường chi tiết, tỉ lệ sáng/tối, silhouette) → `test-output/score/report.md`; chuẩn trong `docs/QUALITY_BAR.md` |
-| `pnpm qa:1x` | **Thước nghiệm thu chính** (D-088): đo ở cỡ thật — mảng rời khỏi thân và ô da đơn phải bằng 0, mảnh vật liệu dưới 3 ô và số cặp nhân vật dễ lẫn không được tăng → `test-output/score/report_1x.md` |
+| `pnpm qa:1x` | **Thước nghiệm thu chính** (D-088): đo ở cỡ thật — mảng rời khỏi thân và ô da đơn phải bằng 0, mảnh vật liệu dưới 3 ô và số cặp nhân vật dễ lẫn không được tăng; đo cả 66 khung đi bộ → `test-output/score/report_1x.md` |
 
 ## Nguyên tắc bất biến
 

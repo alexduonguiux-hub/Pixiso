@@ -3,7 +3,10 @@
  * Generated: do not edit by hand, except the eyes, corrected after a cell-by-cell diff against the
  * reference at 1x (navy upper iris `E`, blue lower iris `e`, white only beside the lower rows; D-057),
  * and the standing N nape (rows 10-14): the lower back of the skull a shadow cup as in the reference's
- * walk frames, the trapezius showing beside the neck instead of a line block (D-092).
+ * walk frames, the trapezius showing beside the neck instead of a line block (D-092), and the S steps'
+ * back-swinging hands (rows 23-24): one fist of six cells, where the reference's knuckle lines left one- and
+ * two-cell pieces of skin at 1x, and the W step A's hips corner (15,27): a body cell instead of the far arm's
+ * outline corner, so the hem seam below it completes no line block (D-095).
  * Index 0 and 2 are the two walk steps, 1 is standing.
  * `dtop`/`dbottom` are the frame's top and bottom rows relative to the standing frame of the same view.
  */
@@ -43,8 +46,8 @@ export const HERO_FRAME_DATA: Record<
         'oSSSo$$$s$$oss$o',
         'oSsooSSsss$oSs$o',
         'ossSosssssoSs$$o',
-        'oso$os$$$ooos$o.',
-        'osoooss$oSsss$o.',
+        'os$$os$$$ooos$o.',
+        'os$ooss$oSsss$o.',
         '.o$oos$$oSSSSo..',
         '..oooss$$oSSo...',
         '....oSssssooo...',
@@ -136,8 +139,8 @@ export const HERO_FRAME_DATA: Record<
         'o$sso$$s$$$oSSSo',
         'o$sSossssSSoosSo',
         'o$$sSosssssoSsso',
-        '.o$sooo$$$so$o$o',
-        '.ossssSo$ssooo$o',
+        '.o$sooo$$$so$$so',
+        '.ossssSo$ssoo$so',
         '..oSSSSo$$soo$o.',
         '...oSSo$$ssooo..',
         '...ooossssSo....',
@@ -331,7 +334,7 @@ export const HERO_FRAME_DATA: Record<
         '...oSss$$sSoossooSo...',
         '...oSs$ssSossssooSo...',
         '....oSSSoos$$ssooo....',
-        '.....oooss$$$sSoo.....',
+        '.....oooss$$$sSSo.....',
         '.......o$$$$ssSSo.....',
         '......o$$$$ssSoSo.....',
         '......os$ssssoSSSo....',

@@ -9,8 +9,8 @@
  * sprites in broad strokes (colours and silhouettes), redrawn at this scale.
  */
 import type { Rgb8 } from '@pixiso/pixel-core';
-import { flipX, LEGEND, MATERIALS, packCell, parseSprite } from './format.js';
-import type { Box, HeroView } from './hero64.js';
+import { flipX, LEGEND, MATERIALS, packCell, parseSprite, toAscii } from './format.js';
+import type { Box, HeroView, WalkKey } from './hero64.js';
 import {
   POSE_CRAWL,
   POSE_DRAG,
@@ -24,46 +24,58 @@ import {
   POSE_TWIST_M,
   type ZombiePose,
 } from './hero64.poses.js';
-import type { Outfit, Overlay, Remap, Seam, ViewItem, ViewLayer } from './outfit64.js';
+import type { Outfit, Overlay, Remap, Seam, Space, ViewItem, ViewLayer } from './outfit64.js';
+import { buildForm } from './heroforms.js';
 import type { Garment } from './tailor64.js';
 import type { MaterialColors } from './paint.js';
 import { poseInView } from './poseviews64.js';
 import { STAND_BRUTE, STAND_FAT, STAND_HEAVY, STAND_VIEWS } from './views64.js';
+import { WALK_VIEWS, type WalkView } from './walk64.js';
 import {
+  BACKPACK_N,
+  BACKPACK_NW,
+  BACKPACK_W,
+  BACKPACK_WALK,
   BEARD_VIEWS,
   BERET_W,
+  BIG_EAR_W,
   BUZZ_VIEWS,
+  COAT_TAILS2_W,
+  COAT_TAILS2_WALK,
   DRESS_STAINS_W,
+  DRESS_STAINS_WALK,
   GLASSES_VIEWS,
   HAIR_BOB_VIEWS,
   HAIR_CURLY_VIEWS,
+  HAIR_LONG_VIEWS,
   HAIR_PONYTAIL_VIEWS,
+  HAIR_SHORT_VIEWS,
   HAIR_SPIKY_VIEWS,
   HAIR_SWEPT_VIEWS,
-  HAIR_LONG_VIEWS,
-  HAIR_SHORT_VIEWS,
   HAIR_WILD_VIEWS,
   HARD_HAT_W,
   HEADBAND_VIEWS,
   HELMET_W,
-  BACKPACK_N,
-  BACKPACK_NW,
-  BACKPACK_W,
-  COAT_TAILS2_W,
-  RANGER_COAT_W,
-  RIFLE_SLUNG_N,
-  RIFLE_SLUNG_W,
-  TUNIC_W,
-  RIFLE_STAND_N,
-  RIFLE_STAND_W,
-  SATCHEL_N,
-  SATCHEL_W,
+  MAP_CASE_WALK,
   MIMIC_FACE_VIEWS,
+  NY_STRAP_WALK,
   PEAKED_CAP_N,
   PEAKED_CAP_W,
+  RANGER_COAT_W,
+  RANGER_COAT_WALK,
   RANGER_HAT_W,
+  RIFLE_SLUNG_N,
+  RIFLE_SLUNG_W,
+  RIFLE_SLUNG_WALK,
+  RIFLE_STAND_N,
+  RIFLE_STAND_W,
+  RIFLE_STAND_WALK,
+  SATCHEL_N,
+  SATCHEL_W,
+  SATCHEL_WALK,
   SEALED_EYES_VIEWS,
-  BIG_EAR_W,
+  TUNIC_W,
+  TUNIC_WALK,
   ZOMBIE_CHEEK_VIEWS,
   ZOMBIE_FACE_VIEWS,
 } from './views64.items.js';
@@ -498,6 +510,7 @@ const RIFLE_STAND_V: ViewItem = {
   W: RIFLE_STAND_W,
   N: RIFLE_STAND_N,
   NW: RIFLE_STAND_N,
+  ...RIFLE_STAND_WALK,
 };
 /** A rifle slung across the back: barrel up behind the left shoulder, stock below the right hip, sling over the chest. */
 const RIFLE_SLUNG: Overlay[] = [
@@ -547,6 +560,7 @@ const RIFLE_SLUNG_V: ViewItem = {
   W: RIFLE_SLUNG_W,
   N: RIFLE_SLUNG_N,
   NW: RIFLE_SLUNG_N,
+  ...RIFLE_SLUNG_WALK,
 };
 /** The medic's big satchel: hangs outside the right hip on the chest strap, red with a white cross. */
 const SATCHEL: Overlay[] = [
@@ -559,6 +573,7 @@ const SATCHEL_V: ViewItem = {
   W: SATCHEL_W,
   N: SATCHEL_N,
   NW: SATCHEL_N,
+  ...SATCHEL_WALK,
 };
 
 /** Sơn's backpack: its top shows behind the shoulders either side of the neck, two straps down the chest; a bat rests on the right shoulder. */
@@ -608,6 +623,7 @@ const BACKPACK_V: ViewItem = {
   W: BACKPACK_W,
   N: BACKPACK_N,
   NW: BACKPACK_NW,
+  ...BACKPACK_WALK,
 };
 /** Ông Tư's ranger coat: a column wider at each sleeve and a skirt to the knee, open at the front, vented at the back. */
 const RANGER_COAT: Overlay[] = [
@@ -638,6 +654,7 @@ const RANGER_COAT_V: ViewItem = {
   W: RANGER_COAT_W,
   N: { overlays: RANGER_COAT_BACK },
   NW: { overlays: RANGER_COAT_BACK },
+  ...RANGER_COAT_WALK,
 };
 /** Bác sĩ Lan's coat tails to the knee, a column past each hip, and a clipboard held against the left thigh. */
 const COAT_TAILS2: Overlay = ov(1, 29, [
@@ -694,6 +711,7 @@ const TUNIC_V: ViewItem = {
   W: TUNIC_W,
   N: { overlays: [STRAP_BACK, TUNIC, POUCH_BACK] },
   NW: { overlays: [STRAP_BACK, TUNIC, POUCH_BACK] },
+  ...TUNIC_WALK,
 };
 
 /** The beret soldier's leather map case on the left hip, a column past the arm. */
@@ -704,6 +722,7 @@ const MAP_CASE_V: ViewItem = {
   W: { overlays: [ov(1, 23, ['oooo', 'oLlo', 'oLlo', 'olio', 'oooo'])] },
   N: { overlays: [ov(15, 23, ['oooo', 'olLo', 'olLo', 'oilo', 'oooo'])] },
   NW: { overlays: [ov(15, 23, ['oooo', 'olLo', 'olLo', 'oilo', 'oooo'])] },
+  ...MAP_CASE_WALK,
 };
 
 /** The police zombie's duty belt on the mirrored droop pose: a baton beside the hanging hand, a holster on the far hip. */
@@ -725,6 +744,12 @@ const MEDIC_BAG: Overlay[] = [
   ov(5, 17, ['A......', 'AA.....', '.AA....', '..AA...', '...AA..', '....AA.', '.....AA']),
   ov(12, 22, ['ooooo', 'o*x*o', 'oxxxo', 'oAxAo', 'oAAAo', 'ooooo']),
 ];
+/** Ny's chest strap on the front views (the tunic carries it on the side and from behind); shorter on the walk steps' narrower torso. */
+const NY_STRAP_V: ViewItem = {
+  S: { overlays: [MEDIC_BAG[0]!] },
+  SW: { overlays: [MEDIC_BAG[0]!] },
+  ...NY_STRAP_WALK,
+};
 
 /** Pustules on a bloated belly (fat form coordinates). */
 const PUSTULES = ov(7, 23, ['...aa....', 'aa.a...**', 'a......*.', '...aa...a', '...a...aa']);
@@ -759,7 +784,7 @@ const NY_LOOK: Look = {
   shoes: 'both',
   details: [],
   face: 'plain',
-  extras: [{ S: { overlays: [MEDIC_BAG[0]!] }, SW: { overlays: [MEDIC_BAG[0]!] } }, TUNIC_V], // strap, tunic, pouch
+  extras: [NY_STRAP_V, TUNIC_V], // strap, tunic, pouch
   colors: {
     skin: [250, 214, 180],
     hair: [160, 56, 40],
@@ -782,7 +807,13 @@ const SON_LOOK: Look = {
   details: [],
   face: 'plain',
   extras: [
-    { S: { lines: [seam([8, 19, 8, 27])] }, SW: { lines: [seam([7, 19, 7, 27])] } },
+    {
+      S: { lines: [seam([8, 19, 8, 27])] },
+      SW: { lines: [seam([7, 19, 7, 27])] },
+      // on the walk steps the zip stops above the fist swung in front of the hip (D-095)
+      S0: { lines: [seam([7, 19, 7, 25])] },
+      S1: { lines: [seam([8, 19, 8, 25])] },
+    },
     BACKPACK_V,
   ], // jacket zip, pack, bat
   colors: {
@@ -839,6 +870,7 @@ const BAC_SI_LAN_LOOK: Look = {
     W: COAT_TAILS2_W,
     N: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] }, // back vent
     NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK_NW] },
+    ...COAT_TAILS2_WALK,
   },
   colors: {
     skin: [240, 206, 176],
@@ -901,26 +933,32 @@ export interface Look {
   colors: MaterialColors;
 }
 
-/** The layer an item contributes in a view; S-only items (plain overlays, remaps) count for S alone. */
+/**
+ * The layer an item contributes in a view; S-only items (plain overlays, remaps) count for S alone. On a
+ * walk step (D-095) an item's own drawing for that step wins; otherwise the view's drawing moves by the
+ * step's column shift (figure space only: head-space parts follow the form's head map).
+ */
 function layer(
   item: Overlay | Overlay[] | Remap | ViewItem | ViewItem[] | undefined,
   view: HeroView,
+  walk?: { key: WalkKey; dx: number },
 ): ViewLayer {
   if (!item) return {};
+  const dx = walk?.dx ?? 0;
+  const pick = (i: ViewItem): ViewLayer => (walk && i[walk.key]) || shifted(i[view] ?? {}, dx);
+  const merge = (parts: ViewLayer[]): ViewLayer => ({
+    overlays: parts.flatMap((p) => p.overlays ?? []),
+    remaps: parts.flatMap((p) => p.remaps ?? []),
+    lines: parts.flatMap((p) => p.lines ?? []),
+  });
+  const sOnly = (l: ViewLayer): ViewLayer => (view === 'S' ? shifted(l, dx) : {});
   if (Array.isArray(item)) {
-    if (item.length && isViewItem(item[0]!)) {
-      const parts = (item as ViewItem[]).map((i) => i[view] ?? {});
-      return {
-        overlays: parts.flatMap((l) => l.overlays ?? []),
-        remaps: parts.flatMap((l) => l.remaps ?? []),
-        lines: parts.flatMap((l) => l.lines ?? []),
-      };
-    }
-    return view === 'S' ? { overlays: item as Overlay[] } : {};
+    if (item.length && isViewItem(item[0]!)) return merge((item as ViewItem[]).map(pick));
+    return sOnly({ overlays: item as Overlay[] });
   }
-  if (isViewItem(item)) return item[view] ?? {};
-  if (view !== 'S') return {};
-  return 'sprite' in item ? { overlays: [item] } : { remaps: [item] };
+  if (isViewItem(item)) return pick(item);
+  if ('sprite' in item) return sOnly({ overlays: [item] });
+  return sOnly({ remaps: [item] });
 }
 function push(into: { remaps: Remap[]; lines: Seam[]; overlays: Overlay[] }, l: ViewLayer): void {
   into.remaps.push(...(l.remaps ?? []));
@@ -943,6 +981,22 @@ const SKIN_F: Rgb8 = [178, 188, 152];
 
 /** Deterministic camouflage blotches inside a box (no randomness: a fixed hash of the cell). */
 /** Camouflage blotches: three-cell shapes on a 6x4 tile (the reference draws marks as 2-4 cell shapes, never lone dots). */
+/** A layer's figure-space parts moved by `dx` columns (head-space parts follow the form's head map instead). */
+function shifted(l: ViewLayer, dx: number): ViewLayer {
+  if (!dx) return l;
+  const box = ([x0, y0, x1, y1]: Box): Box => [x0 + dx, y0, x1 + dx, y1];
+  const figure = (space: Space | undefined) => space !== 'head';
+  return {
+    overlays: l.overlays?.map((o) => (figure(o.space) ? { ...o, x: o.x + dx } : o)),
+    remaps: l.remaps?.map((r) =>
+      figure(r.space)
+        ? { ...r, box: box(r.box), ...(r.except ? { except: r.except.map(box) } : {}) }
+        : r,
+    ),
+    lines: l.lines?.map((m) => (figure(m.space) ? { ...m, box: box(m.box) } : m)),
+  };
+}
+
 const CAMO_TILE = ['xx....', '.x..x.', '....xx', 'x.....'];
 /**
  * Rows of marks keeping only the 4-connected groups of three or more cells: a mark cut to one or two
@@ -975,13 +1029,21 @@ function cullSmallBlotches(w: number, h: number, cell: (x: number, y: number) =>
   }
   return rows;
 }
-function camo(box: Box, glyph: string): Overlay {
+function camo(
+  box: Box,
+  glyph: string,
+  except: readonly Box[] = [],
+  onBody: (x: number, y: number) => boolean = () => true,
+): Overlay {
   const [x0, y0, x1, y1] = box;
+  const skip = (x: number, y: number) =>
+    !onBody(x, y) ||
+    except.some(([ex0, ey0, ex1, ey1]) => x >= ex0 && x <= ex1 && y >= ey0 && y <= ey1);
   return ov(
     x0,
     y0,
     cullSmallBlotches(x1 - x0 + 1, y1 - y0 + 1, (x, y) =>
-      CAMO_TILE[y % 4]![x % 6] === 'x' ? glyph : '.',
+      CAMO_TILE[y % 4]![x % 6] === 'x' && !skip(x0 + x, y0 + y) ? glyph : '.',
     ),
   );
 }
@@ -1019,6 +1081,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         box,
         material: 'cloth',
         cuff,
+        ...(pose.sleeveExcept ? { except: pose.sleeveExcept } : {}),
         // A uniform's cuff is its second cloth (the darker green of the cap and the camo blotches).
         ...(cuff && look.details.includes('cuffs') && look.colors.cloth2
           ? { cuffMaterial: 'cloth2' as const }
@@ -1026,7 +1089,7 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         // Shoulder caps are let out too, so the coat's shoulder slopes evenly into the wider sleeve.
         ...(look.sleeves === 'wide' ? { letOut: 1 } : {}),
       });
-    return { box, to: 'cloth' };
+    return { box, to: 'cloth', ...(pose.sleeveExcept ? { except: pose.sleeveExcept } : {}) };
   };
   const caps = pose.shoulders.map((box): Remap => sleeve(box[0] < tx0 ? 'L' : 'R', box));
   const collar = pose.collar.map(seam);
@@ -1099,13 +1162,21 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       break;
   }
   const kneePads = look.details.includes('kneepads');
+  // The body's own cells (not empty, not outline), for details that must not land on a line.
+  const body = toAscii(buildForm(pose.form));
+  const onBody = (x: number, y: number) => !'.o'.includes(body[y]?.[x] ?? '.');
+  // A stride parts the legs at a column of its own and may put the near leg on the right (D-095).
+  const legs = {
+    ...(pose.legSplit !== undefined ? { split: pose.legSplit } : {}),
+    ...(pose.nearLeg ? { near: pose.nearLeg } : {}),
+  };
   if (look.bottoms === 'pants') {
     remaps.push(...pose.pants.map((box): Remap => ({ box, to: 'pants' })));
-    garments.push({ kind: 'pants', box: pose.pants, material: 'pants', kneePads });
+    garments.push({ kind: 'pants', box: pose.pants, material: 'pants', kneePads, ...legs });
   }
   if (look.bottoms === 'shorts') {
     remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants' })));
-    garments.push({ kind: 'pants', box: pose.shorts, material: 'pants' });
+    garments.push({ kind: 'pants', box: pose.shorts, material: 'pants', ...legs });
   }
   if (look.bottoms === 'skirt') overlays.push(ov(pose.skirt.x, pose.skirt.y, pose.skirt.rows));
   if (look.bottoms === 'dress') {
@@ -1124,16 +1195,18 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
     garments.push({ kind: 'boots', box: pose.flats, material: 'boots' });
   }
-  const hairLayer = layer(look.hair, view);
+  // On a walk step, items pick their step drawing or move with the step's canvas (D-095).
+  const walk = pose.walkKey ? { key: pose.walkKey, dx: pose.extrasDx ?? 0 } : undefined;
+  const hairLayer = layer(look.hair, view, walk);
   push(out, hairLayer);
-  if (look.glasses) push(out, layer(GLASSES_V, view));
-  if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view));
+  if (look.glasses) push(out, layer(GLASSES_V, view, walk));
+  if (look.details.includes('scalp')) push(out, layer(ZOMBIE_SCALP_V, view, walk));
   if ((look.face ?? 'zombie') === 'zombie') {
-    push(out, layer(ZOMBIE_FACE_V, view));
-    push(out, layer(ZOMBIE_CHEEK_V, view));
-  } else if (look.mouth !== false) push(out, layer(MOUTH_V, view));
+    push(out, layer(ZOMBIE_FACE_V, view, walk));
+    push(out, layer(ZOMBIE_CHEEK_V, view, walk));
+  } else if (look.mouth !== false) push(out, layer(MOUTH_V, view, walk));
   // Hats go on after the face so a scalp wound or cheek gash never lands on the hat.
-  push(out, layer(look.hat, view));
+  push(out, layer(look.hat, view, walk));
   for (const d of look.details) {
     const chest = pose.chest;
     if (d === 'stains' && pose.stains) {
@@ -1184,8 +1257,11 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       // views placed so no belt piece beside it is under two columns (D-093: one-row belt pieces and a
       // two-cell buckle were fragments at 1x).
       const [hx0, hy, hx1] = pose.hem;
-      const strap = 'b'.repeat(hx1 - hx0 + 1); // the boots' dark brown, as the reference's belt
-      overlays.push(ov(hx0, hy - 1, [strap, strap]));
+      // the boots' dark brown, as the reference's belt; only on the body's own cells (a fist swung in front
+      // of the hip on a walk step puts its outline on the belt rows, D-095)
+      const strap = (y: number) =>
+        Array.from({ length: hx1 - hx0 + 1 }, (_, i) => (onBody(hx0 + i, y) ? 'b' : '.')).join('');
+      overlays.push(ov(hx0, hy - 1, [strap(hy - 1), strap(hy)]));
       if (view === 'S' || view === 'SW') {
         const bx = Math.min(pose.belt[0], hx1 - 3);
         overlays.push(ov(bx, hy - 1, ['ww', 'ww']));
@@ -1196,10 +1272,18 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     if (d === 'number' && pose.number) overlays.push(ov(...pose.number, ['xxx', '..x', '..x']));
     if (d === 'camo')
       overlays.push(
-        camo([tx0 + 1, pose.collar[pose.collar.length - 1]![1] + 1, tx1 - 1, hemY - 1], 'k'), // darker-green blotches (cloth2)
+        // darker-green blotches (cloth2); only on the body's own cells and none on the torso's exceptions (a
+        // walk step's torso box holds the outline of the arm swung across the chest: a blotch cut by it is a dot,
+        // D-095)
+        camo(
+          [tx0 + 1, pose.collar[pose.collar.length - 1]![1] + 1, tx1 - 1, hemY - 1],
+          'k',
+          pose.neck,
+          onBody,
+        ),
       );
   }
-  push(out, layer(look.extras, view));
+  push(out, layer(look.extras, view, walk));
   return {
     id,
     label,
@@ -1837,12 +1921,19 @@ const DRESS_STAINS = ov(4, 30, ['....DD...', '....D....', '.DD......', '..D....D
  * hair, red points in sunken sockets and a smile too wide.
  */
 const HAIR_WILD_V: ViewItem = { S: same(HAIR_WILD), ...HAIR_WILD_VIEWS };
+const walkStains = (key: WalkKey): Overlay[] => DRESS_STAINS_WALK[key]?.overlays ?? [];
 const MIMIC_V: ViewItem = {
   S: { overlays: [SUNKEN_EYES, WIDE_SMILE, DRESS_STAINS] },
   SW: { overlays: [...(MIMIC_FACE_VIEWS.SW?.overlays ?? []), DRESS_STAINS] },
   W: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...(DRESS_STAINS_W.overlays ?? [])] },
   N: { overlays: [DRESS_STAINS] },
   NW: { overlays: [DRESS_STAINS] },
+  S0: { overlays: [SUNKEN_EYES, WIDE_SMILE, ...walkStains('S0')] },
+  S1: { overlays: [SUNKEN_EYES, WIDE_SMILE, ...walkStains('S1')] },
+  N0: { overlays: walkStains('N0') },
+  N1: { overlays: walkStains('N1') },
+  W0: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...walkStains('W0')] },
+  W1: { overlays: [...(MIMIC_FACE_VIEWS.W?.overlays ?? []), ...walkStains('W1')] },
 };
 const KE_BAT_CHUOC_LOOK: Look = {
   hair: HAIR_WILD_V,
@@ -2007,6 +2098,22 @@ export const BASE_LOOKS: readonly { id: string; label: string; look: Look }[] = 
 /** Every base character dressed for one view. */
 export function castInView(view: HeroView): Outfit[] {
   return BASE_LOOKS.map((c) => wearView(c.id, c.label, c.look, view));
+}
+
+/** The outfit of a look on a walk step of a drawn view (D-095): step 0 is A, 1 is B. */
+export function wearWalk(
+  id: string,
+  label: string,
+  look: Look,
+  view: WalkView,
+  step: 0 | 1,
+): Outfit {
+  return build(id, label, WALK_VIEWS[view][step], look, view);
+}
+
+/** Every base character dressed for one walk step. */
+export function walkCastInView(view: WalkView, step: 0 | 1): Outfit[] {
+  return BASE_LOOKS.map((c) => wearWalk(c.id, c.label, c.look, view, step));
 }
 
 export const CAST: readonly Outfit[] = [
