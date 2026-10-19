@@ -107,7 +107,7 @@ FACE = {
  'BEARD_SW':   O(2,12, ['.#.hHh.hHH.','o#hHjjHhhHo','o#hHhhHhHHo','.o#hHhHhHo.','.....HjH...','.....ooo...']),
  'BEARD_W':    O(0,10, ['.......H....','.......h....','.o#hHhhHhH..','o#hhHhHhHH..','o#hHhhHhHHj.','.ooHhHHhH...','...o........']),
  'SUNKEN_SW':  O(3,9, ['SES.SEs','.ES.SEx','.e...ex']),
- 'SMILE_SW':   O(3,12, ['ooooooooo','.xxxxxx..']),
+ 'SMILE_SW':   O(3,12, ['ooooooooo','.xxxxxxx.']),  # teeth to the jaw line: no skin cell pocketed at the corner
  'SUNKEN_W':   O(3,8, ['.ES','.ES','.ex']),
  'SMILE_W':    O(2,12, ['oooooo','.xxxx.']),
  'HEADBAND_W': O(0,6, ['o**aaaaaaaAAo','oaaaaaaaaAAAo']),
@@ -128,7 +128,9 @@ BODY = {
  'STAINS_W': [O(5,30, ['..DD.','.....','DD...','.....','...DD'], head=False)],
  'RIFLE_STAND_W': [O(12,9, ['.o.', '.o.', '.o.', '.o.', '.o.', '...', '...', '...', '...', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', 'Do.', 'Do.', 'Do.', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.Do', '.oo'], head=False, under=True)],
  'RIFLE_STAND_N': [O(-4,9, ['..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '..o.', '.oo.', 'omMo', 'omMo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'odDo', 'o%Do', 'odDo', 'odDo', 'odDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', 'oDDo', '.oo.'], head=False)],
- 'RIFLE_SLUNG_W': [O(14,9, ['o...', 'o...', 'o...', 'o...', 'o...', '....', '....', '....', '....', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.o..', '.ooo', '.oDo', '.oDo', '.ooo'], head=False, under=True)],
+ # the sling: two leather cells from the shoulder (row 17) to the stock (row 18) tie the stock to the body; without
+ # them it hangs a column behind the back as a piece apart (1x yardstick)
+ 'RIFLE_SLUNG_W': [O(13,9, ['.o...', '.o...', '.o...', '.o...', '.o...', '.....', '.....', '.....', 'o....', '.oo..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..o..', '..ooo', '..oDo', '..oDo', '..ooo'], head=False, under=True)],
  'RIFLE_SLUNG_N': [O(-1,5, ['o.', 'o.', 'o.', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o', '.o'], head=False), O(7,17, ['oMo........', '.oMo.......', '..oMo......', '..oD.......', '...oD......', '....oD.....', '....oD.....', '.....oD....', '......oD...', '......oD...', '.......oooo', '........oDo', '........oDo', '........oDo', '........ooo'], head=False), O(11,16, ['LL','.L'], head=False)],
  'SATCHEL_W':  [O(7,18, ['A..', '.A.', '..A'], head=False), O(13,21, ['ooooo', 'o**Ao', 'oaaAo', 'oaxAo', 'oxxxo', 'oaxAo', 'oaaAo', 'orrro', 'ooooo'], head=False)],
  'BACKPACK_W': [O(13,17, ['.ooo', 'o|lo', 'o|lo', 'oiio', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'oLlo', 'olLo', 'oiio', '.ooo'], head=False), O(10,7, ['....ooo', '....o%o', '...o%o.', '...odo.', '..odo..', '..odo..', '.odo...', '.odo...', 'odo....', 'odo....'], head=False, under=True)],

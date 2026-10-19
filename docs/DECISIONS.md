@@ -698,3 +698,46 @@ Năm mục, hai làm, một đã xong từ trước, hai từ chối vì vướn
 
 **Số đo.** Đạt 85/130 giữ nguyên (không sprite nào đổi trạng thái); ô lẻ 287 → 286, `strict` 1655 → 1642; lint
 80; QA sạch; `problems: 0`; 113 test. **Hết thứ tự B2 → B3 → B4 → B5 → B6 → B1 → B7 → B8 → B9 → B10 của vòng 4.**
+
+### D-088 Thước 1× thay thước ×6 làm cổng nghiệm thu; sửa thân gốc cho cỡ thật
+
+**Vì sao.** Sau bốn vòng giám khảo, 85/130 sprite đạt thước ×6 nhưng ở cỡ thật dàn 64 px vẫn có pixel rời khỏi
+thân, chấm da đơn và sáu bộ quân phục lục không phân biệt được (người dùng, 19/10). Thước ×6 đo chi tiết ở độ
+phóng kiểm tra, không đo cái người chơi nhìn. Từ đây **`pnpm qa:1x` là cổng**, `pnpm qa:score` chỉ ghi số.
+
+**Thước** (`scripts/research/qa_1x.py`, báo cáo `test-output/score/report_1x.md`), đo trên dump của bộ chấm:
+
+- `islands`: mảng 8-liên-thông tách khỏi thân (đồ vật trôi nổi) — **phải 0**.
+- `skin1`: ô da không có ô da nào trong 8 ô quanh (chấm thịt rời: tai còn một ô dưới tóc, má kẹt giữa các viền; ngón
+  cái chạm tay chéo góc thì không tính) — **phải 0**. Định nghĩa 4-liên-thông đã thử: nó bắt cả ngón cái dưới cổ tay
+  áo và góc hàm dưới cổ áo rồi lấp bằng viền, tạo khối viền 2×2 và xoá ngón; đổi sang 8 ô.
+- `frag`: vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) — không được tăng (mốc 731).
+- cặp dễ lẫn ở 1× (góc S): IoU silhouette ≥ 0,82 (căn theo chân) và ΔE oklab trung bình của sáu dải ngang ≤ 0,075
+  — không được tăng (mốc 7: Dương~Lính nữ, Lính mũ nồi~Lính nữ, Lính nón sắt~Quân y, Dương~Lính mũ nồi, zombie dân
+  thường nam~nữ, Dương~zombie văn phòng, Lính mũ nồi~Quân y).
+
+**Sửa thân gốc một lần** (lan ra cả dàn):
+
+- Mặt S/SW: bỏ viền ngoài hốc mắt (`o` hai hàng cạnh mắt, SW ba hàng) — ảnh mẫu không có; mắt = mống + trắng + chân
+  mày trên nền da. Trước đó ô da góc mắt và ô má dưới trắng mắt là chấm thịt rời trên mọi nhân vật.
+- Mặt W: bỏ đường sau hốc mắt (cột `o` hai ô) — vành mũ che hàng 8 là ô góc mắt rời.
+- Tai N/NW rộng hai ô ở hàng 9 (đầu nghiêng từng làm rời ô tai).
+- Ngón cái nối vào bàn tay ở S, N, NW, dáng gục đầu, dáng lết (S và SW); ngón treo của dáng vươn tay @W rộng hai ô;
+  chân duỗi của dáng lết @W rộng hai ô suốt chiều dài (trước là một đường chéo một ô, đọc như vệt rơi); vai nâng
+  của dáng ngoẹo cổ (S, SW) đặt trên da.
+- `dress()` có `coverLoneSkin`: ô da không còn ô da nào quanh lấy ô của thứ phủ lên nó (tóc trước, rồi bất kỳ vật
+  liệu vẽ đè; 4 ô kề trước, vòng 8 sau); kẹt giữa viền bốn phía thì lấp bằng viền, trừ khi viền đó tạo khối 2×2
+  (khi ấy vòng 8 phủ trước, viền là đường cùng). Còn 5 ô lấp bằng viền tạo khối 2×2: ngón cái Ny @N/NW và Lính nón
+  sắt @N dưới cổ tay áo, tai zombie quân đội @NW dưới mũ sắt, zombie văn phòng @N — tồn đọng.
+- Đồ vật chạm thân: dùi cui cảnh sát @SW theo thân hẹp (x 0), bảng kẹp của Lan @NW sát tay (`CLIPBOARD_BACK_NW`),
+  súng đeo chéo @W có dây hai ô viền từ vai xuống báng.
+- Miệng rộng của Kẻ Bắt Chước @SW kéo răng tới viền hàm (ô da góc miệng từng kẹt).
+- Thử và hoàn lại: dời miệng zombie xuống hàng cằm (tạo hai túi da mới mỗi mặt).
+
+**Số đo** (trước → sau, cùng định nghĩa): islands 3 → 0; skin1 143 → 0; frag 1012 → 731; cặp lẫn 7 → 7; lint
+thân (`qa:pixel`) 80 → 74; ô lẻ theo giám khảo 287 → 232, `strict` 1663 → 1539; QA sạch; 113 test. Thước ×6 tham
+khảo: 85 → 77/130 — rớt chủ yếu `lines`/`lineDens` (bớt viền mắt) và `lintAdded` (5 ô lấp viền), hai metric đếm nét
+tối mảnh ở ×6, không phải mục tiêu nữa.
+
+**Còn lại của kế hoạch 19/10** (mục 3–6): chấm thành mảng ≥ 3 ô (frag 731), giảm nhiễu tông cho mảng dưới 100 ô,
+bảng màu nhận diện cho nhóm lục (7 cặp), và 5 ô viền tồn đọng ở trên.

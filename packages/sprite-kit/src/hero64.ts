@@ -46,8 +46,8 @@ export const HERO_S_FIGURE = sprite`
   ..ossssssssssso..
   ..oSsssssssssSo..
   .osSSoosssooSSso.
-  .osSosEsssEsoSso.
-  ..oSoxEsssExoSo..
+  .osSSsEsssEsSSso.
+  ..oSSxEsssExSSo..
   ...oSxe$$$exSo...
   ....os$$$$$so....
   .....os$$$so.....
@@ -64,7 +64,7 @@ export const HERO_S_FIGURE = sprite`
   o$soossssSSSoos$o
   osssosssssssossso
   osososssssSSososo
-  osooossssSSSoooso
+  ossoossssSSSoooso
   .osoosSSsSSsoosso
   ..ooossooossoooo.
   ...oSsso.ossSo...

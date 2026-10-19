@@ -271,9 +271,60 @@ export function dress(figure: Sprite, outfit: Outfit): DressedSprite {
     if (into) put(x + into[0], y + into[1], v);
     else out.cells[i] = LINE;
   }
+  coverLoneSkin(out);
   combHair(out, outfit.view ?? 'S', cropCells);
   fixLoneCells(out);
   return out;
+}
+
+/**
+ * No skin cell stands alone once dressed (the 1x yardstick, D-088): a one-cell
+ * sliver of ear or temple left beside the hair or a hat, with no skin among its
+ * eight neighbours, reads as a dropped pixel at game size. Such a cell takes the
+ * cell of a neighbour that covers it: hair first, then whatever is drawn over
+ * the body, 4-neighbours before the ring; walled in by lines on all four sides
+ * it closes with the line. A lone skin cell with none of these (between lines,
+ * eyes or whites) is the body's to fix and stays.
+ */
+function coverLoneSkin(out: Sprite): void {
+  const get = (x: number, y: number) =>
+    x < 0 || y < 0 || x >= out.w || y >= out.h ? EMPTY : out.cells[y * out.w + x]!;
+  const material = (v: number) => (v < 0 ? -1 : Math.floor(v / 8));
+  const changes: [number, number][] = [];
+  for (let i = 0; i < out.cells.length; i++) {
+    if (material(out.cells[i]!) !== SKIN_MATERIAL) continue;
+    const x = i % out.w;
+    const y = Math.floor(i / out.w);
+    const around = N4.map(([ax, ay]) => get(x + ax, y + ay));
+    const ring = N8.map(([ax, ay]) => get(x + ax, y + ay));
+    // a cell touching skin even corner to corner is part of the body (a thumb, a jaw corner under a collar)
+    if (ring.some((v) => material(v) === SKIN_MATERIAL)) continue;
+    // walled in by lines on every side: a gap in a seam or a pocket under a brim, closed with the line
+    const walled = around.every((v) => v >= 0 && material(v) === LINE_MATERIAL);
+    // anything drawn over the body may take the cell: a garment, a stain, a pustule, a strap
+    const covers = (v: number) => {
+      const m = material(v);
+      return m >= 0 && m !== SKIN_MATERIAL && m !== LINE_MATERIAL && !FACE_MATERIALS.has(m);
+    };
+    // a line here would make a 2x2 line block (the doubles lint) where a diagonal quad is already three lines:
+    // then whatever the ring offers covers the cell first, the line only as the last resort
+    const isLine = (v: number) => v >= 0 && material(v) === LINE_MATERIAL;
+    const wouldBlock = [-1, 1].some((dx) =>
+      [-1, 1].some(
+        (dy) => isLine(get(x + dx, y)) && isLine(get(x, y + dy)) && isLine(get(x + dx, y + dy)),
+      ),
+    );
+    const cover =
+      walled && !wouldBlock
+        ? LINE
+        : (around.find((v) => material(v) === HAIR_MATERIAL) ??
+          around.find(covers) ??
+          ring.find((v) => material(v) === HAIR_MATERIAL) ??
+          ring.find(covers) ??
+          (walled ? LINE : undefined));
+    if (cover !== undefined) changes.push([i, cover]);
+  }
+  for (const [i, v] of changes) out.cells[i] = v;
 }
 
 const N4: readonly (readonly [number, number])[] = [
@@ -287,6 +338,7 @@ const MID = 1;
 const LIGHT = 2;
 const BRIGHT = 4;
 const SKIN_MATERIAL = MATERIALS.indexOf('skin');
+const FACE_MATERIALS = new Set([MATERIALS.indexOf('eye'), MATERIALS.indexOf('white')]);
 const HAIR_MATERIAL = MATERIALS.indexOf('hair');
 /** Materials a garment is made of (what the camouflage and seam rules below act on). */
 const GARMENT_MATERIALS = new Set(

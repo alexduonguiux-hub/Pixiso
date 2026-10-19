@@ -268,3 +268,22 @@ nhìn 0); **B4 xong** (D-080: mắt Kẻ Bắt Chước và Đột Biến theo m
 mọi mặt thường, mày đầu đinh nâu; ô lẻ 302); **B6 xong** (D-082: áo trắng hạ gốc, quần chân rộng, mai; đạt 85/130,
 ô lẻ 299; cảnh sát/công nhân giữ nguyên vì đã qua ngưỡng); **B1 xong** (D-083: lõi thân SW/NW 6 ô, vai 13; đạt
 84/130, lint 80); **B7 xong** (D-084: đầu W cho dáng ngoẹo cổ, mũi và vạch ngón Đột Biến W; ô lẻ 286); **B8 xong** (D-085: đuôi tóc lính nữ có tông; đầu đinh S/SW chải theo chế độ crop — ba tông thành mảng, một nét chia thẳng, ngưỡng đúng cổng của thước; W/N/NW giữ lọn vì cần ≥ 5 mảng; ô lẻ 287 / strict 1663 bằng HEAD đo lại); **B9 xong** (D-086: dải băng đỏ quanh mũ kê-pi cảnh sát, da xám-lục và lỗ áo rách của zombie quân đội; đạt 85/130, strict 1655); **B10 xong** (D-087: dải cổ áo dưới gáy @N cho dáng gục đầu, gấu may cho áo rách Kẻ Bám Trần; từ chối đế giày một tông — 15 sprite rớt `banding` — và ô gấu quần Lan — Lan@SW rớt `lineDens` 4,08 < 4,1; đạt 85/130, ô lẻ 286, strict 1642). **Hết thứ tự sửa của vòng 4**; còn lại cho vòng sau: hai mục từ chối ở D-087, W/N/NW của đầu đinh vẫn chải lọn (D-085), ô viền vành sau mũ Lính nữ @W thành tóc sâu.
+
+## 10. Thước 1× (từ 19/10/2026, D-088) — cổng nghiệm thu
+
+Giám khảo các vòng 1–4 chấm ở ×6; người dùng nhìn ở cỡ thật và thấy pixel rời khỏi thân, chấm da đơn, sáu bộ
+quân phục lục không phân biệt được. Từ 19/10, **`pnpm qa:1x` là cổng**, §3–§9 và `qa:score` giữ làm tham khảo.
+
+| Thước     | Định nghĩa                                                      | Mốc 19/10 (trước → sau D-088) | Luật       |
+| --------- | --------------------------------------------------------------- | ----------------------------- | ---------- |
+| `islands` | mảng 8-liên-thông tách khỏi thân                                | 3 → **0**                     | phải 0     |
+| `skin1`   | ô da không có ô da nào trong 8 ô quanh                          | 143 → **0**                   | phải 0     |
+| `frag`    | vùng cùng vật liệu 4-liên-thông dưới 3 ô (trừ viền, mắt, trắng) | 1012 → **731**                | không tăng |
+| cặp lẫn   | góc S, IoU silhouette ≥ 0,82 và ΔE sáu dải ≤ 0,075              | 7 → **7**                     | không tăng |
+
+Báo cáo: `test-output/score/report_1x.md` (danh sách theo sprite, mảnh theo vật liệu, mọi cặp IoU ≥ 0,82).
+Khi một thay đổi hạ `frag` hay số cặp, hạ `BASELINE` trong `scripts/research/qa_1x.py` cùng commit.
+
+Việc còn lại theo kế hoạch 19/10: (3) chi tiết dạng chấm (máu, rằn ri, mụn, dải phản quang, ô chói tóc) thành mảng
+≥ 3 ô có viền; (4) giảm nhiễu tông cho mảng dưới 100 ô, viền tối đồng nhất; (5) bảng màu nhận diện cho nhóm lục
+(7 cặp lẫn → 0); (6) 5 ô lấp viền tạo khối 2×2 (ngón cái dưới cổ tay áo @N, tai dưới mũ sắt @NW).

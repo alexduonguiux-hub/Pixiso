@@ -642,6 +642,8 @@ const CLIPBOARD: Overlay = ov(-1, 23, [
   'ooooo',
 ]);
 const CLIPBOARD_BACK: Overlay = ov(17, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 'oo']);
+/** The back of the turned figure is a column narrower: the clipboard stays against the arm (1x yardstick). */
+const CLIPBOARD_BACK_NW: Overlay = ov(16, 23, ['oo', 'xo', 'xo', 'xo', 'xo', 'xo', 'oo']);
 /** Ny's scrub tunic reaches below the hips; a small red pouch hangs on the right hip. */
 const TUNIC: Overlay = ov(1, 30, [
   'o^ccCccCccCccCo',
@@ -686,7 +688,7 @@ const HOLSTER = ['oo', 'Do', 'Do', 'Do', 'Do', 'Do', 'oo'];
 const HOLSTER_L = ['oo', 'oD', 'oD', 'oD', 'oD', 'oD', 'oo'];
 const POLICE_GEAR_V: ViewItem = {
   S: { overlays: [ov(0, 26, BATON), ov(16, 27, HOLSTER)] },
-  SW: { overlays: [ov(-1, 26, BATON), ov(16, 27, HOLSTER)] },
+  SW: { overlays: [ov(0, 26, BATON), ov(16, 27, HOLSTER)] }, // the turned torso is a column narrower: the baton follows
   W: { overlays: [ov(3, 26, BATON)] },
   N: { overlays: [ov(17, 26, BATON_R), ov(1, 28, HOLSTER_L)] },
   NW: { overlays: [ov(17, 26, BATON_R), ov(1, 28, HOLSTER_L)] },
@@ -810,7 +812,7 @@ const BAC_SI_LAN_LOOK: Look = {
     SW: { overlays: [COAT_TAILS2, CLIPBOARD], lines: [seam([7, 19, 7, 28])] },
     W: COAT_TAILS2_W,
     N: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] }, // back vent
-    NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK] },
+    NW: { overlays: [COAT_TAILS2_BACK, CLIPBOARD_BACK_NW] },
   },
   colors: {
     skin: [240, 206, 176],

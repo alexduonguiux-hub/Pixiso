@@ -21,6 +21,7 @@
     "sheets": "tsx scripts/render-sheets.ts",
     "qa:hero": "tsx scripts/hero-qa.ts",
     "qa:score": "tsx scripts/hero-score-dump.ts && python3 -I scripts/research/score.py",
+    "qa:1x": "tsx scripts/hero-score-dump.ts && python3 -I scripts/research/qa_1x.py",
     "qa:pixel": "DUMP=test-output/view_figures.json tsx scripts/hero-views.ts > /dev/null && python3 -I scripts/research/pixel_lint.py test-output/view_figures.json -q && python3 -I scripts/research/pixel_lint.py packages/sprite-kit/src/hero64.poses.views.ts -q"
   },
   "devDependencies": {
