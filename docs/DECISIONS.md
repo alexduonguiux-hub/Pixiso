@@ -741,3 +741,26 @@ tối mảnh ở ×6, không phải mục tiêu nữa.
 
 **Còn lại của kế hoạch 19/10** (mục 3–6): chấm thành mảng ≥ 3 ô (frag 731), giảm nhiễu tông cho mảng dưới 100 ô,
 bảng màu nhận diện cho nhóm lục (7 cặp), và 5 ô viền tồn đọng ở trên.
+
+### D-089 Bảng màu nhận diện cho nhóm lục (mục 5 của kế hoạch 19/10)
+
+Bảy cặp dễ lẫn ở 1× (thước D-088) đều là người mặc olive quân đội hoặc đứng cạnh họ: cả dàn sống trong L 0,2–0,6
+với sắc độ gần 0, nên ở cỡ thật sáu bộ quân phục là một khối xám-lục. Mỗi nhân vật trong nhóm nhận **một chìa khoá
+màu lớn** (đọc được ở 1×) và một bước lệch bảng màu khỏi olive chuẩn (`ARMY` vẫn là gốc chung):
+
+| Nhân vật              | Chìa khoá                                                                                                                                                                                            | Thay đổi                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Dương                 | áo lục trong, lạnh (70,150,100), quần navy sâu hơn                                                                                                                                                   | hết lẫn với lính (áo cũ (84,116,64) là olive)                   |
+| Lính nón sắt          | giữ olive chuẩn + súng chéo                                                                                                                                                                          | không đổi                                                       |
+| Lính quân y           | **chữ thập đỏ 5 ô trên mũ sắt** (mọi góc, `rigid` theo mũ), **băng tay trắng** 2 hàng trên tay phải (remap vải → trắng, giữ viền; bỏ ở tay xa một cột của NW), kaki sáng (152,146,112), cổ tay trắng | mũ sắt vẽ bằng vải nên vẫn kaki, không trắng được bằng bảng màu |
+| Lính mũ nồi           | **mũ nồi và cổ tay đỏ rượu** (118,42,54), quân phục tối và xanh hơn (80,92,72)                                                                                                                       |                                                                 |
+| Lính nữ               | olive ấm, sáng hơn (124,124,80), mũ mềm sáng hơn                                                                                                                                                     |                                                                 |
+| Zombie quân đội       | quân phục mục xám-olive (92,96,80); Lính Nhiễm giữ olive sống                                                                                                                                        |                                                                 |
+| Zombie dân thường nữ  | tóc nâu đỏ (104,56,48), áo hồng đậm hơn (214,124,152)                                                                                                                                                | cả hai dân thường từng tóc gần đen                              |
+| Zombie dân thường nam | áo xám xanh (108,122,132)                                                                                                                                                                            |                                                                 |
+| Zombie văn phòng      | tóc bạc (118,116,112)                                                                                                                                                                                | từng lẫn với Dương vì cùng tóc đen                              |
+
+**Số đo.** Cặp lẫn 7 → **0** (cặp gần nhất còn lại: Ông Tư ~ Lính nữ ΔE 0,078, Dương ~ Lính nữ 0,079, hai zombie dân
+thường 0,080); islands 0, skin1 0, frag 731 giữ; thước ×6 77/130 (tham khảo); ô lẻ theo luật màu của giám khảo 232 →
+245 vì các ô đơn sẵn có nay tương phản hơn (ô mũ nồi/cổ tay đỏ rượu của Lính mũ nồi, ô bóng áo hồng của zombie
+nữ) — đó là mảnh 1 ô thuộc mục 3; QA sạch; 113 test. Mốc cặp lẫn trong `qa_1x.py` hạ xuống 0.

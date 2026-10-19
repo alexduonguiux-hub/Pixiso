@@ -383,6 +383,15 @@ const HELMET_V: ViewItem = {
   NW: same(HELMET),
   W: HELMET_W,
 };
+/** The medic's red cross on the white helmet dome: five cells, one region, on every side (D-089). */
+const CROSS = ['.a.', 'aaa', '.a.'];
+const MEDIC_CROSS_V: ViewItem = {
+  S: { overlays: [{ ...hov(6, 2, CROSS), rigid: true }] },
+  SW: { overlays: [{ ...hov(6, 2, CROSS), rigid: true }] },
+  N: { overlays: [{ ...hov(6, 2, CROSS), rigid: true }] },
+  NW: { overlays: [{ ...hov(6, 2, CROSS), rigid: true }] },
+  W: { overlays: [{ ...hov(5, 2, CROSS), rigid: true }] },
+};
 const BERET_BACK: Overlay = { ...BERET, sprite: flipX(BERET.sprite) };
 const BERET_V: ViewItem = {
   S: same(BERET),
@@ -717,8 +726,8 @@ const DUONG_LOOK: Look = {
   colors: {
     skin: [249, 209, 173],
     hair: [56, 44, 40],
-    cloth: [84, 116, 64],
-    pants: [58, 66, 88],
+    cloth: [70, 150, 100], // a clear, cool green: next to the army olive he read as a soldier at 1x (D-089)
+    pants: [48, 58, 96],
     boots: [110, 74, 48],
     eye: [25, 123, 186],
     white: [212, 230, 238],
@@ -846,7 +855,8 @@ type Detail =
   | 'scalp'
   | 'cuffs' // a uniform's cuffs in its second cloth
   | 'kneepads' // two light cells on each knee
-  | 'rip'; // a tear at the belly baring four skin cells, front views
+  | 'rip' // a tear at the belly baring four skin cells, front views
+  | 'armband'; // two rows of the right upper sleeve in white (the medic)
 
 function isViewItem(x: object): x is ViewItem {
   return 'S' in x;
@@ -1101,6 +1111,13 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       overlays.push(ov(tx0 + 1, hemY - 3, [stripe]), ov(tx0 + 1, hemY - 1, [stripe]));
     }
     if (d === 'badge' && chest) overlays.push(ov(chest[0], chest[1], ['ww']));
+    if (d === 'armband') {
+      // the sleeve's cloth two rows below its top goes white; a remap, so the arm's outline stays (D-089).
+      // Not on a one-column far arm (the turned back view): the band would cut its cloth into fragments.
+      const b = pose.sleeveR.long;
+      if (b[2] - b[0] >= 4)
+        remaps.push({ box: [b[0], b[1] + 2, b[2], b[1] + 3], from: ['cloth'], to: 'white' });
+    }
     // A tear below the chest anchor baring the skin: two offset pairs read as a jagged hole (the garment's
     // own fold shadows frame it), only where the belly faces the viewer.
     if (d === 'rip' && chest && (view === 'S' || view === 'SW'))
@@ -1172,7 +1189,7 @@ export const ZOMBIE_CIV_M = wearPosed('zombie_civ_m', 'Zombie dân thường (na
   colors: {
     skin: SKIN_M,
     hair: [60, 50, 42],
-    cloth: [122, 120, 112],
+    cloth: [108, 122, 132], // blue-grey tee, away from the woman's warm top (D-089)
     pants: [62, 60, 66],
     boots: [52, 46, 40],
     ...BLOOD,
@@ -1189,8 +1206,8 @@ export const ZOMBIE_CIV_F = wearPosed('zombie_civ_f', 'Zombie dân thường (n�
   details: ['gash', 'stains'],
   colors: {
     skin: SKIN_F,
-    hair: [62, 50, 58],
-    cloth: [204, 150, 168],
+    hair: [104, 56, 48], // auburn: both civilians had near-black hair (D-089)
+    cloth: [214, 124, 152],
     cloth2: [70, 60, 92],
     boots: [60, 40, 50],
     ...BLOOD,
@@ -1248,6 +1265,10 @@ export const ZOMBIE_SOLDIER = wearPosed('zombie_soldier', 'Zombie quân đội',
   colors: {
     skin: SKIN_M, // the zombies' grey-green on the bare forearms, not the live soldiers' skin (fourth review)
     ...ARMY,
+    // the uniform rotted to grey-olive: Lính Nhiễm keeps the live olive, so the two part at 1x (D-089)
+    cloth: [92, 96, 80],
+    pants: [84, 86, 74],
+    cloth2: [66, 70, 56],
     eye: [150, 80, 40],
     ...BLOOD,
     ...ZOMBIE_EYES,
@@ -1341,7 +1362,7 @@ export const ZOMBIE_OFFICE = wearPosed(
     details: ['tie', 'stains'],
     colors: {
       skin: SKIN_M,
-      hair: [62, 57, 57],
+      hair: [118, 116, 112], // grey: with black hair he paired with Dương at 1x (D-089)
       cloth: [214, 214, 210], // off-white shirt with room for a light step
       leather: [120, 30, 40],
       pants: [50, 50, 60],
@@ -1832,7 +1853,17 @@ const LINH_MU_NOI_LOOK: Look = {
   details: ['belt', 'badge', 'cuffs', 'kneepads'],
   face: 'plain',
   extras: MAP_CASE_V,
-  colors: { skin: [214, 170, 132], eye: [150, 80, 40], white: [212, 230, 238], ...ARMY },
+  // the one maroon in the green group: beret and cuffs; the uniform a step darker and bluer than the line
+  // infantry so the pair with the female soldier parts at 1x (D-089)
+  colors: {
+    skin: [214, 170, 132],
+    eye: [150, 80, 40],
+    white: [212, 230, 238],
+    ...ARMY,
+    cloth: [80, 92, 72],
+    pants: [70, 76, 62],
+    cloth2: [118, 42, 54],
+  },
 };
 export const LINH_MU_NOI = wear('linh_mu_noi', 'Lính mũ nồi', POSE_STAND, LINH_MU_NOI_LOOK);
 
@@ -1870,6 +1901,9 @@ const LINH_NU_LOOK: Look = {
     eye: [150, 80, 40],
     white: [212, 230, 238],
     ...ARMY,
+    cloth: [124, 124, 80], // a warmer, lighter olive than the line infantry (D-089)
+    pants: [108, 108, 72],
+    cloth2: [100, 104, 66], // the soft cap a step lighter than the army's dark green
   },
 };
 export const LINH_NU = wear('linh_nu', 'Lính nữ', POSE_STAND, LINH_NU_LOOK);
@@ -1880,15 +1914,20 @@ const LINH_QUAN_Y_LOOK: Look = {
   top: 'long',
   bottoms: 'pants',
   shoes: 'both',
-  details: ['belt', 'cuffs', 'kneepads'],
-  extras: SATCHEL_V,
+  details: ['belt', 'cuffs', 'kneepads', 'armband'],
+  extras: [SATCHEL_V, MEDIC_CROSS_V],
   face: 'plain',
   colors: {
+    // the medic in a lighter khaki than the line infantry, with the white of the armband and the helmet
+    // cross: the helmet-and-olive pair with the rifleman parted at 1x (D-089)
     skin: [232, 192, 156],
     eye: [150, 80, 40],
     white: [240, 245, 245],
     accent: [200, 40, 50],
     ...ARMY,
+    cloth: [152, 146, 112],
+    pants: [130, 124, 94],
+    cloth2: [196, 196, 186], // white cuffs (the helmet is drawn in cloth, so it stays khaki under its red cross)
   },
 };
 export const LINH_QUAN_Y = wear('linh_quan_y', 'Lính quân y', POSE_STAND, LINH_QUAN_Y_LOOK);
