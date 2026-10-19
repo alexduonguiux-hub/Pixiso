@@ -793,10 +793,10 @@ const ONG_TU_LOOK: Look = {
   sleeves: 'wide',
   colors: {
     skin: [226, 182, 144],
-    hair: [104, 100, 96], // dark grey beard
-    leather: [120, 92, 60],
-    cloth: [176, 158, 112],
-    pants: [70, 72, 70],
+    hair: [188, 182, 172], // a white beard: the old man's key at 1x (D-090)
+    leather: [120, 92, 60], // dark brown pith helmet (a pale one met the medic's khaki helmet at 1x)
+    cloth: [194, 148, 84], // ochre, warmer than the medic's grey khaki (D-090: the two met at 1x once outlines darkened)
+    pants: [78, 64, 52],
     boots: [72, 52, 36],
     eye: [150, 80, 40],
     white: [212, 230, 238],
@@ -1189,7 +1189,7 @@ export const ZOMBIE_CIV_M = wearPosed('zombie_civ_m', 'Zombie dân thường (na
   colors: {
     skin: SKIN_M,
     hair: [60, 50, 42],
-    cloth: [108, 122, 132], // blue-grey tee, away from the woman's warm top (D-089)
+    cloth: [98, 120, 138], // blue-grey tee, away from the woman's warm top (D-089)
     pants: [62, 60, 66],
     boots: [52, 46, 40],
     ...BLOOD,
@@ -1901,8 +1901,8 @@ const LINH_NU_LOOK: Look = {
     eye: [150, 80, 40],
     white: [212, 230, 238],
     ...ARMY,
-    cloth: [124, 124, 80], // a warmer, lighter olive than the line infantry (D-089)
-    pants: [108, 108, 72],
+    cloth: [128, 126, 78], // a warmer, lighter olive than the line infantry (D-089)
+    pants: [110, 108, 70],
     cloth2: [100, 104, 66], // the soft cap a step lighter than the army's dark green
   },
 };
@@ -1925,8 +1925,8 @@ const LINH_QUAN_Y_LOOK: Look = {
     white: [240, 245, 245],
     accent: [200, 40, 50],
     ...ARMY,
-    cloth: [152, 146, 112],
-    pants: [130, 124, 94],
+    cloth: [140, 148, 104], // grey-green khaki, a step away from Ông Tư's ochre
+    pants: [122, 124, 90],
     cloth2: [196, 196, 186], // white cuffs (the helmet is drawn in cloth, so it stays khaki under its red cross)
   },
 };

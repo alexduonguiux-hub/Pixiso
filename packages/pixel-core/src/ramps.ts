@@ -191,7 +191,7 @@ export const HERO_RAMP_OPTIONS: RampOptions = {
   minChromaForShift: 0.025,
   tintChroma: 0.02,
   shadowAwayFromHighlight: true,
-  lineL: 0.38,
+  lineL: 0.22,
 };
 
 /**
@@ -242,7 +242,7 @@ export const HERO_CLOTH_RAMP_OPTIONS: RampOptions = {
   // Greys stay close to neutral (reference trousers' highlights are plain grey); 0.02 read as olive on dark hair.
   tintChroma: 0.012,
   shadowAwayFromHighlight: true,
-  lineL: 0.38,
+  lineL: 0.22,
   deepL: -0.14,
   brightL: 0.13,
 };

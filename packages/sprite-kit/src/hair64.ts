@@ -45,8 +45,13 @@ const CROP_QUANTILES = [0.2, 0.75];
 const CROP_TONES = [1, 2, 3];
 /** Parting strokes of a crop all run one way: 2:1 down and to the right. */
 const CROP_DIRS = [1];
-/** A crop is combed as masses only when it fits in this many regions of the gate; larger ones keep the locks. */
-const CROP_MASSES = 4;
+/**
+ * Below this many cells a mass is combed like a crop: three tones in masses, no lock period (D-090: at game
+ * size five tones and locks on a 60-cell mass read as noise). Long hair and the back of the head keep the locks.
+ */
+const SMALL_MASS = 130;
+/** A small mass may hold one same-tone region this share of itself (never under the scorer's figure gate). */
+const MASS_SHARE = 0.3;
 const JITTER = 0.07;
 /** The parting sits this share of the half-width left of the crown centre. */
 const PART = 0.15;
@@ -121,7 +126,7 @@ function comb(
   // the scorer's figure gate (it never counts a region of 8 or fewer); a crop that cannot fit in four masses
   // (the back of the head, the side with its sideburn) keeps the lock comb
   const gate = Math.max(8, Math.floor(FLAT_FIG_SHARE * s.cells.filter((c) => c >= 0).length));
-  const crop = cropped && mass.length <= CROP_MASSES * gate;
+  const crop = cropped || mass.length < SMALL_MASS;
   const tones = crop ? CROP_TONES : TONES;
   const quantiles = crop ? CROP_QUANTILES : QUANTILES;
   const jitter = crop ? 0 : JITTER;
@@ -276,7 +281,9 @@ function comb(
   const largest = (tones: Map<number, number>) =>
     Math.max(0, ...regionsOf(tones, mass).map((r) => r.length));
   // a crop's masses go up to the figure gate
-  const limit = crop ? gate : Math.max(FLAT_CELLS, Math.floor(FLAT_SHARE * mass.length));
+  const limit = crop
+    ? Math.max(gate, Math.floor(MASS_SHARE * mass.length))
+    : Math.max(FLAT_CELLS, Math.floor(FLAT_SHARE * mass.length));
   const locked = new Set<number>(fixed);
   fixLone(fixed);
   const candidates = (reg: number[]) => {

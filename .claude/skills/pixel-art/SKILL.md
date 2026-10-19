@@ -77,9 +77,10 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
   về `s`, chỉ giữ cụm bóng dưới bả vai.
 - **Đầu:** sáng ở trán trái, bóng dưới cằm và dưới mái tóc; đầu trọc dùng `BALD_V` để bỏ mảng
   bóng gáy của đầu gốc (nếu không người trọc nhìn như có tóc).
-- **Tóc:** chỉ vẽ silhouette một tông (`h` + viền); tông do `hair64.ts` (`combHair`) chải khi mặc:
-  ba mảng chéo sáng/gốc/tối theo trường sáng trên–trái, đường lọn sẫm 4-liên thông toả từ ngôi lệch,
-  vùng vượt ngưỡng phẳng bị cắt, không bậc thang (D-074). Không tô tay tông tóc; râu vẽ tay thì giữ.
+- **Tóc:** chỉ vẽ silhouette một tông (`h` + viền); tông do `hair64.ts` (`combHair`) chải khi mặc.
+  Mảng dưới 130 ô (mọi kiểu ở S/SW/W): **ba tông thành mảng lớn** (tới 30 % mảng một vùng), không lọn, không
+  jitter, chia bằng một nét thẳng khi vượt (D-090). Mảng lớn hơn (tóc dài, góc sau): năm tông, ba mảng chéo
+  theo trường sáng, đường lọn sẫm 4-liên thông (D-074). Không tô tay tông tóc; râu vẽ tay thì giữ.
   Tóc sát da đầu (đầu đinh) đánh cờ `crop` trên overlay (`O(..., crop=True)`): chải ba tông thành mảng,
   không chu kỳ lọn, chia bằng một nét thẳng 2:1 chỉ khi mảng vượt cổng của thước; chỉ áp khi mảng vừa
   bốn cổng (S/SW), mảng lớn hơn (W, góc sau) vẫn chải lọn (D-085).
@@ -92,7 +93,8 @@ bóng 25–40 % ở dưới–phải, còn lại gốc. Cách đặt:
   thêm kiểu áo mới, khai báo `Garment` trong `build()` thay vì vẽ bóng tay vào remap. Kết cấu là luật
   (D-075): mảng sáng một khối chữ L ≈ 12 % món áo, nếp bắt sáng 3 ô, gấu sâu một hàng, thắt lưng là
   hàng may đổi sang da giày + khoá 2 ô, cổ tay vải 2 bóng, băng gối 2 ô sáng, cổ thun chữ V; thân trần
-  vẫn có đường cạp quần. Viền chói là cặp 2 ô trên hàng vai; trong một món không có ô sâu/sáng/chói
+  vẫn có đường cạp quần. **Không chấm chói/sâu 2 ô** trong món (D-090): tông sâu chỉ ở hàng cấu trúc (gấu,
+  cổ tay, cạp, gối, đế, đuôi nếp); viền nhuộm theo vật liệu nhưng trần L 0,22 cho mọi vật liệu. Viền chói là cặp 2 ô trên hàng vai; trong một món không có ô sâu/sáng/chói
   đứng một mình (tailor tự lùi một bậc); ô vải rời giữa vật liệu vải khác bị vật liệu đó nuốt, ô chói
   rời hạ xuống sáng, ô viền lẻ màu lấy màu viền kề; da không bị nuốt (D-078).
 

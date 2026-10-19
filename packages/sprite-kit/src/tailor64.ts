@@ -163,19 +163,19 @@ export function tailor(
     const budget = Math.max(6, Math.min(block ? 9 : 16, Math.round(cells.length * 0.12)));
     for (const [x, y] of lightCells.filter(([x, y]) => has(x, y)).slice(0, budget))
       set(x, y, LIGHT);
-    // The bright rim is two cells side by side on the row above the block (a fixed pair loses its second
-    // cell to the neck opening and leaves a stray dot; the fourth review counted one on every shoulder).
+    // The rim on the row above the block is light too (D-090: a two-cell bright pair is a fleck at game
+    // size; the shoulder reads as one lit mass).
     const rimX = rowMin.get(y0 + 1) ?? x0;
     if (has(rimX, y0 + 1) && has(rimX + 1, y0 + 1)) {
-      set(rimX, y0 + 1, BRIGHT);
-      set(rimX + 1, y0 + 1, BRIGHT);
+      set(rimX, y0 + 1, LIGHT);
+      set(rimX + 1, y0 + 1, LIGHT);
     } else if (has(rimX, y0 + 1) && has(rimX, y0 + 2)) {
       // a sliver of torso beside a pack: the pair runs down the lit edge
-      set(rimX, y0 + 1, BRIGHT);
-      set(rimX, y0 + 2, BRIGHT);
+      set(rimX, y0 + 1, LIGHT);
+      set(rimX, y0 + 2, LIGHT);
     }
-    // Deep shadow under the far arm; the hem is a deep band across the last row above the seam.
-    for (let y = y0 + 4; y <= y0 + 5; y++) set(rowMax.get(y) ?? x1, y, DEEP);
+    // Shadow under the far arm; the hem is a deep band across the last row above the seam.
+    for (let y = y0 + 4; y <= y0 + 5; y++) set(rowMax.get(y) ?? x1, y, SHADOW);
     const hemRow = cells.filter((c) => c.y === y1 - 1);
     if (hemRow.length >= 3) for (const c of hemRow) c.shade = DEEP;
     set(x1 - 1, y1, DEEP);
@@ -200,24 +200,14 @@ export function tailor(
     };
     crease(y0 + 6);
     crease(y0 + Math.round(h * 0.68));
-    set(x1 - 3, y0 + 8, DEEP);
-    set(x1 - 2, y0 + 8, DEEP);
-    const farEdge = x0 + Math.round(w * 0.85);
-    for (const c of cells)
-      if (
-        c.x >= farEdge + (Math.floor((c.y - y0) / 2) % 2) && // steps every two rows: no lone deep cell
-        c.y >= y0 + 3 &&
-        c.y <= y1 - 2 &&
-        (c.y - y0) % 4 !== 3 && // a shadow cell every fourth row keeps the band from forming one long patch
-        c.shade === SHADOW
-      )
-        c.shade = DEEP;
+    // D-090: the two deep cells under the far crease and the stepped deep band along the far edge were
+    // flecks at game size; the shadow mass is one tone, deep stays for the creases, hem and cuffs.
     if (g.pockets) {
       const py = y0 + 6;
-      set(x0 + 1, py, DEEP);
-      set(x0 + 2, py, DEEP);
-      set(x1 - 2, py, DEEP);
-      set(x1 - 1, py, DEEP);
+      set(x0 + 1, py, SHADOW);
+      set(x0 + 2, py, SHADOW);
+      set(x1 - 2, py, SHADOW);
+      set(x1 - 1, py, SHADOW);
     }
     if (g.placket === 'buttons') {
       const cx = x0 + Math.floor(w / 2);

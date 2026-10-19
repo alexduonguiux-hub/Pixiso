@@ -764,3 +764,25 @@ màu lớn** (đọc được ở 1×) và một bước lệch bảng màu kh�
 thường 0,080); islands 0, skin1 0, frag 731 giữ; thước ×6 77/130 (tham khảo); ô lẻ theo luật màu của giám khảo 232 →
 245 vì các ô đơn sẵn có nay tương phản hơn (ô mũ nồi/cổ tay đỏ rượu của Lính mũ nồi, ô bóng áo hồng của zombie
 nữ) — đó là mảnh 1 ô thuộc mục 3; QA sạch; 113 test. Mốc cặp lẫn trong `qa_1x.py` hạ xuống 0.
+
+### D-090 Giảm nhiễu tông cho cỡ thật (mục 4 của kế hoạch 19/10)
+
+Ba thay đổi, cùng một lý do: ở 1× mỗi bước tông thừa là một đốm.
+
+- **Tóc:** mảng dưới 130 ô (mọi kiểu tóc ở S/SW/W, đa số góc sau; trừ tóc dài và tóc bù xù 145–194 ô) chải như
+  crop của D-085: ba tông sáng/gốc/tối theo trường sáng, không jitter, không chu kỳ lọn, một vùng cùng tông được
+  tới 30 % mảng (không dưới cổng hình), chỉ chia bằng một nét thẳng khi vượt. Năm tông và lọn 4-4-5 giữ cho mảng
+  lớn. Hệ quả: thước ×6 `flat hair` rớt 40 sprite — đúng chủ ý, mảng lớn là thứ mắt đọc được ở cỡ thật.
+- **Áo:** bỏ cặp chói 2 ô ở vai (thành sáng, nhập vào khối sáng), bỏ hai ô sâu dưới nếp xa và dải sâu bậc thang
+  ở mép xa, túi áo tô bóng thay vì sâu, bóng dưới tay xa là tông tối. Sâu chỉ còn ở hàng gấu, cổ tay, cạp, gối,
+  đế và đuôi nếp gấp — tức các đường cấu trúc.
+- **Viền:** trần L của màu viền hạ 0,38 → 0,22 cho cả da lẫn vải (`lineL` trong `HERO_RAMP_OPTIONS` và
+  `HERO_CLOTH_RAMP_OPTIONS`): viền vẫn nhuộm theo vật liệu như ảnh mẫu, nhưng tối và đều hơn nên silhouette đọc
+  rõ ở 1×–2× (A/B trên sáu nhân vật). Viền tối hơn làm các dải màu xích lại, hai cặp lẫn mới xuất hiện (Ông Tư ~
+  Lính nữ / quân y): Ông Tư nhận **râu trắng** (188,182,172) làm chìa khoá, áo vàng đất (194,148,84), quần nâu;
+  quân y kaki xanh xám hơn (140,148,104). Thử mũ cối nhạt cho Ông Tư: tiến sát quân y hơn, hoàn lại.
+
+**Số đo.** islands 0, skin1 0, frag 731 (không đổi — mảnh nhỏ nằm ở chi tiết, là mục 3), cặp lẫn 0 (ba cặp sát
+ngưỡng 0,076: Dương ~ Lính nữ, Lính nón sắt ~ quân y, Ông Tư ~ quân y); lint thân 74; ô lẻ theo luật màu 242 /
+`strict` 1482; QA sạch; 113 test. Thước ×6 tham khảo 77 → 53/130 (flat hair 40, flat cloth 8): thước đó đòi tóc
+5 tông và vùng ≤ 13 ô, trái với mục tiêu 1×; không chạy theo nữa.
