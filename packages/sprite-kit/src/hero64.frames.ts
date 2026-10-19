@@ -1,7 +1,9 @@
 /**
  * Hero mannequin frames transcribed from the reference sheet (scripts/research/extract_hero_frames.py).
  * Generated: do not edit by hand, except the eyes, corrected after a cell-by-cell diff against the
- * reference at 1x (navy upper iris `E`, blue lower iris `e`, white only beside the lower rows; D-057).
+ * reference at 1x (navy upper iris `E`, blue lower iris `e`, white only beside the lower rows; D-057),
+ * and the standing N nape (rows 10-14): the lower back of the skull a shadow cup as in the reference's
+ * walk frames, the trapezius showing beside the neck instead of a line block (D-092).
  * Index 0 and 2 are the two walk steps, 1 is standing.
  * `dtop`/`dbottom` are the frame's top and bottom rows relative to the standing frame of the same view.
  */
@@ -217,11 +219,11 @@ export const HERO_FRAME_DATA: Record<
         '..oSSsssssssSSo..',
         '.osSS$$sssssSSso.',
         '.o$SS$$sssssSS$o.',
-        '..ooS$sssssSSoo..',
-        '...oSsssssSSSo...',
-        '....oSssssSSo....',
-        '.....oSssSSo.....',
-        '....oooSSSooo....',
+        '..ooSsssssSSSoo..',
+        '...oSssssSSSSo...',
+        '....oSSSSSSSo....',
+        '.....oSSSSSo.....',
+        '....ossSSSsso....',
         '...ossSSssssso...',
         '..oss$sssss$sso..',
         '..oss$$SsS$$sso..',

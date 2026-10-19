@@ -1625,9 +1625,9 @@ export const KE_PHUN = wearPosed('ke_phun', 'Kẻ Phun', STAND_FAT, KE_PHUN_LOOK
 
 /**
  * A shaven head: the base heads keep the back of the skull in shadow where
- * hair normally sits, which reads as dark hair on a bald man from the side
- * and behind. These lighten that zone to mid skin, leaving a shadow on the
- * lower back of the skull. S needs nothing.
+ * hair normally sits, which reads as dark hair on a bald man from the side.
+ * These lighten that zone to mid skin. S needs nothing; the back views keep
+ * the base nape (D-092).
  */
 const BALD_V: ViewItem = {
   S: {},
@@ -1649,26 +1649,9 @@ const BALD_V: ViewItem = {
       '.s...',
     ]),
   ),
-  NW: same(
-    hov(2, 8, [
-      'sssssssssssS',
-      '..ssssssssSS',
-      '..sssssssSS.',
-      '..ssssssSS..',
-      '...ssssSS...',
-      '....ssSS....',
-    ]),
-  ),
-  N: same(
-    hov(2, 8, [
-      'sssssssssssss',
-      '..ssssssssS..',
-      '..sssssssSS..',
-      '..sssssssSS..',
-      '...sssssSS...',
-      '....sssSS....',
-    ]),
-  ),
+  // N/NW: the base nape (D-092) already reads as a shaven skull: lit dome, shadow cup, ears.
+  NW: {},
+  N: {},
 };
 
 /** Hùng: heavy build, headband, grey tank top, khaki shorts to the knee, boots; shaven head. */

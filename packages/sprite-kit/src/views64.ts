@@ -94,13 +94,17 @@ export const STAND_W: ZombiePose = {
   },
 };
 
-/** Back view: same columns as S; the collar is a straight line, boots start at the heel row 35. */
+/**
+ * Back view: same columns as S; the collar is a shallow U two rows above the front V (the back
+ * neckline sits higher than the front opening), the nape the three skin cells inside it (D-092);
+ * boots start at the heel row 35.
+ */
 export const STAND_N: ZombiePose = {
   id: 'stand_n',
   form: standForm('stand_n', 'Đứng (N)', heroStand('N').sprite),
   w: 17,
   torso: [4, 15, 12, 28],
-  neck: [[6, 15, 10, 16]],
+  neck: [[7, 15, 9, 15]],
   shoulders: [
     [1, 15, 3, 18],
     [13, 15, 15, 18],
@@ -115,7 +119,11 @@ export const STAND_N: ZombiePose = {
     [1, 37, 7, 39],
     [9, 37, 15, 39],
   ],
-  collar: [[6, 17, 10, 17]],
+  collar: [
+    [6, 15, 6, 15],
+    [10, 15, 10, 15],
+    [7, 16, 9, 16],
+  ],
   hem: [5, 28, 11, 28],
   frayedXs: [5, 7, 9, 11],
   number: [7, 21],

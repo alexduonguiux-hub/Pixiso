@@ -586,12 +586,22 @@ def mirror_regions(r, W):
     out['skirt'] = rows(r['skirt'])
     if 'dress' in r: out['dress'] = rows(r['dress'])
     return out
-def back_regions(r):
-    """Regions seen from behind: a straight collar line, no tie, badge or belt."""
+def back_regions(r, hy=0):
+    """Regions seen from behind: no tie, badge or belt. Where the front opening is a V (two side cells
+    over a bottom run) the back collar is a shallow U two rows higher (a neckline sits higher at the
+    back) and the nape is the skin inside it (D-092); under a lowered head (`hy` > 0) the U stays a
+    row below the head's neck row; a straight front collar stays a straight line."""
     xs = [x for b in r['collar'] for x in (b[0], b[2])]
     row = min(b[1] for b in r['collar'])
+    x0, x1 = min(xs), max(xs)
     out = {k: v for k, v in r.items() if k not in ('tie', 'chest', 'belt')}
-    out['collar'] = [[min(xs), row, max(xs), row]]
+    if len(r['collar']) == 3:
+        u = max(row - 2, hy + 15)
+        out['collar'] = [[x0, u, x0, u], [x1, u, x1, u], [x0 + 1, u + 1, x1 - 1, u + 1]]
+        # the neck boxes of the opening go; boxes below the collar (bare arms listed as skin) stay
+        out['neck'] = [[x0 + 1, u, x1 - 1, u]] + [b for b in r['neck'] if b[1] > row + 1]
+    else:
+        out['collar'] = [[x0, row, x1, row]]
     return out
 
 POSES = {}
@@ -674,6 +684,30 @@ def add(pose, view, rows, head, regions, under=False, headcols=None, **opts):
     else:
         hview, hx, hy, shift = head
         fig = stamp_head(rows, hview, hx, hy, shift, under=under, **opts)
+        if hview in ('N', 'NW') and hy > 0 and not under:
+            # A lowered head seen from behind reaches into the torso box: its lower skull rows and its neck
+            # row stay skin (D-092; the torso remap used to turn them to cloth, hidden by a line band).
+            regions = copy.deepcopy(regions)
+            ty0 = regions['torso'][1]
+            for k, hr in enumerate(head_rows(hview, **opts)):
+                if k < 12 or hy + k < ty0: continue
+                xs = [x for x, c in enumerate(hr) if c not in '.o']
+                if not xs: continue
+                box = [hx + shift(k) + min(xs), hy + k, hx + shift(k) + max(xs), hy + k]
+                regions.setdefault('neck', []).append(box)
+                # a raised shoulder's cap box that starts on this row beside the neck starts below it instead
+                for sb in regions.get('shoulders', []):
+                    if sb[1] == box[1] <= sb[3] and sb[0] <= box[2] and box[0] <= sb[2]: sb[1] += 1
+        if hview == 'NW':
+            # The SW chin line overhangs the far shoulder by a column; the turned skull seen from behind does
+            # not (its far side curves in), so the flipped body's leftover line cell beside the neck row goes.
+            hr = head_rows(hview, **opts)[14]
+            x = hx + shift(14) + max(i for i, c in enumerate(hr) if c != '.') + 1
+            y = hy + 14
+            g = [list(r) for r in fig]
+            while x < len(g[0]) and g[y][x] == 'o' and g[y - 1][x] == '.' and g[y + 1][x] in '.o':
+                g[y][x] = '.'; x += 1
+            fig = [''.join(r) for r in g]
     table = [shift(k) for k in range(HEAD_W)]
     base = pose[:-2] if pose.endswith('_m') else pose
     label = LABELS[base] + (' lật' if pose.endswith('_m') else '') + f' ({view})'
@@ -1066,17 +1100,13 @@ for pose, S in POSE_S.items():
     if 'N' not in views:
         back = mirror_regions(regs, W)
         body = flatten(flipx(S['body']), back['torso'])
-        add(pose, 'N', patched(body, PATCHES.get((pose, 'N'), {})), ('N', W - HEAD_W - S['hx'], S['hy'], lambda k, f=sh: -f(k)), back_regions(back))
+        add(pose, 'N', patched(body, PATCHES.get((pose, 'N'), {})), ('N', W - HEAD_W - S['hx'], S['hy'], lambda k, f=sh: -f(k)), back_regions(back, S['hy']))
     # NW: the back of the SW drawing (hand-drawn or derived).
     if 'NW' not in views:
         sw = views['SW']; Wsw = len(sw['body'][0])
         back = mirror_regions(sw['regions'], Wsw)
         body = flatten(flipx(sw['body']), back['torso'])
-        add(pose, 'NW', patched(body, PATCHES.get((pose, 'NW'), {})), ('NW', Wsw - HEAD_W - sw['headX'], sw['headY'], lambda k, t=sw['shift']: -t[k]), back_regions(back))
-# The dropped head seen from behind leaves the upper back bare above the collar seam: a collar band right under
-# the nape (row 14; a hairstyle covers it, a cap leaves it showing) so the band reads dark across the back
-# (fourth review, the police zombie). First in the list: the last collar segment anchors the neckband and camo.
-POSES['droop']['N']['regions']['collar'].insert(0, [6, 14, 11, 14])
+        add(pose, 'NW', patched(body, PATCHES.get((pose, 'NW'), {})), ('NW', Wsw - HEAD_W - sw['headX'], sw['headY'], lambda k, t=sw['shift']: -t[k]), back_regions(back, sw['headY']))
 # Mirrored poses: their own back view (flipped, as their S view is); W, SW and NW are shared with the base pose.
 for pose in MIRRORED:
     n = POSES[pose]['N']; Wn = len(n['body'][0])

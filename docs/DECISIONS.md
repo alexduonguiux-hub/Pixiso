@@ -794,3 +794,34 @@ Người dùng chỉ vào góc sau của Dương và Ông Tư (19/10): tóc từ
 theo chế độ mảng (ba tông, một vùng tới 30 % mảng) — `SMALL_MASS` vượt mọi mảng, bộ chải lọn D-074 giữ trong
 mã để tham khảo; **không nếp ở góc sau** (`light === 'block'`): lưng chỉ còn khối sáng vai, mảng bóng bên phải
 và gấu. Thước 1× giữ nguyên (islands 0, skin1 0, frag 731, cặp lẫn 0); 113 test; QA sạch.
+
+### D-092 Góc sau: dựng hình theo góc nhìn, không lật mặt trước
+
+Người dùng nói rõ (19/10): góc sau của Dương và Ông Tư chưa ổn ở **tạo hình**, không phải màu (D-091 mới sửa
+tông). Soi ×10 cạnh khung N của ảnh mẫu: đầu N dùng đường cằm của mặt trước làm gáy nên Ông Tư là "quả trứng
+không mặt"; cổ thắt 3 ô giữa hai khối viền `ooo` rồi nở ra; cổ áo sau là vạch thẳng ngang hàng với chữ V trước
+(gáy thành ô cửa sổ 13 ô); tai sau là một ô tóc kẹp viền ("khía"); đầu NW là đầu N bớt một cột, không xoay.
+
+- **Đầu N gốc** (`hero64.frames.ts` hàng 10–14, ngoại lệ "không sửa tay" thứ hai sau mắt): nửa dưới sọ là chén
+  bóng `S` (hàng 12–13 trọn, mé phải hàng 10–11) như khung đi N của ảnh mẫu; hàng 14 `ossSSSsso`: cơ thang lộ
+  hai bên cổ như hàng cằm góc S, hết khối `ooo`. `BALD_V` bỏ N/NW (gáy gốc đã đọc là đầu cạo: vòm sáng, chén
+  bóng, tai).
+- **Đầu NW** (`hero64.views.ts`): đầu quay 3/4 nhìn từ sau có **silhouette bằng SW** (đầu quay đọc như nhau từ
+  trước và sau): mép gần thẳng đứng ở cột 2 xuống tới hàm, mé xa cong vào vai hẹp — hàng 10–13 nội 3–13, 3–12,
+  3–11, 4–10; tai gần 2×2 bên trái; dải da má một ô dọc mép gần (cột 3 hàng 10–12, ô (4,13)) là dấu hiệu đầu
+  quay; hàng 14 `ossSSSso` (4–11), không nhô qua vai xa như cằm SW — `gen_pose_views.py` xoá ô viền cằm thừa
+  của thân lật bên cạnh hàng cổ.
+- **Cổ áo sau** = chữ U nông cao hơn chữ V trước hai hàng (viền (6,15), (10,15), (7–9,16); gáy 3×2 ô bên trong):
+  `STAND_N`/`STAND_NW` và `back_regions()` cho dáng; cổ thẳng (thân to con) giữ thẳng. Đầu hạ (gục, lết, ngoẹo,
+  bò) đẩy U xuống `max(V − 2, hy + 15)`; các hàng sọ 12–14 nằm trong hộp thân được khai là cổ để hộp thân không
+  nhuộm sọ thành vải (dải cổ `[6,14,11,14]` của D-087 chỉ che vết này — bỏ); hộp vai nhô bắt đầu dưới ô gáy.
+- **Tóc từ sau** (`gen_view_items.py`): SPIKY/SHORT/PONYTAIL chừa tai 2×2 (hàng 8–9 tóc 4–12 ở N, 4–13 ở NW)
+  và phủ tới hàng sọ cuối không có hàng viền riêng (hết khối viền đôi dưới tóc); PONYTAIL hở gáy hàng 13;
+  SWEPT phủ tai, N lấp hàng 13, NW theo sọ xoay; BUZZ chừa tai và dải má qua `BUZZ_BOXES`; BOB/CURLY/WILD/LONG
+  giữ (khối tóc rộng hơn sọ).
+
+Số: islands 0, skin1 0, frag 731 → 720 (mốc hạ theo), cặp lẫn 0; lint 74 = 74; QA sạch; 113 test; ô lẻ 240 → 234
+(strict 1482 → 1536: cặp ô cơ thang và dải má là chủ ý); thước ×6 tham khảo 38 → 34 (ba lính đội mũ @NW rớt
+`skin sh` > 40 % vì phần da còn thấy dưới mũ sắt chủ yếu là chén bóng gáy; Lính Nhiễm @N `lintAdded`). 40 sprite
+đổi, chỉ N/NW. Còn lại: đầu gục nhìn từ sau vẫn hạ hai hàng như mặt trước (đầu cúi thì ụ chẩm phải cao hơn và
+gáy lộ nhiều hơn — cần vẽ lại hàng 14–17 của thân gục ở N/NW); bàn tay và gót góc sau chưa vẽ riêng.
