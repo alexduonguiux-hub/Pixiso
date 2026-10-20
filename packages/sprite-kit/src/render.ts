@@ -35,6 +35,7 @@ import {
 import { HERO_CLIP_IDS, heroLook, POSED_CLIP_IDS } from './hero64.registry.js';
 import { dress } from './outfit64.js';
 import { POSED_BODIES } from './posed64.js';
+import { posedBodySteps, posedStep } from './posedwalk64.js';
 import { poseInView } from './poseviews64.js';
 import { ratClip, RATS_BODY_ID, RATS_CLIP_IDS, RATS_DEFAULT_COLORS } from './rats64.js';
 import {
@@ -247,38 +248,47 @@ function heroCells(
 function posedCells(
   bodyId: string,
   view: HeroView,
+  clipId: string,
   config: CharacterConfig,
   colors: MaterialColors,
 ) {
   const body = POSED_BODIES.find((b) => b.id === bodyId)!;
-  const pose = poseInView(body.pose, view);
-  if (!pose) throw new Error(`body "${bodyId}" is not drawn in view ${view}`);
+  const stand = poseInView(body.pose, view);
+  if (!stand) throw new Error(`body "${bodyId}" is not drawn in view ${view}`);
   const look = heroLook(config.parts, colors, bodyId);
-  const figure = pose.form.figure!;
-  const s = dress(figure, buildOutfit(bodyId, bodyId, pose, look, view));
+  const standFigure = stand.form.figure!;
   const ground = HERO_GROUND + (view === 'W' ? 1 : 0);
-  const cell = compose(
-    [
-      {
-        id: 'body',
-        sprite: s,
-        x: HERO_PIVOT.x - Math.floor(figure.w / 2) - s.ox,
-        y: ground - (figure.h - 1) - s.oy,
-        z: 0,
-      },
-    ],
-    HERO_CANVAS,
-    HERO_CANVAS,
-  );
-  return { frames: [cell, cell], colors: look.colors };
+  // every frame keeps the standing figure's origin: the head stays put, a step reaches two rows lower
+  const cellOf = (pose: typeof stand): Sprite => {
+    const s = dress(pose.form.figure!, buildOutfit(bodyId, bodyId, pose, look, view));
+    return compose(
+      [
+        {
+          id: 'body',
+          sprite: s,
+          x: HERO_PIVOT.x - Math.floor(standFigure.w / 2) - s.ox,
+          y: ground - (standFigure.h - 1) - s.oy,
+          z: 0,
+        },
+      ],
+      HERO_CANVAS,
+      HERO_CANVAS,
+    );
+  };
+  const standing = cellOf(stand);
+  if (clipId !== 'walk') return { frames: [standing, standing], colors: look.colors };
+  const a = posedStep(body, view, 0);
+  const b = posedStep(body, view, 1);
+  if (!a || !b) throw new Error(`body "${bodyId}" has no steps in view ${view}`);
+  return { frames: [cellOf(a), standing, cellOf(b), standing], colors: look.colors };
 }
 
 const DRAWN_BODIES: readonly DrawnBody[] = [
   { id: HERO_BODY_ID, clipIds: HERO_CLIP_IDS, cells: heroCells },
   ...POSED_BODIES.map((b): DrawnBody => ({
     id: b.id,
-    clipIds: POSED_CLIP_IDS,
-    cells: (config, colors, view) => posedCells(b.id, view, config, colors),
+    clipIds: posedBodySteps(b) ? HERO_CLIP_IDS : POSED_CLIP_IDS,
+    cells: (config, colors, view, clipId) => posedCells(b.id, view, clipId, config, colors),
   })),
   {
     id: RATS_BODY_ID,

@@ -29,3 +29,4 @@ export * from './hero64.registry.js';
 export * from './export.js';
 export * from './rats64.js';
 export * from './posed64.js';
+export * from './posedwalk64.js';

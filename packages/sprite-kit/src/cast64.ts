@@ -1135,6 +1135,8 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     return { box, to: 'cloth', ...(pose.sleeveExcept ? { except: pose.sleeveExcept } : {}) };
   };
   const caps = pose.shoulders.map((box): Remap => sleeve(box[0] < tx0 ? 'L' : 'R', box));
+  // The body's own cells (not empty, not outline), for details that must not land on a line.
+  const body = toAscii(buildForm(pose.form));
   const collar = pose.collar.map(seam);
   // A dress is one piece, a coat carries on: no hem line at the waist.
   const waist = look.bottoms === 'dress' || look.hem === false ? [] : [seam(pose.hem)];
@@ -1174,10 +1176,16 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         sleeve('R', pose.sleeveR.short),
       );
       // `hem: true` sews the rags to a hem line (the crawler's shirt parted from its hips at 1x, fourth review)
-      lines.push(
-        ...collar,
-        ...(look.hem ? waist : pose.frayedXs.map((x) => seam([x, hemY, x, hemY]))),
-      );
+      // on a step derived from a stance (D-101) a frayed cell with no line beside it (the stance's crotch
+      // line used to sit under it) would be a lone dot: that rag stays unsewn
+      const frayed = pose.snapItems
+        ? pose.frayedXs.filter((x) =>
+            [-1, 0, 1].some((ay) =>
+              [-1, 0, 1].some((ax) => (ax || ay) && body[hemY + ay]?.[x + ax] === 'o'),
+            ),
+          )
+        : pose.frayedXs;
+      lines.push(...collar, ...(look.hem ? waist : frayed.map((x) => seam([x, hemY, x, hemY]))));
       break;
     }
     case 'long':
@@ -1205,8 +1213,6 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
       break;
   }
   const kneePads = look.details.includes('kneepads');
-  // The body's own cells (not empty, not outline), for details that must not land on a line.
-  const body = toAscii(buildForm(pose.form));
   const onBody = (x: number, y: number) => !'.o'.includes(body[y]?.[x] ?? '.');
   // A stride parts the legs at a column of its own and may put the near leg on the right (D-095).
   const legs = {
@@ -1334,7 +1340,10 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         ),
       );
   }
-  push(out, layer(look.extras, view, walk));
+  const extras = layer(look.extras, view, walk);
+  if (pose.snapItems && extras.overlays)
+    extras.overlays = extras.overlays.map((o) => snapToBody(o, body));
+  push(out, extras);
   return {
     id,
     label,
@@ -1346,6 +1355,87 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     colors: look.colors,
     view,
   };
+}
+
+/**
+ * A figure-space overlay beside the body (a baton on the hip) moved sideways
+ * until it touches the body again: on a step derived from a stance (D-101) the
+ * stride's hips are narrower than the stance's, and an item left where the
+ * stance's hip was would float. The item keeps its rows; the smallest gap over
+ * its rows closes, so it never overlaps the body.
+ */
+function snapToBody(o: Overlay, body: string[]): Overlay {
+  if (o.space === 'head') return o;
+  const on = (x: number, y: number) => !'.o'.includes(body[y]?.[x] ?? '.') || body[y]?.[x] === 'o';
+  const W = body[0]?.length ?? 0;
+  let x0 = Infinity;
+  let x1 = -Infinity;
+  for (let y = 0; y < o.sprite.h; y++)
+    for (let x = 0; x < o.sprite.w; x++)
+      if (o.sprite.cells[y * o.sprite.w + x] !== EMPTY) {
+        x0 = Math.min(x0, o.x + x);
+        x1 = Math.max(x1, o.x + x);
+      }
+  if (x0 === Infinity) return o;
+  // the side of the body the item is on: toward the body's centre line at its rows
+  let gapRight = Infinity; // body cells to the right of the item
+  let gapLeft = Infinity; // body cells to the left of the item
+  for (let y = o.y; y < o.y + o.sprite.h; y++) {
+    for (let x = x1 + 1; x < W; x++)
+      if (on(x, y)) {
+        gapRight = Math.min(gapRight, x - x1 - 1);
+        break;
+      }
+    for (let x = x0 - 1; x >= 0; x--)
+      if (on(x, y)) {
+        gapLeft = Math.min(gapLeft, x0 - 1 - x);
+        break;
+      }
+  }
+  const dx = gapRight <= gapLeft ? gapRight : -gapLeft;
+  return closeOverlay(Number.isFinite(dx) && dx !== 0 ? { ...o, x: o.x + dx } : o, body);
+}
+
+/**
+ * An item's material cell that faces neither the body nor the item's own
+ * cells gets a line cell there: a baton lying along a thigh keeps its edge
+ * where the stride's leg has moved away from it.
+ */
+function closeOverlay(o: Overlay, body: string[]): Overlay {
+  const covered = (x: number, y: number) => (body[y]?.[x] ?? '.') !== '.';
+  const own = (x: number, y: number) =>
+    x >= o.x && y >= o.y && x < o.x + o.sprite.w && y < o.y + o.sprite.h
+      ? o.sprite.cells[(y - o.y) * o.sprite.w + x - o.x]!
+      : EMPTY;
+  const add = new Map<string, [number, number]>();
+  for (let y = 0; y < o.sprite.h; y++)
+    for (let x = 0; x < o.sprite.w; x++) {
+      const v = o.sprite.cells[y * o.sprite.w + x]!;
+      if (v === EMPTY || Math.floor(v / 8) === MATERIALS.indexOf('line')) continue;
+      for (const [ax, ay] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        const X = o.x + x + ax;
+        const Y = o.y + y + ay;
+        if (own(X, Y) === EMPTY && !covered(X, Y)) add.set(`${X},${Y}`, [X, Y]);
+      }
+    }
+  if (add.size === 0) return o;
+  const xs = [o.x, o.x + o.sprite.w - 1, ...[...add.values()].map((p) => p[0])];
+  const ys = [o.y, o.y + o.sprite.h - 1, ...[...add.values()].map((p) => p[1])];
+  const x0 = Math.min(...xs);
+  const y0 = Math.min(...ys);
+  const w = Math.max(...xs) - x0 + 1;
+  const h = Math.max(...ys) - y0 + 1;
+  const cells = new Int16Array(w * h).fill(EMPTY);
+  for (let y = 0; y < o.sprite.h; y++)
+    for (let x = 0; x < o.sprite.w; x++)
+      cells[(o.y + y - y0) * w + o.x + x - x0] = o.sprite.cells[y * o.sprite.w + x]!;
+  for (const [X, Y] of add.values()) cells[(Y - y0) * w + X - x0] = packCell(LEGEND.o!);
+  return { ...o, x: x0, y: y0, sprite: { w, h, cells } };
 }
 
 /** The outfit of a look on any pose in any drawn view: what the registry's bodies render with (D-100). */

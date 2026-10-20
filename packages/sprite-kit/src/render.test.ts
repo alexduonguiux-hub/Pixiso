@@ -7,7 +7,10 @@ import {
   type ProjectStyle,
 } from '@pixiso/shared';
 import { describe, expect, it } from 'vitest';
+import { HERO_VIEWS } from './hero64.js';
 import { HERO_PRESETS } from './hero64.registry.js';
+import { POSED_BODIES } from './posed64.js';
+import { posedBodySteps, posedStep } from './posedwalk64.js';
 import {
   colorTableFrom,
   materialColorsFor,
@@ -208,8 +211,27 @@ describe('posed bodies (D-100)', () => {
         expect(bottom, `${preset.id} ${d}`).toBeGreaterThanOrEqual(60);
         expect(bottom, `${preset.id} ${d}`).toBeLessThanOrEqual(61);
       }
-      expect(() => renderClip(preset.config, style, 'walk', 'S', table)).toThrow(/no .* frames/);
+      const body = POSED_BODIES.find((b) => b.id === preset.body)!;
+      if (posedBodySteps(body)) {
+        // the stance strides on the hero's legs (D-101): four frames, the head where it stands, feet two rows lower
+        for (const d of DIRECTIONS_8) {
+          const walk = renderClip(preset.config, style, 'walk', d, table);
+          expect(walk.frames, `${preset.id} ${d}`).toHaveLength(4);
+          const idle = renderClip(preset.config, style, 'idle', d, table).frames[0]!;
+          expect(imageHash(walk.frames[1]!)).toBe(imageHash(idle));
+          expect(imageHash(walk.frames[0]!)).not.toBe(imageHash(walk.frames[2]!));
+          expect(topRowsEqual(walk.frames[0]!, idle, 20), `${preset.id} ${d} head`).toBe(true);
+          expect(lowestOpaqueRow(walk.frames[0]!)).toBeGreaterThanOrEqual(lowestOpaqueRow(idle));
+        }
+      } else {
+        expect(() => renderClip(preset.config, style, 'walk', 'S', table)).toThrow(/no .* frames/);
+      }
     }
+    for (const body of POSED_BODIES)
+      for (const view of HERO_VIEWS)
+        expect(posedStep(body, view, 0) !== undefined, `${body.id}@${view}`).toBe(
+          posedBodySteps(body),
+        );
     // a part not drawn for the body is ignored, so a config can never crash the renderer
     const droop = HERO_PRESETS.find((p) => p.id === 'zombie_civ_m')!.config;
     const withPack = { ...droop, parts: { ...droop.parts, gear: 'backpack' } };
@@ -223,4 +245,15 @@ function lowestOpaqueRow(img: { width: number; height: number; data: Uint8Clampe
   for (let y = img.height - 1; y >= 0; y--)
     for (let x = 0; x < img.width; x++) if (img.data[(y * img.width + x) * 4 + 3] === 255) return y;
   return -1;
+}
+
+/** Whether the first `rows` rows of two images are identical. */
+function topRowsEqual(
+  a: { width: number; data: Uint8ClampedArray },
+  b: { width: number; data: Uint8ClampedArray },
+  rows: number,
+): boolean {
+  const n = rows * a.width * 4;
+  for (let i = 0; i < n; i++) if (a.data[i] !== b.data[i]) return false;
+  return true;
 }

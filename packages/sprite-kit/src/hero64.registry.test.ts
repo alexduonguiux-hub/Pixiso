@@ -13,6 +13,7 @@ import {
 } from './hero64.registry.js';
 import { dress } from './outfit64.js';
 import { POSED_BODIES } from './posed64.js';
+import { posedBodySteps } from './posedwalk64.js';
 import { poseInView } from './poseviews64.js';
 import { buildPalette, HERO_RAMPS, paint } from './paint.js';
 import { COLOR_TARGETS, HERO_BODY_ID } from './registry.js';
@@ -105,8 +106,9 @@ describe('hero registry', () => {
         ).toBe(true);
         expect(c.color).toMatch(/^#[0-9a-f]{6}$/);
       }
+      const posed = POSED_BODIES.find((b) => b.id === config.baseCharacter);
       expect(config.animations).toEqual(
-        config.baseCharacter === HERO_BODY_ID ? [...HERO_CLIP_IDS] : ['idle'],
+        !posed || posedBodySteps(posed) ? [...HERO_CLIP_IDS] : ['idle'],
       );
     }
   });

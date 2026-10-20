@@ -332,6 +332,11 @@ export interface ZombiePose {
   stepBase?: { key: WalkKey; map: (x: number, y: number) => number };
   /** Torso cells inside a sleeve box (a forearm swung across the chest): the sleeve leaves them to the torso. */
   sleeveExcept?: Box[];
+  /**
+   * A step derived from a stance (D-101): figure-space items drawn against the stance's hips (a baton, a
+   * holster) move sideways to touch the body again where the stride narrowed it.
+   */
+  snapItems?: boolean;
 }
 
 const form = (id: string, label: string, figure: Sprite, headMap: HeadMap): FormSpec => ({

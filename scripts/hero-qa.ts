@@ -12,6 +12,7 @@ import {
   posedInView,
   SOLDIERS,
   toAscii,
+  posedWalkCast,
   walkCastInView,
   WALK_VIEWS_DRAWN,
   ZOMBIES,
@@ -154,5 +155,9 @@ for (const view of HERO_VIEWS)
 for (const view of WALK_VIEWS_DRAWN)
   for (const step of [0, 1] as const)
     for (const o of walkCastInView(view, step)) check({ ...o, id: `${o.id}@${view}${step}` });
+for (const view of ['S', 'SW', 'W', 'NW', 'N'] as const)
+  for (const step of [0, 1] as const)
+    for (const { id, outfit } of posedWalkCast(view, step))
+      check({ ...outfit, id: `${id}@${view}${step}` });
 console.log(problems ? `${problems} problem(s)` : 'QA clean');
 process.exitCode = problems ? 1 : 0;

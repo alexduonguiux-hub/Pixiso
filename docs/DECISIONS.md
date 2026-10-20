@@ -1049,3 +1049,29 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   cả 5 góc với look gốc, và mọi bộ phận mặc được lên mọi thân nó khai báo ở 5 góc (ma trận 69 × thân × 5). Catalog:
   15 thân, 13 slot, 69 bộ phận, 29 preset. Thước 1× giữ (567/0/0/0), lint 138, QA sạch, 141 test, Playwright 4.
 - Để lại: bước đi cho 12 thân dáng (D-101); UI liệt kê 15 thẻ nhân vật (chưa gom nhóm).
+
+### D-101 Bước đi cho dáng zombie: thân trên của dáng ghép lên chân bước của người (gục đầu, ngoẹo cổ, vươn tay)
+
+- **Cách suy** (`posedwalk64.ts`): dáng zombie giữ nguyên chân của mannequin ("chân 11 hàng là bất biến", SKILL §4),
+  nên bước của dáng = dáng từ đỉnh đầu tới **hàng gấu** của nó + thân bước của người từ hàng quần đầu tiên trở xuống,
+  canh theo tâm đoạn gấu (dx) và hàng gấu (dy; hông bước cao hơn một hàng nên chân dài hơn, bàn chân xuống hàng 62
+  như bước của người). Ô của dáng dưới gấu mà không nằm trong hộp quần/giày của dáng (bàn tay rủ quá hông, cánh tay
+  buông cạnh đùi) được giữ và đè lên chân bước, nhưng chỉ những ô còn **nối 8-liên thông với hàng gấu** (mẩu viền mà
+  chân cũ từng mang sẽ trôi nổi). Vùng cho thợ may: thân, tay áo, cổ, gấu, vết thương từ dáng; quần, giày, `legSplit`,
+  `nearLeg`, váy/đầm từ bước (dịch theo dx, dy); váy ghép: hàng trên gấu của dáng (vừa hông dáng) + dưới gấu của bước
+  (vừa sải chân), ô hở ở đường nối được khép bằng viền. Đầu không đổi chỗ giữa các khung (thân trên y nguyên).
+- **Hậu xử lý đường nối** (`closeSeam`): từ hàng gấu xuống, ô vật liệu kề ô trống nhận một ô viền (đỉnh quần dưới
+  gấu hẹp hơn, mép tay nơi chân đã dời đi); ô viền đơn độc trong dải gấu ±1 (đường đũng cũ của dáng) lấy ô phía trên.
+  Trong `build()`: dáng bước có `snapItems` → đạo cụ vẽ trong không gian thân (dùi cui, bao súng) **trượt ngang tới khi
+  chạm thân** (khe nhỏ nhất trên các hàng của nó, không chồng lên thân) rồi được khép viền ở mặt không còn chạm
+  (`closeOverlay`); ô may gấu rách không còn ô viền kề (đường đũng cũ bên dưới) thì không may (không để chấm viền lẻ).
+- **Phạm vi**: `STEPPING_POSES` = droop, twist, reach (và bản lật) → 6 thân, 7 preset có walk 8 hướng (zombie dân
+  thường nam/nữ, công nhân, cảnh sát, vận động viên nam, văn phòng, Kẻ Thính). Không suy cho: gù (`hunch`, chân vẽ
+  hẹp hơn vì tay rủ sát), lết chân (`drag`, bản sắc là chân kéo lê), bò, to con/mập/khổng lồ (chân khác bề rộng, góc W
+  vẽ tay): các thân này vẫn chỉ idle; cần bước vẽ riêng nếu muốn.
+- **Thước**: 70 sprite bước mới vào `qa:1x` và `qa:hero`: islands 0, skin1 0, cặp lẫn 0, frag 567 → **755** (cùng loại
+  mảnh như thân đứng và bước người: cơ thang cạnh cằm, ô thái dương cạnh tóc, góc tay; ~2,7 mảnh/sprite), QA sạch.
+  `pnpm posedwalk` render bảng 8 hướng và dump **dải nối** (gấu ±3 hàng) của 50 thân bước suy ra cho `pixel_lint`
+  (thân trên là dáng đã lint, chân là bước người đã lint): lint 138 → **212**, phần tăng là viền đôi nơi bàn tay/cánh
+  tay rủ chạm hông bước (chỗ hai bộ phận chạm nhau, chấp nhận theo SKILL §2.3) và 2 bậc 3-1-3 ở vai dáng vươn tay
+  SW/NW. 141 test, Playwright 4; catalog: walk có `characters` gồm 6 thân dáng.

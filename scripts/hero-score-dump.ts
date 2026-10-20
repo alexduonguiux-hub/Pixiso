@@ -19,6 +19,7 @@ import {
   toAscii,
   type HeroView,
   HERO_RAMPS,
+  posedWalkCast,
   walkCastInView,
   WALK_VIEWS,
   WALK_VIEWS_DRAWN,
@@ -80,6 +81,28 @@ for (const view of WALK_VIEWS_DRAWN)
       entries.push({
         id: outfit.id,
         label: outfit.label,
+        view: `${view}${step}`,
+        w: s.w,
+        h: s.h,
+        rows: toAscii(s),
+        baseRows: toAscii(figure),
+        png: file,
+      });
+    }
+// the stances' derived steps (D-101)
+for (const view of VIEWS)
+  for (const step of [0, 1] as const)
+    for (const { id, label, outfit, figure } of posedWalkCast(view, step)) {
+      const s = dress(figure, outfit);
+      const img = paint(s, buildPalette(outfit.colors, HERO_RAMPS), {
+        lineStyle: 'tinted',
+        selout: false,
+      });
+      const file = `${id}__${view}${step}.png`;
+      writePng(path.join(OUT, file), img);
+      entries.push({
+        id,
+        label,
         view: `${view}${step}`,
         w: s.w,
         h: s.h,

@@ -25,6 +25,7 @@ import {
 import type { ViewItem } from './outfit64.js';
 import type { MaterialColors } from './paint.js';
 import { POSED_BODIES } from './posed64.js';
+import { posedBodySteps } from './posedwalk64.js';
 import { COLOR_TARGETS, HERO_BODY_ID } from './registry.js';
 
 export const HERO_SLOT_IDS = [
@@ -530,7 +531,8 @@ function presetOf(id: string, body: string, look: Look): HeroPreset {
     const c = look.colors[t.material];
     return c ? [{ target: t.id, color: hexOf(c) }] : [];
   });
-  const clips = body === HERO_BODY_ID ? HERO_CLIP_IDS : POSED_CLIP_IDS;
+  const posed = POSED_BODIES.find((b) => b.id === body);
+  const clips = !posed || posedBodySteps(posed) ? HERO_CLIP_IDS : POSED_CLIP_IDS;
   return {
     id,
     body,

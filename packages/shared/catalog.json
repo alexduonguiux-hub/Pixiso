@@ -2221,6 +2221,11 @@
       "characters": [
         "human",
         "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
         "rats"
       ]
     },
@@ -3168,7 +3173,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3231,7 +3237,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3298,7 +3305,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3368,7 +3376,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3570,7 +3579,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3700,7 +3710,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3756,7 +3767,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
