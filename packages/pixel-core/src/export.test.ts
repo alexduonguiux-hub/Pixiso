@@ -13,7 +13,15 @@ const RED: Rgb8 = [200, 30, 40];
 const BLUE: Rgb8 = [20, 60, 200];
 
 /** A w×h image with a filled rectangle of one colour. */
-function box(w: number, h: number, x0: number, y0: number, x1: number, y1: number, c: Rgb8): RGBAImage {
+function box(
+  w: number,
+  h: number,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  c: Rgb8,
+): RGBAImage {
   const img = createImage(w, h);
   for (let y = y0; y <= y1; y++)
     for (let x = x0; x <= x1; x++) {
@@ -58,8 +66,14 @@ describe('sheet + aseprite json', () => {
       [1, 0, 0, 10],
     ]);
     // pixel (12, 3) is the second frame's red; (10, 13) the blue of the second row
-    expect([...sheet.image.data.subarray((3 * 16 + 12) * 4, (3 * 16 + 12) * 4 + 4)]).toEqual([...RED, 255]);
-    expect([...sheet.image.data.subarray((13 * 16 + 4) * 4, (13 * 16 + 4) * 4 + 4)]).toEqual([...BLUE, 255]);
+    expect([...sheet.image.data.subarray((3 * 16 + 12) * 4, (3 * 16 + 12) * 4 + 4)]).toEqual([
+      ...RED,
+      255,
+    ]);
+    expect([...sheet.image.data.subarray((13 * 16 + 4) * 4, (13 * 16 + 4) * 4 + 4)]).toEqual([
+      ...BLUE,
+      255,
+    ]);
     expect(() => packSheet([[box(8, 10, 0, 0, 1, 1, RED), box(9, 10, 0, 0, 1, 1, RED)]])).toThrow(
       /cell/,
     );
@@ -92,7 +106,11 @@ describe('sheet + aseprite json', () => {
     gap.meta.frameTags[1]!.from = 1;
     expect(checkAseprite(gap).length).toBeGreaterThan(0);
     const moved = structuredClone(json);
-    moved.meta.slices[0]!.keys.push({ frame: 1, bounds: { x: 0, y: 0, w: 8, h: 10 }, pivot: { x: 5, y: 9 } });
+    moved.meta.slices[0]!.keys.push({
+      frame: 1,
+      bounds: { x: 0, y: 0, w: 8, h: 10 },
+      pivot: { x: 5, y: 9 },
+    });
     expect(checkAseprite(moved)).toContain('pivot moves at frame 1');
   });
 });
@@ -125,9 +143,9 @@ describe('zip', () => {
     const back = unzipFiles(z1);
     expect(back.map((e) => e.name).sort()).toEqual(['a.json', 'b.png']);
     for (const e of entries)
-      expect(Buffer.from(back.find((b) => b.name === e.name)!.data).equals(Buffer.from(e.data))).toBe(
-        true,
-      );
+      expect(
+        Buffer.from(back.find((b) => b.name === e.name)!.data).equals(Buffer.from(e.data)),
+      ).toBe(true);
   });
 });
 
@@ -138,7 +156,8 @@ describe('lowestRowsCenterX', () => {
     expect(lowestRowsCenterX(createImage(3, 3))).toBeNull();
     // only the lowest two rows count: a wider row above does not move the centre
     const feet = box(10, 6, 0, 0, 9, 3, RED);
-    for (let y = 4; y <= 5; y++) for (let x = 6; x <= 7; x++) feet.data.set([...RED, 255], (y * 10 + x) * 4);
+    for (let y = 4; y <= 5; y++)
+      for (let x = 6; x <= 7; x++) feet.data.set([...RED, 255], (y * 10 + x) * 4);
     expect(lowestRowsCenterX(feet)).toBe(6.5);
   });
 });
