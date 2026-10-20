@@ -338,6 +338,11 @@ export interface ZombiePose {
    */
   legExcept?: Box[];
   /**
+   * Columns the figure's left edge lies left of the stance's origin (a step whose canvas grew on the left so a
+   * part could move back while the head stays put, D-101): the frame is drawn that many columns further left.
+   */
+  originDx?: number;
+  /**
    * A step derived from a stance (D-101): figure-space items drawn against the stance's hips (a baton, a
    * holster) move sideways to touch the body again where the stride narrowed it.
    */

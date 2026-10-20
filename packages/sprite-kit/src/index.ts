@@ -31,3 +31,4 @@ export * from './rats64.js';
 export * from './posed64.js';
 export * from './posedwalk64.js';
 export * from './posedlegs64.js';
+export * from './crawl64.js';

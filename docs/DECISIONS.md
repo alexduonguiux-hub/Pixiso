@@ -1067,8 +1067,22 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   (`closeOverlay`); ô may gấu rách không còn ô viền kề (đường đũng cũ bên dưới) thì không may (không để chấm viền lẻ).
 - **Phạm vi**: `STEPPING_POSES` = droop, twist, reach, hunch, drag (và bản lật) + heavy, fat, brute → 12 thân, 14
   preset có walk 8 hướng (zombie dân thường nam/nữ, công nhân, cảnh sát, quân đội, vận động viên nam/nữ, văn phòng,
-  Kẻ Thính, Lính Nhiễm, Hùng, Kẻ Phun, Kẻ Mang Vỏ, Đột Biến). Không suy cho bò (`crawl`, không có chân đứng): Kẻ Bám
-  Trần vẫn chỉ idle; cần chu kỳ bò vẽ riêng nếu muốn.
+  Kẻ Thính, Lính Nhiễm, Hùng, Kẻ Phun, Kẻ Mang Vỏ, Đột Biến) + crawl (chu kỳ bò, dưới) → 13 thân, 15 preset: mọi
+  nhân vật trong catalog đều có idle và walk 8 hướng.
+- **Chu kỳ bò cho Kẻ Bám Trần** (`crawl64.ts`, cùng ngày): kẻ bò đi bằng tay, nên "walk" của nó là tay thay phiên,
+  không phải chân — hoạt hình bằng offset 1 ô từng chi (cách dự án đã dùng cho thân 32 px). Ở S/SW/N/NW hai cánh tay
+  là hai cột ô hai bên thân, bàn tay chạm hàng đất: bước = dáng đứng với một tay **vươn thêm một hàng** (cẳng tay và
+  bàn tay từ hàng khuỷu dịch một hàng về phía đi: xuống ở S/SW, lên ở N/NW; hàng khuỷu lặp lại) và tay kia **rút một
+  hàng** (dịch ngược, bỏ hàng khuỷu); cột viền chung với chân không dịch; sau đó dọn: ô viền không chạm vật liệu nào
+  (mẩu viền của chi kia bị kéo theo) bỏ, ô vật liệu hở ra nhận viền. Góc W hai tay chồng cột nhau nên không tách
+  được: bước là **nhún** — A dịch mọi hàng từ hông xuống sang phải một cột (thân vượt trước tay), B dịch phần thân
+  trên sang phải một cột và khung vẽ lùi một cột (`originDx`, trường mới của `ZombiePose` mà `posedCells` và
+  `posed-walk.ts` tôn trọng) để đầu đứng yên và tay lùi — quy tắc "đầu không đổi chỗ giữa các khung" giữ nguyên;
+  `headMap` và mọi hộp vùng dịch theo hàng của chúng. Bước A = tay trái của nhân vật vươn trước (D-095; W: tay gần).
+  Thước: frag 921 → **939** (+18 = đúng gấp đôi mảnh của 5 dáng đứng; không mảnh nào sinh thêm), islands 0,
+  skin1 0, cặp lẫn 0, QA sạch; lint dải nối 275 → **293**: 16 là dải 7 ô `$` dọc viền cánh tay của chính dáng bò
+  (bản vẽ gốc, dải nối cắt đúng 7 hàng tay), 1 banding cột tay W (gốc), 1 bậc 3-1-3 ở mép tay gần nơi nhún nối hàng
+  28/29 (W B, chấp nhận: khớp một cột của cú nhún).
 - **Chân cho thể hình to con và mập** (`posedlegs64.ts`, cùng ngày): theo SKILL §4 thể hình lấy tỉ lệ từ form nhân
   hàng/cột, nên bước của thân to con/mập = thân trên của dáng đứng + chân bước của người **nhân cột trong từng chân**
   (to con +1 mỗi chân ở mọi góc; mập +2 ở S/N/SW/NW theo dải đùi của FORM_FAT, +1 ở W theo bản vẽ tay FAT_W) và

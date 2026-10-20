@@ -10,6 +10,7 @@
  * stride's leg split from the step, moved to where the step landed.
  */
 import { buildOutfit, POSED_LOOKS } from './cast64.js';
+import { crawlStep } from './crawl64.js';
 import { EMPTY, LEGEND, MATERIALS, packCell, type Sprite } from './format.js';
 import type { Box, HeroView } from './hero64.js';
 import type { ZombiePose } from './hero64.poses.js';
@@ -31,6 +32,8 @@ export const STEPPING_POSES: readonly string[] = [
   'heavy',
   'fat',
   'brute',
+  // the crawl: the stance with the arms taking turns (crawl64.ts)
+  'crawl',
 ];
 
 const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
@@ -56,8 +59,11 @@ export function posedBodySteps(body: PosedBodyDef): boolean {
 export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): ZombiePose | undefined {
   if (!posedBodySteps(body)) return undefined;
   const pose = poseInView(body.pose, view);
+  if (!pose) return undefined;
+  // the crawl moves on its hands: its steps are the stance with the arms taking turns (crawl64.ts)
+  if (body.pose.id === 'crawl') return crawlStep(pose, view, step);
   const walk = WALK_VIEWS[view]?.[step];
-  if (!pose || !walk) return undefined;
+  if (!walk) return undefined;
   const figure = pose.form.figure;
   if (!figure || !walk.form.figure) return undefined;
 

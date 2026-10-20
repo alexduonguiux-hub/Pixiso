@@ -78,7 +78,7 @@ looks.forEach((l, r) => {
           {
             id: 'body',
             sprite: s,
-            x: HERO_PIVOT.x - Math.floor(standFig.w / 2) - s.ox,
+            x: HERO_PIVOT.x - Math.floor(standFig.w / 2) - s.ox - (pose.originDx ?? 0),
             y: ground - (standFig.h - 1) - s.oy,
             z: 0,
           },

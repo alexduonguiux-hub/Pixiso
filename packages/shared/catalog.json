@@ -2219,20 +2219,7 @@
         "bước"
       ],
       "characters": [
-        "human",
-        "hero",
-        "droop",
-        "droop_m",
-        "twist",
-        "twist_m",
-        "reach",
-        "drag",
-        "drag_m",
-        "hunch",
-        "heavy",
-        "fat",
-        "brute",
-        "rats"
+        "*"
       ]
     },
     {
@@ -3832,7 +3819,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
