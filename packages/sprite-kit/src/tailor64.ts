@@ -320,7 +320,7 @@ export function tailor(
     // unless the pose says otherwise (a stride with the right leg forward, D-095).
     const mid = g.split ?? x0 + (w - 1) / 2;
     const nearLeft = g.near !== 'R';
-    const side = (x: number) => ((x < mid) === nearLeft ? 'N' : 'F');
+    const side = (x: number) => (x < mid === nearLeft ? 'N' : 'F');
     const knee = y0 + Math.round(h * 0.55);
     const thigh = y0 + 2;
     const legMin = new Map<string, number>();
