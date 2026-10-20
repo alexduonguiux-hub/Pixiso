@@ -1219,13 +1219,22 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     ...(pose.legSplit !== undefined ? { split: pose.legSplit } : {}),
     ...(pose.nearLeg ? { near: pose.nearLeg } : {}),
   };
+  // hands hanging into the leg boxes (a stance's arms over a derived step, D-101) stay bare
+  const legExcept = pose.legExcept ? { except: pose.legExcept } : {};
   if (look.bottoms === 'pants') {
-    remaps.push(...pose.pants.map((box): Remap => ({ box, to: 'pants' })));
-    garments.push({ kind: 'pants', box: pose.pants, material: 'pants', kneePads, ...legs });
+    remaps.push(...pose.pants.map((box): Remap => ({ box, to: 'pants', ...legExcept })));
+    garments.push({
+      kind: 'pants',
+      box: pose.pants,
+      material: 'pants',
+      kneePads,
+      ...legs,
+      ...legExcept,
+    });
   }
   if (look.bottoms === 'shorts') {
-    remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants' })));
-    garments.push({ kind: 'pants', box: pose.shorts, material: 'pants', ...legs });
+    remaps.push(...pose.shorts.map((box): Remap => ({ box, to: 'pants', ...legExcept })));
+    garments.push({ kind: 'pants', box: pose.shorts, material: 'pants', ...legs, ...legExcept });
   }
   if (look.bottoms === 'skirt') overlays.push(ov(pose.skirt.x, pose.skirt.y, pose.skirt.rows));
   if (look.bottoms === 'dress') {
@@ -1233,16 +1242,24 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     overlays.push(ov(d.x, d.y, d.rows));
   }
   if (look.shoes === 'both') {
-    remaps.push({ box: pose.shoeL, to: 'boots' }, { box: pose.shoeR, to: 'boots' });
-    garments.push({ kind: 'boots', box: [pose.shoeL, pose.shoeR], material: 'boots' });
+    remaps.push(
+      { box: pose.shoeL, to: 'boots', ...legExcept },
+      { box: pose.shoeR, to: 'boots', ...legExcept },
+    );
+    garments.push({
+      kind: 'boots',
+      box: [pose.shoeL, pose.shoeR],
+      material: 'boots',
+      ...legExcept,
+    });
   }
   if (look.shoes === 'right') {
-    remaps.push({ box: pose.shoeR, to: 'boots' });
-    garments.push({ kind: 'boots', box: pose.shoeR, material: 'boots' });
+    remaps.push({ box: pose.shoeR, to: 'boots', ...legExcept });
+    garments.push({ kind: 'boots', box: pose.shoeR, material: 'boots', ...legExcept });
   }
   if (look.shoes === 'flats') {
-    remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots' })));
-    garments.push({ kind: 'boots', box: pose.flats, material: 'boots' });
+    remaps.push(...pose.flats.map((box): Remap => ({ box, to: 'boots', ...legExcept })));
+    garments.push({ kind: 'boots', box: pose.flats, material: 'boots', ...legExcept });
   }
   // On a walk step, items pick their step drawing or move with the step's canvas (D-095).
   const walk = pose.walkKey

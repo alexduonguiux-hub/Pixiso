@@ -19,7 +19,7 @@ import { poseInView } from './poseviews64.js';
 import { WALK_VIEWS } from './walk64.js';
 
 /** Stances whose legs are the mannequin's, so the hero's steps fit under them. */
-export const STEPPING_POSES: readonly string[] = ['droop', 'twist', 'reach'];
+export const STEPPING_POSES: readonly string[] = ['droop', 'twist', 'reach', 'hunch', 'drag'];
 
 const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
   x >= x0 && x <= x1 && y >= y0 && y <= y1;
@@ -98,7 +98,53 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
       }
   }
   for (const k of kept) put(k % figure.w, Math.floor(k / figure.w), figure.cells[k]!);
+  // The stance's outline around what it kept (the line between an arm and the thigh it hung beside, which lay
+  // in the stance's leg box and went with the legs) comes back over the step's cells, so the arm keeps its edge.
+  const stanceAt = (x: number, y: number) =>
+    x >= 0 && y >= 0 && x < figure.w && y < figure.h ? figure.cells[y * figure.w + x]! : EMPTY;
+  const isLine = (v: number) => v !== EMPTY && Math.floor(v / 8) === LINE_MATERIAL;
+  for (const k of kept) {
+    const x = k % figure.w;
+    const y = Math.floor(k / figure.w);
+    if (isLine(figure.cells[k]!)) continue;
+    for (const [ex, ey] of [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ] as const) {
+      const X = x + ex;
+      const Y = y + ey;
+      const here =
+        X - minX >= 0 && X - minX < w && Y >= 0 && Y < h ? cells[Y * w + X - minX]! : EMPTY;
+      if (isLine(stanceAt(X, Y)) && !kept.has(Y * figure.w + X) && here !== EMPTY && !isLine(here))
+        put(X, Y, LINE);
+    }
+  }
   closeSeam(cells, w, h, hemP);
+  // Where the step's leg has its own line right beside the kept arm's, the leg reaches the arm's line instead
+  // (two parts that touch share one line, D-047): the leg's line cell takes the leg cell on its other side.
+  const at = (X: number, Y: number) =>
+    X - minX >= 0 && X - minX < w && Y >= 0 && Y < h ? cells[Y * w + X - minX]! : EMPTY;
+  const keptMaterial = (X: number, Y: number) =>
+    X >= 0 &&
+    X < figure.w &&
+    kept.has(Y * figure.w + X) &&
+    !isLine(figure.cells[Y * figure.w + X]!);
+  const legCell = (X: number, Y: number) => {
+    const v = at(X, Y);
+    return v !== EMPTY && !isLine(v) && !keptMaterial(X, Y) ? v : EMPTY;
+  };
+  for (let y = hemP + 1; y < h; y++)
+    for (let x = minX; x < minX + w; x++) {
+      if (!isLine(at(x, y))) continue;
+      if (isLine(at(x + 1, y)) && keptMaterial(x + 2, y) && legCell(x - 1, y) !== EMPTY)
+        put(x, y, legCell(x - 1, y));
+      else if (isLine(at(x - 1, y)) && keptMaterial(x - 2, y) && legCell(x + 1, y) !== EMPTY)
+        put(x, y, legCell(x + 1, y));
+    }
+  // The kept pieces' boxes, for the trousers and shoes of the step to leave alone (one box per 8-connected piece).
+  const legExcept = pieces(kept, figure.w).map((b) => shiftBox(b, -minX, 0));
   const shiftX = -minX;
   const own = (b: Box) => shiftBox(b, shiftX, 0);
   const stepped = (b: Box) => shiftBox(b, dx + shiftX, dy);
@@ -140,6 +186,7 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
         ? { dress: { x: walk.dress.x + dx + shiftX, y: walk.dress.y + dy, rows: walk.dress.rows } }
         : {}),
     snapItems: true,
+    ...(legExcept.length ? { legExcept } : {}),
     ...(walk.legSplit !== undefined ? { legSplit: walk.legSplit + dx + shiftX } : {}),
     ...(walk.nearLeg ? { nearLeg: walk.nearLeg } : {}),
     ...(walk.walkKey ? { walkKey: walk.walkKey } : {}),
@@ -221,6 +268,41 @@ function pad(s: Sprite, dx: number, w: number, h: number): Sprite {
 
 const LINE = packCell(LEGEND.o!);
 const LINE_MATERIAL = MATERIALS.indexOf('line');
+
+/** Bounding boxes of the 8-connected pieces of a cell set (keys y * w + x). */
+function pieces(set: ReadonlySet<number>, w: number): Box[] {
+  const seen = new Set<number>();
+  const out: Box[] = [];
+  for (const start of set) {
+    if (seen.has(start)) continue;
+    let x0 = Infinity;
+    let y0 = Infinity;
+    let x1 = -Infinity;
+    let y1 = -Infinity;
+    const stack = [start];
+    seen.add(start);
+    while (stack.length) {
+      const k = stack.pop()!;
+      const x = k % w;
+      const y = Math.floor(k / w);
+      x0 = Math.min(x0, x);
+      y0 = Math.min(y0, y);
+      x1 = Math.max(x1, x);
+      y1 = Math.max(y1, y);
+      for (let ey = -1; ey <= 1; ey++)
+        for (let ex = -1; ex <= 1; ex++) {
+          const X = x + ex;
+          const n = (y + ey) * w + X;
+          if ((ex || ey) && X >= 0 && X < w && set.has(n) && !seen.has(n)) {
+            seen.add(n);
+            stack.push(n);
+          }
+        }
+    }
+    out.push([x0, y0, x1, y1]);
+  }
+  return out;
+}
 
 /**
  * Closes the silhouette where the stance and the step meet: from the hem row

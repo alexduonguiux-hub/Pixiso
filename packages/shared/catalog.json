@@ -2226,6 +2226,9 @@
         "twist",
         "twist_m",
         "reach",
+        "drag",
+        "drag_m",
+        "hunch",
         "rats"
       ]
     },
@@ -3444,7 +3447,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3512,7 +3516,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3643,7 +3648,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },

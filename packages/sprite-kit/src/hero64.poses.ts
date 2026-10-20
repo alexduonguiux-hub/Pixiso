@@ -333,6 +333,11 @@ export interface ZombiePose {
   /** Torso cells inside a sleeve box (a forearm swung across the chest): the sleeve leaves them to the torso. */
   sleeveExcept?: Box[];
   /**
+   * Cells inside the trouser and shoe boxes that are not the legs (a stance's arms hanging to the ankles over a
+   * derived step, D-101): the trousers and shoes leave them alone.
+   */
+  legExcept?: Box[];
+  /**
    * A step derived from a stance (D-101): figure-space items drawn against the stance's hips (a baton, a
    * holster) move sideways to touch the body again where the stride narrowed it.
    */

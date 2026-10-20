@@ -1065,10 +1065,23 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   Trong `build()`: dáng bước có `snapItems` → đạo cụ vẽ trong không gian thân (dùi cui, bao súng) **trượt ngang tới khi
   chạm thân** (khe nhỏ nhất trên các hàng của nó, không chồng lên thân) rồi được khép viền ở mặt không còn chạm
   (`closeOverlay`); ô may gấu rách không còn ô viền kề (đường đũng cũ bên dưới) thì không may (không để chấm viền lẻ).
-- **Phạm vi**: `STEPPING_POSES` = droop, twist, reach (và bản lật) → 6 thân, 7 preset có walk 8 hướng (zombie dân
-  thường nam/nữ, công nhân, cảnh sát, vận động viên nam, văn phòng, Kẻ Thính). Không suy cho: gù (`hunch`, chân vẽ
-  hẹp hơn vì tay rủ sát), lết chân (`drag`, bản sắc là chân kéo lê), bò, to con/mập/khổng lồ (chân khác bề rộng, góc W
-  vẽ tay): các thân này vẫn chỉ idle; cần bước vẽ riêng nếu muốn.
+- **Phạm vi**: `STEPPING_POSES` = droop, twist, reach, hunch, drag (và bản lật) → 9 thân, 10 preset có walk 8 hướng
+  (zombie dân thường nam/nữ, công nhân, cảnh sát, quân đội, vận động viên nam/nữ, văn phòng, Kẻ Thính, Lính Nhiễm).
+  Không suy cho: bò (`crawl`, không có chân đứng), to con/mập/khổng lồ (chân khác bề rộng, góc W vẽ tay): các thân này
+  vẫn chỉ idle; cần bước vẽ riêng nếu muốn.
+- **Mở rộng cho gù và lết chân (cùng ngày)**: dáng gù buông hai cánh tay tới mắt cá, cạnh đùi và **chung một cột
+  viền** với chân; ghép thẳng thì hộp quần/giày của bước (rộng bằng cả sải chân) nhuộm cánh tay thành quần, và cột
+  viền chung (nằm trong hộp quần của dáng nên đi theo chân cũ) mất, tay dính liền chân. Ba quy tắc thêm vào
+  `posedStep`: (1) các mảnh giữ lại (8-liên thông) thành hộp `legExcept` trên `ZombiePose`, `build()` cho quần, quần
+  đùi, giày, giày bệt chừa các hộp đó (remap lẫn thợ may); (2) ô viền của dáng quanh mảnh giữ lại mà giờ là ô vật liệu
+  của bước thì **trở lại viền** (cánh tay giữ mép của nó); (3) ô viền của chân bước nằm sát ô viền ấy (hai cột viền
+  kề nhau) nhận ô chân bên kia: hai bộ phận chạm nhau chung một đường (D-047), chân kéo dài một cột tới mép tay. Quy
+  tắc (3) cũng gộp viền đôi tay–hông ở các dáng gục nên lint dải nối **212 → 203** dù thêm 30 thân bước. Phần chân
+  thấy được giữa hai cánh tay của dáng gù ở góc S/N là mặt bóng của chân (tay che mặt sáng; tay đứng trước chân nên bóng
+  này đúng nguồn sáng), chấp nhận. Lết chân: khung đứng giữ chân kéo lê giữa hai bước nên chu kỳ đọc là bước khập
+  khiễng; bản sắc "chân kéo lê" còn ở idle và ở khung đứng của walk. Thước: frag 755 → **865** (+114 của 30 sprite
+  bước mới, toàn bộ là mảnh thân trên thừa hưởng từ dáng đứng — bước còn **ít hơn** dáng đứng 30 mảnh vì bỏ chân kéo
+  lê; −4 ở các dáng gục nhờ (1): bàn tay rủ không còn bị nhuộm quần), islands 0, skin1 0, cặp lẫn 0, QA sạch.
 - **Thước**: 70 sprite bước mới vào `qa:1x` và `qa:hero`: islands 0, skin1 0, cặp lẫn 0, frag 567 → **755** (cùng loại
   mảnh như thân đứng và bước người: cơ thang cạnh cằm, ô thái dương cạnh tóc, góc tay; ~2,7 mảnh/sprite), QA sạch.
   `pnpm posedwalk` render bảng 8 hướng và dump **dải nối** (gấu ±3 hàng) của 50 thân bước suy ra cho `pixel_lint`
