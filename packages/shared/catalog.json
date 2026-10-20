@@ -66,6 +66,239 @@
         "x": 32,
         "y": 62
       }
+    },
+    {
+      "id": "droop",
+      "label_vi": "Zombie gục đầu",
+      "description_vi": "Thân người 64 px, đầu gục nghiêng, tay buông; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "gục đầu",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "droop_m",
+      "label_vi": "Zombie gục đầu (lật)",
+      "description_vi": "Dáng gục đầu nghiêng sang bên kia; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "gục đầu",
+        "lật",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "twist",
+      "label_vi": "Zombie ngoẹo cổ",
+      "description_vi": "Thân người 64 px, cổ ngoẹo sang một bên; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "ngoẹo cổ",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "twist_m",
+      "label_vi": "Zombie ngoẹo cổ (lật)",
+      "description_vi": "Dáng ngoẹo cổ sang bên kia; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "ngoẹo cổ",
+        "lật",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "reach",
+      "label_vi": "Zombie vươn tay",
+      "description_vi": "Thân người 64 px, hai tay vươn về phía trước; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "vươn tay",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "drag",
+      "label_vi": "Zombie lết chân",
+      "description_vi": "Thân người 64 px, một chân lết sau; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "lết chân",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "drag_m",
+      "label_vi": "Zombie lết chân (lật)",
+      "description_vi": "Dáng lết chân bên kia; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "lết chân",
+        "lật",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "hunch",
+      "label_vi": "Zombie gù lưng",
+      "description_vi": "Thân người 64 px, lưng gù có bướu, đầu thụt; chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "gù",
+        "bướu",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "crawl",
+      "label_vi": "Dáng bò",
+      "description_vi": "Thân người 64 px ngồi xổm bò bằng bốn chi (Kẻ Bám Trần); chỉ có khung đứng",
+      "tags": [
+        "zombie",
+        "dáng",
+        "bò",
+        "trần",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "heavy",
+      "label_vi": "Người to con (64 px)",
+      "description_vi": "Thân to con 23×45 ô, vai rộng, tay dày (Hùng, Kẻ Mang Vỏ); chỉ có khung đứng",
+      "tags": [
+        "người",
+        "to con",
+        "cơ bắp",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "fat",
+      "label_vi": "Người mập (64 px)",
+      "description_vi": "Thân mập bụng phình, đầu bè (Kẻ Phun); chỉ có khung đứng",
+      "tags": [
+        "người",
+        "mập",
+        "bụng",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
+    },
+    {
+      "id": "brute",
+      "label_vi": "Khổng lồ đột biến (64 px)",
+      "description_vi": "Thân khổng lồ 31 cột với đầu riêng, không đội mũ hay tóc thường được (Đột Biến); chỉ có khung đứng",
+      "tags": [
+        "khổng lồ",
+        "đột biến",
+        "quái",
+        "64 px"
+      ],
+      "canvas": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 32,
+        "y": 62
+      }
     }
   ],
   "slots": [
@@ -98,6 +331,10 @@
       "label_vi": "Mặt"
     },
     {
+      "id": "eyewear",
+      "label_vi": "Kính"
+    },
+    {
       "id": "top",
       "label_vi": "Áo"
     },
@@ -112,6 +349,10 @@
     {
       "id": "gear",
       "label_vi": "Đồ mang theo"
+    },
+    {
+      "id": "marks",
+      "label_vi": "Vết thương"
     }
   ],
   "parts": [
@@ -193,7 +434,18 @@
         "nam"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -209,7 +461,18 @@
         "trẻ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -225,7 +488,18 @@
         "gọn"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -241,7 +515,18 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -257,7 +542,18 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -273,7 +569,18 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -289,7 +596,18 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -305,7 +623,18 @@
         "lính"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -322,7 +651,45 @@
         "kinh dị"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
+      ]
+    },
+    {
+      "id": "hair_bald",
+      "slots": [
+        "hair"
+      ],
+      "label_vi": "Đầu trọc",
+      "tags": [
+        "tóc",
+        "trọc",
+        "cạo",
+        "hói"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -338,7 +705,18 @@
         "chiến đấu"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -354,7 +732,18 @@
         "lính"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -370,7 +759,18 @@
         "lính"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -386,7 +786,18 @@
         "băng đỏ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -403,7 +814,18 @@
         "già"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -419,7 +841,18 @@
         "công trường"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -435,24 +868,18 @@
         "võ"
       ],
       "characters": [
-        "hero"
-      ]
-    },
-    {
-      "id": "glasses",
-      "slots": [
-        "face"
-      ],
-      "label_vi": "Kính tròn",
-      "tags": [
-        "kính",
-        "tròn",
-        "trí thức",
-        "bác sĩ",
-        "kỹ thuật"
-      ],
-      "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -468,7 +895,18 @@
         "ông"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -485,7 +923,18 @@
         "quái"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -502,7 +951,91 @@
         "nhiễm"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
+      ]
+    },
+    {
+      "id": "face_thinh",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Mặt Kẻ Thính",
+      "tags": [
+        "mặt",
+        "tai to",
+        "mắt khâu",
+        "mù",
+        "quái"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
+      ]
+    },
+    {
+      "id": "face_brute",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Mặt Đột Biến",
+      "tags": [
+        "mặt",
+        "một mắt",
+        "hàm răng",
+        "khổng lồ",
+        "quái"
+      ],
+      "characters": [
+        "brute"
+      ]
+    },
+    {
+      "id": "glasses",
+      "slots": [
+        "eyewear"
+      ],
+      "label_vi": "Kính tròn",
+      "tags": [
+        "kính",
+        "tròn",
+        "trí thức",
+        "bác sĩ",
+        "kỹ thuật"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat"
       ]
     },
     {
@@ -518,7 +1051,19 @@
         "thường"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -534,7 +1079,76 @@
         "zombie"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "tee_rags",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo thun rách may gấu",
+      "tags": [
+        "áo",
+        "thun",
+        "rách",
+        "gấu",
+        "bò"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "tee_hivis",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo thun có dải phản quang",
+      "tags": [
+        "áo",
+        "thun",
+        "phản quang",
+        "công nhân"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -552,6 +1166,35 @@
       ],
       "characters": [
         "hero"
+      ]
+    },
+    {
+      "id": "tee_army_torn",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo lính rách dính máu",
+      "tags": [
+        "áo",
+        "lính",
+        "rách",
+        "máu",
+        "thắt lưng"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -584,7 +1227,19 @@
         "khuy"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -638,6 +1293,35 @@
       ]
     },
     {
+      "id": "shirt_tie_stained",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Sơ mi cà vạt dính máu",
+      "tags": [
+        "áo",
+        "sơ mi",
+        "cà vạt",
+        "văn phòng",
+        "máu"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
       "id": "uniform_camo",
       "slots": [
         "top"
@@ -650,7 +1334,48 @@
         "thắt lưng"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "uniform_rotten",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Quân phục rằn ri mục rách",
+      "tags": [
+        "quân phục",
+        "rằn ri",
+        "rách",
+        "máu",
+        "zombie"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -666,7 +1391,47 @@
         "lính"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "uniform_police",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Đồng phục cảnh sát",
+      "tags": [
+        "đồng phục",
+        "cảnh sát",
+        "phù hiệu",
+        "thắt lưng"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -682,7 +1447,19 @@
         "lính"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -698,7 +1475,19 @@
         "khoẻ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -715,7 +1504,47 @@
         "zombie"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "tank_number",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo ba lỗ số thi đấu",
+      "tags": [
+        "áo",
+        "ba lỗ",
+        "số",
+        "vận động viên"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -731,7 +1560,19 @@
         "thể thao"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -746,7 +1587,19 @@
         "thường"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -762,7 +1615,19 @@
         "nóng"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -777,7 +1642,19 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -793,7 +1670,19 @@
         "nữ"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -825,7 +1714,19 @@
         "đủ đôi"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -840,7 +1741,19 @@
         "zombie"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -856,7 +1769,19 @@
         "văn phòng"
       ],
       "characters": [
-        "hero"
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     },
     {
@@ -937,6 +1862,183 @@
       ],
       "characters": [
         "hero"
+      ]
+    },
+    {
+      "id": "police_belt",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Đai cảnh sát (dùi cui",
+      "tags": [
+        "đai",
+        "dùi cui",
+        "bao súng",
+        "cảnh sát"
+      ],
+      "characters": [
+        "droop_m"
+      ]
+    },
+    {
+      "id": "sores_dog_tag",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Vết loét tay và thẻ bài",
+      "tags": [
+        "loét",
+        "thẻ bài",
+        "lính",
+        "nhiễm"
+      ],
+      "characters": [
+        "drag"
+      ]
+    },
+    {
+      "id": "shell",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Mai giáp",
+      "tags": [
+        "mai",
+        "giáp",
+        "vỏ",
+        "cứng",
+        "quái"
+      ],
+      "characters": [
+        "heavy"
+      ]
+    },
+    {
+      "id": "pustules",
+      "slots": [
+        "gear"
+      ],
+      "label_vi": "Mụn mủ trên bụng",
+      "tags": [
+        "mụn",
+        "mủ",
+        "bụng",
+        "bào tử",
+        "quái"
+      ],
+      "characters": [
+        "fat"
+      ]
+    },
+    {
+      "id": "wounds",
+      "slots": [
+        "marks"
+      ],
+      "label_vi": "Vết rách và máu",
+      "tags": [
+        "vết thương",
+        "rách",
+        "máu",
+        "zombie"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "wounds_scalp",
+      "slots": [
+        "marks"
+      ],
+      "label_vi": "Vết rách",
+      "tags": [
+        "vết thương",
+        "rách",
+        "máu",
+        "da đầu",
+        "zombie"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "stains",
+      "slots": [
+        "marks"
+      ],
+      "label_vi": "Vết máu",
+      "tags": [
+        "máu",
+        "vết",
+        "zombie"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
+      ]
+    },
+    {
+      "id": "gash",
+      "slots": [
+        "marks"
+      ],
+      "label_vi": "Vết rách",
+      "tags": [
+        "rách",
+        "vết thương",
+        "zombie"
+      ],
+      "characters": [
+        "hero",
+        "droop",
+        "droop_m",
+        "twist",
+        "twist_m",
+        "reach",
+        "drag",
+        "drag_m",
+        "hunch",
+        "crawl",
+        "heavy",
+        "fat",
+        "brute"
       ]
     }
   ],
@@ -1117,7 +2219,9 @@
         "bước"
       ],
       "characters": [
-        "*"
+        "human",
+        "hero",
+        "rats"
       ]
     },
     {
@@ -1212,10 +2316,12 @@
           "hair": "hair_spiky",
           "hat": "none",
           "face": "none",
+          "eyewear": "none",
           "top": "tee",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1270,10 +2376,12 @@
           "hair": "hair_curly",
           "hat": "none",
           "face": "none",
+          "eyewear": "none",
           "top": "scrubs",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1331,11 +2439,13 @@
         "parts": {
           "hair": "hair_swept",
           "hat": "none",
-          "face": "glasses",
+          "face": "none",
+          "eyewear": "glasses",
           "top": "jacket_zip",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "backpack"
+          "gear": "backpack",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1390,10 +2500,12 @@
           "hair": "none",
           "hat": "ranger_hat",
           "face": "beard",
+          "eyewear": "none",
           "top": "coat_ranger",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1450,11 +2562,13 @@
         "parts": {
           "hair": "hair_bob",
           "hat": "none",
-          "face": "glasses",
+          "face": "none",
+          "eyewear": "glasses",
           "top": "coat_lab",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1509,10 +2623,12 @@
           "hair": "hair_wild",
           "hat": "none",
           "face": "mimic",
+          "eyewear": "none",
           "top": "tank",
           "bottoms": "dress_stained",
           "shoes": "none",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1567,10 +2683,12 @@
           "hair": "none",
           "hat": "helmet",
           "face": "none",
+          "eyewear": "none",
           "top": "uniform_camo",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "rifle_slung"
+          "gear": "rifle_slung",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1629,10 +2747,12 @@
           "hair": "none",
           "hat": "beret",
           "face": "none",
+          "eyewear": "none",
           "top": "uniform_officer",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "map_case"
+          "gear": "map_case",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1690,10 +2810,12 @@
           "hair": "hair_buzz",
           "hat": "none",
           "face": "none",
+          "eyewear": "none",
           "top": "tee_army",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "rifle_stand"
+          "gear": "rifle_stand",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1755,10 +2877,12 @@
           "hair": "hair_ponytail",
           "hat": "peaked_cap",
           "face": "none",
+          "eyewear": "none",
           "top": "uniform_camo",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1821,10 +2945,12 @@
           "hair": "none",
           "hat": "helmet",
           "face": "none",
+          "eyewear": "none",
           "top": "uniform_medic",
           "bottoms": "pants",
           "shoes": "boots",
-          "gear": "satchel_medic"
+          "gear": "satchel_medic",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1885,13 +3011,15 @@
         "version": 1,
         "baseCharacter": "hero",
         "parts": {
-          "hair": "none",
+          "hair": "hair_bald",
           "hat": "none",
           "face": "face_zombie",
+          "eyewear": "none",
           "top": "tank_torn",
           "bottoms": "shorts",
           "shoes": "none",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1942,10 +3070,12 @@
           "hair": "hair_short",
           "hat": "none",
           "face": "none",
+          "eyewear": "none",
           "top": "tee",
           "bottoms": "shorts",
           "shoes": "none",
-          "gear": "none"
+          "gear": "none",
+          "marks": "none"
         },
         "colors": [
           {
@@ -1976,6 +3106,937 @@
         "animations": [
           "idle",
           "walk"
+        ]
+      }
+    },
+    {
+      "id": "zombie_civ_m",
+      "label_vi": "Zombie dân thường (nam)",
+      "description_vi": "Dáng gục đầu, áo thun rách, quần jean, mất một giày, da đầu tróc",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "dân thường",
+        "nam"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "droop",
+        "parts": {
+          "hair": "hair_short",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tee_torn",
+          "bottoms": "pants",
+          "shoes": "boot_right",
+          "gear": "none",
+          "marks": "wounds_scalp"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "hair",
+            "color": "#3c322a"
+          },
+          {
+            "target": "body",
+            "color": "#62788a"
+          },
+          {
+            "target": "legs",
+            "color": "#3e3c42"
+          },
+          {
+            "target": "boots",
+            "color": "#342e28"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_civ_f",
+      "label_vi": "Zombie dân thường (nữ)",
+      "description_vi": "Dáng ngoẹo cổ, tóc dài, áo blouse, váy rách, giày bệt",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "dân thường",
+        "nữ"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "twist",
+        "parts": {
+          "hair": "hair_long",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tee",
+          "bottoms": "skirt",
+          "shoes": "flats",
+          "gear": "none",
+          "marks": "wounds"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#b2bc98"
+          },
+          {
+            "target": "hair",
+            "color": "#683830"
+          },
+          {
+            "target": "body",
+            "color": "#d67c98"
+          },
+          {
+            "target": "boots",
+            "color": "#3c2832"
+          },
+          {
+            "target": "cape",
+            "color": "#463c5c"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_worker",
+      "label_vi": "Zombie công nhân",
+      "description_vi": "Dáng vươn tay, nón bảo hộ, áo cam có dải phản quang",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "công nhân",
+        "công trường"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "reach",
+        "parts": {
+          "hair": "none",
+          "hat": "hard_hat",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tee_hivis",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "wounds"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "body",
+            "color": "#de6e28"
+          },
+          {
+            "target": "legs",
+            "color": "#3c466e"
+          },
+          {
+            "target": "boots",
+            "color": "#60422a"
+          },
+          {
+            "target": "metal",
+            "color": "#c8c8c4"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "accent",
+            "color": "#e8b830"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_police",
+      "label_vi": "Zombie cảnh sát",
+      "description_vi": "Dáng gục đầu lật, mũ kê-pi băng đỏ, đồng phục, đai dùi cui và bao súng",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "cảnh sát"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "droop_m",
+        "parts": {
+          "hair": "none",
+          "hat": "police_cap",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "uniform_police",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "police_belt",
+          "marks": "stains"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "body",
+            "color": "#628050"
+          },
+          {
+            "target": "legs",
+            "color": "#344832"
+          },
+          {
+            "target": "boots",
+            "color": "#1e1e22"
+          },
+          {
+            "target": "cape",
+            "color": "#284c32"
+          },
+          {
+            "target": "metal",
+            "color": "#d2b45a"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "accent",
+            "color": "#c82832"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_soldier",
+      "label_vi": "Zombie quân đội",
+      "description_vi": "Dáng gù lưng, nón sắt, quân phục rằn ri mục rách bụng",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "quân đội",
+        "lính"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hunch",
+        "parts": {
+          "hair": "none",
+          "hat": "helmet",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "uniform_rotten",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "body",
+            "color": "#5c6050"
+          },
+          {
+            "target": "legs",
+            "color": "#54564a"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#424638"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "linh_nhiem",
+      "label_vi": "Lính Nhiễm",
+      "description_vi": "Dáng lết chân, nón sắt, áo lính rách một tay, vết loét, thẻ bài",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "lính",
+        "nhiễm",
+        "npc"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "drag",
+        "parts": {
+          "hair": "none",
+          "hat": "helmet",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tee_army_torn",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "sores_dog_tag",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#b8ba9c"
+          },
+          {
+            "target": "body",
+            "color": "#6a7048"
+          },
+          {
+            "target": "legs",
+            "color": "#5c6040"
+          },
+          {
+            "target": "boots",
+            "color": "#3a3228"
+          },
+          {
+            "target": "cape",
+            "color": "#4e5638"
+          },
+          {
+            "target": "metal",
+            "color": "#ccccc2"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_athlete_m",
+      "label_vi": "Zombie vận động viên (nam)",
+      "description_vi": "Dáng gục đầu lật, băng đô, áo ba lỗ số thi đấu, quần ngắn, giày thể thao",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "vận động viên",
+        "nam"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "droop_m",
+        "parts": {
+          "hair": "hair_short",
+          "hat": "headband",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tank_number",
+          "bottoms": "shorts",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "wounds"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "hair",
+            "color": "#3c3636"
+          },
+          {
+            "target": "body",
+            "color": "#2c6ec8"
+          },
+          {
+            "target": "legs",
+            "color": "#ececec"
+          },
+          {
+            "target": "boots",
+            "color": "#f0f0f0"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "accent",
+            "color": "#f0f0ec"
+          },
+          {
+            "target": "eyes",
+            "color": "#b43228"
+          },
+          {
+            "target": "white",
+            "color": "#ecece6"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_athlete_f",
+      "label_vi": "Zombie vận động viên (nữ)",
+      "description_vi": "Dáng lết chân lật, tóc đuôi ngựa, áo lửng, quần ngắn, giày thể thao",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "vận động viên",
+        "nữ"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "drag_m",
+        "parts": {
+          "hair": "hair_ponytail",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "crop",
+          "bottoms": "shorts",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "gash"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#b2bc98"
+          },
+          {
+            "target": "hair",
+            "color": "#784628"
+          },
+          {
+            "target": "body",
+            "color": "#de3c60"
+          },
+          {
+            "target": "legs",
+            "color": "#282834"
+          },
+          {
+            "target": "boots",
+            "color": "#f0f0f0"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "zombie_office",
+      "label_vi": "Zombie nhân viên văn phòng",
+      "description_vi": "Dáng ngoẹo cổ lật, đầu đinh bạc, kính, sơ mi cà vạt dính máu",
+      "tags": [
+        "vùng xanh",
+        "zombie",
+        "văn phòng",
+        "kính"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "twist_m",
+        "parts": {
+          "hair": "hair_buzz",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "glasses",
+          "top": "shirt_tie_stained",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#acb68e"
+          },
+          {
+            "target": "hair",
+            "color": "#767470"
+          },
+          {
+            "target": "body",
+            "color": "#d6d6d2"
+          },
+          {
+            "target": "legs",
+            "color": "#32323c"
+          },
+          {
+            "target": "boots",
+            "color": "#1e1e22"
+          },
+          {
+            "target": "leather",
+            "color": "#781e28"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "ke_thinh",
+      "label_vi": "Kẻ Thính",
+      "description_vi": "Mù, nghe cực nhạy; dáng vươn tay, tai to, mắt khâu, áo rách",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "kẻ thính",
+        "mù",
+        "tai"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "reach",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "face_thinh",
+          "eyewear": "none",
+          "top": "tee_torn",
+          "bottoms": "shorts",
+          "shoes": "none",
+          "gear": "none",
+          "marks": "wounds"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#c4c4ba"
+          },
+          {
+            "target": "body",
+            "color": "#786e64"
+          },
+          {
+            "target": "legs",
+            "color": "#46423e"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "ke_bam_tran",
+      "label_vi": "Kẻ Bám Trần",
+      "description_vi": "Bò trên trần rồi rơi xuống; dáng bò, da tím tái, áo rách",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "kẻ bám trần",
+        "bò"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "crawl",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "tee_rags",
+          "bottoms": "shorts",
+          "shoes": "none",
+          "gear": "none",
+          "marks": "wounds_scalp"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#787084"
+          },
+          {
+            "target": "body",
+            "color": "#504c54"
+          },
+          {
+            "target": "legs",
+            "color": "#322e38"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#e6c83c"
+          },
+          {
+            "target": "white",
+            "color": "#a09678"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "ke_phun",
+      "label_vi": "Kẻ Phun",
+      "description_vi": "Phun mây bào tử; thân mập bụng phình, mụn mủ, da xanh",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "kẻ phun",
+        "mập",
+        "bào tử"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "fat",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "none",
+          "eyewear": "none",
+          "top": "none",
+          "bottoms": "pants",
+          "shoes": "boots",
+          "gear": "pustules",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#96ac70"
+          },
+          {
+            "target": "legs",
+            "color": "#423a36"
+          },
+          {
+            "target": "boots",
+            "color": "#3c342c"
+          },
+          {
+            "target": "accent",
+            "color": "#e6c850"
+          },
+          {
+            "target": "eyes",
+            "color": "#d2aa32"
+          },
+          {
+            "target": "white",
+            "color": "#c8be96"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "hung",
+      "label_vi": "Hùng",
+      "description_vi": "Sức mạnh của nhóm, to con, đầu trọc, băng đô xanh, áo ba lỗ xám",
+      "tags": [
+        "vùng xanh",
+        "người chơi",
+        "hùng",
+        "to con"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "heavy",
+        "parts": {
+          "hair": "hair_bald",
+          "hat": "headband",
+          "face": "none",
+          "eyewear": "none",
+          "top": "tank",
+          "bottoms": "shorts",
+          "shoes": "boots",
+          "gear": "none",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#c48c60"
+          },
+          {
+            "target": "body",
+            "color": "#969696"
+          },
+          {
+            "target": "legs",
+            "color": "#9c7646"
+          },
+          {
+            "target": "boots",
+            "color": "#463c36"
+          },
+          {
+            "target": "accent",
+            "color": "#48aa60"
+          },
+          {
+            "target": "eyes",
+            "color": "#965028"
+          },
+          {
+            "target": "white",
+            "color": "#d4e6ee"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "ke_mang_vo",
+      "label_vi": "Kẻ Mang Vỏ",
+      "description_vi": "Vỏ cứng miễn cận chiến; thân to con mang mai giáp và tấm vai",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "kẻ mang vỏ",
+        "mai giáp"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "heavy",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "face_zombie",
+          "eyewear": "none",
+          "top": "none",
+          "bottoms": "shorts",
+          "shoes": "none",
+          "gear": "shell",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#a09884"
+          },
+          {
+            "target": "legs",
+            "color": "#403a34"
+          },
+          {
+            "target": "leather",
+            "color": "#5c483a"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#dc7828"
+          },
+          {
+            "target": "white",
+            "color": "#c8beaa"
+          }
+        ],
+        "animations": [
+          "idle"
+        ]
+      }
+    },
+    {
+      "id": "dot_bien",
+      "label_vi": "Đột Biến",
+      "description_vi": "Khổng lồ đột biến một mắt, hàm răng, nhọt trên thân",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "đột biến",
+        "khổng lồ"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "brute",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "face_brute",
+          "eyewear": "none",
+          "top": "none",
+          "bottoms": "pants",
+          "shoes": "none",
+          "gear": "none",
+          "marks": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#96a280"
+          },
+          {
+            "target": "legs",
+            "color": "#3c383c"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "accent",
+            "color": "#e6c850"
+          },
+          {
+            "target": "eyes",
+            "color": "#d22828"
+          },
+          {
+            "target": "white",
+            "color": "#ece6d2"
+          }
+        ],
+        "animations": [
+          "idle"
         ]
       }
     },

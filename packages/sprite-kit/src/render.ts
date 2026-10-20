@@ -20,13 +20,22 @@ import {
   type ProjectStyle,
 } from '@pixiso/shared';
 import { CLIPS, type Clip } from './anim.js';
-import { wearView, wearWalk } from './cast64.js';
+import { buildOutfit, wearView, wearWalk } from './cast64.js';
 import { buildClip, partById, type CharacterSpec } from './character.js';
 import { compose } from './compose.js';
 import { flipX, type Material, type Sprite } from './format.js';
-import { HERO_CANVAS, HERO_WALK_CYCLE, heroFrames, type HeroView } from './hero64.js';
-import { HERO_CLIP_IDS, heroLook } from './hero64.registry.js';
+import {
+  HERO_CANVAS,
+  HERO_GROUND,
+  HERO_PIVOT,
+  HERO_WALK_CYCLE,
+  heroFrames,
+  type HeroView,
+} from './hero64.js';
+import { HERO_CLIP_IDS, heroLook, POSED_CLIP_IDS } from './hero64.registry.js';
 import { dress } from './outfit64.js';
+import { POSED_BODIES } from './posed64.js';
+import { poseInView } from './poseviews64.js';
 import { ratClip, RATS_BODY_ID, RATS_CLIP_IDS, RATS_DEFAULT_COLORS } from './rats64.js';
 import {
   buildPalette,
@@ -229,8 +238,48 @@ function heroCells(
   return { frames, colors: look.colors };
 }
 
+/**
+ * A posed body (D-100): the pose seen from the drawn view, dressed by the same
+ * Look rules, centred on the pivot with its soles on the ground row (the side
+ * view's soles sit one row lower, as the reference frames do); the standing
+ * frame held for two frames is its idle.
+ */
+function posedCells(
+  bodyId: string,
+  view: HeroView,
+  config: CharacterConfig,
+  colors: MaterialColors,
+) {
+  const body = POSED_BODIES.find((b) => b.id === bodyId)!;
+  const pose = poseInView(body.pose, view);
+  if (!pose) throw new Error(`body "${bodyId}" is not drawn in view ${view}`);
+  const look = heroLook(config.parts, colors, bodyId);
+  const figure = pose.form.figure!;
+  const s = dress(figure, buildOutfit(bodyId, bodyId, pose, look, view));
+  const ground = HERO_GROUND + (view === 'W' ? 1 : 0);
+  const cell = compose(
+    [
+      {
+        id: 'body',
+        sprite: s,
+        x: HERO_PIVOT.x - Math.floor(figure.w / 2) - s.ox,
+        y: ground - (figure.h - 1) - s.oy,
+        z: 0,
+      },
+    ],
+    HERO_CANVAS,
+    HERO_CANVAS,
+  );
+  return { frames: [cell, cell], colors: look.colors };
+}
+
 const DRAWN_BODIES: readonly DrawnBody[] = [
   { id: HERO_BODY_ID, clipIds: HERO_CLIP_IDS, cells: heroCells },
+  ...POSED_BODIES.map((b): DrawnBody => ({
+    id: b.id,
+    clipIds: POSED_CLIP_IDS,
+    cells: (config, colors, view) => posedCells(b.id, view, config, colors),
+  })),
   {
     id: RATS_BODY_ID,
     clipIds: RATS_CLIP_IDS,
@@ -240,6 +289,11 @@ const DRAWN_BODIES: readonly DrawnBody[] = [
     }),
   },
 ];
+
+/** Clips each body drawn whole has frames for, by body id (the catalog's animation `characters`). */
+export const DRAWN_BODY_CLIPS: Readonly<Record<string, readonly string[]>> = Object.fromEntries(
+  DRAWN_BODIES.map((b) => [b.id, b.clipIds]),
+);
 
 /** Renders a clip of a body drawn whole: mirrored directions flip the canvas, the cast's ramps paint it. */
 function renderDrawnClip(

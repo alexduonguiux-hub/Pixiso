@@ -9,6 +9,7 @@ import { CANVAS_H, CANVAS_W, PIVOT, type BodyView } from './body32.js';
 import { buildBody, CHIBI_CLASSIC } from './bodygen.js';
 import type { Material } from './format.js';
 import { HERO_CANVAS, HERO_PIVOT } from './hero64.js';
+import { POSED_BODIES } from './posed64.js';
 import { RATS_BODY_ID, RATS_CANVAS, RATS_PIVOT } from './rats64.js';
 
 export const SLOT_IDS = ['head', 'hand_right', 'hand_left', 'back'] as const;
@@ -66,6 +67,12 @@ export const BODIES: readonly BodyDef[] = [
     canvas: { w: RATS_CANVAS, h: RATS_CANVAS },
     pivot: { x: RATS_PIVOT.x, y: RATS_PIVOT.y },
   },
+  // the posed bodies (D-100): each zombie stance and large build, on the hero's canvas and ground line
+  ...POSED_BODIES.map((b) => ({
+    id: b.id,
+    canvas: { w: HERO_CANVAS, h: HERO_CANVAS },
+    pivot: { x: HERO_PIVOT.x, y: HERO_PIVOT.y },
+  })),
 ];
 
 export function bodyById(id: string): BodyDef | undefined {

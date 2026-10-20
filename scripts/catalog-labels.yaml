@@ -23,6 +23,54 @@ characters:
     label_vi: Bầy chuột (64 px)
     description_vi: Ba con chuột trên cùng ô 64 px và điểm neo của người; không có bộ phận, chỉ đổi màu lông, da và mắt
     tags: [chuột, bầy, thú, '64 px', vùng xanh]
+  droop:
+    label_vi: Zombie gục đầu
+    description_vi: Thân người 64 px, đầu gục nghiêng, tay buông; chỉ có khung đứng
+    tags: [zombie, dáng, gục đầu, '64 px']
+  droop_m:
+    label_vi: Zombie gục đầu (lật)
+    description_vi: Dáng gục đầu nghiêng sang bên kia; chỉ có khung đứng
+    tags: [zombie, dáng, gục đầu, lật, '64 px']
+  twist:
+    label_vi: Zombie ngoẹo cổ
+    description_vi: Thân người 64 px, cổ ngoẹo sang một bên; chỉ có khung đứng
+    tags: [zombie, dáng, ngoẹo cổ, '64 px']
+  twist_m:
+    label_vi: Zombie ngoẹo cổ (lật)
+    description_vi: Dáng ngoẹo cổ sang bên kia; chỉ có khung đứng
+    tags: [zombie, dáng, ngoẹo cổ, lật, '64 px']
+  reach:
+    label_vi: Zombie vươn tay
+    description_vi: Thân người 64 px, hai tay vươn về phía trước; chỉ có khung đứng
+    tags: [zombie, dáng, vươn tay, '64 px']
+  drag:
+    label_vi: Zombie lết chân
+    description_vi: Thân người 64 px, một chân lết sau; chỉ có khung đứng
+    tags: [zombie, dáng, lết chân, '64 px']
+  drag_m:
+    label_vi: Zombie lết chân (lật)
+    description_vi: Dáng lết chân bên kia; chỉ có khung đứng
+    tags: [zombie, dáng, lết chân, lật, '64 px']
+  hunch:
+    label_vi: Zombie gù lưng
+    description_vi: Thân người 64 px, lưng gù có bướu, đầu thụt; chỉ có khung đứng
+    tags: [zombie, dáng, gù, bướu, '64 px']
+  crawl:
+    label_vi: Dáng bò
+    description_vi: Thân người 64 px ngồi xổm bò bằng bốn chi (Kẻ Bám Trần); chỉ có khung đứng
+    tags: [zombie, dáng, bò, trần, '64 px']
+  heavy:
+    label_vi: Người to con (64 px)
+    description_vi: Thân to con 23×45 ô, vai rộng, tay dày (Hùng, Kẻ Mang Vỏ); chỉ có khung đứng
+    tags: [người, to con, cơ bắp, '64 px']
+  fat:
+    label_vi: Người mập (64 px)
+    description_vi: Thân mập bụng phình, đầu bè (Kẻ Phun); chỉ có khung đứng
+    tags: [người, mập, bụng, '64 px']
+  brute:
+    label_vi: Khổng lồ đột biến (64 px)
+    description_vi: Thân khổng lồ 31 cột với đầu riêng, không đội mũ hay tóc thường được (Đột Biến); chỉ có khung đứng
+    tags: [khổng lồ, đột biến, quái, '64 px']
 
 slots:
   head: { label_vi: Đầu }
@@ -36,6 +84,8 @@ slots:
   bottoms: { label_vi: Quần / váy }
   shoes: { label_vi: Giày }
   gear: { label_vi: Đồ mang theo }
+  eyewear: { label_vi: Kính }
+  marks: { label_vi: Vết thương }
 
 parts:
   knight_helmet: { label_vi: Mũ giáp hiệp sĩ, tags: [mũ, giáp, hiệp sĩ, kim loại, bảo vệ] }
@@ -52,6 +102,7 @@ parts:
   hair_ponytail: { label_vi: Tóc đuôi ngựa, tags: [tóc, đuôi ngựa, buộc, nữ] }
   hair_buzz: { label_vi: Đầu đinh, tags: [tóc, đinh, cạo, lính] }
   hair_wild: { label_vi: Tóc rối dài, tags: [tóc, rối, dài, ma, kinh dị] }
+  hair_bald: { label_vi: Đầu trọc, tags: [tóc, trọc, cạo, hói] }
   # hero: hats
   helmet: { label_vi: Nón sắt, tags: [nón, sắt, lính, chiến đấu] }
   beret: { label_vi: Mũ nồi, tags: [mũ, nồi, sĩ quan, lính] }
@@ -65,20 +116,29 @@ parts:
   beard: { label_vi: Râu quai nón, tags: [râu, rậm, già, ông] }
   mimic: { label_vi: Mặt Kẻ Bắt Chước, tags: [mặt, hốc mắt, cười rộng, ma, quái] }
   face_zombie: { label_vi: Mặt nhiễm, tags: [mặt, zombie, hốc mắt, răng, nhiễm] }
+  face_thinh: { label_vi: Mặt Kẻ Thính, tags: [mặt, tai to, mắt khâu, mù, quái] }
+  face_brute: { label_vi: Mặt Đột Biến, tags: [mặt, một mắt, hàm răng, khổng lồ, quái] }
   # hero: tops
   tee: { label_vi: Áo thun, tags: [áo, thun, ngắn tay, thường] }
   tee_torn: { label_vi: Áo thun rách, tags: [áo, thun, rách, zombie] }
+  tee_rags: { label_vi: Áo thun rách may gấu, tags: [áo, thun, rách, gấu, bò] }
+  tee_hivis: { label_vi: Áo thun có dải phản quang, tags: [áo, thun, phản quang, công nhân] }
+  tee_army_torn: { label_vi: Áo lính rách dính máu, tags: [áo, lính, rách, máu, thắt lưng] }
   tee_army: { label_vi: Áo thun lính, tags: [áo, thun, lính, thẻ bài, thắt lưng] }
   scrubs: { label_vi: Áo y tá, tags: [áo, y tá, tunic, túi, cứu thương] }
   jacket: { label_vi: Áo khoác, tags: [áo, khoác, dài tay, khuy] }
   jacket_zip: { label_vi: Áo khoác khoá kéo, tags: [áo, khoác, khoá kéo, kỹ thuật] }
+  shirt_tie_stained: { label_vi: Sơ mi cà vạt dính máu, tags: [áo, sơ mi, cà vạt, văn phòng, máu] }
   coat_ranger: { label_vi: Áo khoác kiểm lâm, tags: [áo, khoác, dài, kiểm lâm, rừng] }
   coat_lab: { label_vi: Áo blouse, tags: [áo, blouse, bác sĩ, trắng, bìa kẹp] }
   uniform_camo: { label_vi: Quân phục rằn ri, tags: [quân phục, rằn ri, lính, thắt lưng] }
+  uniform_rotten: { label_vi: Quân phục rằn ri mục rách, tags: [quân phục, rằn ri, rách, máu, zombie] }
+  uniform_police: { label_vi: Đồng phục cảnh sát, tags: [đồng phục, cảnh sát, phù hiệu, thắt lưng] }
   uniform_officer: { label_vi: Quân phục sĩ quan, tags: [quân phục, sĩ quan, phù hiệu, lính] }
   uniform_medic: { label_vi: Quân phục quân y, tags: [quân phục, quân y, băng tay, lính] }
   tank: { label_vi: Áo ba lỗ, tags: [áo, ba lỗ, sát nách, khoẻ] }
   tank_torn: { label_vi: Áo ba lỗ rách dính máu, tags: [áo, ba lỗ, rách, máu, zombie] }
+  tank_number: { label_vi: Áo ba lỗ số thi đấu, tags: [áo, ba lỗ, số, vận động viên] }
   crop: { label_vi: Áo lửng, tags: [áo, lửng, hở eo, thể thao] }
   # hero: bottoms
   pants: { label_vi: Quần dài, tags: [quần, dài, thường] }
@@ -96,6 +156,15 @@ parts:
   rifle_stand: { label_vi: Súng cầm tay, tags: [súng, cầm, chống đất, lính] }
   map_case: { label_vi: Túi bản đồ, tags: [túi, bản đồ, hông, sĩ quan] }
   satchel_medic: { label_vi: Túi cứu thương, tags: [túi, cứu thương, chữ thập, quân y] }
+  police_belt: { label_vi: Đai cảnh sát (dùi cui, bao súng), tags: [đai, dùi cui, bao súng, cảnh sát] }
+  sores_dog_tag: { label_vi: Vết loét tay và thẻ bài, tags: [loét, thẻ bài, lính, nhiễm] }
+  shell: { label_vi: Mai giáp, tags: [mai, giáp, vỏ, cứng, quái] }
+  pustules: { label_vi: Mụn mủ trên bụng, tags: [mụn, mủ, bụng, bào tử, quái] }
+  # hero: marks
+  wounds: { label_vi: Vết rách và máu, tags: [vết thương, rách, máu, zombie] }
+  wounds_scalp: { label_vi: Vết rách, máu và da đầu tróc, tags: [vết thương, rách, máu, da đầu, zombie] }
+  stains: { label_vi: Vết máu, tags: [máu, vết, zombie] }
+  gash: { label_vi: Vết rách, tags: [rách, vết thương, zombie] }
 
 colorTargets:
   skin: { label_vi: Da }
@@ -196,3 +265,63 @@ presets:
     label_vi: Bầy Chuột Đỏ
     description_vi: Bầy chuột đỏ đi theo cống, ba con, chạy lúp xúp
     tags: [vùng xanh, quái, chuột, bầy, cống]
+  zombie_civ_m:
+    label_vi: Zombie dân thường (nam)
+    description_vi: Dáng gục đầu, áo thun rách, quần jean, mất một giày, da đầu tróc
+    tags: [vùng xanh, zombie, dân thường, nam]
+  zombie_civ_f:
+    label_vi: Zombie dân thường (nữ)
+    description_vi: Dáng ngoẹo cổ, tóc dài, áo blouse, váy rách, giày bệt
+    tags: [vùng xanh, zombie, dân thường, nữ]
+  zombie_worker:
+    label_vi: Zombie công nhân
+    description_vi: Dáng vươn tay, nón bảo hộ, áo cam có dải phản quang
+    tags: [vùng xanh, zombie, công nhân, công trường]
+  zombie_police:
+    label_vi: Zombie cảnh sát
+    description_vi: Dáng gục đầu lật, mũ kê-pi băng đỏ, đồng phục, đai dùi cui và bao súng
+    tags: [vùng xanh, zombie, cảnh sát]
+  zombie_soldier:
+    label_vi: Zombie quân đội
+    description_vi: Dáng gù lưng, nón sắt, quân phục rằn ri mục rách bụng
+    tags: [vùng xanh, zombie, quân đội, lính]
+  linh_nhiem:
+    label_vi: Lính Nhiễm
+    description_vi: Dáng lết chân, nón sắt, áo lính rách một tay, vết loét, thẻ bài
+    tags: [vùng xanh, zombie, lính, nhiễm, npc]
+  zombie_athlete_m:
+    label_vi: Zombie vận động viên (nam)
+    description_vi: Dáng gục đầu lật, băng đô, áo ba lỗ số thi đấu, quần ngắn, giày thể thao
+    tags: [vùng xanh, zombie, vận động viên, nam]
+  zombie_athlete_f:
+    label_vi: Zombie vận động viên (nữ)
+    description_vi: Dáng lết chân lật, tóc đuôi ngựa, áo lửng, quần ngắn, giày thể thao
+    tags: [vùng xanh, zombie, vận động viên, nữ]
+  zombie_office:
+    label_vi: Zombie nhân viên văn phòng
+    description_vi: Dáng ngoẹo cổ lật, đầu đinh bạc, kính, sơ mi cà vạt dính máu
+    tags: [vùng xanh, zombie, văn phòng, kính]
+  ke_thinh:
+    label_vi: Kẻ Thính
+    description_vi: Mù, nghe cực nhạy; dáng vươn tay, tai to, mắt khâu, áo rách
+    tags: [vùng xanh, quái, kẻ thính, mù, tai]
+  ke_bam_tran:
+    label_vi: Kẻ Bám Trần
+    description_vi: Bò trên trần rồi rơi xuống; dáng bò, da tím tái, áo rách
+    tags: [vùng xanh, quái, kẻ bám trần, bò]
+  ke_phun:
+    label_vi: Kẻ Phun
+    description_vi: Phun mây bào tử; thân mập bụng phình, mụn mủ, da xanh
+    tags: [vùng xanh, quái, kẻ phun, mập, bào tử]
+  hung:
+    label_vi: Hùng
+    description_vi: Sức mạnh của nhóm, to con, đầu trọc, băng đô xanh, áo ba lỗ xám
+    tags: [vùng xanh, người chơi, hùng, to con]
+  ke_mang_vo:
+    label_vi: Kẻ Mang Vỏ
+    description_vi: Vỏ cứng miễn cận chiến; thân to con mang mai giáp và tấm vai
+    tags: [vùng xanh, quái, kẻ mang vỏ, mai giáp]
+  dot_bien:
+    label_vi: Đột Biến
+    description_vi: Khổng lồ đột biến một mắt, hàm răng, nhọt trên thân
+    tags: [vùng xanh, quái, đột biến, khổng lồ]

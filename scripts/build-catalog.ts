@@ -22,8 +22,7 @@ import {
   BODIES,
   CLIPS,
   COLOR_TARGETS,
-  HERO_BODY_ID,
-  HERO_CLIP_IDS,
+  DRAWN_BODY_CLIPS,
   HERO_PARTS,
   HERO_PRESETS,
   HERO_SLOT_IDS,
@@ -57,6 +56,13 @@ const labelsSchema = z.object({
 });
 
 export type Labels = z.infer<typeof labelsSchema>;
+
+/** Bodies with frames for a clip: the limb body always, a drawn body when it lists the clip. */
+function clipCharacters(clipId: string): string[] {
+  const drawn = Object.entries(DRAWN_BODY_CLIPS);
+  const have = drawn.filter(([, clips]) => clips.includes(clipId)).map(([id]) => id);
+  return have.length === drawn.length ? ['*'] : [REFERENCE_BODY, ...have];
+}
 
 function fail(msg: string): never {
   throw new Error(msg);
@@ -120,16 +126,16 @@ export function buildCatalog(labels: Labels): Catalog {
       id,
       label_vi: labels.slots[id]!.label_vi,
     })),
-    // The 32 px parts fit the limb body, the hero's parts its own body (D-096): a part names its body.
+    // The 32 px parts fit the limb body; a 64 px part lists the bodies it is drawn for (D-096, D-100).
     parts: [
-      ...PARTS.map((p) => ({ id: p.id, slot: p.slot, body: REFERENCE_BODY })),
-      ...HERO_PARTS.map((p) => ({ id: p.id, slot: p.slot, body: HERO_BODY_ID })),
+      ...PARTS.map((p) => ({ id: p.id, slot: p.slot as string, bodies: [REFERENCE_BODY] })),
+      ...HERO_PARTS.map((p) => ({ id: p.id, slot: p.slot as string, bodies: [...p.bodies] })),
     ].map((p) => ({
       id: p.id,
       slots: [p.slot],
       label_vi: labels.parts[p.id]!.label_vi,
       tags: labels.parts[p.id]!.tags,
-      characters: [p.body],
+      characters: p.bodies,
     })),
     colorTargets: COLOR_TARGETS.map((t) => ({
       id: t.id,
@@ -148,8 +154,8 @@ export function buildCatalog(labels: Labels): Catalog {
       frames: c.frames.S.length,
       frameMs: c.frameMs,
       tags: labels.animations[c.id]!.tags,
-      // idle and walk have frames on every body; the other clips are the limb body's offset tables
-      characters: (HERO_CLIP_IDS as readonly string[]).includes(c.id) ? ['*'] : [REFERENCE_BODY],
+      // the limb body has every clip; a body drawn whole lists its own (every body → "*")
+      characters: clipCharacters(c.id),
     })),
     directions: [...AVAILABLE_DIRECTIONS],
     presets: PRESETS.map((p) => {

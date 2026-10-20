@@ -2,10 +2,12 @@ import { countColors, imageHash } from '@pixiso/pixel-core';
 import {
   COLOR_NAMES,
   DEFAULT_PROJECT_STYLE,
+  DIRECTIONS_8,
   type CharacterConfig,
   type ProjectStyle,
 } from '@pixiso/shared';
 import { describe, expect, it } from 'vitest';
+import { HERO_PRESETS } from './hero64.registry.js';
 import {
   colorTableFrom,
   materialColorsFor,
@@ -191,3 +193,34 @@ describe('hero config → frames (D-096)', () => {
     expect(imageHash(none.frames[0]!)).not.toBe(imageHash(green.frames[0]!));
   });
 });
+
+describe('posed bodies (D-100)', () => {
+  it('every posed preset renders its standing frame in all eight directions and has no walk yet', () => {
+    for (const preset of HERO_PRESETS.filter((p) => p.body !== 'hero')) {
+      for (const d of DIRECTIONS_8) {
+        const idle = renderClip(preset.config, style, 'idle', d, table);
+        expect(idle.frames, `${preset.id} ${d}`).toHaveLength(2);
+        expect(idle.cell).toEqual({ w: 64, h: 64 });
+        expect(idle.pivot).toEqual({ x: 32, y: 62 });
+        expect(imageHash(idle.frames[0]!)).toBe(imageHash(idle.frames[1]!));
+        // something is drawn, and its lowest opaque row is on the ground
+        const bottom = lowestOpaqueRow(idle.frames[0]!);
+        expect(bottom, `${preset.id} ${d}`).toBeGreaterThanOrEqual(60);
+        expect(bottom, `${preset.id} ${d}`).toBeLessThanOrEqual(61);
+      }
+      expect(() => renderClip(preset.config, style, 'walk', 'S', table)).toThrow(/no .* frames/);
+    }
+    // a part not drawn for the body is ignored, so a config can never crash the renderer
+    const droop = HERO_PRESETS.find((p) => p.id === 'zombie_civ_m')!.config;
+    const withPack = { ...droop, parts: { ...droop.parts, gear: 'backpack' } };
+    expect(imageHash(renderClip(withPack, style, 'idle', 'S', table).frames[0]!)).toBe(
+      imageHash(renderClip(droop, style, 'idle', 'S', table).frames[0]!),
+    );
+  });
+});
+
+function lowestOpaqueRow(img: { width: number; height: number; data: Uint8ClampedArray }): number {
+  for (let y = img.height - 1; y >= 0; y--)
+    for (let x = 0; x < img.width; x++) if (img.data[(y * img.width + x) * 4 + 3] === 255) return y;
+  return -1;
+}

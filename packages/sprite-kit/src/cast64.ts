@@ -1321,7 +1321,13 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
         // walk step's torso box holds the outline of the arm swung across the chest: a blotch cut by it is a dot,
         // D-095)
         camo(
-          [tx0 + 1, pose.collar[pose.collar.length - 1]![1] + 1, tx1 - 1, hemY - 1],
+          // below the collar line, or from the torso top when the view draws no collar (the crawl in profile)
+          [
+            tx0 + 1,
+            pose.collar.length ? pose.collar[pose.collar.length - 1]![1] + 1 : ty0,
+            tx1 - 1,
+            hemY - 1,
+          ],
           'k',
           pose.neck,
           onBody,
@@ -1341,6 +1347,9 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
     view,
   };
 }
+
+/** The outfit of a look on any pose in any drawn view: what the registry's bodies render with (D-100). */
+export const buildOutfit = build;
 
 /** The S-view outfit of a look on a pose. */
 function wear(id: string, label: string, pose: ZombiePose, look: Look): Outfit {
@@ -2268,7 +2277,13 @@ export const HERO_ITEMS = {
     hard_hat: HARD_HAT_V,
     headband: HEADBAND_V,
   },
-  face: { beard: BEARD_V, mimic: MIMIC_FACE_V },
+  face: {
+    beard: BEARD_V,
+    mimic: MIMIC_FACE_V,
+    big_ears: BIG_EARS_V,
+    sealed_eyes: SEALED_EYES_V,
+    brute: BRUTE_FACE_V,
+  },
   top: {
     ny_strap: NY_STRAP_V,
     tunic: TUNIC_V,
@@ -2285,6 +2300,14 @@ export const HERO_ITEMS = {
     map_case: MAP_CASE_V,
     satchel: SATCHEL_V,
     medic_cross: MEDIC_CROSS_V,
+    /** The police zombie's duty belt, drawn on the mirrored droop pose. */
+    police: POLICE_GEAR_V,
+    /** Lính Nhiễm's forearm sores and dog tag, drawn on the drag pose (front view). */
+    sores_dog_tag: { S: { overlays: [...SORES, dogTag(POSE_DRAG)] } } as ViewItem,
+    /** Kẻ Mang Vỏ's carapace and shoulder plates, on the heavy build. */
+    shell: SHELL_V,
+    /** Kẻ Phun's pustules, on the bloated belly. */
+    pustules: PUSTULES_V,
   },
   /** Under a hat brim the profile's iris keeps its lower cell (the ranger hat). */
   brim_eye: BRIM_EYE_V,

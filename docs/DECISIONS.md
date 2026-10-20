@@ -1024,3 +1024,28 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   con mỗi khung, con trước trên hàng đất, khung bước khác khung nghỉ, render idle 2 / walk 4 / 64×64 / E lật W / đổi
   màu / tất định); `pnpm rats` render bảng 8 hướng ×6 và dump đơn vị cho `pixel_lint.py` (nay đọc được dump phẳng),
   chạy trong `pnpm qa:pixel` (15 đơn vị sạch; tổng lint giữ 138). Thước 1× và qa:hero không đổi. 139 test, Playwright 4.
+
+### D-100 Dáng zombie và thể hình vào catalog: mỗi dáng là một thân, bộ phận khai báo thân nó vẽ cho, 15 preset nữa
+
+- **Thân**: mỗi dáng/thể hình mà dàn diễn đang mặc là một nhân vật của catalog (`posed64.ts`): `droop`, `droop_m`,
+  `twist`, `twist_m`, `reach`, `drag`, `drag_m`, `hunch`, `crawl`, `heavy`, `fat`, `brute` (id = id dáng), canvas 64×64,
+  neo (32, 62), vẽ năm góc bởi `poseInView`, đặt lên canvas như `hero-pose-views.ts` (giữa neo, đế trên hàng đất, góc W
+  thấp hơn một hàng). Chỉ có **idle** (khung đứng giữ hai khung) cho tới khi có bước đi (D-101): animation trong catalog
+  ghi `characters` theo dữ liệu (`DRAWN_BODY_CLIPS`): idle = `*`, walk = `human`, `hero`, `rats`, các clip khác = `human`.
+- **Bộ phận khai báo thân**: `HeroPartDef.bodies` → catalog `characters`. Tóc, mũ, mặt, kính: mọi thân có lưới đầu gốc
+  (trừ `brute`, đầu khổng lồ vẽ riêng, không `headMap`); áo quần giày cơ bản: mọi thân `Look`; món vẽ cho thân đứng
+  (áo y tá, khoá kéo, hai áo khoác, áo thun lính có thẻ bài, váy dính máu, ba lô, súng, túi): chỉ `hero`; món của dáng:
+  `police_belt` (`droop_m`), `sores_dog_tag` (`drag`), `shell` (`heavy`), `pustules` (`fat`), `face_brute` (`brute`).
+  `heroLook(parts, colors, bodyId)` bỏ qua bộ phận không vẽ cho thân (render không bao giờ hỏng vì cấu hình), chỉ tự
+  thêm `BALD_V` cho thân đứng (look của dáng giữ sọ như đã duyệt), ép `mouth: false` cho thân mập (đầu bè tách miệng).
+- **Slot mới**: `eyewear` (kính, vì zombie văn phòng vừa đeo kính vừa có mặt nhiễm) và `marks` (vết thương: `wounds`
+  = rách + máu, `wounds_scalp`, `stains`, `gash`). Mặt: `face_zombie`, `face_thinh` (mặt nhiễm + tai to + mắt khâu),
+  `face_brute`. Áo mới gói đúng thứ tự chi tiết của look gốc để chồng lớp y hệt: `tee_hivis`, `tee_rags` (gấu may),
+  `tee_army_torn` (máu, thắt lưng, gối), `shirt_tie_stained` (máu rồi cà vạt, D-093), `uniform_rotten` (rằn ri, máu,
+  thắt lưng, cổ tay, gối, rách bụng), `uniform_police` (phù hiệu, thắt lưng), `tank_number`, `hair_bald`. Thứ tự áp:
+  hair → face → eyewear → top → bottoms → shoes → gear → **marks** → hat; `headband` là mũ nhưng đi cùng lớp tóc
+  (dưới vết rách má, như look gốc liệt kê nó trong `hair`). `camo` trên góc không có cổ áo (dáng bò @W) bắt đầu từ đỉnh thân.
+- **Preset**: 15 look của `POSED_LOOKS` thành cấu hình trên thân của dáng; test chứng minh **đúng từng ô và màu** ở
+  cả 5 góc với look gốc, và mọi bộ phận mặc được lên mọi thân nó khai báo ở 5 góc (ma trận 69 × thân × 5). Catalog:
+  15 thân, 13 slot, 69 bộ phận, 29 preset. Thước 1× giữ (567/0/0/0), lint 138, QA sạch, 141 test, Playwright 4.
+- Để lại: bước đi cho 12 thân dáng (D-101); UI liệt kê 15 thẻ nhân vật (chưa gom nhóm).

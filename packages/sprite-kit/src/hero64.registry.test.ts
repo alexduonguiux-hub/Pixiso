@@ -1,6 +1,6 @@
 import { imageHash } from '@pixiso/pixel-core';
 import { describe, expect, it } from 'vitest';
-import { BASE_LOOKS, wearView, wearWalk } from './cast64.js';
+import { BASE_LOOKS, buildOutfit, POSED_LOOKS, wearView, wearWalk } from './cast64.js';
 import { toAscii } from './format.js';
 import { HERO_VIEWS } from './hero64.js';
 import {
@@ -12,6 +12,8 @@ import {
   heroPartById,
 } from './hero64.registry.js';
 import { dress } from './outfit64.js';
+import { POSED_BODIES } from './posed64.js';
+import { poseInView } from './poseviews64.js';
 import { buildPalette, HERO_RAMPS, paint } from './paint.js';
 import { COLOR_TARGETS, HERO_BODY_ID } from './registry.js';
 import { materialColorsFor } from './render.js';
@@ -23,8 +25,11 @@ const NO_TABLE = new Map();
 
 describe('hero registry', () => {
   it('every preset is the cast look, pixel for pixel, in every view and walk step', () => {
-    expect(HERO_PRESETS.map((p) => p.id)).toEqual(BASE_LOOKS.map((c) => c.id));
-    for (const preset of HERO_PRESETS) {
+    expect(HERO_PRESETS.map((p) => p.id)).toEqual([
+      ...BASE_LOOKS.map((c) => c.id),
+      ...POSED_LOOKS.map((c) => c.id),
+    ]);
+    for (const preset of HERO_PRESETS.filter((p) => p.body === HERO_BODY_ID)) {
       const cast = BASE_LOOKS.find((c) => c.id === preset.id)!;
       const look = heroLook(preset.config.parts, materialColorsFor(preset.config, NO_TABLE));
       const same = (
@@ -57,15 +62,41 @@ describe('hero registry', () => {
     }
   });
 
+  it('every posed preset is its cast look, pixel for pixel, in every drawn view (D-100)', () => {
+    for (const preset of HERO_PRESETS.filter((p) => p.body !== HERO_BODY_ID)) {
+      const cast = POSED_LOOKS.find((c) => c.id === preset.id)!;
+      expect(preset.body).toBe(cast.pose.id);
+      expect(POSED_BODIES.some((b) => b.id === preset.body)).toBe(true);
+      const look = heroLook(
+        preset.config.parts,
+        materialColorsFor(preset.config, NO_TABLE),
+        preset.body,
+      );
+      for (const view of HERO_VIEWS) {
+        const pose = poseInView(cast.pose, view);
+        expect(pose, `${preset.id}@${view} is drawn`).toBeDefined();
+        const figure = pose!.form.figure!;
+        const a = dress(figure, buildOutfit(cast.id, cast.label, pose!, cast.look, view));
+        const b = dress(figure, buildOutfit(cast.id, cast.label, pose!, look, view));
+        expect(toAscii(b), `${preset.id}@${view}`).toEqual(toAscii(a));
+        expect(
+          imageHash(paint(b, buildPalette(look.colors, HERO_RAMPS))),
+          `${preset.id}@${view}`,
+        ).toBe(imageHash(paint(a, buildPalette(cast.look.colors, HERO_RAMPS))));
+      }
+    }
+  });
+
   it('presets are plain hero configs: known parts in their slots, every colour a target as hex', () => {
     for (const { id, config } of HERO_PRESETS) {
-      expect(config.baseCharacter).toBe(HERO_BODY_ID);
+      expect([HERO_BODY_ID, ...POSED_BODIES.map((b) => b.id)]).toContain(config.baseCharacter);
       expect(Object.keys(config.parts).sort()).toEqual([...HERO_SLOT_IDS].sort());
       for (const [slot, part] of Object.entries(config.parts)) {
         if (part === 'none') continue;
         expect(heroPartById(part)?.slot, `${id}: ${part}`).toBe(slot);
+        expect(heroPartById(part)?.bodies, `${id}: ${part}`).toContain(config.baseCharacter);
       }
-      const cast = BASE_LOOKS.find((c) => c.id === id)!;
+      const cast = [...BASE_LOOKS, ...POSED_LOOKS].find((c) => c.id === id)!;
       expect(config.colors.length).toBe(Object.keys(cast.look.colors).length);
       for (const c of config.colors) {
         expect(
@@ -74,7 +105,9 @@ describe('hero registry', () => {
         ).toBe(true);
         expect(c.color).toMatch(/^#[0-9a-f]{6}$/);
       }
-      expect(config.animations).toEqual([...HERO_CLIP_IDS]);
+      expect(config.animations).toEqual(
+        config.baseCharacter === HERO_BODY_ID ? [...HERO_CLIP_IDS] : ['idle'],
+      );
     }
   });
 
@@ -84,12 +117,17 @@ describe('hero registry', () => {
       expect(ids.has(p.id), p.id).toBe(false);
       ids.add(p.id);
       expect(HERO_SLOT_IDS).toContain(p.slot);
-      const look = heroLook({ [p.slot]: p.id }, {});
-      for (const view of HERO_VIEWS) {
-        const figure = STAND_VIEWS[view].form.figure!;
-        const s = dress(figure, wearView(p.id, p.id, look, view));
-        expect(s.w - s.ox, `${p.id}@${view}`).toBeGreaterThanOrEqual(figure.w);
-        expect(s.h - s.oy, `${p.id}@${view}`).toBeGreaterThanOrEqual(figure.h);
+      expect(p.bodies.length, p.id).toBeGreaterThan(0);
+      for (const bodyId of p.bodies) {
+        const look = heroLook({ [p.slot]: p.id }, {}, bodyId);
+        const posed = POSED_BODIES.find((b) => b.id === bodyId);
+        for (const view of HERO_VIEWS) {
+          const pose = posed ? poseInView(posed.pose, view)! : STAND_VIEWS[view];
+          const figure = pose.form.figure!;
+          const s = dress(figure, buildOutfit(p.id, p.id, pose, look, view));
+          expect(s.w - s.ox, `${p.id}@${bodyId}/${view}`).toBeGreaterThanOrEqual(figure.w);
+          expect(s.h - s.oy, `${p.id}@${bodyId}/${view}`).toBeGreaterThanOrEqual(figure.h);
+        }
       }
     }
   });
