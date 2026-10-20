@@ -30,6 +30,7 @@ export const STEPPING_POSES: readonly string[] = [
   // the large builds: the hero's stride with their legs' extra columns and rows (posedlegs64.ts)
   'heavy',
   'fat',
+  'brute',
 ];
 
 const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
@@ -67,8 +68,15 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
   const build = LEG_BUILDS[body.pose.id.replace(/_m$/, '')];
   const heroStand = STAND_VIEWS[view].form.figure!;
   const extraRows = figure.h - 1 - hemP - (heroStand.h - 1 - hemS);
+  const drawnView = view === 'SW' ? 'S' : view === 'NW' ? 'N' : view;
+  const feetRows = build?.feetRows?.[drawnView] ?? 0;
   const legs = build
-    ? buildLegs(walk, build.cols[view === 'SW' ? 'S' : view === 'NW' ? 'N' : view], extraRows)
+    ? buildLegs(walk, {
+        cols: build.cols[drawnView],
+        feet: build.feet?.[drawnView] ?? build.cols[drawnView],
+        legRows: extraRows - feetRows,
+        feetRows,
+      })
     : undefined;
   const stepFigure = legs?.figure ?? walk.form.figure;
   const legBoxes0 = legs ?? walk;
@@ -141,6 +149,24 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
         put(X, Y, LINE);
     }
   }
+  // A piece's gaps occlude too: where a row of a kept piece is transparent between its cells (between a
+  // claw's fingers), a step cell showing through becomes a line, the piece's edge, not a sliver of leg.
+  const keptPieces = pieces(kept, figure.w);
+  for (const piece of keptPieces) {
+    const span = new Map<number, [number, number]>();
+    for (const k of piece.cells) {
+      const x = k % figure.w;
+      const y = Math.floor(k / figure.w);
+      const s = span.get(y);
+      span.set(y, s ? [Math.min(s[0], x), Math.max(s[1], x)] : [x, x]);
+    }
+    for (const [y, [x0, x1]] of span)
+      for (let x = x0 + 1; x < x1; x++) {
+        if (kept.has(y * figure.w + x) || stanceAt(x, y) !== EMPTY) continue;
+        const v = cells[y * w + x - minX]!;
+        if (v !== EMPTY && !isLine(v)) put(x, y, LINE);
+      }
+  }
   closeSeam(cells, w, h, hemP);
   // Where the step's leg has its own line right beside the kept arm's, the leg reaches the arm's line instead
   // (two parts that touch share one line, D-047): the leg's line cell takes the leg cell on its other side.
@@ -164,7 +190,7 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
         put(x, y, legCell(x + 1, y));
     }
   // The kept pieces' boxes, for the trousers and shoes of the step to leave alone (one box per 8-connected piece).
-  const legExcept = pieces(kept, figure.w).map((b) => shiftBox(b, -minX, 0));
+  const legExcept = keptPieces.map((p) => shiftBox(p.box, -minX, 0));
   const shiftX = -minX;
   const own = (b: Box) => shiftBox(b, shiftX, 0);
   const stepped = (b: Box) => shiftBox(b, dx + shiftX, dy);
@@ -295,12 +321,13 @@ function pad(s: Sprite, dx: number, w: number, h: number): Sprite {
 const LINE = packCell(LEGEND.o!);
 const LINE_MATERIAL = MATERIALS.indexOf('line');
 
-/** Bounding boxes of the 8-connected pieces of a cell set (keys y * w + x). */
-function pieces(set: ReadonlySet<number>, w: number): Box[] {
+/** The 8-connected pieces of a cell set (keys y * w + x): each piece's cells and bounding box. */
+function pieces(set: ReadonlySet<number>, w: number): { cells: Set<number>; box: Box }[] {
   const seen = new Set<number>();
-  const out: Box[] = [];
+  const out: { cells: Set<number>; box: Box }[] = [];
   for (const start of set) {
     if (seen.has(start)) continue;
+    const members = new Set<number>([start]);
     let x0 = Infinity;
     let y0 = Infinity;
     let x1 = -Infinity;
@@ -321,11 +348,12 @@ function pieces(set: ReadonlySet<number>, w: number): Box[] {
           const n = (y + ey) * w + X;
           if ((ex || ey) && X >= 0 && X < w && set.has(n) && !seen.has(n)) {
             seen.add(n);
+            members.add(n);
             stack.push(n);
           }
         }
     }
-    out.push([x0, y0, x1, y1]);
+    out.push({ cells: members, box: [x0, y0, x1, y1] });
   }
   return out;
 }

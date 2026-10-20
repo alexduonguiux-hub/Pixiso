@@ -23,7 +23,7 @@ describe('legs of the large builds (D-101)', () => {
         for (const extra of [1, 2]) {
           const walk = WALK_VIEWS[view]![step];
           const src = toAscii(walk.form.figure!);
-          const built = buildLegs(walk, extra, 0);
+          const built = buildLegs(walk, { cols: extra, feet: extra, legRows: 0, feetRows: 0 });
           const out = toAscii(built.figure);
           const hem = walk.hem[1];
           expect(built.figure.w).toBe(walk.form.figure!.w + 2 * extra);
@@ -56,10 +56,10 @@ describe('legs of the large builds (D-101)', () => {
 
   it('lengthens or shortens the legs by whole rows, keeping the boxes on them', () => {
     const walk = WALK_VIEWS.S![0];
-    const longer = buildLegs(walk, 1, 2);
+    const longer = buildLegs(walk, { cols: 1, feet: 1, legRows: 2, feetRows: 0 });
     expect(longer.figure.h).toBe(walk.form.figure!.h + 2);
     expect(longer.shoeR[3]).toBe(walk.shoeR[3] + 2);
-    const shorter = buildLegs(walk, 2, -1);
+    const shorter = buildLegs(walk, { cols: 2, feet: 2, legRows: -1, feetRows: 0 });
     expect(shorter.figure.h).toBe(walk.form.figure!.h - 1);
     expect(shorter.pants[0]![1]).toBe(walk.hem[1] + 1);
     expect(shorter.shoeR[3]).toBe(walk.shoeR[3] - 1);

@@ -1065,10 +1065,10 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   Trong `build()`: dáng bước có `snapItems` → đạo cụ vẽ trong không gian thân (dùi cui, bao súng) **trượt ngang tới khi
   chạm thân** (khe nhỏ nhất trên các hàng của nó, không chồng lên thân) rồi được khép viền ở mặt không còn chạm
   (`closeOverlay`); ô may gấu rách không còn ô viền kề (đường đũng cũ bên dưới) thì không may (không để chấm viền lẻ).
-- **Phạm vi**: `STEPPING_POSES` = droop, twist, reach, hunch, drag (và bản lật) + heavy, fat → 11 thân, 13 preset có
-  walk 8 hướng (zombie dân thường nam/nữ, công nhân, cảnh sát, quân đội, vận động viên nam/nữ, văn phòng, Kẻ Thính,
-  Lính Nhiễm, Hùng, Kẻ Phun, Kẻ Mang Vỏ). Không suy cho: bò (`crawl`, không có chân đứng) và Đột Biến (`brute`, khổng
-  lồ ×1,5 vẽ tay, chân không phải mannequin nhân lên): hai thân này vẫn chỉ idle; cần bước vẽ riêng nếu muốn.
+- **Phạm vi**: `STEPPING_POSES` = droop, twist, reach, hunch, drag (và bản lật) + heavy, fat, brute → 12 thân, 14
+  preset có walk 8 hướng (zombie dân thường nam/nữ, công nhân, cảnh sát, quân đội, vận động viên nam/nữ, văn phòng,
+  Kẻ Thính, Lính Nhiễm, Hùng, Kẻ Phun, Kẻ Mang Vỏ, Đột Biến). Không suy cho bò (`crawl`, không có chân đứng): Kẻ Bám
+  Trần vẫn chỉ idle; cần chu kỳ bò vẽ riêng nếu muốn.
 - **Chân cho thể hình to con và mập** (`posedlegs64.ts`, cùng ngày): theo SKILL §4 thể hình lấy tỉ lệ từ form nhân
   hàng/cột, nên bước của thân to con/mập = thân trên của dáng đứng + chân bước của người **nhân cột trong từng chân**
   (to con +1 mỗi chân ở mọi góc; mập +2 ở S/N/SW/NW theo dải đùi của FORM_FAT, +1 ở W theo bản vẽ tay FAT_W) và
@@ -1080,6 +1080,14 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
   `legSplit`/váy dịch theo; cả khối chân dịch trái `extra` cột để tâm chân ở dưới tâm gấu. Hông bước nhân cột vừa khít
   bề rộng thân của dáng (to con 11 ô, mập 13 ô). Món `under` (mai giáp) của dáng bước không lộ qua khe mà sải chân mở
   giữa các chi (`hideInGaps`: ô dưới gấu nằm giữa hai ô thân của hàng bị bỏ; rìa mai bên ngoài thân vẫn giữ).
+- **Đột Biến** (`brute`, cùng ngày) đi cùng cách: chân người +3 cột mỗi chân ở S/N (chân khổng lồ 6 ô), +1 ở W; bàn
+  chân có số cột riêng (`feet`: +5 ở S/N cho bàn chân trần 10 ô, +1 ở W) từ hàng đỉnh hộp giày xuống và **lùi về
+  dưới chân** nửa phần chênh (bàn chân rộng hơn chân thì dịch trái, có lề để không âm cột); hàng thêm chia cho bàn
+  chân (`feetRows`: +2 ở S/N, 0 ở W, chọn trong các hàng giày ít cặp viền kề) và phần còn lại cho đùi/ống (S/N +1,
+  W +5). Móng vuốt rủ dưới gấu là mảnh giữ lại đè lên chân bước; **khe của mảnh giữ cũng che**: ô bước lộ qua khe
+  giữa các ngón (trong khoảng cột của mảnh ở hàng đó, chỗ dáng đứng trong suốt) thành ô viền, không để sợi da 1 ô
+  giữa hai ngón. Thước: frag 917 → **921** (+4 của 10 sprite bước, ít hơn gấp đôi dáng đứng (6)), lint dải nối
+  241 → **275** (+34, toàn bộ ở hàng trên gấu: ngón vuốt, cánh tay phải và sườn của chính dáng đứng Đột Biến).
 - **Thước sau hai lần mở rộng**: frag 865 → **917** (+52: 30 sprite bước của Hùng/Kẻ Phun/Kẻ Mang Vỏ mang 50 mảnh
   thừa hưởng từ dáng đứng, +2 là ô da đơn cạnh mép mai giáp ở NW của Kẻ Mang Vỏ được `coverLoneSkin` che bằng da
   thuộc của mai thay vì quần (hàng quần giờ cách một hàng viền mai)), islands 0, skin1 0, cặp lẫn 0, QA sạch. Lint
