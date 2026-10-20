@@ -9,12 +9,12 @@ Web app giúp người **không biết vẽ, không biết dựng 3D** tạo nh�
 ## Stack
 
 - Monorepo **pnpm workspaces**, TypeScript strict ở mọi package.
-- `apps/web`: Vite + React. Gồm UI ghép nhân vật, preview pixel (vẽ từ sprite-kit, không WebGL), xuất file.
+- `apps/web`: Vite + React. Gồm UI ghép nhân vật, preview pixel (vẽ từ sprite-kit, không WebGL), xuất file (`exportCharacter` của sprite-kit); `apps/web/dev/player.html` phát lại PNG + JSON vừa xuất để tự kiểm tra định dạng.
 - `apps/server`: Node 20+, Hono (hoặc Express) và `@anthropic-ai/sdk`. Chỉ server giữ API key và gọi Claude API.
 - `packages/pixel-core`: hàm thuần (không DOM, không WebGL), gồm:
   - giảm màu và bảng màu;
   - viền, dọn pixel lẻ, ngưỡng alpha;
-  - xếp sprite sheet, sinh JSON kiểu Aseprite.
+  - xếp sprite sheet, sinh JSON kiểu Aseprite, mã hoá PNG/GIF/ZIP (`fflate`, `gifenc`; D-097).
 - `packages/sprite-kit`: nguồn sự thật của pixel. Template ASCII ô (vật liệu + bậc sáng), ghép lớp theo điểm neo trên khung 24×32, animation là bảng offset từng chi, tô màu bằng dải hue-shift của pixel-core; `render.ts` biến `CharacterConfig` + `ProjectStyle` thành khung hình. Registry (thân, slot, bộ phận, mục tiêu màu, hướng vẽ được) là nguồn sinh catalog. Thân 64 px (`hero64*.ts`, `cast64.ts`) vào catalog qua `hero64.registry.ts`: bộ phận là mảnh vá lên `Look`, preset là dàn Vùng Xanh viết thành cấu hình, test giữ preset đúng từng ô với look gốc (D-096).
 - `packages/shared`: kiểu dữ liệu dùng chung (`CharacterConfig`, catalog gồm preset) và schema zod; màu trong cấu hình là tên trong catalog hoặc `#rrggbb`.
 - `scripts/`: sinh `catalog.json` từ registry sprite-kit + `scripts/catalog-labels.yaml`; render sheet kiểm tra; script nghiên cứu ảnh tham chiếu (`scripts/research/`, Python, chỉ dùng khi nghiên cứu).

@@ -9,5 +9,13 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "gifenc": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/pngjs": "6.0.5",
+    "pngjs": "7.0.0"
   }
 }

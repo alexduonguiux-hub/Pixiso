@@ -951,3 +951,38 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
 - Số: 125 test (114 + 11), Playwright 3; catalog 2 thân / 11 slot / 49 bộ phận / 12 mục tiêu màu / 6 clip / 11
   preset; qa:1x giữ (islands 0, skin1 0, frag 527, cặp lẫn 0), qa:hero sạch, lint 138. Để lại: idle hero không nhịp
   thở; xuất file (Phase 3) và Mô tả (Phase 5) cho thân hero.
+
+### D-097 Xuất file (M4): sheet PNG theo animation, JSON Aseprite, GIF xem trước, ZIP, trang `player.html`
+
+- **Bộ mã hoá trong `pixel-core`** (hàm thuần, Uint8Array vào/ra): `encodePng` (RGBA8, filter 0, một IDAT, zlib của
+  `fflate`), `packSheet` (lưới ô bằng nhau, hàng do người gọi đặt, cột là khung), `asepriteJson` + `checkAseprite`
+  (định dạng "array" + `meta.pixiso`, kiểm tra của Phase 3 viết thành hàm), `encodeGif` (`gifenc`, bảng màu đúng
+  bằng màu đã dùng + một chỉ số trong suốt, lặp vô hạn, `dispose: 2`), `zipFiles`/`unzipFiles` (`fflate`, mốc thời
+  gian cố định 2026-01-01 cho mọi mục nên cùng nội dung → cùng byte; PNG/GIF lưu không nén). Thêm `fflate` 0.8.3 và
+  `gifenc` 1.0.3 làm dependency của pixel-core (HANDOFF §7 chỉ định, cả hai nhỏ, không phụ thuộc gì); `pngjs` chỉ
+  là devDependency để test giải mã lại. `gifenc` không có kiểu: khai báo trong `gifenc.d.ts`.
+- **`exportCharacter(config, style, table, opts)`** (`sprite-kit/src/export.ts`, tầng chính sách trên `renderClip`):
+  render mọi animation của config ở mọi hướng, kiểm tra chung ô và neo, bảng màu = hợp màu đã dùng của toàn bộ
+  khung (nhiều nhất trước); mỗi animation một `{name}_{anim}.png` (hàng = hướng theo thứ tự HANDOFF §6.1, cột =
+  khung) và `{name}_{anim}.json` (tag `{anim}_{dir}`, tên khung `{name}_{anim}_{dir}_{i}`, slice `pivot` một khoá ở
+  khung 0, `meta.pixiso` gồm ô, neo, hướng, bảng màu, `pixelsPerMeter`); `{name}_preview.gif` = animation xem trước
+  (walk, không có thì cái đầu) lần lượt qua mọi hướng; tuỳ chọn `{name}_atlas.png/json` xếp mọi animation; `{name}.zip`.
+  `name` mặc định là id thân (`human`/`hero`).
+- **5 hướng + lật**: sheet giữ năm góc vẽ S, SW, W, NW, N (PIVOT quyết định 2 và D-042, khác HANDOFF §6.6 vốn viết
+  cho pipeline 3D là S, SE, E, NE, N) và `meta.pixiso.mirror = { NE: 'NW', E: 'W', SE: 'SW' }`; UI ghi chú chi tiết
+  lệch bên sẽ đổi bên.
+- **`pixelsPerMeter`** = `characterHeightPx / (1,75 m · cos 30°)` (HANDOFF §6.2 với nhân vật tham chiếu cao 1,75 m):
+  32 px → 21,1; 64 px → 42,2. Là thước lưới danh nghĩa; Phase 4 (lưới iso) sẽ dùng và chỉnh nếu cần.
+- **Test rung (Phase 3)**: thân 32 px đo đúng theo HANDOFF — tâm X của hai hàng đặc thấp nhất đổi ≤ 1 px giữa hai
+  khung liền nhau (khép vòng) và cả clip nằm trong dải ±1 px; đứng yên thì bằng nhau tuyệt đối. Thân hero không đo
+  được bằng bàn chân: bước đi là bản chép dáng sải chân, bàn chân trước gần camera hơn nên nằm thấp hơn trên canvas
+  2:1, hai hàng thấp nhất chỉ chứa một bàn chân và đổi bên mỗi bước (tâm 34,5 / 32 / 29,5 / 32 ở S). Với hero đo
+  đầu (hai hàng đặc trên cùng, phải đứng yên tuyệt đối theo D-095) và tâm hộp bao của cả hình (≤ 2 px giữa hai khung,
+  dải ±1 px); đo thực: đầu 0, hộp bao ≤ 1,5 (ba lô Sơn @W).
+- **Web**: `ExportBar` có ô tên file, hộp "gộp một atlas", ba nút (ZIP; PNG + JSON của animation đang xem; GIF) tải
+  qua Blob; `apps/web/dev/player.html` (trang thuần, không build) nạp PNG + JSON bằng file input hoặc kéo thả, tự
+  kiểm tra kích thước/khung/tag, phát theo `duration` từng tag, vẽ điểm neo; Playwright xuất ZIP từ app (`hero.zip`)
+  rồi nạp sheet walk vào player và thấy khung chạy.
+- **Để lại**: GIF và sheet dùng tỉ lệ xuất của style (32 → ×1, 64 → ×2 cho thân 32 px; thân hero luôn ×1 trên ô 64);
+  chưa có khoá bảng màu dự án (Phase 4) nên `palette` là bảng đo được; `meta.version` cố định `0.1.0`. Số: 136 test
+  (+11), Playwright 4; thước pixel không đổi (không sửa ma trận).

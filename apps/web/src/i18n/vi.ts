@@ -80,7 +80,13 @@ export const vi = {
     zip: 'Tải ZIP',
     pngJson: 'PNG + JSON',
     gif: 'GIF',
-    comingSoon: 'Sẽ có ở bước xuất file (M4).',
+    name: 'Tên file',
+    atlas: 'Gộp một atlas',
+    done: 'Đã xuất:',
+    failed: 'Xuất thất bại.',
+    player: 'Trang kiểm tra (player)',
+    mirrorNote:
+      'Chế độ 5 hướng + lật: NE, E, SE lật từ NW, W, SW; chi tiết lệch một bên sẽ đổi bên.',
   },
   frames: {
     palette: 'Bảng màu',

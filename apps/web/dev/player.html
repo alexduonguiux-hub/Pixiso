@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixiso player</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #1b1d24;
+        --panel: #262933;
+        --fg: #e8e8ec;
+        --muted: #9a9aa6;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          14px/1.4 system-ui,
+          sans-serif;
+      }
+      h1 {
+        font-size: 18px;
+        margin: 0 0 12px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .panel {
+        background: var(--panel);
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+      canvas {
+        image-rendering: pixelated;
+        background: repeating-conic-gradient(#30323c 0 25%, #282a33 0 50%) 0 0 / 16px 16px;
+        border-radius: 4px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      button,
+      select {
+        font: inherit;
+      }
+      #drop {
+        border: 1px dashed var(--muted);
+        padding: 8px;
+        border-radius: 6px;
+      }
+      #drop.over {
+        border-color: var(--fg);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pixiso player — phát lại sheet PNG + JSON vừa xuất</h1>
+    <div class="panel" id="drop">
+      <div class="row">
+        <label
+          >PNG <input type="file" id="png" accept="image/png" data-testid="player-png"
+        /></label>
+        <label
+          >JSON <input type="file" id="json" accept="application/json" data-testid="player-json"
+        /></label>
+        <span class="muted">hoặc kéo thả cả hai file vào đây</span>
+      </div>
+      <div class="row">
+        <label
+          >Hướng / tag
+          <select id="tag" data-testid="player-tag"></select
+        ></label>
+        <label
+          >Phóng to
+          <select id="zoom">
+            <option>2</option>
+            <option>4</option>
+            <option selected>6</option>
+            <option>8</option>
+          </select></label
+        >
+        <button id="play" type="button" data-testid="player-play">Tạm dừng</button>
+        <button id="step" type="button">Khung kế</button>
+        <label><input type="checkbox" id="pivot" checked /> Điểm neo</label>
+      </div>
+      <div class="muted" id="info" data-testid="player-info">Chưa nạp file.</div>
+    </div>
+    <div class="panel">
+      <canvas id="stage" data-testid="player-canvas" width="64" height="64"></canvas>
+    </div>
+    <div class="panel">
+      <canvas id="sheet" data-testid="player-sheet"></canvas>
+    </div>
+    <script>
+      // A plain page, no build step: it checks the exported files the way an engine would read them.
+      const state = {
+        image: null, // HTMLImageElement of the sheet
+        json: null,
+        tag: null,
+        frame: 0,
+        playing: true,
+        timer: 0,
+      };
+      const $ = (id) => document.getElementById(id);
+      const stage = $('stage');
+      const sheetCanvas = $('sheet');
+
+      function setInfo(text) {
+        $('info').textContent = text;
+      }
+
+      function frameOf(i) {
+        return state.json.frames[i];
+      }
+
+      function tagFrames(tag) {
+        const out = [];
+        for (let i = tag.from; i <= tag.to; i++) out.push(i);
+        return out;
+      }
+
+      function draw() {
+        if (!state.image || !state.json || !state.tag) return;
+        const zoom = Number($('zoom').value);
+        const frames = tagFrames(state.tag);
+        const f = frameOf(frames[state.frame % frames.length]);
+        const { cell, pivot } = state.json.meta.pixiso;
+        stage.width = cell.w * zoom;
+        stage.height = cell.h * zoom;
+        const ctx = stage.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, stage.width, stage.height);
+        ctx.drawImage(
+          state.image,
+          f.frame.x,
+          f.frame.y,
+          f.frame.w,
+          f.frame.h,
+          0,
+          0,
+          f.frame.w * zoom,
+          f.frame.h * zoom,
+        );
+        if ($('pivot').checked) {
+          ctx.fillStyle = 'rgba(80,160,255,0.9)';
+          ctx.fillRect(pivot.x * zoom, pivot.y * zoom, zoom, zoom);
+        }
+        stage.dataset.frame = `${state.tag.name}:${state.frame % frames.length}`;
+      }
+
+      function schedule() {
+        clearTimeout(state.timer);
+        if (!state.playing || !state.tag) return;
+        const frames = tagFrames(state.tag);
+        const f = frameOf(frames[state.frame % frames.length]);
+        state.timer = setTimeout(() => {
+          state.frame = (state.frame + 1) % frames.length;
+          draw();
+          schedule();
+        }, f.duration);
+      }
+
+      function fillTags() {
+        const sel = $('tag');
+        sel.innerHTML = '';
+        for (const t of state.json.meta.frameTags) {
+          const o = document.createElement('option');
+          o.value = t.name;
+          o.textContent = `${t.name} (${t.to - t.from + 1})`;
+          sel.appendChild(o);
+        }
+        state.tag = state.json.meta.frameTags[0] ?? null;
+        state.frame = 0;
+      }
+
+      function check() {
+        const j = state.json;
+        const problems = [];
+        const size = j.meta.size;
+        if (state.image.naturalWidth !== size.w || state.image.naturalHeight !== size.h)
+          problems.push(
+            `PNG ${state.image.naturalWidth}×${state.image.naturalHeight} ≠ meta.size ${size.w}×${size.h}`,
+          );
+        j.frames.forEach((f, i) => {
+          const r = f.frame;
+          if (r.x < 0 || r.y < 0 || r.x + r.w > size.w || r.y + r.h > size.h)
+            problems.push(`frame ${i} ngoài ảnh`);
+        });
+        const covered = new Array(j.frames.length).fill(0);
+        for (const t of j.meta.frameTags) for (let i = t.from; i <= t.to; i++) covered[i]++;
+        if (covered.some((n) => n !== 1))
+          problems.push('frameTags không phủ đúng mỗi frame một lần');
+        return problems;
+      }
+
+      function ready() {
+        if (!state.image || !state.json) return;
+        fillTags();
+        const p = check();
+        const { cell, pivot, directions } = state.json.meta.pixiso;
+        setInfo(
+          (p.length ? `LỖI: ${p.join('; ')} · ` : 'Hợp lệ · ') +
+            `${state.json.meta.image} · ô ${cell.w}×${cell.h} · neo (${pivot.x}, ${pivot.y}) · ${state.json.frames.length} frame · ${state.json.meta.frameTags.length} tag · hướng ${directions.join(' ')}` +
+            (state.json.meta.pixiso.mirror
+              ? ` · lật ${JSON.stringify(state.json.meta.pixiso.mirror)}`
+              : ''),
+        );
+        sheetCanvas.width = state.image.naturalWidth * 2;
+        sheetCanvas.height = state.image.naturalHeight * 2;
+        const sctx = sheetCanvas.getContext('2d');
+        sctx.imageSmoothingEnabled = false;
+        sctx.drawImage(state.image, 0, 0, sheetCanvas.width, sheetCanvas.height);
+        document.body.dataset.ready = p.length ? 'invalid' : 'ok';
+        draw();
+        schedule();
+      }
+
+      function loadPng(file) {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          state.image = img;
+          ready();
+        };
+        img.src = url;
+      }
+      function loadJson(file) {
+        file.text().then((t) => {
+          state.json = JSON.parse(t);
+          ready();
+        });
+      }
+      function take(files) {
+        for (const f of files) {
+          if (f.name.endsWith('.png') || f.type === 'image/png') loadPng(f);
+          else if (f.name.endsWith('.json') || f.type === 'application/json') loadJson(f);
+        }
+      }
+
+      $('png').addEventListener('change', (e) => take(e.target.files));
+      $('json').addEventListener('change', (e) => take(e.target.files));
+      const drop = $('drop');
+      drop.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        drop.classList.add('over');
+      });
+      drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+      drop.addEventListener('drop', (e) => {
+        e.preventDefault();
+        drop.classList.remove('over');
+        take(e.dataTransfer.files);
+      });
+      $('tag').addEventListener('change', (e) => {
+        state.tag = state.json.meta.frameTags.find((t) => t.name === e.target.value) ?? null;
+        state.frame = 0;
+        draw();
+        schedule();
+      });
+      $('zoom').addEventListener('change', draw);
+      $('pivot').addEventListener('change', draw);
+      $('play').addEventListener('click', () => {
+        state.playing = !state.playing;
+        $('play').textContent = state.playing ? 'Tạm dừng' : 'Phát';
+        schedule();
+      });
+      $('step').addEventListener('click', () => {
+        if (!state.tag) return;
+        state.playing = false;
+        $('play').textContent = 'Phát';
+        clearTimeout(state.timer);
+        state.frame = (state.frame + 1) % tagFrames(state.tag).length;
+        draw();
+      });
+      window.__player = state;
+    </script>
+  </body>
+</html>

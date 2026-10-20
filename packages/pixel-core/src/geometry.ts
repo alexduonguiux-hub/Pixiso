@@ -125,3 +125,29 @@ export function blit(dst: RGBAImage, src: RGBAImage, x: number, y: number): void
     }
   }
 }
+
+/**
+ * Horizontal centre of the opaque pixels in the lowest `rows` rows that hold
+ * any (the feet of a standing figure), or null for an empty image. The Phase 3
+ * jitter check compares it across the frames of a looping clip.
+ */
+export function lowestRowsCenterX(img: RGBAImage, rows = 2): number | null {
+  const { width, height, data } = img;
+  let bottom = -1;
+  for (let y = height - 1; y >= 0 && bottom < 0; y--)
+    for (let x = 0; x < width; x++)
+      if (data[(y * width + x) * 4 + 3] === 255) {
+        bottom = y;
+        break;
+      }
+  if (bottom < 0) return null;
+  let minX = width;
+  let maxX = -1;
+  for (let y = Math.max(0, bottom - rows + 1); y <= bottom; y++)
+    for (let x = 0; x < width; x++)
+      if (data[(y * width + x) * 4 + 3] === 255) {
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+      }
+  return (minX + maxX) / 2;
+}

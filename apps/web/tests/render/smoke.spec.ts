@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import fs from 'node:fs';
 import path from 'node:path';
 import { canvasStats, openFresh, outDir } from './helpers.js';
 
@@ -99,4 +100,63 @@ test('a hero preset renders at 64 px with its own slots, clips and a custom colo
   await expect(page.getByTestId('part-head')).toHaveCount(1);
   await expect(page.getByTestId('part-gear')).toHaveCount(0);
   await drawn(page, 'W:idle:0:0:7');
+});
+
+test('exports a ZIP from the app, and the player plays the exported PNG + JSON', async ({
+  page,
+  context,
+}) => {
+  await openFresh(page);
+  await page.getByTestId('preset-son').click();
+  await drawn(page, 'S:idle:0:6:7');
+
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByTestId('export-zip').click(),
+  ]);
+  expect(download.suggestedFilename()).toBe('hero.zip');
+  const zipPath = path.join(dir, 'hero.zip');
+  await download.saveAs(zipPath);
+  expect(fs.statSync(zipPath).size).toBeGreaterThan(1000);
+  await expect(page.getByTestId('export-message')).toContainText('hero.zip');
+
+  // The walk sheet and its JSON, made in the page by the same code the buttons use, go through the player
+  // the way an engine would read them (the PNG decoded by the browser, the JSON driving the frames).
+  const files = await page.evaluate(() => {
+    const { store, kit } = window.__pixiso!;
+    const s = store.getState();
+    const out = kit.exportCharacter(s.config, s.style, kit.colorTableFrom(s.catalog.colors), {
+      name: 'son',
+    });
+    const walk = out.animations.find((a) => a.id === 'walk')!;
+    return {
+      png: Array.from(walk.png.data),
+      json: Array.from(walk.json.data),
+      tags: walk.aseprite.meta.frameTags.length,
+      frames: walk.aseprite.frames.length,
+      gifBytes: out.gif.data.length,
+    };
+  });
+  expect(files.tags).toBe(8);
+  expect(files.frames).toBe(32);
+  expect(files.gifBytes).toBeGreaterThan(100);
+  fs.writeFileSync(path.join(dir, 'son_walk.png'), Buffer.from(files.png));
+  fs.writeFileSync(path.join(dir, 'son_walk.json'), Buffer.from(files.json));
+
+  const player = await context.newPage();
+  await player.goto('http://localhost:5173/dev/player.html');
+  await player.getByTestId('player-png').setInputFiles(path.join(dir, 'son_walk.png'));
+  await player.getByTestId('player-json').setInputFiles(path.join(dir, 'son_walk.json'));
+  await expect(player.locator('body')).toHaveAttribute('data-ready', 'ok');
+  await expect(player.getByTestId('player-info')).toContainText('Hợp lệ');
+  await expect(player.getByTestId('player-tag').locator('option')).toHaveCount(8);
+  await expect(player.getByTestId('player-canvas')).toHaveAttribute('data-frame', 'walk_S:0');
+  await expect(player.getByTestId('player-canvas')).toHaveAttribute('data-frame', /walk_S:[1-3]/);
+  await player.getByTestId('player-tag').selectOption('walk_W');
+  await expect(player.getByTestId('player-canvas')).toHaveAttribute('data-frame', /^walk_W:/);
+  const stats = await canvasStats(player, 'player-canvas');
+  expect(stats!.opaque).toBeGreaterThan(0);
+  await player
+    .getByTestId('player-canvas')
+    .screenshot({ path: path.join(dir, 'player-son-W.png') });
 });
