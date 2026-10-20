@@ -5,7 +5,7 @@
  * a narrower silhouette never shows the previous frame behind it.
  */
 /// <reference path="./gifenc.d.ts" />
-import { GIFEncoder } from 'gifenc';
+import { GIFEncoder } from 'gifenc/dist/gifenc.esm.js';
 import type { Rgb8 } from './oklab.js';
 import { rgbKey } from './stats.js';
 import type { RGBAImage } from './types.js';

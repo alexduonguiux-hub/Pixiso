@@ -1,5 +1,5 @@
-/** Typings for gifenc 1.0 (the package ships none); only what gif.ts uses. */
-declare module 'gifenc' {
+/** Typings for gifenc 1.0 (the package ships none; its ESM build is imported by path because the package has no exports map and Node would take the CJS bundle). */
+declare module 'gifenc/dist/gifenc.esm.js' {
   export interface GIFFrameOptions {
     /** Colour table as [r, g, b] rows; required on the first frame (global table), local afterwards. */
     palette?: number[][];

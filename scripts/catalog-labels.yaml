@@ -60,6 +60,7 @@ parts:
   glasses: { label_vi: Kính tròn, tags: [kính, tròn, trí thức, bác sĩ, kỹ thuật] }
   beard: { label_vi: Râu quai nón, tags: [râu, rậm, già, ông] }
   mimic: { label_vi: Mặt Kẻ Bắt Chước, tags: [mặt, hốc mắt, cười rộng, ma, quái] }
+  face_zombie: { label_vi: Mặt nhiễm, tags: [mặt, zombie, hốc mắt, răng, nhiễm] }
   # hero: tops
   tee: { label_vi: Áo thun, tags: [áo, thun, ngắn tay, thường] }
   tee_torn: { label_vi: Áo thun rách, tags: [áo, thun, rách, zombie] }
@@ -73,6 +74,7 @@ parts:
   uniform_officer: { label_vi: Quân phục sĩ quan, tags: [quân phục, sĩ quan, phù hiệu, lính] }
   uniform_medic: { label_vi: Quân phục quân y, tags: [quân phục, quân y, băng tay, lính] }
   tank: { label_vi: Áo ba lỗ, tags: [áo, ba lỗ, sát nách, khoẻ] }
+  tank_torn: { label_vi: Áo ba lỗ rách dính máu, tags: [áo, ba lỗ, rách, máu, zombie] }
   crop: { label_vi: Áo lửng, tags: [áo, lửng, hở eo, thể thao] }
   # hero: bottoms
   pants: { label_vi: Quần dài, tags: [quần, dài, thường] }
@@ -178,3 +180,11 @@ presets:
     label_vi: Lính quân y
     description_vi: Quân y, nón sắt có chữ thập đỏ, băng tay trắng, túi cứu thương lớn
     tags: [vùng xanh, lính, quân y, cứu thương]
+  ke_lang_thang:
+    label_vi: Kẻ Lang Thang
+    description_vi: Kẻ nhiễm canh đầu cầu, đầu trọc da tái, áo ba lỗ nâu rách, chân trần
+    tags: [vùng xanh, quái, zombie, canh gác, kẻ lang thang]
+  mai:
+    label_vi: Mai
+    description_vi: Hồn ma dẫn đường, cô gái tóc ngắn, toàn thân xanh lục nhạt, chân trần
+    tags: [vùng xanh, hồn ma, npc, mai]

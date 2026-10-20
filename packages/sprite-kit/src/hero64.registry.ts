@@ -54,6 +54,8 @@ interface Draft {
   shoes: Footwear;
   details: Detail[];
   extras: ViewItem[];
+  /** The infected face (sunken sockets, toothy mouth, cheek gash) instead of the plain one. */
+  face?: 'zombie';
   mouth?: boolean;
   hem?: boolean;
   sleeves?: 'wide';
@@ -163,6 +165,13 @@ export const HERO_PARTS: readonly HeroPartDef[] = [
       d.extras.push(I.face.mimic);
     },
   },
+  {
+    id: 'face_zombie',
+    slot: 'face',
+    apply: (d) => {
+      d.face = 'zombie';
+    },
+  },
   top('tee', 'tee'),
   top('tee_torn', 'torn'),
   top('tee_army', 'tee', { details: UNIFORM, extras: [I.top.dog_tag] }),
@@ -175,6 +184,7 @@ export const HERO_PARTS: readonly HeroPartDef[] = [
   top('uniform_officer', 'long', { details: ['belt', 'badge', 'cuffs', 'kneepads'] }),
   top('uniform_medic', 'long', { details: [...UNIFORM, 'armband'] }),
   top('tank', 'tank'),
+  top('tank_torn', 'tank', { details: ['gash', 'stains'] }),
   top('crop', 'crop'),
   bottoms('pants', 'pants'),
   bottoms('shorts', 'shorts'),
@@ -236,7 +246,7 @@ export function heroLook(parts: Readonly<Record<string, string>>, colors: Materi
     shoes: d.shoes,
     details: d.details,
     ...(d.extras.length ? { extras: d.extras } : {}),
-    face: 'plain',
+    face: d.face ?? 'plain',
     ...(d.mouth === false ? { mouth: false } : {}),
     ...(d.hem === false ? { hem: false } : {}),
     ...(d.sleeves ? { sleeves: d.sleeves } : {}),
@@ -306,6 +316,8 @@ const PRESET_PARTS: Readonly<Record<string, Partial<Record<HeroSlotId, string>>>
     shoes: 'boots',
     gear: 'satchel_medic',
   },
+  ke_lang_thang: { face: 'face_zombie', top: 'tank_torn', bottoms: 'shorts' },
+  mai: { hair: 'hair_short', top: 'tee', bottoms: 'shorts' },
 };
 
 function hexOf([r, g, b]: Rgb8): HexColor {

@@ -469,6 +469,23 @@
       ]
     },
     {
+      "id": "face_zombie",
+      "slots": [
+        "face"
+      ],
+      "label_vi": "Mặt nhiễm",
+      "tags": [
+        "mặt",
+        "zombie",
+        "hốc mắt",
+        "răng",
+        "nhiễm"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
       "id": "tee",
       "slots": [
         "top"
@@ -659,6 +676,23 @@
         "ba lỗ",
         "sát nách",
         "khoẻ"
+      ],
+      "characters": [
+        "hero"
+      ]
+    },
+    {
+      "id": "tank_torn",
+      "slots": [
+        "top"
+      ],
+      "label_vi": "Áo ba lỗ rách dính máu",
+      "tags": [
+        "áo",
+        "ba lỗ",
+        "rách",
+        "máu",
+        "zombie"
       ],
       "characters": [
         "hero"
@@ -1808,6 +1842,115 @@
           {
             "target": "white",
             "color": "#f0f5f5"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "ke_lang_thang",
+      "label_vi": "Kẻ Lang Thang",
+      "description_vi": "Kẻ nhiễm canh đầu cầu, đầu trọc da tái, áo ba lỗ nâu rách, chân trần",
+      "tags": [
+        "vùng xanh",
+        "quái",
+        "zombie",
+        "canh gác",
+        "kẻ lang thang"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "none",
+          "hat": "none",
+          "face": "face_zombie",
+          "top": "tank_torn",
+          "bottoms": "shorts",
+          "shoes": "none",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#cec09c"
+          },
+          {
+            "target": "body",
+            "color": "#805c3a"
+          },
+          {
+            "target": "legs",
+            "color": "#684a30"
+          },
+          {
+            "target": "wood",
+            "color": "#781e1e"
+          },
+          {
+            "target": "eyes",
+            "color": "#de3e30"
+          },
+          {
+            "target": "white",
+            "color": "#cec4a0"
+          }
+        ],
+        "animations": [
+          "idle",
+          "walk"
+        ]
+      }
+    },
+    {
+      "id": "mai",
+      "label_vi": "Mai",
+      "description_vi": "Hồn ma dẫn đường, cô gái tóc ngắn, toàn thân xanh lục nhạt, chân trần",
+      "tags": [
+        "vùng xanh",
+        "hồn ma",
+        "npc",
+        "mai"
+      ],
+      "config": {
+        "version": 1,
+        "baseCharacter": "hero",
+        "parts": {
+          "hair": "hair_short",
+          "hat": "none",
+          "face": "none",
+          "top": "tee",
+          "bottoms": "shorts",
+          "shoes": "none",
+          "gear": "none"
+        },
+        "colors": [
+          {
+            "target": "skin",
+            "color": "#b2cca0"
+          },
+          {
+            "target": "hair",
+            "color": "#74946c"
+          },
+          {
+            "target": "body",
+            "color": "#96b88a"
+          },
+          {
+            "target": "legs",
+            "color": "#7a9c72"
+          },
+          {
+            "target": "eyes",
+            "color": "#346c4e"
+          },
+          {
+            "target": "white",
+            "color": "#d6ecd0"
           }
         ],
         "animations": [

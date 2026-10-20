@@ -986,3 +986,19 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
 - **Để lại**: GIF và sheet dùng tỉ lệ xuất của style (32 → ×1, 64 → ×2 cho thân 32 px; thân hero luôn ×1 trên ô 64);
   chưa có khoá bảng màu dự án (Phase 4) nên `palette` là bảng đo được; `meta.version` cố định `0.1.0`. Số: 136 test
   (+11), Playwright 4; thước pixel không đổi (không sửa ma trận).
+
+### D-098 Kẻ Lang Thang và Mai trên thân đứng; `gifenc` nạp theo đường dẫn ESM
+
+- Hai nhân vật còn thiếu của game mà thân đứng đủ dựng (dáng đứng thẳng, có idle + đi bộ 8 hướng ngay), đọc
+  từ atlas của game chỉ để lấy màu và dáng: **Kẻ Lang Thang** (kẻ nhiễm canh đầu cầu) đầu trọc (`BALD_V`), da tái
+  vàng, mặt nhiễm (hốc mắt, miệng răng, vết rách má), áo ba lỗ nâu rách có máu (`tank` + chi tiết `gash`, `stains`),
+  quần ngắn cùng vải, chân trần; **Mai** (hồn ma dẫn đường) tóc ngắn rẽ ngôi, áo thun, quần ngắn, chân trần, mọi
+  vật liệu một tông xanh lục nhạt (game vẽ bán trong suốt trong quầng xanh; sprite không có pixel bán trong suốt
+  nên màu gánh phần "ma"; quầng sáng là hiệu ứng của game, không thuộc sprite). Bộ phận mới trong catalog:
+  `face_zombie` (mặt nhiễm cho mọi thân), `tank_torn` (ba lỗ rách dính máu). Preset `ke_lang_thang`, `mai`;
+  test preset ≡ look giữ. Thước: islands 0, skin1 0, cặp lẫn 0 (Mai trùng silhouette với zombie VĐV nam /
+  văn phòng ở IoU 0,86–0,88 nhưng ΔE 0,12–0,13 nên không lẫn), frag 527 → **567** (+40 của 2 nhân vật × 15
+  sprite: cùng loại mảnh như thân đứng — cơ thang cạnh cằm, ô da cạnh tóc, góc tay), lint 138, QA sạch.
+- `gifenc` không có `exports` trong package.json nên Node (tsx, script) lấy bản CJS và không thấy `GIFEncoder`;
+  pixel-core nạp thẳng `gifenc/dist/gifenc.esm.js` (khai báo kiểu theo đường dẫn đó). Vite và Node đều chạy.
+- Còn của dàn game: Bầy Chuột Đỏ (thân mới, không phải người), các dáng zombie/thể hình vào catalog, đi bộ cho chúng.

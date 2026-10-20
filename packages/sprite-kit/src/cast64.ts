@@ -2128,6 +2128,54 @@ export const SOLDIERS: readonly Outfit[] = [
   LINH_QUAN_Y,
 ];
 
+/* ------------------------------------------------------------------ */
+/* Two more of the game's cast on the standing figure (D-098).         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Kẻ Lang Thang, the wanderer that guards the bridgehead: a bald, pale infected standing upright (not
+ * drooping like the common infected), a ragged brown sleeveless tunic read as a tank top over shorts of
+ * the same cloth, bare feet, sunken sockets, a gash and blood on the tunic.
+ */
+const KE_LANG_THANG_LOOK: Look = {
+  hair: BALD_V,
+  top: 'tank',
+  bottoms: 'shorts',
+  shoes: 'none',
+  details: ['gash', 'stains'],
+  colors: {
+    skin: [206, 192, 156],
+    cloth: [128, 92, 58],
+    pants: [104, 74, 48],
+    ...BLOOD,
+    ...ZOMBIE_EYES,
+  },
+};
+export const KE_LANG_THANG = wear('ke_lang_thang', 'Kẻ Lang Thang', POSE_STAND, KE_LANG_THANG_LOOK);
+
+/**
+ * Mai, the ghost who guides the group: a girl with short side-parted hair, a plain tee and shorts, bare
+ * feet, every material in one pale green so she reads as a spirit (the game draws her translucent in a
+ * green glow; a sprite has no half-transparent pixels, so the colour carries it).
+ */
+const MAI_LOOK: Look = {
+  hair: HAIR_SHORT_V,
+  top: 'tee',
+  bottoms: 'shorts',
+  shoes: 'none',
+  details: [],
+  face: 'plain',
+  colors: {
+    skin: [178, 204, 160],
+    hair: [116, 148, 108],
+    cloth: [150, 184, 138],
+    pants: [122, 156, 114],
+    eye: [52, 108, 78],
+    white: [214, 236, 208],
+  },
+};
+export const MAI = wear('mai', 'Mai', POSE_STAND, MAI_LOOK);
+
 /** Characters on the standing base figure, dressable in every drawn view. */
 export const BASE_LOOKS: readonly { id: string; label: string; look: Look }[] = [
   { id: 'duong', label: 'Dương', look: DUONG_LOOK },
@@ -2141,6 +2189,8 @@ export const BASE_LOOKS: readonly { id: string; label: string; look: Look }[] = 
   { id: 'linh_dau_dinh', label: 'Lính đầu đinh', look: LINH_DAU_DINH_LOOK },
   { id: 'linh_nu', label: 'Lính nữ', look: LINH_NU_LOOK },
   { id: 'linh_quan_y', label: 'Lính quân y', look: LINH_QUAN_Y_LOOK },
+  { id: 'ke_lang_thang', label: 'Kẻ Lang Thang', look: KE_LANG_THANG_LOOK },
+  { id: 'mai', label: 'Mai', look: MAI_LOOK },
 ];
 
 /** Every base character dressed for one view. */
