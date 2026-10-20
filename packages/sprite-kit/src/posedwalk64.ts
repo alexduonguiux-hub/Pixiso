@@ -15,11 +15,22 @@ import type { Box, HeroView } from './hero64.js';
 import type { ZombiePose } from './hero64.poses.js';
 import type { Outfit } from './outfit64.js';
 import { POSED_BODIES, type PosedBodyDef } from './posed64.js';
+import { buildLegs, LEG_BUILDS } from './posedlegs64.js';
 import { poseInView } from './poseviews64.js';
+import { STAND_VIEWS } from './views64.js';
 import { WALK_VIEWS } from './walk64.js';
 
 /** Stances whose legs are the mannequin's, so the hero's steps fit under them. */
-export const STEPPING_POSES: readonly string[] = ['droop', 'twist', 'reach', 'hunch', 'drag'];
+export const STEPPING_POSES: readonly string[] = [
+  'droop',
+  'twist',
+  'reach',
+  'hunch',
+  'drag',
+  // the large builds: the hero's stride with their legs' extra columns and rows (posedlegs64.ts)
+  'heavy',
+  'fat',
+];
 
 const inBox = (x: number, y: number, [x0, y0, x1, y1]: Box) =>
   x >= x0 && x <= x1 && y >= y0 && y <= y1;
@@ -47,12 +58,21 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
   const walk = WALK_VIEWS[view]?.[step];
   if (!pose || !walk) return undefined;
   const figure = pose.form.figure;
-  const stepFigure = walk.form.figure;
-  if (!figure || !stepFigure) return undefined;
+  if (!figure || !walk.form.figure) return undefined;
 
   const hemP = pose.hem[1];
   const hemS = walk.hem[1];
-  const dx = Math.round(centre(pose.hem) - centre(walk.hem));
+  // A large build's legs: the hero's stride widened and lengthened to the build's leg proportion (the rows
+  // its standing legs have below its hem over the mannequin's standing legs below the step's hem, in this view).
+  const build = LEG_BUILDS[body.pose.id.replace(/_m$/, '')];
+  const heroStand = STAND_VIEWS[view].form.figure!;
+  const extraRows = figure.h - 1 - hemP - (heroStand.h - 1 - hemS);
+  const legs = build
+    ? buildLegs(walk, build.cols[view === 'SW' ? 'S' : view === 'NW' ? 'N' : view], extraRows)
+    : undefined;
+  const stepFigure = legs?.figure ?? walk.form.figure;
+  const legBoxes0 = legs ?? walk;
+  const dx = Math.round(centre(pose.hem) - centre(walk.hem)) - (legs?.shift ?? 0);
   const dy = hemP - hemS;
   // the composite keeps the stance's origin; the step's rows below its hem land dy rows down, dx columns over
   const minX = Math.min(0, dx);
@@ -174,20 +194,26 @@ export function posedStep(body: PosedBodyDef, view: HeroView, step: 0 | 1): Zomb
     sleeveR: sleeves(pose.sleeveR, own),
     collar: pose.collar.map(own),
     hem: own(pose.hem),
-    pants: walk.pants.map(stepped),
-    shorts: walk.shorts.map(stepped),
-    shoeL: stepped(walk.shoeL),
-    shoeR: stepped(walk.shoeR),
-    flats: walk.flats.map(stepped),
-    skirt: mergeSkirt(pose.skirt, walk.skirt, hemP, shiftX, dx + shiftX, dy),
-    ...(walk.dress && pose.dress
-      ? { dress: mergeSkirt(pose.dress, walk.dress, hemP, shiftX, dx + shiftX, dy) }
-      : walk.dress
-        ? { dress: { x: walk.dress.x + dx + shiftX, y: walk.dress.y + dy, rows: walk.dress.rows } }
+    pants: legBoxes0.pants.map(stepped),
+    shorts: legBoxes0.shorts.map(stepped),
+    shoeL: stepped(legBoxes0.shoeL),
+    shoeR: stepped(legBoxes0.shoeR),
+    flats: legBoxes0.flats.map(stepped),
+    skirt: mergeSkirt(pose.skirt, legBoxes0.skirt, hemP, shiftX, dx + shiftX, dy),
+    ...(legBoxes0.dress && pose.dress
+      ? { dress: mergeSkirt(pose.dress, legBoxes0.dress, hemP, shiftX, dx + shiftX, dy) }
+      : legBoxes0.dress
+        ? {
+            dress: {
+              x: legBoxes0.dress.x + dx + shiftX,
+              y: legBoxes0.dress.y + dy,
+              rows: legBoxes0.dress.rows,
+            },
+          }
         : {}),
     snapItems: true,
     ...(legExcept.length ? { legExcept } : {}),
-    ...(walk.legSplit !== undefined ? { legSplit: walk.legSplit + dx + shiftX } : {}),
+    ...(legBoxes0.legSplit !== undefined ? { legSplit: legBoxes0.legSplit + dx + shiftX } : {}),
     ...(walk.nearLeg ? { nearLeg: walk.nearLeg } : {}),
     ...(walk.walkKey ? { walkKey: walk.walkKey } : {}),
     extrasDx: 0,

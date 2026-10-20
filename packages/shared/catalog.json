@@ -2229,6 +2229,8 @@
         "drag",
         "drag_m",
         "hunch",
+        "heavy",
+        "fat",
         "rats"
       ]
     },
@@ -3885,7 +3887,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3944,7 +3947,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },
@@ -3999,7 +4003,8 @@
           }
         ],
         "animations": [
-          "idle"
+          "idle",
+          "walk"
         ]
       }
     },

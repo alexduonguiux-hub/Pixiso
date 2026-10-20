@@ -1359,7 +1359,9 @@ function build(id: string, label: string, pose: ZombiePose, look: Look, view: He
   }
   const extras = layer(look.extras, view, walk);
   if (pose.snapItems && extras.overlays)
-    extras.overlays = extras.overlays.map((o) => snapToBody(o, body));
+    extras.overlays = extras.overlays.map((o) =>
+      o.under ? hideInGaps(o, body, hemY) : snapToBody(o, body),
+    );
   push(out, extras);
   return {
     id,
@@ -1411,6 +1413,36 @@ function snapToBody(o: Overlay, body: string[]): Overlay {
   }
   const dx = gapRight <= gapLeft ? gapRight : -gapLeft;
   return closeOverlay(Number.isFinite(dx) && dx !== 0 ? { ...o, x: o.x + dx } : o, body);
+}
+
+/**
+ * An item behind the body (a carapace) never shows through a gap the stride
+ * opened between the limbs: below the hem, its cells that lie between two
+ * body cells of their row are dropped. Cells beside the body (the dome's rim
+ * past the back) stay.
+ */
+function hideInGaps(o: Overlay, body: string[], hem: number): Overlay {
+  const opaque = (x: number, y: number) => (body[y]?.[x] ?? '.') !== '.';
+  const W = body[0]?.length ?? 0;
+  const cells = new Int16Array(o.sprite.cells);
+  let changed = false;
+  for (let y = 0; y < o.sprite.h; y++) {
+    const Y = o.y + y;
+    if (Y <= hem) continue;
+    for (let x = 0; x < o.sprite.w; x++) {
+      const X = o.x + x;
+      if (cells[y * o.sprite.w + x] === EMPTY || opaque(X, Y)) continue;
+      let left = false;
+      let right = false;
+      for (let k = X - 1; k >= 0 && !left; k--) left = opaque(k, Y);
+      for (let k = X + 1; k < W && !right; k++) right = opaque(k, Y);
+      if (left && right) {
+        cells[y * o.sprite.w + x] = EMPTY;
+        changed = true;
+      }
+    }
+  }
+  return changed ? { ...o, sprite: { ...o.sprite, cells } } : o;
 }
 
 /**
