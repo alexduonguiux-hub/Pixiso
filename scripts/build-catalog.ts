@@ -28,9 +28,13 @@ import {
   HERO_PRESETS,
   HERO_SLOT_IDS,
   PARTS,
+  RATS_PRESETS,
   REFERENCE_BODY,
   SLOT_IDS,
 } from '@pixiso/sprite-kit';
+
+/** Every ready-made character: the hero cast and the rat pack (D-099). */
+const PRESETS = [...HERO_PRESETS, ...RATS_PRESETS];
 import { CATALOG_JSON, CATALOG_LABELS_YAML } from './lib/paths.js';
 
 const labeled = z.object({ label_vi: z.string(), tags: z.array(z.string()) });
@@ -90,7 +94,7 @@ export function buildCatalog(labels: Labels): Catalog {
   );
   pairUp(
     'presets',
-    HERO_PRESETS.map((p) => p.id),
+    PRESETS.map((p) => p.id),
     labels.presets,
   );
   if (labels.referenceCharacter !== REFERENCE_BODY) {
@@ -148,7 +152,7 @@ export function buildCatalog(labels: Labels): Catalog {
       characters: (HERO_CLIP_IDS as readonly string[]).includes(c.id) ? ['*'] : [REFERENCE_BODY],
     })),
     directions: [...AVAILABLE_DIRECTIONS],
-    presets: HERO_PRESETS.map((p) => {
+    presets: PRESETS.map((p) => {
       const l = labels.presets[p.id]!;
       return {
         id: p.id,

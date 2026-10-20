@@ -9,6 +9,7 @@ import { CANVAS_H, CANVAS_W, PIVOT, type BodyView } from './body32.js';
 import { buildBody, CHIBI_CLASSIC } from './bodygen.js';
 import type { Material } from './format.js';
 import { HERO_CANVAS, HERO_PIVOT } from './hero64.js';
+import { RATS_BODY_ID, RATS_CANVAS, RATS_PIVOT } from './rats64.js';
 
 export const SLOT_IDS = ['head', 'hand_right', 'hand_left', 'back'] as const;
 export type SlotId = (typeof SLOT_IDS)[number];
@@ -58,6 +59,12 @@ export const BODIES: readonly BodyDef[] = [
     id: HERO_BODY_ID,
     canvas: { w: HERO_CANVAS, h: HERO_CANVAS },
     pivot: { x: HERO_PIVOT.x, y: HERO_PIVOT.y },
+  },
+  // the rat pack (D-099): drawn whole too, on the hero's canvas and ground line
+  {
+    id: RATS_BODY_ID,
+    canvas: { w: RATS_CANVAS, h: RATS_CANVAS },
+    pivot: { x: RATS_PIVOT.x, y: RATS_PIVOT.y },
   },
 ];
 

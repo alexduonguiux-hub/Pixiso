@@ -317,6 +317,11 @@ if __name__ == '__main__':
         lint_views_ts(args[0], kinds)
         sys.exit(0)
     fig = json.load(open(args[0]))
+    if 'S' not in fig:
+        # a flat dump of named figures (scripts/rats-sheet.ts): every key is one figure
+        for k, rows in fig.items():
+            summarize(k, lint(rows, kinds))
+        sys.exit(0)
     for v in ('S', 'SW', 'W', 'NW', 'N'):
         summarize(f'stand {v}', lint(fig[v], kinds))
     for k in ('fat_S', 'brute_S'):

@@ -19,6 +19,10 @@ characters:
     label_vi: Người (64 px, vẽ tay)
     description_vi: Thân 64 px vẽ tay năm góc, đi bộ tám hướng; dàn nhân vật Vùng Xanh mặc trên thân này
     tags: [người, '64 px', vẽ tay, vùng xanh, nhân vật]
+  rats:
+    label_vi: Bầy chuột (64 px)
+    description_vi: Ba con chuột trên cùng ô 64 px và điểm neo của người; không có bộ phận, chỉ đổi màu lông, da và mắt
+    tags: [chuột, bầy, thú, '64 px', vùng xanh]
 
 slots:
   head: { label_vi: Đầu }
@@ -188,3 +192,7 @@ presets:
     label_vi: Mai
     description_vi: Hồn ma dẫn đường, cô gái tóc ngắn, toàn thân xanh lục nhạt, chân trần
     tags: [vùng xanh, hồn ma, npc, mai]
+  bay_chuot_do:
+    label_vi: Bầy Chuột Đỏ
+    description_vi: Bầy chuột đỏ đi theo cống, ba con, chạy lúp xúp
+    tags: [vùng xanh, quái, chuột, bầy, cống]

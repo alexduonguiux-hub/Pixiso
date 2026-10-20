@@ -1002,3 +1002,25 @@ bậc) và bốn góc suy từ chúng (34); các hình cũ giữ nguyên số. C
 - `gifenc` không có `exports` trong package.json nên Node (tsx, script) lấy bản CJS và không thấy `GIFEncoder`;
   pixel-core nạp thẳng `gifenc/dist/gifenc.esm.js` (khai báo kiểu theo đường dẫn đó). Vite và Node đều chạy.
 - Còn của dàn game: Bầy Chuột Đỏ (thân mới, không phải người), các dáng zombie/thể hình vào catalog, đi bộ cho chúng.
+
+### D-099 Bầy Chuột Đỏ: thân vẽ nguyên khối thứ hai, bầy ba con trên ô và neo của người
+
+- **Thân `rats`** (canvas 64×64, neo (32, 62), cùng hàng đất 60 với người): một bầy là **ba con chuột** đặt thành cụm
+  tam giác, con gần nhất (thấp nhất) vẽ sau cùng, không con nào chạm con nào (ba vùng 8-liên thông riêng ở mọi khung).
+  Mỗi con là một "đơn vị" vẽ tay theo góc (`rats64.ts`: S 11×10, SW 15×9, W 16×6, NW 15×9, N 11×11): viền `o` 1 ô khép
+  kín, lông bằng vật liệu `cloth` (sáng `^` trên–trái, gốc `c`, bóng `C` dưới–phải, một ô `v`), tai và mũi bằng `skin`
+  **hai ô** (chi tiết nhỏ nhất theo D-073; thước "mảnh < 3 ô" của qa:1x là thước người, chuột không vào), một ô mắt
+  `E` ở mặt thấy được, đuôi là nét `o` 1 ô (nét 1 px là ô viền, như đạo cụ). Không vẽ chân ở cỡ này (chuột của game cũng
+  không): **chạy lúp xúp = nhấp lên 1 ô luân phiên + vẩy đuôi**. Mép chéo 2:1 bằng cặp `oo` ở thân SW/NW được chấp
+  nhận cho thú bốn chân (ô trong vẫn kín bốn phía). NE/E/SE lật từ NW/W/SW (D-042).
+- **Khung**: idle 2 (bầy nghỉ, rồi con trước vẩy đuôi + con giữa đổi đuôi), walk 4 theo chu kỳ của người
+  (A, nghỉ, B, nghỉ; A: con 1 và 3 nhấp lên với đuôi A, con 2 đuôi B; B ngược lại). Thời lượng lấy từ `CLIPS`
+  (500/140 ms) như hero; chưa có run/attack/hit/death.
+- **Render**: `render.ts` gom hero và chuột vào một đường `DrawnBody` (thân vẽ nguyên khối: `cells(config, colors,
+  view, clipId)` → khung trên canvas + màu); lật, tô `HERO_RAMPS`, scale như trước. Màu mặc định `RATS_DEFAULT_COLORS`
+  (lông đỏ nâu sẫm, da hồng, mắt gần đen) đo từ game; người dùng đổi qua mục tiêu `body`, `skin`, `eyes`. Không có
+  bộ phận nào cho thân chuột (`slotsForCharacter` rỗng → panel phụ kiện trống). Preset `bay_chuot_do`.
+- **Kiểm tra**: `rats64.test.ts` (viền kín, không khối viền 2×2, mảng lông/da ≥ 2 ô, không lỗ, một con mỗi đơn vị, ba
+  con mỗi khung, con trước trên hàng đất, khung bước khác khung nghỉ, render idle 2 / walk 4 / 64×64 / E lật W / đổi
+  màu / tất định); `pnpm rats` render bảng 8 hướng ×6 và dump đơn vị cho `pixel_lint.py` (nay đọc được dump phẳng),
+  chạy trong `pnpm qa:pixel` (15 đơn vị sạch; tổng lint giữ 138). Thước 1× và qa:hero không đổi. 139 test, Playwright 4.

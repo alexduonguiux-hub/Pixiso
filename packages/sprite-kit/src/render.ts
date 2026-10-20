@@ -27,6 +27,7 @@ import { flipX, type Material, type Sprite } from './format.js';
 import { HERO_CANVAS, HERO_WALK_CYCLE, heroFrames, type HeroView } from './hero64.js';
 import { HERO_CLIP_IDS, heroLook } from './hero64.registry.js';
 import { dress } from './outfit64.js';
+import { ratClip, RATS_BODY_ID, RATS_CLIP_IDS, RATS_DEFAULT_COLORS } from './rats64.js';
 import {
   buildPalette,
   HERO_RAMPS,
@@ -151,8 +152,8 @@ export function renderClip(
 ): RenderedClip {
   const clip = clips.find((c) => c.id === animationId);
   if (!clip) throw new Error(`unknown animation "${animationId}"`);
-  if (config.baseCharacter === HERO_BODY_ID)
-    return renderHeroClip(config, style, clip, direction, table);
+  const drawn = DRAWN_BODIES.find((b) => b.id === config.baseCharacter);
+  if (drawn) return renderDrawnClip(drawn, config, style, clip, direction, table);
   const spec = specFromConfig(config);
   const body = bodyById(spec.body ?? REFERENCE_BODY)!;
   const { palette, options } = paintSetupFor(style, materialColorsFor(config, table));
@@ -172,26 +173,32 @@ export function renderClip(
   };
 }
 
+/** A body drawn whole, not by limbs: its clips are canvas-sized cell sprites per drawn view (the hero, the rats). */
+interface DrawnBody {
+  id: string;
+  clipIds: readonly string[];
+  /** Frames of a clip in a drawn view on the body's canvas (before any mirroring), and the colours to paint them. */
+  cells: (
+    config: CharacterConfig,
+    colors: MaterialColors,
+    view: HeroView,
+    clipId: string,
+  ) => { frames: Sprite[]; colors: MaterialColors };
+}
+
 /**
  * The 64 px hero (D-096): the config's parts become a Look (hero64.registry.ts)
- * dressed on the standing figure of the direction's drawn view and, for the
- * walk, on its step figures; each dressed sprite lands on the 64×64 canvas
- * where heroFrames puts that frame, a mirrored direction flips the canvas, and
- * the cast's ramps paint it. Idle is the standing frame held for two frames.
+ * dressed on the standing figure of the drawn view and, for the walk, on its
+ * step figures; each dressed sprite lands on the 64×64 canvas where heroFrames
+ * puts that frame. Idle is the standing frame held for two frames.
  */
-function renderHeroClip(
+function heroCells(
   config: CharacterConfig,
-  style: ProjectStyle,
-  clip: Clip,
-  direction: Direction,
-  table: ColorTable,
-): RenderedClip {
-  if (!(HERO_CLIP_IDS as readonly string[]).includes(clip.id))
-    throw new Error(`animation "${clip.id}" has no hero frames`);
-  const src = FACING_SOURCE[direction];
-  if (!src) throw new Error(`direction "${direction}" has no drawn view yet`);
-  const view: HeroView = src.view;
-  const look = heroLook(config.parts, materialColorsFor(config, table));
+  colors: MaterialColors,
+  view: HeroView,
+  clipId: string,
+): { frames: Sprite[]; colors: MaterialColors } {
+  const look = heroLook(config.parts, colors);
   const placed = heroFrames(view);
   const steps = WALK_VIEWS[view];
   const cellOf = (i: 0 | 1 | 2): Sprite => {
@@ -203,34 +210,70 @@ function renderHeroClip(
     const figure = standing ? STAND_VIEWS[view].form.figure! : steps![step].form.figure!;
     const s = dress(figure, outfit);
     const at = placed[i];
-    const cell = compose(
+    return compose(
       [{ id: 'body', sprite: s, x: at.x - s.ox, y: at.y - s.oy, z: 0 }],
       HERO_CANVAS,
       HERO_CANVAS,
     );
-    return src.flip ? flipX(cell) : cell;
   };
-  const indices: readonly (0 | 1 | 2)[] = clip.id === 'walk' ? HERO_WALK_CYCLE : [1, 1];
-  const cells = new Map<number, Sprite>();
-  const { palette, options } = paintSetupFor(style, look.colors, HERO_RAMPS);
-  const scale = outputScale(style, HERO_CANVAS);
+  const indices: readonly (0 | 1 | 2)[] = clipId === 'walk' ? HERO_WALK_CYCLE : [1, 1];
+  const cache = new Map<number, Sprite>();
   const frames = indices.map((i) => {
-    let cell = cells.get(i);
+    let cell = cache.get(i);
     if (!cell) {
       cell = cellOf(i);
-      cells.set(i, cell);
+      cache.set(i, cell);
     }
-    const img = paint(cell, palette, options);
+    return cell;
+  });
+  return { frames, colors: look.colors };
+}
+
+const DRAWN_BODIES: readonly DrawnBody[] = [
+  { id: HERO_BODY_ID, clipIds: HERO_CLIP_IDS, cells: heroCells },
+  {
+    id: RATS_BODY_ID,
+    clipIds: RATS_CLIP_IDS,
+    cells: (_config, colors, view, clipId) => ({
+      frames: ratClip(view, clipId),
+      colors: { ...RATS_DEFAULT_COLORS, ...colors },
+    }),
+  },
+];
+
+/** Renders a clip of a body drawn whole: mirrored directions flip the canvas, the cast's ramps paint it. */
+function renderDrawnClip(
+  body: DrawnBody,
+  config: CharacterConfig,
+  style: ProjectStyle,
+  clip: Clip,
+  direction: Direction,
+  table: ColorTable,
+): RenderedClip {
+  if (!body.clipIds.includes(clip.id))
+    throw new Error(`animation "${clip.id}" has no ${body.id} frames`);
+  const src = FACING_SOURCE[direction];
+  if (!src) throw new Error(`direction "${direction}" has no drawn view yet`);
+  const def = bodyById(body.id)!;
+  const { frames: cells, colors } = body.cells(
+    config,
+    materialColorsFor(config, table),
+    src.view,
+    clip.id,
+  );
+  const { palette, options } = paintSetupFor(style, colors, HERO_RAMPS);
+  const scale = outputScale(style, def.canvas.h);
+  const frames = cells.map((cell) => {
+    const img = paint(src.flip ? flipX(cell) : cell, palette, options);
     return scale === 1 ? img : scaleNearest(img, scale);
   });
-  const body = bodyById(HERO_BODY_ID)!;
   return {
     frames,
     frameMs: frameDurationMs(clip, style.fps),
     loop: clip.loop,
     palette: usedColors(frames),
     scale,
-    cell: { w: body.canvas.w * scale, h: body.canvas.h * scale },
-    pivot: { x: body.pivot.x * scale, y: body.pivot.y * scale },
+    cell: { w: def.canvas.w * scale, h: def.canvas.h * scale },
+    pivot: { x: def.pivot.x * scale, y: def.pivot.y * scale },
   };
 }
